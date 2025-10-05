@@ -68,7 +68,7 @@ const Accueil = () => {
         description="Rejoignez notre communauté passionnée de ping-pong. Compétition, loisir ou découverte, il y a une place pour vous !"
         buttonText="S'inscrire"
         buttonLink="/adhesions"
-        imageUrl="https://picsum.photos/id/1015/1000/600" // Example Picsum image for Hero
+        imageUrl="https://i.imgur.com/F5aCw3I.jpeg" // Updated image URL
         imageAlt="Joueur de tennis de table en action"
       />
 
