@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const playerImages = [
   "https://i.imgur.com/P9ddf1f.jpeg",
   "https://i.imgur.com/lXqoHkV.jpeg",
-  "https://picsum.photos/id/239/200/300", // Example Picsum image
+  "https://i.imgur.com/8aNahbJ.jpeg", // Updated with the new image
 ];
 
 const newsItems = [
@@ -29,7 +29,7 @@ const newsItems = [
     title: "Tournoi interne de rentrée : les résultats !",
     date: "05 Septembre 2024",
     description: "Félicitations à tous les participants de notre tournoi amical de début de saison.",
-    image: "https://i.imgur.com/3sdoiHE.jpeg", // Updated with the new image
+    image: "https://i.imgur.com/3sdoiHE.jpeg",
   },
 ];
 
