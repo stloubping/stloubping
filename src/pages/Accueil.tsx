@@ -3,9 +3,9 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const playerImages = [
-  "https://via.placeholder.com/800x400/FF0000/FFFFFF?text=Joueur+de+Tennis+de+Table+1",
-  "https://via.placeholder.com/800x400/000000/FFFFFF?text=Joueur+de+Tennis+de+Table+2",
-  "https://via.placeholder.com/800x400/FF0000/FFFFFF?text=Joueur+de+Tennis+de+Table+3",
+  "https://images.unsplash.com/photo-1551730456-f0232777be82?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1551730456-f0232777be82?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1551730456-f0232777be82?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 ];
 
 const newsItems = [
@@ -52,7 +52,7 @@ const eventsItems = [
 
 const Accueil = () => {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-clubBackground text-clubBackground-foreground">
       <section className="mb-12">
         <Carousel className="w-full max-w-4xl mx-auto">
           <CarouselContent>
@@ -74,16 +74,16 @@ const Accueil = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-3xl font-bold text-center mb-8 text-clubBlack">Actualités Récentes</h2>
+        <h2 className="text-3xl font-bold text-center mb-8 text-clubPrimary">Actualités Récentes</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {newsItems.map((news) => (
             <Card key={news.id} className="bg-card shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardHeader>
-                <CardTitle className="text-clubRed">{news.title}</CardTitle>
+                <CardTitle className="text-clubPrimary">{news.title}</CardTitle>
                 <p className="text-sm text-muted-foreground">{news.date}</p>
               </CardHeader>
               <CardContent>
-                <p className="text-foreground">{news.description}</p>
+                <p className="text-clubBackground-foreground">{news.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -91,16 +91,16 @@ const Accueil = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-3xl font-bold text-center mb-8 text-clubBlack">Prochains Événements</h2>
+        <h2 className="text-3xl font-bold text-center mb-8 text-clubPrimary">Prochains Événements</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {eventsItems.map((event) => (
             <Card key={event.id} className="bg-card shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardHeader>
-                <CardTitle className="text-clubRed">{event.title}</CardTitle>
+                <CardTitle className="text-clubPrimary">{event.title}</CardTitle>
                 <p className="text-sm text-muted-foreground">{event.date}</p>
               </CardHeader>
               <CardContent>
-                <p className="text-foreground">{event.location}</p>
+                <p className="text-clubBackground-foreground">{event.location}</p>
               </CardContent>
             </Card>
           ))}

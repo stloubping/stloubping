@@ -62,13 +62,18 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        clubRed: {
-          DEFAULT: "hsl(0 84.2% 60.2%)", // A vibrant red
-          foreground: "hsl(0 0% 100%)",
+        // New club colors based on the reference site
+        clubPrimary: {
+          DEFAULT: "hsl(210 100% 30%)", // A deep blue
+          foreground: "hsl(0 0% 100%)", // White text
         },
-        clubBlack: {
-          DEFAULT: "hsl(222.2 84% 4.9%)", // A deep black
-          foreground: "hsl(210 40% 98%)",
+        clubAccent: {
+          DEFAULT: "hsl(210 100% 95%)", // A very light blue for accents/backgrounds
+          foreground: "hsl(210 100% 30%)", // Dark blue text
+        },
+        clubBackground: {
+          DEFAULT: "hsl(210 20% 98%)", // Light grey background
+          foreground: "hsl(210 10% 20%)", // Dark grey text
         },
       },
       borderRadius: {

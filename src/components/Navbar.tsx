@@ -24,7 +24,7 @@ const Navbar = () => {
         <Link
           key={item.name}
           to={item.path}
-          className="text-sm font-medium transition-colors hover:text-clubRed-foreground text-clubBlack-foreground"
+          className="text-sm font-medium transition-colors hover:text-clubPrimary text-clubBackground-foreground"
         >
           {item.name}
         </Link>
@@ -33,20 +33,20 @@ const Navbar = () => {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-clubBlack to-clubRed text-clubBlack-foreground shadow-sm">
+    <header className="sticky top-0 z-50 w-full border-b bg-clubBackground text-clubBackground-foreground shadow-sm">
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-        <Link to="/" className="flex items-center gap-2 text-lg font-semibold md:text-base text-clubRed-foreground">
+        <Link to="/" className="flex items-center gap-2 text-lg font-semibold md:text-base text-clubPrimary">
           <span>Club de Tennis de Table</span>
         </Link>
         {isMobile ? (
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-clubRed-foreground">
+              <Button variant="ghost" size="icon" className="text-clubPrimary">
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-clubBlack text-clubBlack-foreground">
+            <SheetContent side="right" className="bg-clubBackground text-clubBackground-foreground">
               <NavLinks className="flex flex-col space-x-0 space-y-4 p-4" />
             </SheetContent>
           </Sheet>

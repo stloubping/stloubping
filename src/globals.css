@@ -50,10 +50,13 @@
 
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    --club-red: 0 84.2% 60.2%;
-    --club-red-foreground: 0 0% 100%;
-    --club-black: 222.2 84% 4.9%;
-    --club-black-foreground: 210 40% 98%;
+    /* New club colors */
+    --club-primary: 210 100% 30%; /* Deep blue */
+    --club-primary-foreground: 0 0% 100%; /* White */
+    --club-accent: 210 100% 95%; /* Light blue */
+    --club-accent-foreground: 210 100% 30%; /* Dark blue */
+    --club-background: 210 20% 98%; /* Light grey */
+    --club-background-foreground: 210 10% 20%; /* Dark grey */
   }
 
   .dark {
@@ -93,10 +96,13 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    --club-red: 0 62.8% 30.6%; /* Darker red for dark mode */
-    --club-red-foreground: 0 0% 100%;
-    --club-black: 222.2 84% 4.9%;
-    --club-black-foreground: 210 40% 98%;
+    /* New club colors for dark mode */
+    --club-primary: 210 100% 50%; /* Slightly lighter blue for dark mode */
+    --club-primary-foreground: 0 0% 100%; /* White */
+    --club-accent: 210 100% 15%; /* Darker light blue for dark mode */
+    --club-accent-foreground: 210 100% 95%; /* Light blue */
+    --club-background: 210 10% 10%; /* Dark grey background */
+    --club-background-foreground: 210 20% 98%; /* Light grey text */
   }
 }
 
