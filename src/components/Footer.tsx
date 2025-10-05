@@ -11,7 +11,7 @@ const Footer = () => {
           {/* Club Info */}
           <div className="col-span-full md:col-span-1 mb-8 md:mb-0">
             <Link to="/" className="flex items-center justify-center md:justify-start gap-2 text-xl font-semibold mb-4 text-clubPrimary">
-              <img src="/logo.jpg" alt="St Loub Ping Logo" className="h-8 w-8 mr-2" />
+              <img src="https://scontent-cdg4-2.xx.fbcdn.net/v/t39.30808-6/354242202_217666231105306_1523329741096941961_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=vxBlxBVDqUYQ7kNvwFolNDp&_nc_oc=AdmEYTEnuK9wM1eJaeCwg0sm_jAKDjOEFaDM0RpPGZmYiZnhqrtZyu0cC0E-5Kmdb9AkvKBojC3XALXa9fm2Yo8U&_nc_zt=23&_nc_ht=scontent-cdg4-2.xx&_nc_gid=LmC60VNdyhR5083u3mLHDQ&oh=00_AfcJ5cIUBRQCiiq-MpR89cxwU6nNCOse8QUnbk1UuURwEA&oe=68E847D8" alt="St Loub Ping Logo" className="h-8 w-8 mr-2" />
               <span>St Loub Ping</span>
             </Link>
             <p className="text-sm text-clubDark-foreground/80 mb-4">
