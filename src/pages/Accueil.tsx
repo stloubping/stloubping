@@ -4,7 +4,7 @@ import HeroSection from "@/components/HeroSection"; // Import the new HeroSectio
 import { Link } from "react-router-dom";
 
 const playerImages = [
-  "https://i.imgur.com/P9ddf1f.jpeg",
+  "https://i.imgur.com/8aNahbJ.jpeg", // Updated with the new image
   "https://i.imgur.com/lXqoHkV.jpeg",
   "https://picsum.photos/id/239/200/300", // Example Picsum image
 ];
