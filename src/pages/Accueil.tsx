@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const playerImages = [
   "https://i.imgur.com/P9ddf1f.jpeg",
-  "https://i.imgur.com/lXqoHkV.jpeg", // Updated with the new image
+  "https://i.imgur.com/lXqoHkV.jpeg",
   "https://picsum.photos/id/239/200/300", // Example Picsum image
 ];
 
@@ -15,7 +15,7 @@ const newsItems = [
     title: "Victoire éclatante de notre équipe A !",
     date: "15 Septembre 2024",
     description: "L'équipe première a dominé ses adversaires lors du dernier championnat régional.",
-    image: "https://picsum.photos/400/250?random=1",
+    image: "https://i.imgur.com/cJ6kfTc.jpeg", // Updated with the new image
   },
   {
     id: 2,
@@ -66,7 +66,7 @@ const Accueil = () => {
       <HeroSection
         title="Bienvenue au St Loub Ping"
         description="Rejoignez notre communauté passionnée de ping-pong. Compétition, loisir ou découverte, il y a une place pour vous !"
-        buttonText="S'inscrire"
+        buttonText="S'inscire"
         buttonLink="/adhesions"
         imageUrl="https://i.imgur.com/F5aCw3I.jpeg" // Updated image URL
         imageAlt="Joueur de tennis de table en action"
