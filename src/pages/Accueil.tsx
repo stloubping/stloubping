@@ -22,14 +22,14 @@ const newsItems = [
     title: "Nouveaux horaires d'entraînement pour les jeunes",
     date: "10 Septembre 2024",
     description: "Découvrez les nouvelles sessions dédiées aux jeunes talents du club.",
-    image: "https://i.imgur.com/6pYZWST.jpeg", // Updated with the new image
+    image: "https://i.imgur.com/6pYZWST.jpeg",
   },
   {
     id: 3,
     title: "Tournoi interne de rentrée : les résultats !",
     date: "05 Septembre 2024",
     description: "Félicitations à tous les participants de notre tournoi amical de début de saison.",
-    image: "https://picsum.photos/400/250?random=3",
+    image: "https://i.imgur.com/3sdoiHE.jpeg", // Updated with the new image
   },
 ];
 
