@@ -29,7 +29,7 @@ const newsItems = [
     title: "Tournoi interne de rentrée : les résultats !",
     date: "05 Septembre 2024",
     description: "Félicitations à tous les participants de notre tournoi amical de début de saison.",
-    image: "https://i.imgur.com/3sdoiHE.jpeg", // Updated with the new image
+    image: "https://i.imgur.com/O7YYeof.jpeg", // Updated with the new image
   },
 ];
 
