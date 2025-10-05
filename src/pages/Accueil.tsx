@@ -15,14 +15,14 @@ const newsItems = [
     title: "Victoire éclatante de notre équipe A !",
     date: "15 Septembre 2024",
     description: "L'équipe première a dominé ses adversaires lors du dernier championnat régional.",
-    image: "https://i.imgur.com/cJ6kfTc.jpeg", // Updated with the new image
+    image: "https://i.imgur.com/cJ6kfTc.jpeg",
   },
   {
     id: 2,
     title: "Nouveaux horaires d'entraînement pour les jeunes",
     date: "10 Septembre 2024",
     description: "Découvrez les nouvelles sessions dédiées aux jeunes talents du club.",
-    image: "https://picsum.photos/400/250?random=2",
+    image: "https://i.imgur.com/6pYZWST.jpeg", // Updated with the new image
   },
   {
     id: 3,
@@ -66,7 +66,7 @@ const Accueil = () => {
       <HeroSection
         title="Bienvenue au St Loub Ping"
         description="Rejoignez notre communauté passionnée de ping-pong. Compétition, loisir ou découverte, il y a une place pour vous !"
-        buttonText="S'inscire"
+        buttonText="S'inscrire"
         buttonLink="/adhesions"
         imageUrl="https://i.imgur.com/F5aCw3I.jpeg" // Updated image URL
         imageAlt="Joueur de tennis de table en action"
