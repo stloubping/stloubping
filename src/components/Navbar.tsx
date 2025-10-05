@@ -35,13 +35,13 @@ const Navbar = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-clubBackground text-clubBackground-foreground shadow-sm">
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-        <Link to="/" className="flex items-center gap-2 text-lg font-semibold md:text-base text-clubPrimary">
+        <Link to="/" className="flex items-center gap-2 text-lg font-semibold md:text-base text-clubAccent">
           <span>Club de Tennis de Table</span>
         </Link>
         {isMobile ? (
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-clubPrimary">
+              <Button variant="ghost" size="icon" className="text-clubAccent">
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>

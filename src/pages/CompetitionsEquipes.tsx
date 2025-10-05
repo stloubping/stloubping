@@ -25,21 +25,21 @@ const matchCalendar = [
 const CompetitionsEquipes = () => {
   return (
     <div className="container mx-auto px-4 py-8 bg-clubBackground text-clubBackground-foreground">
-      <h1 className="text-4xl font-bold text-center mb-12 text-clubPrimary">Compétitions & Équipes</h1>
+      <h1 className="text-4xl font-bold text-center mb-12 text-clubAccent">Compétitions & Équipes</h1>
 
       <section className="mb-12">
         <Card className="bg-card shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubPrimary">Nos Équipes</CardTitle>
+            <CardTitle className="text-2xl text-clubAccent">Nos Équipes</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {teams.map((team, index) => (
-                <Card key={index} className="bg-clubAccent text-clubAccent-foreground shadow-md">
+                <Card key={index} className="bg-clubBackground shadow-md">
                   <CardHeader>
-                    <CardTitle className="text-xl text-clubPrimary">{team.name}</CardTitle>
+                    <CardTitle className="text-xl text-clubAccent">{team.name}</CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="text-clubBackground-foreground">
                     <p>Division: <span className="font-semibold">{team.division}</span></p>
                     <p>Capitaine: <span className="font-semibold">{team.captain}</span></p>
                   </CardContent>
@@ -53,17 +53,17 @@ const CompetitionsEquipes = () => {
       <section className="mb-12">
         <Card className="bg-card shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubPrimary">Profils des Joueurs</CardTitle>
+            <CardTitle className="text-2xl text-clubAccent">Profils des Joueurs</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {players.map((player, index) => (
-                <Card key={index} className="bg-clubAccent text-clubAccent-foreground shadow-md text-center">
+                <Card key={index} className="bg-clubBackground shadow-md text-center">
                   <CardContent className="p-4">
                     <img src={player.image} alt={player.name} className="rounded-full mx-auto mb-4 w-24 h-24 object-cover border-2 border-clubPrimary" />
-                    <h3 className="text-lg font-semibold text-clubPrimary">{player.name}</h3>
+                    <h3 className="text-lg font-semibold text-clubAccent">{player.name}</h3>
                     <p className="text-sm text-muted-foreground mb-2">{player.ranking}</p>
-                    <p className="text-xs text-clubAccent-foreground">{player.equipment}</p>
+                    <p className="text-xs text-clubBackground-foreground">{player.equipment}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -75,17 +75,17 @@ const CompetitionsEquipes = () => {
       <section className="mb-12">
         <Card className="bg-card shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubPrimary">Calendrier des Matchs</CardTitle>
+            <CardTitle className="text-2xl text-clubAccent">Calendrier des Matchs</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
-                <TableRow className="bg-clubPrimary text-clubPrimary-foreground hover:bg-clubPrimary">
-                  <TableHead className="text-clubPrimary-foreground">Date</TableHead>
-                  <TableHead className="text-clubPrimary-foreground">Adversaire</TableHead>
-                  <TableHead className="text-clubPrimary-foreground">Équipe</TableHead>
-                  <TableHead className="text-clubPrimary-foreground">Lieu</TableHead>
-                  <TableHead className="text-clubPrimary-foreground">Résultat</TableHead>
+                <TableRow className="bg-clubAccent text-clubAccent-foreground hover:bg-clubAccent">
+                  <TableHead className="text-clubAccent-foreground">Date</TableHead>
+                  <TableHead className="text-clubAccent-foreground">Adversaire</TableHead>
+                  <TableHead className="text-clubAccent-foreground">Équipe</TableHead>
+                  <TableHead className="text-clubAccent-foreground">Lieu</TableHead>
+                  <TableHead className="text-clubAccent-foreground">Résultat</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -107,7 +107,7 @@ const CompetitionsEquipes = () => {
       <section>
         <Card className="bg-card shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubPrimary">Résultats et Feuilles de Rencontres</CardTitle>
+            <CardTitle className="text-2xl text-clubAccent">Résultats et Feuilles de Rencontres</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="mb-4 text-clubBackground-foreground">

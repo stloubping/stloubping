@@ -50,13 +50,13 @@
 
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Corrected club colors */
-    --club-primary: 210 100% 20%; /* Dark Navy Blue */
+    /* Corrected club colors: Black, Red, White */
+    --club-primary: 0 84.2% 60.2%; /* Vibrant Red */
     --club-primary-foreground: 0 0% 100%; /* White */
-    --club-accent: 211 100% 50%; /* Brighter Blue */
+    --club-accent: 0 0% 10%; /* Deep Black */
     --club-accent-foreground: 0 0% 100%; /* White */
-    --club-background: 210 10% 98%; /* Very Light Grey */
-    --club-background-foreground: 210 10% 15%; /* Dark grey text */
+    --club-background: 0 0% 100%; /* Pure White */
+    --club-background-foreground: 0 0% 10%; /* Black text */
   }
 
   .dark {
@@ -97,12 +97,12 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
 
     /* Corrected club colors for dark mode (adjusting for visibility) */
-    --club-primary: 210 100% 30%; /* Slightly lighter dark blue for dark mode */
+    --club-primary: 0 84.2% 70.2%; /* Slightly lighter Red for dark mode */
     --club-primary-foreground: 0 0% 100%; /* White */
-    --club-accent: 211 100% 60%; /* Slightly lighter bright blue for dark mode */
+    --club-accent: 0 0% 20%; /* Slightly lighter Black for dark mode */
     --club-accent-foreground: 0 0% 100%; /* White */
-    --club-background: 210 10% 10%; /* Dark grey background */
-    --club-background-foreground: 210 10% 90%; /* Light grey text */
+    --club-background: 0 0% 5%; /* Very dark grey background */
+    --club-background-foreground: 0 0% 90%; /* Light grey text */
   }
 }
 

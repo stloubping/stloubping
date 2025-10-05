@@ -74,12 +74,12 @@ const Accueil = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-3xl font-bold text-center mb-8 text-clubPrimary">Actualités Récentes</h2>
+        <h2 className="text-3xl font-bold text-center mb-8 text-clubAccent">Actualités Récentes</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {newsItems.map((news) => (
             <Card key={news.id} className="bg-card shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardHeader>
-                <CardTitle className="text-clubPrimary">{news.title}</CardTitle>
+                <CardTitle className="text-clubAccent">{news.title}</CardTitle>
                 <p className="text-sm text-muted-foreground">{news.date}</p>
               </CardHeader>
               <CardContent>
@@ -91,12 +91,12 @@ const Accueil = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-3xl font-bold text-center mb-8 text-clubPrimary">Prochains Événements</h2>
+        <h2 className="text-3xl font-bold text-center mb-8 text-clubAccent">Prochains Événements</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {eventsItems.map((event) => (
             <Card key={event.id} className="bg-card shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardHeader>
-                <CardTitle className="text-clubPrimary">{event.title}</CardTitle>
+                <CardTitle className="text-clubAccent">{event.title}</CardTitle>
                 <p className="text-sm text-muted-foreground">{event.date}</p>
               </CardHeader>
               <CardContent>

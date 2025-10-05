@@ -9,12 +9,12 @@ import { Mail, Phone, MapPin } from "lucide-react";
 const Contact = () => {
   return (
     <div className="container mx-auto px-4 py-8 bg-clubBackground text-clubBackground-foreground">
-      <h1 className="text-4xl font-bold text-center mb-12 text-clubPrimary">Contact</h1>
+      <h1 className="text-4xl font-bold text-center mb-12 text-clubAccent">Contact</h1>
 
       <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-8">
         <Card className="bg-card shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubPrimary">Nos Coordonnées</CardTitle>
+            <CardTitle className="text-2xl text-clubAccent">Nos Coordonnées</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-clubBackground-foreground">
             <div className="flex items-center">
@@ -47,7 +47,7 @@ const Contact = () => {
 
         <Card className="bg-card shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubPrimary">Où Nous Trouver ?</CardTitle>
+            <CardTitle className="text-2xl text-clubAccent">Où Nous Trouver ?</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="aspect-w-16 aspect-h-9 w-full">
@@ -72,7 +72,7 @@ const Contact = () => {
 
       <section>
         <Card className="bg-card shadow-lg p-8">
-          <CardTitle className="text-2xl text-clubPrimary mb-6 text-center">Formulaire de Contact</CardTitle>
+          <CardTitle className="text-2xl text-clubAccent mb-6 text-center">Formulaire de Contact</CardTitle>
           <CardContent>
             <form className="space-y-6">
               <div>

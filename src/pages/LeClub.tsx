@@ -5,12 +5,12 @@ import { Separator } from "@/components/ui/separator";
 const LeClub = () => {
   return (
     <div className="container mx-auto px-4 py-8 bg-clubBackground text-clubBackground-foreground">
-      <h1 className="text-4xl font-bold text-center mb-12 text-clubPrimary">Le Club</h1>
+      <h1 className="text-4xl font-bold text-center mb-12 text-clubAccent">Le Club</h1>
 
       <section className="mb-12">
         <Card className="bg-card shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubPrimary">Notre Histoire et Nos Valeurs</CardTitle>
+            <CardTitle className="text-2xl text-clubAccent">Notre Histoire et Nos Valeurs</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="mb-4 text-clubBackground-foreground">
@@ -29,7 +29,7 @@ const LeClub = () => {
       <section className="mb-12">
         <Card className="bg-card shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubPrimary">Nos Infrastructures</CardTitle>
+            <CardTitle className="text-2xl text-clubAccent">Nos Infrastructures</CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="list-disc list-inside space-y-2 text-clubBackground-foreground">
@@ -47,10 +47,10 @@ const LeClub = () => {
       <section className="mb-12">
         <Card className="bg-card shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubPrimary">Horaires et Tarifs</CardTitle>
+            <CardTitle className="text-2xl text-clubAccent">Horaires et Tarifs</CardTitle>
           </CardHeader>
           <CardContent>
-            <h3 className="text-xl font-semibold mb-2 text-clubPrimary">Horaires d'entraînement :</h3>
+            <h3 className="text-xl font-semibold mb-2 text-clubAccent">Horaires d'entraînement :</h3>
             <ul className="list-disc list-inside mb-4 text-clubBackground-foreground">
               <li>Lundi : 18h00 - 20h00 (Adultes Loisir)</li>
               <li>Mardi : 17h30 - 19h00 (Jeunes) / 19h00 - 21h00 (Compétition)</li>
@@ -59,7 +59,7 @@ const LeClub = () => {
               <li>Vendredi : 19h00 - 22h00 (Jeu Libre)</li>
             </ul>
             <Separator className="my-4 bg-clubPrimary" />
-            <h3 className="text-xl font-semibold mb-2 text-clubPrimary">Tarifs des adhésions (saison 2024-2025) :</h3>
+            <h3 className="text-xl font-semibold mb-2 text-clubAccent">Tarifs des adhésions (saison 2024-2025) :</h3>
             <ul className="list-disc list-inside text-clubBackground-foreground">
               <li>Licence Loisir : 100€ / an</li>
               <li>Licence Compétition : 150€ / an</li>
@@ -73,23 +73,23 @@ const LeClub = () => {
       <section className="mb-12">
         <Card className="bg-card shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubPrimary">L'Équipe Dirigeante</CardTitle>
+            <CardTitle className="text-2xl text-clubAccent">L'Équipe Dirigeante</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="text-center">
                 <img src="https://picsum.photos/150/150?random=2" alt="Président" className="rounded-full mx-auto mb-2 w-24 h-24 object-cover" />
-                <h4 className="font-semibold text-clubPrimary">Jean Dupont</h4>
+                <h4 className="font-semibold text-clubAccent">Jean Dupont</h4>
                 <p className="text-sm text-muted-foreground">Président</p>
               </div>
               <div className="text-center">
                 <img src="https://picsum.photos/150/150?random=3" alt="Secrétaire" className="rounded-full mx-auto mb-2 w-24 h-24 object-cover" />
-                <h4 className="font-semibold text-clubPrimary">Marie Curie</h4>
+                <h4 className="font-semibold text-clubAccent">Marie Curie</h4>
                 <p className="text-sm text-muted-foreground">Secrétaire</p>
               </div>
               <div className="text-center">
                 <img src="https://picsum.photos/150/150?random=4" alt="Trésorier" className="rounded-full mx-auto mb-2 w-24 h-24 object-cover" />
-                <h4 className="font-semibold text-clubPrimary">Pierre Martin</h4>
+                <h4 className="font-semibold text-clubAccent">Pierre Martin</h4>
                 <p className="text-sm text-muted-foreground">Trésorier</p>
               </div>
             </div>
@@ -100,7 +100,7 @@ const LeClub = () => {
       <section>
         <Card className="bg-card shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubPrimary">Labels FFTT</CardTitle>
+            <CardTitle className="text-2xl text-clubAccent">Labels FFTT</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="mb-4 text-clubBackground-foreground">

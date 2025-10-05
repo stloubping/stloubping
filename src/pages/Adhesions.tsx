@@ -6,12 +6,12 @@ import { Separator } from "@/components/ui/separator";
 const Adhesions = () => {
   return (
     <div className="container mx-auto px-4 py-8 bg-clubBackground text-clubBackground-foreground">
-      <h1 className="text-4xl font-bold text-center mb-12 text-clubPrimary">Adhésions</h1>
+      <h1 className="text-4xl font-bold text-center mb-12 text-clubAccent">Adhésions</h1>
 
       <section className="mb-12">
         <Card className="bg-card shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubPrimary">Devenez Membre de Notre Club !</CardTitle>
+            <CardTitle className="text-2xl text-clubAccent">Devenez Membre de Notre Club !</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="mb-4 text-clubBackground-foreground">
@@ -29,32 +29,32 @@ const Adhesions = () => {
       <section className="mb-12">
         <Card className="bg-card shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubPrimary">Types de Licences</CardTitle>
+            <CardTitle className="text-2xl text-clubAccent">Types de Licences</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-clubAccent p-6 rounded-lg shadow-md">
-                <h3 className="text-xl font-semibold mb-2 text-clubPrimary">Licence Loisir</h3>
-                <p className="mb-4 text-clubAccent-foreground">
+              <div className="bg-clubBackground p-6 rounded-lg shadow-md">
+                <h3 className="text-xl font-semibold mb-2 text-clubAccent">Licence Loisir</h3>
+                <p className="mb-4 text-clubBackground-foreground">
                   Idéale pour ceux qui souhaitent pratiquer le tennis de table pour le plaisir,
                   sans l'engagement des compétitions officielles. Accès aux entraînements libres
                   et aux sessions encadrées dédiées au loisir.
                 </p>
-                <ul className="list-disc list-inside mb-4 text-clubAccent-foreground">
+                <ul className="list-disc list-inside mb-4 text-clubBackground-foreground">
                   <li>Accès aux créneaux de jeu libre</li>
                   <li>Participation aux entraînements loisir</li>
                   <li>Assurance FFTT incluse</li>
                 </ul>
                 <p className="text-2xl font-bold text-clubPrimary">100€ / an</p>
               </div>
-              <div className="bg-clubAccent p-6 rounded-lg shadow-md">
-                <h3 className="text-xl font-semibold mb-2 text-clubPrimary">Licence Compétition</h3>
-                <p className="mb-4 text-clubAccent-foreground">
+              <div className="bg-clubBackground p-6 rounded-lg shadow-md">
+                <h3 className="text-xl font-semibold mb-2 text-clubAccent">Licence Compétition</h3>
+                <p className="mb-4 text-clubBackground-foreground">
                   Pour les joueurs désireux de s'investir dans la compétition.
                   Permet de participer aux championnats par équipes et aux tournois individuels
                   organisés par la FFTT.
                 </p>
-                <ul className="list-disc list-inside mb-4 text-clubAccent-foreground">
+                <ul className="list-disc list-inside mb-4 text-clubBackground-foreground">
                   <li>Accès à tous les entraînements (loisir et compétition)</li>
                   <li>Participation aux championnats et tournois officiels</li>
                   <li>Classement FFTT</li>
@@ -68,7 +68,7 @@ const Adhesions = () => {
 
       <section className="text-center">
         <Card className="bg-card shadow-lg p-8">
-          <CardTitle className="text-2xl text-clubPrimary mb-4">Processus d'Inscription en Ligne</CardTitle>
+          <CardTitle className="text-2xl text-clubAccent mb-4">Processus d'Inscription en Ligne</CardTitle>
           <CardContent>
             <p className="mb-6 text-clubBackground-foreground">
               Prêt à nous rejoindre ? L'inscription est simple et rapide !
