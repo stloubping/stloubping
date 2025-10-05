@@ -11,7 +11,7 @@ const Footer = () => {
           {/* Club Info */}
           <div className="col-span-full md:col-span-1 mb-8 md:mb-0">
             <Link to="/" className="flex items-center justify-center md:justify-start gap-2 text-xl font-semibold mb-4 text-clubPrimary">
-              <img src="/logo.jpeg" alt="TT Club Logo" className="h-8 w-8 mr-2" />
+              <img src="/logo.jpg" alt="TT Club Logo" className="h-8 w-8 mr-2" />
               <span>TT Club</span>
             </Link>
             <p className="text-sm text-clubDark-foreground/80 mb-4">

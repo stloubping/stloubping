@@ -4,9 +4,9 @@ import HeroSection from "@/components/HeroSection"; // Import the new HeroSectio
 import { Link } from "react-router-dom";
 
 const playerImages = [
-  "https://images.unsplash.com/photo-1551730456-f0232777be82?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1551730456-f0232777be82?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1551730456-f0232777be82?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://picsum.photos/id/237/200/300", // Example Picsum image
+  "https://picsum.photos/id/238/200/300", // Example Picsum image
+  "https://picsum.photos/id/239/200/300", // Example Picsum image
 ];
 
 const newsItems = [
@@ -68,7 +68,7 @@ const Accueil = () => {
         description="Rejoignez notre communauté passionnée de ping-pong. Compétition, loisir ou découverte, il y a une place pour vous !"
         buttonText="S'inscrire"
         buttonLink="/adhesions"
-        imageUrl="https://images.unsplash.com/photo-1551730456-f0232777be82?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        imageUrl="https://picsum.photos/id/1015/1000/600" // Example Picsum image for Hero
         imageAlt="Joueur de tennis de table en action"
       />
 
