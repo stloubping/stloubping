@@ -62,6 +62,14 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        clubRed: {
+          DEFAULT: "hsl(0 84.2% 60.2%)", // A vibrant red
+          foreground: "hsl(0 0% 100%)",
+        },
+        clubBlack: {
+          DEFAULT: "hsl(222.2 84% 4.9%)", // A deep black
+          foreground: "hsl(210 40% 98%)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

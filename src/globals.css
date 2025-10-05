@@ -49,6 +49,11 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --club-red: 0 84.2% 60.2%;
+    --club-red-foreground: 0 0% 100%;
+    --club-black: 222.2 84% 4.9%;
+    --club-black-foreground: 210 40% 98%;
   }
 
   .dark {
@@ -87,6 +92,11 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --club-red: 0 62.8% 30.6%; /* Darker red for dark mode */
+    --club-red-foreground: 0 0% 100%;
+    --club-black: 222.2 84% 4.9%;
+    --club-black-foreground: 210 40% 98%;
   }
 }
 
