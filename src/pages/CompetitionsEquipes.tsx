@@ -24,22 +24,22 @@ const matchCalendar = [
 
 const CompetitionsEquipes = () => {
   return (
-    <div className="container mx-auto px-4 py-8 bg-clubBackground text-clubBackground-foreground">
-      <h1 className="text-4xl font-bold text-center mb-12 text-clubAccent">Compétitions & Équipes</h1>
+    <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
+      <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Compétitions & Équipes</h1>
 
       <section className="mb-12">
-        <Card className="bg-card shadow-lg">
+        <Card className="bg-clubLight shadow-lg rounded-xl">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubAccent">Nos Équipes</CardTitle>
+            <CardTitle className="text-2xl text-clubDark">Nos Équipes</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {teams.map((team, index) => (
-                <Card key={index} className="bg-clubBackground shadow-md">
+                <Card key={index} className="bg-clubLight shadow-md rounded-lg">
                   <CardHeader>
-                    <CardTitle className="text-xl text-clubAccent">{team.name}</CardTitle>
+                    <CardTitle className="text-xl text-clubDark">{team.name}</CardTitle>
                   </CardHeader>
-                  <CardContent className="text-clubBackground-foreground">
+                  <CardContent className="text-clubLight-foreground">
                     <p>Division: <span className="font-semibold">{team.division}</span></p>
                     <p>Capitaine: <span className="font-semibold">{team.captain}</span></p>
                   </CardContent>
@@ -51,19 +51,19 @@ const CompetitionsEquipes = () => {
       </section>
 
       <section className="mb-12">
-        <Card className="bg-card shadow-lg">
+        <Card className="bg-clubLight shadow-lg rounded-xl">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubAccent">Profils des Joueurs</CardTitle>
+            <CardTitle className="text-2xl text-clubDark">Profils des Joueurs</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {players.map((player, index) => (
-                <Card key={index} className="bg-clubBackground shadow-md text-center">
+                <Card key={index} className="bg-clubLight shadow-md rounded-lg text-center">
                   <CardContent className="p-4">
                     <img src={player.image} alt={player.name} className="rounded-full mx-auto mb-4 w-24 h-24 object-cover border-2 border-clubPrimary" />
-                    <h3 className="text-lg font-semibold text-clubAccent">{player.name}</h3>
+                    <h3 className="text-lg font-semibold text-clubDark">{player.name}</h3>
                     <p className="text-sm text-muted-foreground mb-2">{player.ranking}</p>
-                    <p className="text-xs text-clubBackground-foreground">{player.equipment}</p>
+                    <p className="text-xs text-clubLight-foreground">{player.equipment}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -73,24 +73,24 @@ const CompetitionsEquipes = () => {
       </section>
 
       <section className="mb-12">
-        <Card className="bg-card shadow-lg">
+        <Card className="bg-clubLight shadow-lg rounded-xl">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubAccent">Calendrier des Matchs</CardTitle>
+            <CardTitle className="text-2xl text-clubDark">Calendrier des Matchs</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
-                <TableRow className="bg-clubAccent text-clubAccent-foreground hover:bg-clubAccent">
-                  <TableHead className="text-clubAccent-foreground">Date</TableHead>
-                  <TableHead className="text-clubAccent-foreground">Adversaire</TableHead>
-                  <TableHead className="text-clubAccent-foreground">Équipe</TableHead>
-                  <TableHead className="text-clubAccent-foreground">Lieu</TableHead>
-                  <TableHead className="text-clubAccent-foreground">Résultat</TableHead>
+                <TableRow className="bg-clubDark text-clubDark-foreground hover:bg-clubDark">
+                  <TableHead className="text-clubDark-foreground">Date</TableHead>
+                  <TableHead className="text-clubDark-foreground">Adversaire</TableHead>
+                  <TableHead className="text-clubDark-foreground">Équipe</TableHead>
+                  <TableHead className="text-clubDark-foreground">Lieu</TableHead>
+                  <TableHead className="text-clubDark-foreground">Résultat</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {matchCalendar.map((match, index) => (
-                  <TableRow key={index} className="text-clubBackground-foreground">
+                  <TableRow key={index} className="text-clubLight-foreground">
                     <TableCell className="font-medium">{match.date}</TableCell>
                     <TableCell>{match.opponent}</TableCell>
                     <TableCell>{match.team}</TableCell>
@@ -105,16 +105,16 @@ const CompetitionsEquipes = () => {
       </section>
 
       <section>
-        <Card className="bg-card shadow-lg">
+        <Card className="bg-clubLight shadow-lg rounded-xl">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubAccent">Résultats et Feuilles de Rencontres</CardTitle>
+            <CardTitle className="text-2xl text-clubDark">Résultats et Feuilles de Rencontres</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="mb-4 text-clubBackground-foreground">
+            <p className="mb-4 text-clubLight-foreground">
               Retrouvez ici les résultats détaillés de toutes nos équipes ainsi que les feuilles de rencontres.
               Les mises à jour sont effectuées après chaque journée de championnat.
             </p>
-            <ul className="list-disc list-inside space-y-2 text-clubBackground-foreground">
+            <ul className="list-disc list-inside space-y-2 text-clubLight-foreground">
               <li><a href="#" className="text-clubPrimary hover:underline">Résultats de la journée 1 (Régionale 1)</a></li>
               <li><a href="#" className="text-clubPrimary hover:underline">Feuille de rencontre Équipe B - Journée 2</a></li>
               <li><a href="#" className="text-clubPrimary hover:underline">Classements généraux</a></li>

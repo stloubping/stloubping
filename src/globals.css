@@ -35,28 +35,25 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Corrected club colors: Black, Red, White */
-    --club-primary: 0 84.2% 60.2%; /* Vibrant Red */
-    --club-primary-foreground: 0 0% 100%; /* White */
-    --club-accent: 0 0% 10%; /* Deep Black */
-    --club-accent-foreground: 0 0% 100%; /* White */
-    --club-background: 0 0% 100%; /* Pure White */
-    --club-background-foreground: 0 0% 10%; /* Black text */
+    /* Club Colors based on provided image */
+    --club-primary: 0 84.2% 60.2%; /* Vibrant Red for accents */
+    --club-primary-foreground: 0 0% 100%; /* White text on red */
+
+    --club-dark: 0 0% 10%; /* Very dark gray/black for header, footer, hero left */
+    --club-dark-foreground: 0 0% 100%; /* White text on dark */
+
+    --club-light: 0 0% 100%; /* Pure white for main content backgrounds */
+    --club-light-foreground: 0 0% 10%; /* Dark text on light */
+
+    --club-section-background: 0 0% 97%; /* Very light gray for specific sections like 'Actualités' */
   }
 
   .dark {
@@ -96,13 +93,17 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Corrected club colors for dark mode (adjusting for visibility) */
+    /* Club Colors for dark mode (adjusting for visibility) */
     --club-primary: 0 84.2% 70.2%; /* Slightly lighter Red for dark mode */
     --club-primary-foreground: 0 0% 100%; /* White */
-    --club-accent: 0 0% 20%; /* Slightly lighter Black for dark mode */
-    --club-accent-foreground: 0 0% 100%; /* White */
-    --club-background: 0 0% 5%; /* Very dark grey background */
-    --club-background-foreground: 0 0% 90%; /* Light grey text */
+
+    --club-dark: 0 0% 15%; /* Slightly lighter dark for dark mode */
+    --club-dark-foreground: 0 0% 100%; /* White */
+
+    --club-light: 0 0% 5%; /* Very dark grey background */
+    --club-light-foreground: 0 0% 90%; /* Light grey text */
+
+    --club-section-background: 0 0% 12%; /* Darker light gray for sections in dark mode */
   }
 }
 

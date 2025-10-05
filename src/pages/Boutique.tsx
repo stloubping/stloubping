@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Link } from 'react-router-dom';
 
 const jerseys = [
   {
@@ -28,18 +29,18 @@ const jerseys = [
 
 const Boutique = () => {
   return (
-    <div className="container mx-auto px-4 py-8 bg-clubBackground text-clubBackground-foreground">
-      <h1 className="text-4xl font-bold text-center mb-12 text-clubAccent">Boutique du Club</h1>
+    <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
+      <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Boutique du Club</h1>
 
       <section className="mb-12 text-center">
-        <Card className="bg-card shadow-lg p-8">
-          <CardTitle className="text-2xl text-clubAccent mb-4">Découvrez nos produits dérivés !</CardTitle>
+        <Card className="bg-clubLight shadow-lg p-8 rounded-xl">
+          <CardTitle className="text-2xl text-clubDark mb-4">Découvrez nos produits dérivés !</CardTitle>
           <CardContent>
-            <p className="mb-6 text-clubBackground-foreground">
+            <p className="mb-6 text-clubLight-foreground">
               Soutenez votre club en portant fièrement nos couleurs !
               Retrouvez une sélection de maillots, textiles et accessoires à l'effigie de notre club.
             </p>
-            <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg">
+            <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
               <a href="https://example.com/boutique" target="_blank" rel="noopener noreferrer">
                 Accéder à la Boutique en Ligne
               </a>
@@ -52,16 +53,16 @@ const Boutique = () => {
       </section>
 
       <section>
-        <h2 className="text-3xl font-bold text-center mb-8 text-clubAccent">Nos Maillots</h2>
+        <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Nos Maillots</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {jerseys.map((jersey) => (
-            <Card key={jersey.id} className="bg-card shadow-md hover:shadow-lg transition-shadow duration-300 text-center">
+            <Card key={jersey.id} className="bg-clubLight shadow-md hover:shadow-lg transition-shadow duration-300 text-center rounded-xl">
               <CardContent className="p-6">
                 <img src={jersey.image} alt={jersey.name} className="w-full h-48 object-cover rounded-md mb-4" />
-                <h3 className="text-xl font-semibold mb-2 text-clubAccent">{jersey.name}</h3>
+                <h3 className="text-xl font-semibold mb-2 text-clubDark">{jersey.name}</h3>
                 <p className="text-sm text-muted-foreground mb-4">{jersey.description}</p>
                 <p className="text-2xl font-bold text-clubPrimary mb-4">{jersey.price}</p>
-                <Button className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground">
+                <Button className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground rounded-md shadow-md">
                   Voir le produit
                 </Button>
               </CardContent>

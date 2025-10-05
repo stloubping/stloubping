@@ -8,15 +8,15 @@ import { Mail, Phone, MapPin } from "lucide-react";
 
 const Contact = () => {
   return (
-    <div className="container mx-auto px-4 py-8 bg-clubBackground text-clubBackground-foreground">
-      <h1 className="text-4xl font-bold text-center mb-12 text-clubAccent">Contact</h1>
+    <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
+      <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Contact</h1>
 
       <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Card className="bg-card shadow-lg">
+        <Card className="bg-clubLight shadow-lg rounded-xl">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubAccent">Nos Coordonnées</CardTitle>
+            <CardTitle className="text-2xl text-clubDark">Nos Coordonnées</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-clubBackground-foreground">
+          <CardContent className="space-y-4 text-clubLight-foreground">
             <div className="flex items-center">
               <MapPin className="mr-3 h-5 w-5 text-clubPrimary" />
               <div>
@@ -45,9 +45,9 @@ const Contact = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-card shadow-lg">
+        <Card className="bg-clubLight shadow-lg rounded-xl">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubAccent">Où Nous Trouver ?</CardTitle>
+            <CardTitle className="text-2xl text-clubDark">Où Nous Trouver ?</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="aspect-w-16 aspect-h-9 w-full">
@@ -71,27 +71,27 @@ const Contact = () => {
       </section>
 
       <section>
-        <Card className="bg-card shadow-lg p-8">
-          <CardTitle className="text-2xl text-clubAccent mb-6 text-center">Formulaire de Contact</CardTitle>
+        <Card className="bg-clubLight shadow-lg p-8 rounded-xl">
+          <CardTitle className="text-2xl text-clubDark mb-6 text-center">Formulaire de Contact</CardTitle>
           <CardContent>
             <form className="space-y-6">
               <div>
-                <Label htmlFor="name" className="text-clubBackground-foreground">Nom Complet</Label>
-                <Input id="name" type="text" placeholder="Votre nom" className="mt-1 bg-input text-clubBackground-foreground" />
+                <Label htmlFor="name" className="text-clubLight-foreground">Nom Complet</Label>
+                <Input id="name" type="text" placeholder="Votre nom" className="mt-1 bg-input text-clubLight-foreground" />
               </div>
               <div>
-                <Label htmlFor="email" className="text-clubBackground-foreground">Adresse Email</Label>
-                <Input id="email" type="email" placeholder="Votre email" className="mt-1 bg-input text-clubBackground-foreground" />
+                <Label htmlFor="email" className="text-clubLight-foreground">Adresse Email</Label>
+                <Input id="email" type="email" placeholder="Votre email" className="mt-1 bg-input text-clubLight-foreground" />
               </div>
               <div>
-                <Label htmlFor="subject" className="text-clubBackground-foreground">Sujet</Label>
-                <Input id="subject" type="text" placeholder="Sujet de votre message" className="mt-1 bg-input text-clubBackground-foreground" />
+                <Label htmlFor="subject" className="text-clubLight-foreground">Sujet</Label>
+                <Input id="subject" type="text" placeholder="Sujet de votre message" className="mt-1 bg-input text-clubLight-foreground" />
               </div>
               <div>
-                <Label htmlFor="message" className="text-clubBackground-foreground">Votre Message</Label>
-                <Textarea id="message" placeholder="Écrivez votre message ici..." rows={5} className="mt-1 bg-input text-clubBackground-foreground" />
+                <Label htmlFor="message" className="text-clubLight-foreground">Votre Message</Label>
+                <Textarea id="message" placeholder="Écrivez votre message ici..." rows={5} className="mt-1 bg-input text-clubLight-foreground" />
               </div>
-              <Button type="submit" className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground py-3 text-lg">
+              <Button type="submit" className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground py-3 text-lg rounded-md shadow-lg">
                 Envoyer le Message
               </Button>
             </form>
