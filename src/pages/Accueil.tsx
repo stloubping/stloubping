@@ -64,7 +64,7 @@ const Accueil = () => {
   return (
     <div className="bg-clubLight text-clubLight-foreground">
       <HeroSection
-        title="Bienvenue au Club de Tennis de Table"
+        title="Bienvenue au St Loub Ping"
         description="Rejoignez notre communauté passionnée de ping-pong. Compétition, loisir ou découverte, il y a une place pour vous !"
         buttonText="S'inscrire"
         buttonLink="/adhesions"

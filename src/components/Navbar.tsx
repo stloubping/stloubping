@@ -40,8 +40,8 @@ const Navbar = () => {
     <header className="sticky top-0 z-50 w-full bg-clubDark text-clubDark-foreground shadow-sm">
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         <Link to="/" className="flex items-center gap-2 text-lg font-semibold md:text-base text-clubPrimary">
-          <img src="/logo.jpg" alt="TT Club Logo" className="h-8 w-8 mr-2" />
-          <span>TT Club</span>
+          <img src="/logo.jpg" alt="St Loub Ping Logo" className="h-8 w-8 mr-2" />
+          <span>St Loub Ping</span>
         </Link>
         {isMobile ? (
           <Sheet>
