@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">glowing-sloth-bounce</string>
+    <string name="title_activity_main">glowing-sloth-bounce</string>
+    <string name="package_name">com.example.glowingslothbounce</string>
+    <string name="custom_url_scheme">com.example.glowingslothbounce</string>
+</resources>
