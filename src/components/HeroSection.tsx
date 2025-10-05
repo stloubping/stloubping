@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 interface HeroSectionProps {
   title: string;
   description: string;
-  buttonText: string;
-  buttonLink: string;
+  buttonText?: string; // Made optional
+  buttonLink?: string; // Made optional
   imageUrl: string;
   imageAlt: string;
 }
@@ -30,11 +30,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           <p className="text-lg md:text-xl mb-8 max-w-lg mx-auto lg:mx-0">
             {description}
           </p>
-          <Link to={buttonLink}>
-            <Button className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-6 text-lg rounded-md shadow-lg transition-colors duration-300">
-              {buttonText}
-            </Button>
-          </Link>
+          {buttonText && buttonLink && ( // Only render button if text and link are provided
+            <Link to={buttonLink}>
+              <Button className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-6 text-lg rounded-md shadow-lg transition-colors duration-300">
+                {buttonText}
+              </Button>
+            </Link>
+          )}
         </div>
 
         {/* Right Image Area */}
