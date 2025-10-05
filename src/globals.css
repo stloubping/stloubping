@@ -50,13 +50,13 @@
 
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* New club colors */
-    --club-primary: 210 100% 30%; /* Deep blue */
+    /* Corrected club colors */
+    --club-primary: 210 100% 20%; /* Dark Navy Blue */
     --club-primary-foreground: 0 0% 100%; /* White */
-    --club-accent: 210 100% 95%; /* Light blue */
-    --club-accent-foreground: 210 100% 30%; /* Dark blue */
-    --club-background: 210 20% 98%; /* Light grey */
-    --club-background-foreground: 210 10% 20%; /* Dark grey */
+    --club-accent: 211 100% 50%; /* Brighter Blue */
+    --club-accent-foreground: 0 0% 100%; /* White */
+    --club-background: 210 10% 98%; /* Very Light Grey */
+    --club-background-foreground: 210 10% 15%; /* Dark grey text */
   }
 
   .dark {
@@ -96,13 +96,13 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* New club colors for dark mode */
-    --club-primary: 210 100% 50%; /* Slightly lighter blue for dark mode */
+    /* Corrected club colors for dark mode (adjusting for visibility) */
+    --club-primary: 210 100% 30%; /* Slightly lighter dark blue for dark mode */
     --club-primary-foreground: 0 0% 100%; /* White */
-    --club-accent: 210 100% 15%; /* Darker light blue for dark mode */
-    --club-accent-foreground: 210 100% 95%; /* Light blue */
+    --club-accent: 211 100% 60%; /* Slightly lighter bright blue for dark mode */
+    --club-accent-foreground: 0 0% 100%; /* White */
     --club-background: 210 10% 10%; /* Dark grey background */
-    --club-background-foreground: 210 20% 98%; /* Light grey text */
+    --club-background-foreground: 210 10% 90%; /* Light grey text */
   }
 }
 
