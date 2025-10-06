@@ -22,7 +22,7 @@ const newsItems = [
     title: "Nouveaux horaires d'entraînement pour les jeunes",
     date: "10 Septembre 2024",
     description: "Découvrez les nouvelles sessions dédiées aux jeunes talents du club.",
-    image: "https://i.imgur.com/6pYZWST.jpeg",
+    image: "https://i.imgur.com/fTvrSZW.jpeg", // Nouvelle image pour la deuxième actualité
   },
   {
     id: 3,
@@ -66,7 +66,7 @@ const Accueil = () => {
       <HeroSection
         title="Bienvenue au St Loub Ping"
         description="Rejoignez notre communauté passionnée de ping-pong. Compétition, loisir ou découverte, il y a une place pour vous !"
-        buttonText="S'inscire"
+        buttonText="S'inscrire"
         buttonLink="/adhesions"
         imageUrl="https://i.imgur.com/F5aCw3I.jpeg" // Updated image URL
         imageAlt="Joueur de tennis de table en action"
