@@ -15,7 +15,7 @@ const newsItems = [
     title: "Victoire éclatante de notre équipe A !",
     date: "15 Septembre 2024",
     description: "L'équipe première a dominé ses adversaires lors du dernier championnat régional.",
-    image: "https://i.imgur.com/cJ6kfTc.jpeg",
+    image: "https://i.imgur.com/faVe3sl.jpeg", // Nouvelle image pour la première actualité
   },
   {
     id: 2,
@@ -66,7 +66,7 @@ const Accueil = () => {
       <HeroSection
         title="Bienvenue au St Loub Ping"
         description="Rejoignez notre communauté passionnée de ping-pong. Compétition, loisir ou découverte, il y a une place pour vous !"
-        buttonText="S'inscrire"
+        buttonText="S'inscire"
         buttonLink="/adhesions"
         imageUrl="https://i.imgur.com/F5aCw3I.jpeg" // Updated image URL
         imageAlt="Joueur de tennis de table en action"
