@@ -99,7 +99,7 @@ const Accueil = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {newsItems.map((news) => (
               <Card key={news.id} className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                {/* <img src={news.image} alt={news.title} className="w-full h-48 object-cover" /> */}
+                <img src={news.image} alt={news.title} className="w-full h-48 object-cover" />
                 <CardHeader className="pb-2">
                   <p className="text-sm text-muted-foreground">{news.date}</p>
                   <CardTitle className="text-xl font-semibold text-clubDark">{news.title}</CardTitle>
