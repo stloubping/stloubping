@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 
 const playerImages = [
   "https://i.imgur.com/8aNahbJ.jpeg", // Updated with the new image
-  "https://i.imgur.com/lXqoHkV.jpeg",
-  "https://picsum.photos/id/239/200/300", // Example Picsum image
+  "https://picsum.photos/id/239/200/300", // Now the second image
+  "https://i.imgur.com/lXqoHkV.jpeg", // Now the third image
 ];
 
 const newsItems = [
