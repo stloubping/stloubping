@@ -18,7 +18,7 @@ const newsItems = [
     id: 2,
     image: "https://picsum.photos/800/400?random=2",
     date: "01 Octobre 2024",
-    title: "Succès de notre tournoi annuel",
+    title: "Succès de notre tournoi annuel 2025", // Texte mis à jour ici
     description: "Un grand merci à tous les participants et bénévoles qui ont fait de notre tournoi annuel un événement mémorable. Félicitations aux vainqueurs !",
     link: "/evenements",
   },
