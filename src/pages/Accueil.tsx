@@ -9,7 +9,7 @@ import HeroSection from '@/components/HeroSection';
 const newsItems = [
   {
     id: 1,
-    image: "/images/actualites/FB_IMG_1759672983725.jpg",
+    image: "/images/actualites/photo_2025-10-12_22-03-19_5.jpg", // Chemin de l'image mis à jour ici
     date: "15 Octobre 2024",
     title: "Ouverture des inscriptions pour la nouvelle saison !",
     description: "Ne manquez pas l'occasion de rejoindre notre club pour une saison riche en émotions et en compétitions. Tous les niveaux sont les bienvenus !",
@@ -44,7 +44,7 @@ const Accueil = () => {
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       {/* Hero Section */}
       <HeroSection
-        imageUrl="/images/hero/FB_IMG_1759672880255_hero.jpg" // Chemin de l'image mis à jour ici
+        imageUrl="/images/hero/FB_IMG_1759672880255_hero.jpg"
         imageAlt="Joueurs de tennis de table en action"
         title="Bienvenue au Club de Tennis de Table de Saint-Loubès"
         description="Passion, entraînement et convivialité : rejoignez notre communauté pour progresser et partager l'amour du tennis de table."
