@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import HeroSection from "@/components/HeroSection";
+import TrainingSchedule from "@/components/TrainingSchedule"; // Import the new TrainingSchedule component
 
 const LeClub = () => {
   return (
@@ -133,33 +134,10 @@ const LeClub = () => {
         </section>
 
         <section className="mb-12">
-          <Card className="bg-clubLight shadow-lg rounded-xl">
-            <CardHeader>
-              <CardTitle className="text-2xl text-clubDark">Horaires et Tarifs</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <h3 className="text-xl font-semibold mb-2 text-clubDark">Horaires d'entraînement (Saison 2024-2025) :</h3>
-              <p className="mb-4 text-clubLight-foreground">
-                Nous proposons 10 créneaux d'entraînements dirigés et 2 créneaux d'entraînement libres. Un entraîneur est présent 1h par semaine toute l'année.
-              </p>
-              <ul className="list-disc list-inside mb-6 text-clubLight-foreground">
-                <li>Lundi : 18h00 - 20h00 (Adultes Loisir)</li>
-                <li>Mardi : 17h30 - 19h00 (Jeunes - Encadré) / 19h00 - 21h00 (Adultes Compétition)</li>
-                <li>Mercredi : 14h00 - 16h00 (École de Tennis de Table - 6-12 ans)</li>
-                <li>Jeudi : 18h30 - 20h30 (Adultes Tous Niveaux - Encadré)</li>
-                <li>Vendredi : 19h00 - 22h00 (Jeu Libre - Ouvert à tous les adhérents)</li>
-              </ul>
-              <Separator className="my-6 bg-clubPrimary" />
-              <h3 className="text-xl font-semibold mb-2 text-clubDark">Tarifs des adhésions (Saison 2024-2025) :</h3>
-              <ul className="list-disc list-inside text-clubLight-foreground">
-                <li>Licence Loisir : 100€ / an (Accès jeu libre et entraînements loisir)</li>
-                <li>Licence Compétition : 150€ / an (Accès complet, championnats et tournois)</li>
-                <li>Licence Jeune (-18 ans) : 80€ / an (Accès entraînements jeunes et jeu libre)</li>
-                <li>Option Coaching Personnalisé : +50€ / trimestre (Sur demande et disponibilité)</li>
-                <li>Carte 10 séances (non-adhérents) : 40€</li>
-              </ul>
-            </CardContent>
-          </Card>
+          <TrainingSchedule /> {/* New TrainingSchedule component */}
+          <p className="mt-4 text-sm text-muted-foreground text-center">
+            Les horaires et tarifs sont susceptibles d'être ajustés en début de saison.
+          </p>
         </section>
 
         <section className="mb-12">
