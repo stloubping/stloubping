@@ -51,8 +51,8 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4 text-clubPrimary">Contact</h3>
             <ul className="space-y-2 text-sm text-clubDark-foreground/80">
               <li className="flex items-center justify-center md:justify-start"><MapPin size={16} className="mr-2 text-clubPrimary" /> 123 Rue du Sport, 75000 Paris</li>
-              <li className="flex items-center justify-center md:justify-start"><Mail size={16} className="mr-2 text-clubPrimary" /> contact@ttclub.fr</li>
-              <li className="flex items-center justify-center md:justify-start"><Phone size={16} className="mr-2 text-clubPrimary" /> 01 23 45 67 89</li>
+              <li className="flex items-center justify-center md:justify-start"><Mail size={16} className="mr-2 text-clubPrimary" /> <span className="font-semibold">saintloubping@laposte.net</span></li>
+              <li className="flex items-center justify-center md:justify-start"><Phone size={16} className="mr-2 text-clubPrimary" /> <span className="font-semibold">07 62 27 56 96</span></li>
             </ul>
           </div>
         </div>

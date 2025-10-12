@@ -29,14 +29,14 @@ const Contact = () => {
               <Phone className="mr-3 h-5 w-5 text-clubPrimary" />
               <div>
                 <p className="font-semibold">Téléphone :</p>
-                <p>+33 1 23 45 67 89</p>
+                <p><span className="font-semibold">07 62 27 56 96</span></p>
               </div>
             </div>
             <div className="flex items-center">
               <Mail className="mr-3 h-5 w-5 text-clubPrimary" />
               <div>
                 <p className="font-semibold">Email :</p>
-                <p>contact@clubtt.fr</p>
+                <p><span className="font-semibold">saintloubping@laposte.net</span></p>
               </div>
             </div>
             <p className="text-sm text-muted-foreground">
