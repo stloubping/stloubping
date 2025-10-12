@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 const newsItems = [
   {
     id: 1,
-    image: "/images/actualites/photo_2025-10-12_22-03-19 (5).jpg", // Nouvelle image ici
+    image: "/images/actualites/photo_2025-10-12_22-03-19 (5).jpg",
     date: "15 Octobre 2024",
     title: "Ouverture des inscriptions pour la nouvelle saison !",
     description: "Ne manquez pas l'occasion de rejoindre notre club pour une saison riche en émotions et en compétitions. Tous les niveaux sont les bienvenus !",
@@ -44,7 +44,7 @@ const Accueil = () => {
       {/* Hero Section */}
       <section className="relative bg-clubDark text-clubDark-foreground rounded-xl shadow-lg mb-12 overflow-hidden">
         <img
-          src="https://picsum.photos/1600/600?random=1"
+          src="/images/hero/FB_IMG_1759672880255.jpg" // Nouvelle image ici
           alt="Joueurs de tennis de table en action"
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
