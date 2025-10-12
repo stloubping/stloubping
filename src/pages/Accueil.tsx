@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, Users, Trophy, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import HeroSection from '@/components/HeroSection'; // Import du nouveau composant
+import HeroSection from '@/components/HeroSection';
 
 const newsItems = [
   {
@@ -44,7 +44,7 @@ const Accueil = () => {
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       {/* Hero Section */}
       <HeroSection
-        imageUrl="/images/hero/FB_IMG_1759672983725_hero.jpg"
+        imageUrl="/images/hero/FB_IMG_1759672880255_hero.jpg" // Chemin de l'image mis à jour ici
         imageAlt="Joueurs de tennis de table en action"
         title="Bienvenue au Club de Tennis de Table de Saint-Loubès"
         description="Passion, entraînement et convivialité : rejoignez notre communauté pour progresser et partager l'amour du tennis de table."
