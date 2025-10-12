@@ -25,7 +25,7 @@ const newsItems = [
   },
   {
     id: 3,
-    image: "/images/actualites/FB_IMG_1759672898128_news3.jpg", // Chemin de l'image mis à jour ici
+    image: "/images/actualites/FB_IMG_1759672898128_news3.jpg", // Chemin de l'image confirmé ici
     date: "20 Septembre 2024",
     title: "Nos jeunes talents brillent en compétition régionale",
     description: "Fiers de nos jeunes joueurs qui ont montré de belles performances lors des championnats régionaux. L'avenir du club est assuré !",
