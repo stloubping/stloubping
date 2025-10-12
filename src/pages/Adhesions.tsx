@@ -46,7 +46,7 @@ const Adhesions = () => {
                   <li>Participation aux entraînements loisir</li>
                   <li>Assurance FFTT incluse</li>
                 </ul>
-                <p className="text-2xl font-bold text-clubPrimary">100€ / an</p>
+                <p className="text-2xl font-bold text-clubPrimary">130€ / an</p>
               </div>
               <div className="bg-clubSection p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-semibold mb-2 text-clubDark">Licence Compétition</h3>
