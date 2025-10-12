@@ -12,10 +12,10 @@ const playerImages = [
 const newsItems = [
   {
     id: 1,
-    title: "Victoire éclatante de notre équipe A !",
-    date: "15 Septembre 2024",
-    description: "L'équipe première a dominé ses adversaires lors du dernier championnat régional.",
-    image: "https://i.imgur.com/faVe3sl.jpeg", // Nouvelle image pour la première actualité
+    title: "Nouvelles du Club : Une Saison Prometteuse !",
+    date: "20 Septembre 2024",
+    description: "Découvrez les dernières informations et les événements à venir pour cette nouvelle saison pleine de défis et de convivialité.",
+    image: "DYAD_ATTACHMENT_0", // Nouvelle image pour la première actualité
   },
   {
     id: 2,
