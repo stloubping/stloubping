@@ -25,25 +25,25 @@ const matchCalendar = [
 const recentMatchResults = [
   {
     id: 1,
-    image: "DYAD_ATTACHMENT_1",
+    image: "https://picsum.photos/800/600?random=21", // Placeholder for DYAD_ATTACHMENT_1
     alt: "Équipe St Loub Ping 4",
     result: "Égalité 7-7 contre C STE HELENE 4",
   },
   {
     id: 2,
-    image: "DYAD_ATTACHMENT_2",
+    image: "https://picsum.photos/800/600?random=22", // Placeholder for DYAD_ATTACHMENT_2
     alt: "Équipe St Loub Ping 2",
     result: "Défaite 11-3 contre US CENON 5",
   },
   {
     id: 3,
-    image: "DYAD_ATTACHMENT_3",
+    image: "https://picsum.photos/800/600?random=23", // Placeholder for DYAD_ATTACHMENT_3
     alt: "Équipe St Loub Ping 5",
     result: "Défaite 11-3 contre LE HAILLAN TT 7",
   },
   {
     id: 4,
-    image: "DYAD_ATTACHMENT_4",
+    image: "https://picsum.photos/800/600?random=24", // Placeholder for DYAD_ATTACHMENT_4
     alt: "Équipe St Loub Ping 6",
     result: "Victoire 12-2 contre TT FARGUIAIS 4",
   },
@@ -164,7 +164,7 @@ const CompetitionsEquipes = () => {
               Retrouvez ici les résultats détaillés de toutes nos équipes ainsi que les feuilles de rencontres.
               Les mises à jour sont effectuées après chaque journée de championnat.
             </p>
-            <img src="DYAD_ATTACHMENT_0" alt="Jeunes joueurs en entraînement" className="w-full h-auto object-cover rounded-lg mb-6 shadow-md" />
+            <img src="https://picsum.photos/800/600?random=20" alt="Jeunes joueurs en entraînement" className="w-full h-auto object-cover rounded-lg mb-6 shadow-md" /> {/* Placeholder for DYAD_ATTACHMENT_0 */}
             <ul className="list-disc list-inside space-y-2 text-clubLight-foreground">
               <li><a href="#" className="text-clubPrimary hover:underline">Résultats de la journée 1 (Régionale 1)</a></li>
               <li><a href="#" className="text-clubPrimary hover:underline">Feuille de rencontre Équipe B - Journée 2</a></li>
