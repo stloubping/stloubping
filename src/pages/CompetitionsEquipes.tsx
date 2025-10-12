@@ -12,7 +12,7 @@ const teams = [
 const players = [
   { name: "Félix Lebrun", ranking: "N°1 Français", equipment: "Bois : Tibhar Samsonov Carbon, Revêtement : Tibhar Evolution MX-P", image: "https://picsum.photos/150/150?random=6" },
   { name: "Alexis Lebrun", ranking: "N°2 Français", equipment: "Bois : Butterfly Viscaria, Revêtement : Butterfly Dignics 09C", image: "https://picsum.photos/150/150?random=7" },
-  { name: "Simon Gauzy", ranking: "N°3 Français", equipment: "Bois : Cornilleau Gatien Absolum, Revêtement : Michelin Pilot Power", image: "https://picsum.photos/150/150?random=8" },
+  { name: "Simon Gauzy", ranking: "N°3 Français", equipment: "Bois : Cornilleau Gatien Absolum, Revêtement : Cornilleau Target Pro GT-H47", image: "https://picsum.photos/150/150?random=8" },
   { name: "Prithika Pavade", ranking: "N°1 Féminine", equipment: "Bois : Stiga Carbonado 145, Revêtement : Stiga DNA Platinum XH", image: "https://picsum.photos/150/150?random=9" },
 ];
 
@@ -25,25 +25,25 @@ const matchCalendar = [
 const recentMatchResults = [
   {
     id: 1,
-    image: "https://picsum.photos/800/600?random=21", // Placeholder for DYAD_ATTACHMENT_1
+    image: "/images/competitions/photo_2025-10-12_22-03-19 (4).jpg",
     alt: "Équipe St Loub Ping 4",
     result: "Égalité 7-7 contre C STE HELENE 4",
   },
   {
     id: 2,
-    image: "https://picsum.photos/800/600?random=22", // Placeholder for DYAD_ATTACHMENT_2
+    image: "/images/competitions/photo_2025-10-12_22-03-19 (3).jpg",
     alt: "Équipe St Loub Ping 2",
     result: "Défaite 11-3 contre US CENON 5",
   },
   {
     id: 3,
-    image: "https://picsum.photos/800/600?random=23", // Placeholder for DYAD_ATTACHMENT_3
+    image: "/images/competitions/photo_2025-10-12_22-03-19 (2).jpg",
     alt: "Équipe St Loub Ping 5",
     result: "Défaite 11-3 contre LE HAILLAN TT 7",
   },
   {
     id: 4,
-    image: "https://picsum.photos/800/600?random=24", // Placeholder for DYAD_ATTACHMENT_4
+    image: "/images/competitions/photo_2025-10-12_22-03-19.jpg",
     alt: "Équipe St Loub Ping 6",
     result: "Victoire 12-2 contre TT FARGUIAIS 4",
   },
@@ -164,7 +164,7 @@ const CompetitionsEquipes = () => {
               Retrouvez ici les résultats détaillés de toutes nos équipes ainsi que les feuilles de rencontres.
               Les mises à jour sont effectuées après chaque journée de championnat.
             </p>
-            <img src="https://picsum.photos/800/600?random=20" alt="Jeunes joueurs en entraînement" className="w-full h-auto object-cover rounded-lg mb-6 shadow-md" /> {/* Placeholder for DYAD_ATTACHMENT_0 */}
+            <img src="/images/competitions/photo_2025-10-12_22-03-19 (5).jpg" alt="Jeunes joueurs en entraînement" className="w-full h-auto object-cover rounded-lg mb-6 shadow-md" />
             <ul className="list-disc list-inside space-y-2 text-clubLight-foreground">
               <li><a href="#" className="text-clubPrimary hover:underline">Résultats de la journée 1 (Régionale 1)</a></li>
               <li><a href="#" className="text-clubPrimary hover:underline">Feuille de rencontre Équipe B - Journée 2</a></li>
