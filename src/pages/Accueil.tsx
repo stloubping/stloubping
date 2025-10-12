@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, Users, Trophy, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import HeroSection from '@/components/HeroSection'; // Import du nouveau composant
 
 const newsItems = [
   {
@@ -24,7 +25,7 @@ const newsItems = [
   },
   {
     id: 3,
-    image: "/images/actualites/FB_IMG_1759672983725_talents.jpg", // Chemin de l'image mis à jour ici
+    image: "/images/actualites/FB_IMG_1759672983725_talents.jpg",
     date: "20 Septembre 2024",
     title: "Nos jeunes talents brillent en compétition régionale",
     description: "Fiers de nos jeunes joueurs qui ont montré de belles performances lors des championnats régionaux. L'avenir du club est assuré !",
@@ -42,27 +43,12 @@ const Accueil = () => {
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       {/* Hero Section */}
-      <section className="relative bg-clubDark text-clubDark-foreground rounded-xl shadow-lg mb-12 overflow-hidden">
-        <img
-          src="/images/hero/FB_IMG_1759672880255.jpg"
-          alt="Joueurs de tennis de table en action"
-          className="absolute inset-0 w-full h-full object-cover opacity-40"
-        />
-        <div className="relative z-10 flex flex-col items-center justify-center text-center py-20 px-6">
-          <h1 className="text-5xl font-extrabold mb-4 leading-tight">Bienvenue au Club de Tennis de Table de Saint-Loubès</h1>
-          <p className="text-xl mb-8 max-w-2xl">
-            Passion, entraînement et convivialité : rejoignez notre communauté pour progresser et partager l'amour du tennis de table.
-          </p>
-          <div className="space-x-4">
-            <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-white text-lg px-8 py-6 rounded-full shadow-md">
-              <Link to="/inscriptions">Nous Rejoindre</Link>
-            </Button>
-            <Button asChild variant="outline" className="bg-transparent border-2 border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white text-lg px-8 py-6 rounded-full shadow-md">
-              <Link to="/contact">Contact</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      <HeroSection
+        imageUrl="/images/hero/FB_IMG_1759672983725_hero.jpg"
+        imageAlt="Joueurs de tennis de table en action"
+        title="Bienvenue au Club de Tennis de Table de Saint-Loubès"
+        description="Passion, entraînement et convivialité : rejoignez notre communauté pour progresser et partager l'amour du tennis de table."
+      />
 
       {/* Actualités Section */}
       <section className="mb-12">

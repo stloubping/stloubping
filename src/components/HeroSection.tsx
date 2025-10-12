@@ -3,51 +3,30 @@ import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 
 interface HeroSectionProps {
-  title: string;
-  description: string;
-  buttonText?: string; // Made optional
-  buttonLink?: string; // Made optional
   imageUrl: string;
   imageAlt: string;
+  title: string;
+  description: string;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({
-  title,
-  description,
-  buttonText,
-  buttonLink,
-  imageUrl,
-  imageAlt,
-}) => {
+const HeroSection: React.FC<HeroSectionProps> = ({ imageUrl, imageAlt, title, description }) => {
   return (
-    <section className="relative w-full bg-clubDark text-clubDark-foreground">
-      <div className="container mx-auto flex flex-col lg:flex-row items-center justify-between py-12 md:py-24 lg:py-32 gap-8">
-        {/* Left Content Area */}
-        <div className="flex-1 text-center lg:text-left p-4 lg:p-0">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-            {title}
-          </h1>
-          <p className="text-lg md:text-xl mb-8 max-w-lg mx-auto lg:mx-0">
-            {description}
-          </p>
-          {buttonText && buttonLink && ( // Only render button if text and link are provided
-            <Link to={buttonLink}>
-              <Button className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-6 text-lg rounded-md shadow-lg transition-colors duration-300">
-                {buttonText}
-              </Button>
-            </Link>
-          )}
-        </div>
-
-        {/* Right Image Area */}
-        <div className="flex-1 flex justify-center lg:justify-end p-4 lg:p-0">
-          <div className="w-full max-w-md lg:max-w-lg xl:max-w-xl aspect-square rounded-xl overflow-hidden shadow-2xl">
-            <img
-              src={imageUrl}
-              alt={imageAlt}
-              className="w-full h-full object-cover"
-            />
-          </div>
+    <section className="relative bg-clubDark text-clubDark-foreground rounded-xl shadow-lg mb-12 overflow-hidden">
+      <img
+        src={imageUrl}
+        alt={imageAlt}
+        className="absolute inset-0 w-full h-full object-cover opacity-40"
+      />
+      <div className="relative z-10 flex flex-col items-center justify-center text-center py-20 px-6">
+        <h1 className="text-5xl font-extrabold mb-4 leading-tight">{title}</h1>
+        <p className="text-xl mb-8 max-w-2xl">{description}</p>
+        <div className="space-x-4">
+          <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-white text-lg px-8 py-6 rounded-full shadow-md">
+            <Link to="/inscriptions">Nous Rejoindre</Link>
+          </Button>
+          <Button asChild variant="outline" className="bg-transparent border-2 border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white text-lg px-8 py-6 rounded-full shadow-md">
+            <Link to="/contact">Contact</Link>
+          </Button>
         </div>
       </div>
     </section>
