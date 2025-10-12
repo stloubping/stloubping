@@ -16,9 +16,9 @@ const newsItems = [
   },
   {
     id: 2,
-    image: "https://picsum.photos/800/400?random=2",
+    image: "/images/actualites/FB_IMG_1759672948691.jpg", // Chemin de l'image mis à jour ici
     date: "01 Octobre 2024",
-    title: "Succès de notre tournoi annuel 2025", // Texte mis à jour ici
+    title: "Succès de notre tournoi annuel 2025",
     description: "Un grand merci à tous les participants et bénévoles qui ont fait de notre tournoi annuel un événement mémorable. Félicitations aux vainqueurs !",
     link: "/evenements",
   },
@@ -44,7 +44,7 @@ const Accueil = () => {
       {/* Hero Section */}
       <section className="relative bg-clubDark text-clubDark-foreground rounded-xl shadow-lg mb-12 overflow-hidden">
         <img
-          src="/images/hero/FB_IMG_1759672880255.jpg" // Nouvelle image ici
+          src="/images/hero/FB_IMG_1759672880255.jpg"
           alt="Joueurs de tennis de table en action"
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
