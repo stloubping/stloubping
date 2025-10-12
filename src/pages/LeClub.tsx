@@ -174,39 +174,75 @@ const LeClub = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img src="https://picsum.photos/150/150?random=102" alt="Président" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
-                  <h4 className="font-semibold text-lg text-clubDark">Jean Dupont</h4>
+                  <h4 className="font-semibold text-lg text-clubDark">Philippe Roux</h4>
                   <p className="text-sm text-muted-foreground">Président</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Visionnaire et pilier du club, il assure la direction générale.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=103" alt="Secrétaire" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
-                  <h4 className="font-semibold text-lg text-clubDark">Marie Curie</h4>
-                  <p className="text-sm text-muted-foreground">Secrétaire Générale</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Gère l'administration et la communication interne.</p>
+                  <img src="https://picsum.photos/150/150?random=103" alt="Vice-Président" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <h4 className="font-semibold text-lg text-clubDark">Yves Mounde</h4>
+                  <p className="text-sm text-muted-foreground">Vice-Président</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Soutient le président et participe à la gestion du club.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img src="https://picsum.photos/150/150?random=104" alt="Trésorier" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
-                  <h4 className="font-semibold text-lg text-clubDark">Pierre Martin</h4>
+                  <h4 className="font-semibold text-lg text-clubDark">Patrice Gigaud</h4>
                   <p className="text-sm text-muted-foreground">Trésorier</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Responsable des finances et de la gestion budgétaire.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=105" alt="Responsable Sportif" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
-                  <h4 className="font-semibold text-lg text-clubDark">Sophie Dubois</h4>
-                  <p className="text-sm text-muted-foreground">Responsable Sportive</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Organise les entraînements et les compétitions.</p>
+                  <img src="https://picsum.photos/150/150?random=105" alt="Trésorier adjoint" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <h4 className="font-semibold text-lg text-clubDark">Sandra Thuault</h4>
+                  <p className="text-sm text-muted-foreground">Trésorier adjoint</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Assiste le trésorier dans ses fonctions.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=106" alt="Responsable Jeunes" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
-                  <h4 className="font-semibold text-lg text-clubDark">Lucas Bernard</h4>
-                  <p className="text-sm text-muted-foreground">Responsable Jeunes</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Dédié à l'encadrement et au développement des jeunes talents.</p>
+                  <img src="https://picsum.photos/150/150?random=106" alt="Secrétaire" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <h4 className="font-semibold text-lg text-clubDark">Olivier Goux</h4>
+                  <p className="text-sm text-muted-foreground">Secrétaire</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Gère l'administration et la communication interne.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=107" alt="Bénévole" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
-                  <h4 className="font-semibold text-lg text-clubDark">Chloé Petit</h4>
-                  <p className="text-sm text-muted-foreground">Membre Actif</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Soutient l'équipe dans diverses tâches et événements.</p>
+                  <img src="https://picsum.photos/150/150?random=107" alt="Secrétaire adjoint" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <h4 className="font-semibold text-lg text-clubDark">Jérémie Monteignies</h4>
+                  <p className="text-sm text-muted-foreground">Secrétaire adjoint</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Assiste le secrétaire dans ses tâches.</p>
+                </div>
+                <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
+                  <img src="https://picsum.photos/150/150?random=108" alt="Membre du bureau" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <h4 className="font-semibold text-lg text-clubDark">Dominique</h4>
+                  <p className="text-sm text-muted-foreground">Membre du bureau</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
+                </div>
+                <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
+                  <img src="https://picsum.photos/150/150?random=109" alt="Membre du bureau" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <h4 className="font-semibold text-lg text-clubDark">Wesley</h4>
+                  <p className="text-sm text-muted-foreground">Membre du bureau</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
+                </div>
+                <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
+                  <img src="https://picsum.photos/150/150?random=110" alt="Membre du bureau" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <h4 className="font-semibold text-lg text-clubDark">Vincent</h4>
+                  <p className="text-sm text-muted-foreground">Membre du bureau</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
+                </div>
+                <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
+                  <img src="https://picsum.photos/150/150?random=111" alt="Membre du bureau" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <h4 className="font-semibold text-lg text-clubDark">Michel</h4>
+                  <p className="text-sm text-muted-foreground">Membre du bureau</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
+                </div>
+                <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
+                  <img src="https://picsum.photos/150/150?random=112" alt="Membre du bureau" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <h4 className="font-semibold text-lg text-clubDark">Yann</h4>
+                  <p className="text-sm text-muted-foreground">Membre du bureau</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
+                </div>
+                <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
+                  <img src="https://picsum.photos/150/150?random=113" alt="Membre du bureau" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <h4 className="font-semibold text-lg text-clubDark">Antoine</h4>
+                  <p className="text-sm text-muted-foreground">Membre du bureau</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
                 </div>
               </div>
             </CardContent>
