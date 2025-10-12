@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 const newsItems = [
   {
     id: 1,
-    image: "/images/actualites/FB_IMG_1759672983725.jpg", // Chemin de l'image mis à jour ici
+    image: "/images/actualites/FB_IMG_1759672983725.jpg",
     date: "15 Octobre 2024",
     title: "Ouverture des inscriptions pour la nouvelle saison !",
     description: "Ne manquez pas l'occasion de rejoindre notre club pour une saison riche en émotions et en compétitions. Tous les niveaux sont les bienvenus !",
@@ -24,7 +24,7 @@ const newsItems = [
   },
   {
     id: 3,
-    image: "https://picsum.photos/800/400?random=3",
+    image: "/images/actualites/FB_IMG_1759672983725_talents.jpg", // Chemin de l'image mis à jour ici
     date: "20 Septembre 2024",
     title: "Nos jeunes talents brillent en compétition régionale",
     description: "Fiers de nos jeunes joueurs qui ont montré de belles performances lors des championnats régionaux. L'avenir du club est assuré !",
