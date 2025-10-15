@@ -9,7 +9,8 @@ import HeroSection from '@/components/HeroSection';
 const newsItems = [
   {
     id: 1,
-    image: "/images/actualites/FB_IMG_1759672898128.jpg",
+    // Temporairement remplacé par une image externe pour le débogage
+    image: "https://picsum.photos/seed/news1/300/200", 
     date: "15 Octobre 2024",
     title: "Ouverture des inscriptions pour la nouvelle saison !",
     description: "Ne manquez pas l'occasion de rejoindre notre club pour une saison riche en émotions et en compétitions. Tous les niveaux sont les bienvenus !",
