@@ -17,7 +17,7 @@ const newsItems = [
   },
   {
     id: 2,
-    image: "/images/actualites/FB_IMG_1759672948691.jpg", // Updated to use the uploaded image
+    image: "/images/actualites/FB_IMG_1759672948691.jpg",
     date: "01 Octobre 2024",
     title: "Succès de notre tournoi annuel 2025",
     description: "Un grand merci à tous les participants et bénévoles qui ont fait de notre tournoi annuel un événement mémorable. Félicitations aux vainqueurs !",
@@ -25,7 +25,7 @@ const newsItems = [
   },
   {
     id: 3,
-    image: "https://picsum.photos/300/200?random=3",
+    image: "/images/actualites/FB_IMG_1759672983725.jpg", // Updated to use the uploaded image
     date: "20 Septembre 2024",
     title: "Nos jeunes talents brillent en compétition régionale",
     description: "Fiers de nos jeunes joueurs qui ont montré de belles performances lors des championnats régionaux. L'avenir du club est assuré !",
