@@ -44,7 +44,7 @@ const Accueil = () => {
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       {/* Hero Section */}
       <HeroSection
-        imageUrl="/images/hero/FB_IMG_1759672983725.jpg" // Updated to use the uploaded image
+        imageUrl="/images/hero/FB_IMG_1759672880255.jpg" // Updated to use the newly uploaded image
         imageAlt="Joueurs de tennis de table en action"
         title="Bienvenue au Club de Tennis de Table de Saint-Loubès"
         description="Passion, entraînement et convivialité : rejoignez notre communauté pour progresser et partager l'amour du tennis de table."
