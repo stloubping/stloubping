@@ -25,7 +25,7 @@ const newsItems = [
   },
   {
     id: 3,
-    image: "/images/actualites/FB_IMG_1759672898128_news3.jpg", // Chemin de l'image confirmé ici
+    image: "/images/actualites/FB_IMG_1759672898128_news3.jpg",
     date: "20 Septembre 2024",
     title: "Nos jeunes talents brillent en compétition régionale",
     description: "Fiers de nos jeunes joueurs qui ont montré de belles performances lors des championnats régionaux. L'avenir du club est assuré !",
@@ -56,7 +56,12 @@ const Accueil = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {newsItems.map((news) => (
             <Card key={news.id} className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
-              <img src={news.image} alt={news.title} className="w-full h-48 object-cover" />
+              {/* Debugging: Log the image source */}
+              {console.log(`Loading image for news item ${news.id}: ${news.image}`)}
+              <img src={news.image} alt={news.title} className="w-full h-48 object-cover" onError={(e) => {
+                console.error(`Failed to load image ${news.image}`, e);
+                e.currentTarget.src = 'https://via.placeholder.com/300x200?text=Image+Non+Trouvée'; // Fallback image
+              }} />
               <CardHeader className="pb-2">
                 <p className="text-sm text-muted-foreground">{news.date}</p>
                 <CardTitle className="text-xl font-semibold text-clubDark">{news.title}</CardTitle>
