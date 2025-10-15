@@ -128,7 +128,7 @@ const LeClub = () => {
                 <li><span className="font-semibold">2 créneaux d'entraînement libres</span>.</li>
                 <li><span className="font-semibold">1 entraîneur à 17h00 / semaine annualisé</span>.</li>
               </ul>
-              <img src="https://picsum.photos/800/400?random=101" alt="Infrastructure du club" className="mt-6 rounded-lg shadow-md w-full object-cover" />
+              <img src="/images/club/FB_IMG_1759672880255.jpg" alt="Infrastructure du club" className="mt-6 rounded-lg shadow-md w-full object-cover" />
             </CardContent>
           </Card>
         </section>
