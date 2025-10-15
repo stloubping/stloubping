@@ -22,7 +22,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ imageUrl, imageAlt, title, de
         <p className="text-xl mb-8 max-w-2xl">{description}</p>
         <div className="space-x-4">
           <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-white text-lg px-8 py-6 rounded-full shadow-md">
-            <Link to="/inscriptions">Nous Rejoindre</Link>
+            <Link to="/adhesions">Nous Rejoindre</Link>
           </Button>
           <Button asChild variant="outline" className="bg-transparent border-2 border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white text-lg px-8 py-6 rounded-full shadow-md">
             <Link to="/contact">Contact</Link>
