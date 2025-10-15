@@ -25,25 +25,25 @@ const matchCalendar = [
 const recentMatchResults = [
   {
     id: 1,
-    image: "/images/competitions/photo_2025-10-12_22-03-19 (4).jpg",
+    image: "https://picsum.photos/400/300?random=match1", // Updated to placeholder
     alt: "Équipe St Loub Ping 4",
     result: "Égalité 7-7 contre C STE HELENE 4",
   },
   {
     id: 2,
-    image: "/images/competitions/photo_2025-10-12_22-03-19 (3).jpg",
+    image: "https://picsum.photos/400/300?random=match2", // Updated to placeholder
     alt: "Équipe St Loub Ping 2",
     result: "Défaite 11-3 contre US CENON 5",
   },
   {
     id: 3,
-    image: "/images/competitions/photo_2025-10-12_22-03-19 (2).jpg",
+    image: "https://picsum.photos/400/300?random=match3", // Updated to placeholder
     alt: "Équipe St Loub Ping 5",
     result: "Défaite 11-3 contre LE HAILLAN TT 7",
   },
   {
     id: 4,
-    image: "/images/competitions/photo_2025-10-12_22-03-19.jpg",
+    image: "https://picsum.photos/400/300?random=match4", // Updated to placeholder
     alt: "Équipe St Loub Ping 6",
     result: "Victoire 12-2 contre TT FARGUIAIS 4",
   },
@@ -164,7 +164,7 @@ const CompetitionsEquipes = () => {
               Retrouvez ici les résultats détaillés de toutes nos équipes ainsi que les feuilles de rencontres.
               Les mises à jour sont effectuées après chaque journée de championnat.
             </p>
-            <img src="/images/competitions/photo_2025-10-12_22-03-19 (5).jpg" alt="Jeunes joueurs en entraînement" className="w-full h-auto object-cover rounded-lg mb-6 shadow-md" />
+            <img src="https://picsum.photos/800/400?random=match_detail" alt="Jeunes joueurs en entraînement" className="w-full h-auto object-cover rounded-lg mb-6 shadow-md" /> {/* Updated to placeholder */}
             <ul className="list-disc list-inside space-y-2 text-clubLight-foreground">
               <li><a href="#" className="text-clubPrimary hover:underline">Résultats de la journée 1 (Régionale 1)</a></li>
               <li><a href="#" className="text-clubPrimary hover:underline">Feuille de rencontre Équipe B - Journée 2</a></li>

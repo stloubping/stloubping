@@ -10,7 +10,7 @@ const LeClub = () => {
       <HeroSection
         title="Le Club"
         description="Découvrez l'histoire, les valeurs, les infrastructures et l'équipe qui font la richesse de notre club de tennis de table."
-        imageUrl="/images/hero/FB_IMG_1759672983725_hero.jpg" // Chemin de l'image mis à jour ici
+        imageUrl="https://picsum.photos/1200/600?random=hero2" // Updated to placeholder
         imageAlt="Vue d'ensemble du club de tennis de table"
       />
 
