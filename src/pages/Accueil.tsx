@@ -9,7 +9,7 @@ import HeroSection from '@/components/HeroSection';
 const newsItems = [
   {
     id: 1,
-    image: "/images/actualites/FB_IMG_1759672898128.jpg", 
+    image: "https://picsum.photos/300/200?random=1", 
     date: "15 Octobre 2024",
     title: "Ouverture des inscriptions pour la nouvelle saison !",
     description: "Ne manquez pas l'occasion de rejoindre notre club pour une saison riche en émotions et en compétitions. Tous les niveaux sont les bienvenus !",
@@ -17,7 +17,7 @@ const newsItems = [
   },
   {
     id: 2,
-    image: "/images/actualites/FB_IMG_1759672892407.jpg",
+    image: "https://picsum.photos/300/200?random=2",
     date: "01 Octobre 2024",
     title: "Succès de notre tournoi annuel 2025",
     description: "Un grand merci à tous les participants et bénévoles qui ont fait de notre tournoi annuel un événement mémorable. Félicitations aux vainqueurs !",
@@ -25,7 +25,7 @@ const newsItems = [
   },
   {
     id: 3,
-    image: "/images/actualites/FB_IMG_1759672898128_news3.jpg",
+    image: "https://picsum.photos/300/200?random=3",
     date: "20 Septembre 2024",
     title: "Nos jeunes talents brillent en compétition régionale",
     description: "Fiers de nos jeunes joueurs qui ont montré de belles performances lors des championnats régionaux. L'avenir du club est assuré !",
@@ -57,7 +57,6 @@ const Accueil = () => {
           {newsItems.map((news) => (
             <Card key={news.id} className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
               <img src={news.image} alt={news.title} className="w-full h-48 object-cover" onError={(e) => {
-                console.error(`Failed to load image ${news.image}`, e);
                 e.currentTarget.src = 'https://via.placeholder.com/300x200?text=Image+Non+Trouvée'; // Fallback image
               }} />
               <CardHeader className="pb-2">
