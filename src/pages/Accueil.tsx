@@ -9,7 +9,7 @@ import HeroSection from '@/components/HeroSection';
 const newsItems = [
   {
     id: 1,
-    image: "/images/actualites/FB_IMG_1759672898128.jpg", // Updated to use the uploaded image
+    image: "/images/actualites/FB_IMG_1759672898128.jpg",
     date: "15 Octobre 2024",
     title: "Ouverture des inscriptions pour la nouvelle saison !",
     description: "Ne manquez pas l'occasion de rejoindre notre club pour une saison riche en émotions et en compétitions. Tous les niveaux sont les bienvenus !",
@@ -17,7 +17,7 @@ const newsItems = [
   },
   {
     id: 2,
-    image: "https://picsum.photos/300/200?random=2",
+    image: "/images/actualites/FB_IMG_1759672948691.jpg", // Updated to use the uploaded image
     date: "01 Octobre 2024",
     title: "Succès de notre tournoi annuel 2025",
     description: "Un grand merci à tous les participants et bénévoles qui ont fait de notre tournoi annuel un événement mémorable. Félicitations aux vainqueurs !",
