@@ -21,8 +21,8 @@ const Contact = () => {
               <MapPin className="mr-3 h-5 w-5 text-clubPrimary" />
               <div>
                 <p className="font-semibold">Adresse du Club :</p>
-                <p>123 Rue du Service</p>
-                <p>69000 Ville, France</p>
+                <p>1 Rue du Stade</p>
+                <p>33450 Saint-Loubès, France</p>
               </div>
             </div>
             <div className="flex items-center">
@@ -52,7 +52,7 @@ const Contact = () => {
           <CardContent>
             <div className="aspect-w-16 aspect-h-9 w-full">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9916253000003!2d2.29229261567499!3d48.85837007928746!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e2964e34e2d%3A0x8ddb8076a4ce876b!2sTour%20Eiffel!5e0!3m2!1sfr!2sfr!4v1678912345678!5m2!1sfr!2sfr"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2824.0000000000005!2d-0.4000000000000000!3d44.92000000000000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd5528e0000000000%3A0x0000000000000000!2s1%20Rue%20du%20Stade%2C%2033450%20Saint-Loub%C3%A8s%2C%20France!5e0!3m2!1sfr!2sfr!4v1700000000000!5m2!1sfr!2sfr"
                 width="100%"
                 height="300"
                 style={{ border: 0 }}
