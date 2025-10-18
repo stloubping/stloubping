@@ -17,11 +17,11 @@ const newsItems = [
   },
   {
     id: 2,
-    image: "/images/actualites/FB_IMG_1759672948691.jpg",
-    date: "01 Octobre 2024",
-    title: "Succès de notre tournoi annuel 2025",
-    description: "Un grand merci à tous les participants et bénévoles qui ont fait de notre tournoi annuel un événement mémorable. Félicitations aux vainqueurs !",
-    link: "/evenements",
+    image: "/images/actualites/tournoi-2026-affiche.png", // Nouvelle image
+    date: "11 Avril 2026", // Nouvelle date
+    title: "Tournoi Régional Saint-Loub'Ping 2026 : Inscrivez-vous !", // Nouveau titre
+    description: "Préparez vos raquettes ! Le Tournoi Régional Saint-Loub'Ping revient le 11 avril 2026. Découvrez les tableaux et inscrivez-vous dès maintenant !", // Nouvelle description
+    link: "/tournoi-inscription", // Nouveau lien vers la page d'inscription du tournoi
   },
   {
     id: 3,
