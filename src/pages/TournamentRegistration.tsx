@@ -173,7 +173,7 @@ const TournamentRegistration = () => {
               className="h-48 mx-auto mb-4 object-contain cursor-pointer hover:opacity-80 transition-opacity duration-200"
             />
           </DialogTrigger>
-          <DialogContent className="max-w-4xl p-0 border-none bg-transparent">
+          <DialogContent className="max-w-6xl p-0 border-none bg-transparent"> {/* Changed max-w-4xl to max-w-6xl */}
             <img
               src="/images/actualites/tournoi-2026-affiche.png"
               alt="Affiche Tournoi Régional Saint-Loub'Ping 2026"
