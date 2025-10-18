@@ -12,6 +12,7 @@ const navItems = [
   { name: "Adhésions", path: "/adhesions" },
   { name: "Boutique", path: "/boutique" },
   { name: "Partenaires", path: "/partenaires" },
+  { name: "Tournoi", path: "/tournoi-inscription" }, // Nouveau lien ajouté
   { name: "Contact", path: "/contact" },
 ];
 
