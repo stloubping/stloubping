@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"; // Import Dialog components
 import { Calendar, MapPin, DollarSign, Users, Info, CheckCircle, AlertCircle } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
@@ -164,7 +165,22 @@ const TournamentRegistration = () => {
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       {/* Header Section */}
       <section className="text-center mb-12">
-        <img src="/images/tournaments/affiche-2026.png" alt="Affiche Tournoi Régional Saint-Loub'Ping 2026" className="h-48 mx-auto mb-4 object-contain" />
+        <Dialog>
+          <DialogTrigger asChild>
+            <img
+              src="/images/actualites/tournoi-2026-affiche.png"
+              alt="Affiche Tournoi Régional Saint-Loub'Ping 2026"
+              className="h-48 mx-auto mb-4 object-contain cursor-pointer hover:opacity-80 transition-opacity duration-200"
+            />
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl p-0 border-none bg-transparent">
+            <img
+              src="/images/actualites/tournoi-2026-affiche.png"
+              alt="Affiche Tournoi Régional Saint-Loub'Ping 2026"
+              className="w-full h-auto object-contain"
+            />
+          </DialogContent>
+        </Dialog>
         <h1 className="text-5xl font-extrabold text-clubDark mb-2">Inscription {tournamentInfo.name}</h1>
         <p className="text-xl text-clubPrimary mb-6">{tournamentInfo.dates}</p>
         <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-10 py-6 text-xl rounded-full shadow-lg animate-bounce-slow">
