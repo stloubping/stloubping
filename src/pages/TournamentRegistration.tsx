@@ -15,46 +15,35 @@ import { cn } from "@/lib/utils";
 
 interface Tableau {
   id: string;
-  day: 'saturday' | 'sunday';
+  day: 'saturday'; // Only Saturday for 2026 edition
   time: string;
   label: string;
   maxPoints?: string;
   remainingSpots: number;
-  price?: number; // Price per tableau, if different from general rule
+  isDoubles?: boolean; // To identify doubles tables for pricing
 }
 
 const tournamentInfo = {
-  name: "Tournoi Annuel Saint Loub Ping",
-  dates: "Samedi 26 et Dimanche 27 Octobre 2024",
-  location: "Imp. Max Linder, 33450 Saint-Loubès, France",
-  tariffs: "8€ par tableau, 15€ pour 2, 20€ pour 3, 6€ pour le TRIO 120 (Repas inclus).",
-  rankingLimit: "Le TRIO 120 est limité à 10000 points sur la base des points mensuels de mai.",
-  commentPartners: "Veuillez indiquer vos partenaires dans le champ 'commentaire'.",
+  name: "Tournoi Régional Saint-Loub'Ping",
+  dates: "Samedi 11 Avril 2026",
+  location: "Complexe Sportif, Impasse Max Linder, 33450 Saint-Loubès, France",
+  tariffs: "1 tableau : 8€, 2 tableaux : 15€, 3 tableaux : 20€, Doubles : 3€/joueur.",
+  rankingLimit: "Doubles <2800 pts.",
+  commentPartners: "Veuillez indiquer vos partenaires pour le tableau Doubles dans le champ 'commentaire'.",
   regulationsLink: "#", // Placeholder for actual regulations link
 };
 
 const saturdayTables: Tableau[] = [
-  { id: "sat-A", day: "saturday", time: "8h30", label: "<899 pts", maxPoints: "<899 pts", remainingSpots: 29 },
-  { id: "sat-B", day: "saturday", time: "9h45", label: "<1499 pts", maxPoints: "<1499 pts", remainingSpots: 23 },
-  { id: "sat-C", day: "saturday", time: "11h00", label: "<1099 pts", maxPoints: "<1099 pts", remainingSpots: 18 },
-  { id: "sat-D", day: "saturday", time: "12h30", label: "<1699 pts", maxPoints: "<1699 pts", remainingSpots: 25 },
-  { id: "sat-E", day: "saturday", time: "13h45", label: "<1299 pts", maxPoints: "<1299 pts", remainingSpots: 14 },
-  { id: "sat-F", day: "saturday", time: "18h30", label: "TRIO 120", maxPoints: "10000 pts (mai)", remainingSpots: 35, price: 6 },
+  { id: "sat-1", day: "saturday", time: "8h30", label: "500-799 pts", maxPoints: "500-799 pts", remainingSpots: 30 },
+  { id: "sat-2", day: "saturday", time: "9h30", label: "500-1399 pts", maxPoints: "500-1399 pts", remainingSpots: 30 },
+  { id: "sat-3", day: "saturday", time: "10h30", label: "500-999 pts", maxPoints: "500-999 pts", remainingSpots: 30 },
+  { id: "sat-4", day: "saturday", time: "11h30", label: "500-1599 pts", maxPoints: "500-1599 pts", remainingSpots: 30 },
+  { id: "sat-5", day: "saturday", time: "13h30", label: "500-1199 pts", maxPoints: "500-1199 pts", remainingSpots: 30 },
+  { id: "sat-6", day: "saturday", time: "14h30", label: "500-Non Num FR", maxPoints: "500-Non Num FR", remainingSpots: 30 },
+  { id: "sat-7", day: "saturday", time: "16h00", label: "Doubles <2800 pts", maxPoints: "<2800 pts", remainingSpots: 30, isDoubles: true },
 ];
 
-const sundayTables: Tableau[] = [
-  { id: "sun-G", day: "sunday", time: "8h30", label: "Jeunes compétition", remainingSpots: 20 },
-  { id: "sun-H", day: "sunday", time: "8h30", label: "Loisirs Toutes catégories", remainingSpots: 24 },
-  { id: "sun-I", day: "sunday", time: "9h30", label: "<799 pts", maxPoints: "<799 pts", remainingSpots: 36 },
-  { id: "sun-J", day: "sunday", time: "10h45", label: "Toutes catégories", remainingSpots: 30 },
-  { id: "sun-K", day: "sunday", time: "11h45", label: "<1199 pts", maxPoints: "<1199 pts", remainingSpots: 27 },
-  { id: "sun-L", day: "sunday", time: "11h45", label: "Toutes catégories féminines", remainingSpots: 23 },
-  { id: "sun-M", day: "sunday", time: "13h45", label: "<999 pts", maxPoints: "<999 pts", remainingSpots: 29 },
-  { id: "sun-N", day: "sunday", time: "15h00", label: "<1599 pts", maxPoints: "<1599 pts", remainingSpots: 33 },
-  { id: "sun-O", day: "sunday", time: "16h00", label: "<1399 pts", maxPoints: "<1399 pts", remainingSpots: 32 },
-];
-
-const allTables = [...saturdayTables, ...sundayTables];
+const allTables = [...saturdayTables]; // Only Saturday tables
 
 const TournamentRegistration = () => {
   const [formData, setFormData] = useState({
@@ -78,25 +67,26 @@ const TournamentRegistration = () => {
   useEffect(() => {
     const calculatePrice = () => {
       let price = 0;
-      const nonTrioTables = selectedTableIds.filter(id => !id.includes("TRIO"));
-      const trioTables = selectedTableIds.filter(id => id.includes("TRIO"));
+      const selectedNonDoublesTables = selectedTableIds.filter(id => {
+        const table = allTables.find(t => t.id === id);
+        return table && !table.isDoubles;
+      });
+      const selectedDoublesTables = selectedTableIds.filter(id => {
+        const table = allTables.find(t => t.id === id);
+        return table && table.isDoubles;
+      });
 
-      // Calculate price for non-TRIO tables
-      if (nonTrioTables.length === 1) {
+      // Price for non-doubles tables
+      if (selectedNonDoublesTables.length === 1) {
         price += 8;
-      } else if (nonTrioTables.length === 2) {
+      } else if (selectedNonDoublesTables.length === 2) {
         price += 15;
-      } else if (nonTrioTables.length >= 3) {
+      } else if (selectedNonDoublesTables.length >= 3) {
         price += 20;
       }
 
-      // Add price for TRIO tables (each TRIO is 6€)
-      trioTables.forEach(trioId => {
-        const trioTable = allTables.find(table => table.id === trioId);
-        if (trioTable && trioTable.price) {
-          price += trioTable.price;
-        }
-      });
+      // Price for doubles tables (3€ per player per doubles tableau)
+      price += selectedDoublesTables.length * 3;
 
       setTotalPrice(price);
     };
@@ -174,8 +164,8 @@ const TournamentRegistration = () => {
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       {/* Header Section */}
       <section className="text-center mb-12">
-        <img src="/images/logo/telecharge.jpg" alt="St Loub Ping Logo" className="h-24 mx-auto mb-4" />
-        <h1 className="text-5xl font-extrabold text-clubDark mb-2">Inscription Tournoi {tournamentInfo.name}</h1>
+        <img src="/images/tournaments/affiche-2026.png" alt="Affiche Tournoi Régional Saint-Loub'Ping 2026" className="h-48 mx-auto mb-4 object-contain" />
+        <h1 className="text-5xl font-extrabold text-clubDark mb-2">Inscription {tournamentInfo.name}</h1>
         <p className="text-xl text-clubPrimary mb-6">{tournamentInfo.dates}</p>
         <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-10 py-6 text-xl rounded-full shadow-lg animate-bounce-slow">
           <a href="#registration-form">S'inscrire Maintenant</a>
@@ -298,8 +288,8 @@ const TournamentRegistration = () => {
                   </p>
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="comment" className="text-clubLight-foreground">Commentaire (Partenaires TRIO)</Label>
-                  <Textarea id="comment" placeholder="Indiquez ici vos partenaires pour le TRIO 120 ou toute autre remarque." rows={3} value={formData.comment} onChange={handleInputChange} className="mt-1 bg-input text-clubLight-foreground" />
+                  <Label htmlFor="comment" className="text-clubLight-foreground">Commentaire (Partenaires Doubles)</Label>
+                  <Textarea id="comment" placeholder="Indiquez ici vos partenaires pour le tableau Doubles ou toute autre remarque." rows={3} value={formData.comment} onChange={handleInputChange} className="mt-1 bg-input text-clubLight-foreground" />
                 </div>
               </div>
             </div>
@@ -309,17 +299,12 @@ const TournamentRegistration = () => {
               <h2 className="text-2xl font-semibold text-clubDark mb-4">2. Choix des Tableaux</h2>
               {formSubmitted && selectedTableIds.length === 0 && <p className="text-destructive text-sm mb-4">Veuillez sélectionner au moins un tableau.</p>}
               <Tabs defaultValue="saturday" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 bg-clubSection text-clubLight-foreground">
+                <TabsList className="grid w-full grid-cols-1 bg-clubSection text-clubLight-foreground"> {/* Only one tab for Saturday */}
                   <TabsTrigger value="saturday" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-clubPrimary-foreground">Jeu du Samedi</TabsTrigger>
-                  <TabsTrigger value="sunday" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-clubPrimary-foreground">Jeu du Dimanche</TabsTrigger>
                 </TabsList>
                 <TabsContent value="saturday" className="mt-4 p-4 border rounded-lg bg-clubSection shadow-sm">
-                  <p className="text-sm text-muted-foreground mb-4">Max 3 tableaux + TRIO 120</p>
+                  <p className="text-sm text-muted-foreground mb-4">Max 3 tableaux individuels + 1 tableau Doubles</p>
                   {saturdayTables.map(renderTableCheckbox)}
-                </TabsContent>
-                <TabsContent value="sunday" className="mt-4 p-4 border rounded-lg bg-clubSection shadow-sm">
-                  <p className="text-sm text-muted-foreground mb-4">Max 3 tableaux</p>
-                  {sundayTables.map(renderTableCheckbox)}
                 </TabsContent>
               </Tabs>
             </div>
