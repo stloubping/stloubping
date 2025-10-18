@@ -44,8 +44,8 @@ const Accueil = () => {
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       {/* Hero Section */}
       <HeroSection
-        imageUrl="/images/tournaments/affiche-2026.png" // Updated to use the new poster image
-        imageAlt="Affiche Tournoi Régional Saint-Loub'Ping 2026"
+        imageUrl="/images/hero/club-training.jpg" // Updated to use the new training image
+        imageAlt="Entraînement de tennis de table au club"
         title="Bienvenue au Club de Tennis de Table de Saint-Loubès"
         description="Passion, entraînement et convivialité : rejoignez notre communauté pour progresser et partager l'amour du tennis de table."
       />
