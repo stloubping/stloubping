@@ -86,14 +86,14 @@ const CompetitionsEquipes = () => {
                 <img
                   src="/images/schedule/match-calendar-2025-2026.jpg"
                   alt="Calendrier des Compétitions 2025-2026"
-                  className="w-full h-auto object-contain rounded-lg shadow-md max-h-96 mx-auto cursor-pointer hover:opacity-80 transition-opacity duration-200"
+                  className="w-full h-auto object-contain rounded-lg shadow-md max-h-96 mx-auto cursor-zoom-in hover:opacity-80 transition-opacity duration-200"
                 />
               </DialogTrigger>
               <DialogContent className="max-w-6xl p-0 border-none bg-transparent">
                 <img
                   src="/images/schedule/match-calendar-2025-2026.jpg"
                   alt="Calendrier des Compétitions 2025-2026"
-                  className="w-full h-auto object-contain"
+                  className="w-full h-auto max-w-[90vw] max-h-[90vh] object-scale-down"
                 />
               </DialogContent>
             </Dialog>
