@@ -83,7 +83,7 @@ const CompetitionsEquipes = () => {
             <img
               src="/images/schedule/match-calendar-2025-2026.jpg"
               alt="Calendrier des Compétitions 2025-2026"
-              className="w-full h-auto object-contain rounded-lg shadow-md"
+              className="w-full h-auto object-contain rounded-lg shadow-md max-h-96 mx-auto"
             />
             <p className="mt-4 text-sm text-muted-foreground text-center">
               Retrouvez toutes les dates importantes des championnats et tournois de la saison.
