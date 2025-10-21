@@ -80,8 +80,6 @@ const CompetitionsEquipes = () => {
         </Card>
       </section>
 
-      {/* Section "Profils des Joueurs" supprimée */}
-
       <section className="mb-12">
         <Card className="bg-clubLight shadow-lg rounded-xl">
           <CardHeader>
@@ -133,26 +131,6 @@ const CompetitionsEquipes = () => {
             <p className="mt-6 text-sm text-muted-foreground text-center">
               Retrouvez les feuilles de matchs détaillées dans la section "Résultats et Feuilles de Rencontres".
             </p>
-          </CardContent>
-        </Card>
-      </section>
-
-      <section>
-        <Card className="bg-clubLight shadow-lg rounded-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl text-clubDark">Résultats et Feuilles de Rencontres</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="mb-4 text-clubLight-foreground">
-              Retrouvez ici les résultats détaillés de toutes nos équipes ainsi que les feuilles de rencontres.
-              Les mises à jour sont effectuées après chaque journée de championnat.
-            </p>
-            <img src="https://picsum.photos/800/400?random=match_detail" alt="Jeunes joueurs en entraînement" className="w-full h-auto object-cover rounded-lg mb-6 shadow-md" /> {/* Updated to placeholder */}
-            <ul className="list-disc list-inside space-y-2 text-clubLight-foreground">
-              <li><a href="#" className="text-clubPrimary hover:underline">Résultats de la journée 1 (Régionale 1)</a></li>
-              <li><a href="#" className="text-clubPrimary hover:underline">Feuille de rencontre Équipe B - Journée 2</a></li>
-              <li><a href="#" className="text-clubPrimary hover:underline">Classements généraux</a></li>
-            </ul>
           </CardContent>
         </Card>
       </section>
