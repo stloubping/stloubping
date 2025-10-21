@@ -4,9 +4,12 @@ import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const teams = [
-  { name: "Équipe A", division: "Régionale 1", captain: "Marc Dubois" },
-  { name: "Équipe B", division: "Départementale 1", captain: "Sophie Lefevre" },
-  { name: "Équipe C", division: "Départementale 2", captain: "Lucas Bernard" },
+  { name: "Équipe 1", division: "Régionale 1", captain: "Marc Dubois" },
+  { name: "Équipe 2", division: "Départementale 1", captain: "Sophie Lefevre" },
+  { name: "Équipe 3", division: "Départementale 2", captain: "Lucas Bernard" },
+  { name: "Équipe 4", division: "Départementale 3", captain: "Chloé Martin" },
+  { name: "Équipe 5", division: "Départementale 4", captain: "Thomas Petit" },
+  { name: "Équipe 6", division: "Départementale 5", captain: "Manon Durand" },
 ];
 
 const players = [
