@@ -4,12 +4,12 @@ import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const teams = [
-  { name: "Équipe 1", division: "Régionale 2", captain: "Marc Dubois" },
-  { name: "Équipe 2", division: "Pré-régionale", captain: "Sophie Lefevre" },
-  { name: "Équipe 3", division: "Départementale 2", captain: "Lucas Bernard" },
-  { name: "Équipe 4", division: "Départementale 2", captain: "Chloé Martin" },
-  { name: "Équipe 5", division: "Départementale 3", captain: "Thomas Petit" },
-  { name: "Équipe 6", division: "Départementale 4", captain: "Manon Durand" },
+  { name: "Équipe 1", division: "Régionale 2", captain: "Wesley" },
+  { name: "Équipe 2", division: "Pré-régionale", captain: "Vincent" },
+  { name: "Équipe 3", division: "Départementale 2", captain: "Yanick" },
+  { name: "Équipe 4", division: "Départementale 2", captain: "Patrice" },
+  { name: "Équipe 5", division: "Départementale 3", captain: "Pierre" },
+  { name: "Équipe 6", division: "Départementale 4", captain: "Olivier" },
 ];
 
 const players = [
@@ -168,7 +168,7 @@ const CompetitionsEquipes = () => {
               Les mises à jour sont effectuées après chaque journée de championnat.
             </p>
             <img src="https://picsum.photos/800/400?random=match_detail" alt="Jeunes joueurs en entraînement" className="w-full h-auto object-cover rounded-lg mb-6 shadow-md" /> {/* Updated to placeholder */}
-            <ul className="list-disc list-inside space-y-2 text-clubLight-foreground">
+            <ul className="list-disc list-inside space-y-2 text-clubPrimary-foreground">
               <li><a href="#" className="text-clubPrimary hover:underline">Résultats de la journée 1 (Régionale 1)</a></li>
               <li><a href="#" className="text-clubPrimary hover:underline">Feuille de rencontre Équipe B - Journée 2</a></li>
               <li><a href="#" className="text-clubPrimary hover:underline">Classements généraux</a></li>
