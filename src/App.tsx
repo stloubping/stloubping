@@ -12,6 +12,7 @@ import Boutique from "./pages/Boutique";
 import Partenaires from "./pages/Partenaires";
 import Contact from "./pages/Contact";
 import TournamentRegistration from "./pages/TournamentRegistration"; // Import the new TournamentRegistration component
+import ClassementJoueurs from "./pages/ClassementJoueurs"; // Import the new ClassementJoueurs component
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/partenaires" element={<Partenaires />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/tournoi-inscription" element={<TournamentRegistration />} /> {/* New route for tournament registration */}
+            <Route path="/classement-joueurs" element={<ClassementJoueurs />} /> {/* New route for player rankings */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

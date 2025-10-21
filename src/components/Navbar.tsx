@@ -9,10 +9,11 @@ const navItems = [
   { name: "Accueil", path: "/" },
   { name: "Le Club", path: "/le-club" },
   { name: "Compétitions & Équipes", path: "/competitions-equipes" },
+  { name: "Classement des Joueurs", path: "/classement-joueurs" }, // Nouveau lien ajouté
   { name: "Adhésions", path: "/adhesions" },
   { name: "Boutique", path: "/boutique" },
   { name: "Partenaires", path: "/partenaires" },
-  { name: "Tournoi", path: "/tournoi-inscription" }, // Nouveau lien ajouté
+  { name: "Tournoi", path: "/tournoi-inscription" },
   { name: "Contact", path: "/contact" },
 ];
 
