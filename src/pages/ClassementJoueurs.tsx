@@ -7,28 +7,27 @@ import { ExternalLink } from 'lucide-react';
 // Données de classement simulées pour un club complet, inspirées de PingPocket
 // Ces données sont fictives et ne sont pas extraites en temps réel.
 const playersRankings = [
-  { name: "Dupont Jean", license: "1234567", club: "St Loub Ping", category: "Senior", officialPoints: 1850, monthlyPoints: 1852.34, rankChange: "+5", gender: "M" },
-  { name: "Curie Marie", license: "7654321", club: "St Loub Ping", category: "Senior", officialPoints: 1520, monthlyPoints: 1518.90, rankChange: "-2", gender: "F" },
-  { name: "Martin Pierre", license: "9876543", club: "St Loub Ping", category: "Junior", officialPoints: 1280, monthlyPoints: 1285.12, rankChange: "+10", gender: "M" },
-  { name: "Dubois Sophie", license: "1122334", club: "St Loub Ping", category: "Senior", officialPoints: 1010, monthlyPoints: 1008.76, rankChange: "NC", gender: "F" },
-  { name: "Petit Lucas", license: "4455667", club: "St Loub Ping", category: "Minime", officialPoints: 890, monthlyPoints: 893.05, rankChange: "+3", gender: "M" },
-  { name: "Bernard Chloé", license: "7788990", club: "St Loub Ping", category: "Cadette", officialPoints: 750, monthlyPoints: 748.50, rankChange: "-1", gender: "F" },
-  { name: "Leclerc Antoine", license: "2345678", club: "St Loub Ping", category: "Senior", officialPoints: 1600, monthlyPoints: 1605.20, rankChange: "+7", gender: "M" },
-  { name: "Moreau Emma", license: "8765432", club: "St Loub Ping", category: "Junior", officialPoints: 1350, monthlyPoints: 1347.88, rankChange: "NC", gender: "F" },
-  { name: "Girard Hugo", license: "3456789", club: "St Loub Ping", category: "Benjamin", officialPoints: 950, monthlyPoints: 955.60, rankChange: "+2", gender: "M" },
-  { name: "Lefevre Léa", license: "9876123", club: "St Loub Ping", category: "Minime", officialPoints: 1100, monthlyPoints: 1102.15, rankChange: "-3", gender: "F" },
-  { name: "Roux Philippe", license: "1000001", club: "St Loub Ping", category: "Vétéran", officialPoints: 1400, monthlyPoints: 1401.50, rankChange: "+1", gender: "M" },
-  { name: "Mounde Yves", license: "1000002", club: "St Loub Ping", category: "Vétéran", officialPoints: 1150, monthlyPoints: 1149.80, rankChange: "NC", gender: "M" },
-  { name: "Gigaud Patrice", license: "1000003", club: "St Loub Ping", category: "Vétéran", officialPoints: 980, monthlyPoints: 982.10, rankChange: "+4", gender: "M" },
-  { name: "Thuault Sandra", license: "1000004", club: "St Loub Ping", category: "Senior", officialPoints: 800, monthlyPoints: 799.50, rankChange: "-1", gender: "F" },
-  { name: "Goux Olivier", license: "1000005", club: "St Loub Ping", category: "Senior", officialPoints: 1050, monthlyPoints: 1053.20, rankChange: "+6", gender: "M" },
-  { name: "Monteignies Jérémie", license: "1000006", club: "St Loub Ping", category: "Junior", officialPoints: 1200, monthlyPoints: 1201.00, rankChange: "NC", gender: "M" },
-  { name: "Durand Dominique", license: "1000007", club: "St Loub Ping", category: "Vétéran", officialPoints: 700, monthlyPoints: 702.40, rankChange: "+1", gender: "M" },
-  { name: "Wesley Smith", license: "1000008", club: "St Loub Ping", category: "Senior", officialPoints: 1300, monthlyPoints: 1300.90, rankChange: "-2", gender: "M" },
-  { name: "Vincent Dubois", license: "1000009", club: "St Loub Ping", category: "Junior", officialPoints: 900, monthlyPoints: 901.10, rankChange: "+3", gender: "M" },
-  { name: "Michel Blanc", license: "1000010", club: "St Loub Ping", category: "Vétéran", officialPoints: 1100, monthlyPoints: 1100.50, rankChange: "NC", gender: "M" },
-  { name: "Yann Dupont", license: "1000011", club: "St Loub Ping", category: "Cadet", officialPoints: 650, monthlyPoints: 651.20, rankChange: "+1", gender: "M" },
-  { name: "Antoine Giraud", license: "1000012", club: "St Loub Ping", category: "Minime", officialPoints: 550, monthlyPoints: 550.80, rankChange: "NC", gender: "M" },
+  { rank: 1, name: "Dupont Jean", license: "1234567", club: "St Loub Ping", category: "Senior", officialPoints: 1850, monthlyPoints: 1852.34, rankChange: "+5", gender: "M" },
+  { rank: 2, name: "Martin Pierre", license: "9876543", club: "St Loub Ping", category: "Junior", officialPoints: 1600, monthlyPoints: 1605.20, rankChange: "+10", gender: "M" },
+  { rank: 3, name: "Leclerc Antoine", license: "2345678", club: "St Loub Ping", category: "Senior", officialPoints: 1520, monthlyPoints: 1518.90, rankChange: "+7", gender: "M" },
+  { rank: 4, name: "Curie Marie", license: "7654321", club: "St Loub Ping", category: "Senior", officialPoints: 1400, monthlyPoints: 1401.50, rankChange: "-2", gender: "F" },
+  { rank: 5, name: "Roux Philippe", license: "1000001", club: "St Loub Ping", category: "Vétéran", officialPoints: 1350, monthlyPoints: 1347.88, rankChange: "+1", gender: "M" },
+  { rank: 6, name: "Wesley Smith", license: "1000008", club: "St Loub Ping", category: "Senior", officialPoints: 1300, monthlyPoints: 1300.90, rankChange: "NC", gender: "M" },
+  { rank: 7, name: "Monteignies Jérémie", license: "1000006", club: "St Loub Ping", category: "Junior", officialPoints: 1200, monthlyPoints: 1201.00, rankChange: "-2", gender: "M" },
+  { rank: 8, name: "Mounde Yves", license: "1000002", club: "St Loub Ping", category: "Vétéran", officialPoints: 1150, monthlyPoints: 1149.80, rankChange: "NC", gender: "M" },
+  { rank: 9, name: "Michel Blanc", license: "1000010", club: "St Loub Ping", category: "Vétéran", officialPoints: 1100, monthlyPoints: 1100.50, rankChange: "+3", gender: "M" },
+  { rank: 10, name: "Lefevre Léa", license: "9876123", club: "St Loub Ping", category: "Minime", officialPoints: 1100, monthlyPoints: 1102.15, rankChange: "NC", gender: "F" },
+  { rank: 11, name: "Goux Olivier", license: "1000005", club: "St Loub Ping", category: "Senior", officialPoints: 1050, monthlyPoints: 1053.20, rankChange: "-3", gender: "M" },
+  { rank: 12, name: "Dubois Sophie", license: "1122334", club: "St Loub Ping", category: "Senior", officialPoints: 1010, monthlyPoints: 1008.76, rankChange: "+6", gender: "F" },
+  { rank: 13, name: "Gigaud Patrice", license: "1000003", club: "St Loub Ping", category: "Vétéran", officialPoints: 980, monthlyPoints: 982.10, rankChange: "NC", gender: "M" },
+  { rank: 14, name: "Girard Hugo", license: "3456789", club: "St Loub Ping", category: "Benjamin", officialPoints: 950, monthlyPoints: 955.60, rankChange: "+4", gender: "M" },
+  { rank: 15, name: "Vincent Dubois", license: "1000009", club: "St Loub Ping", category: "Junior", officialPoints: 900, monthlyPoints: 901.10, rankChange: "-1", gender: "M" },
+  { rank: 16, name: "Petit Lucas", license: "4455667", club: "St Loub Ping", category: "Minime", officialPoints: 890, monthlyPoints: 893.05, rankChange: "+3", gender: "M" },
+  { rank: 17, name: "Thuault Sandra", license: "1000004", club: "St Loub Ping", category: "Senior", officialPoints: 800, monthlyPoints: 799.50, rankChange: "NC", gender: "F" },
+  { rank: 18, name: "Bernard Chloé", license: "7788990", club: "St Loub Ping", category: "Cadette", officialPoints: 750, monthlyPoints: 748.50, rankChange: "-1", gender: "F" },
+  { rank: 19, name: "Durand Dominique", license: "1000007", club: "St Loub Ping", category: "Vétéran", officialPoints: 700, monthlyPoints: 702.40, rankChange: "+1", gender: "M" },
+  { rank: 20, name: "Yann Dupont", license: "1000011", club: "St Loub Ping", category: "Cadet", officialPoints: 650, monthlyPoints: 651.20, rankChange: "NC", gender: "M" },
+  { rank: 21, name: "Antoine Giraud", license: "1000012", club: "St Loub Ping", category: "Minime", officialPoints: 550, monthlyPoints: 550.80, rankChange: "+1", gender: "M" },
 ];
 
 const ClassementJoueurs = () => {
@@ -74,6 +73,7 @@ const ClassementJoueurs = () => {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-clubDark text-clubDark-foreground hover:bg-clubDark">
+                    <TableHead className="text-clubDark-foreground text-center">Rang</TableHead>
                     <TableHead className="text-clubDark-foreground">Nom</TableHead>
                     <TableHead className="text-clubDark-foreground text-center">Licence</TableHead>
                     <TableHead className="text-clubDark-foreground text-center">Club</TableHead>
@@ -86,6 +86,7 @@ const ClassementJoueurs = () => {
                 <TableBody>
                   {playersRankings.map((player, index) => (
                     <TableRow key={index} className="even:bg-clubSection/20 odd:bg-clubLight hover:bg-clubSection/40 transition-colors duration-200 border-b border-border">
+                      <TableCell className="font-medium text-clubDark text-center">{player.rank}</TableCell>
                       <TableCell className="font-medium text-clubDark">{player.name}</TableCell>
                       <TableCell className="text-center text-clubLight-foreground">{player.license}</TableCell>
                       <TableCell className="text-center text-clubLight-foreground">{player.club}</TableCell>
