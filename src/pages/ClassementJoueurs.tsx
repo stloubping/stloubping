@@ -4,28 +4,39 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ExternalLink } from 'lucide-react';
 
-// Données de classement enrichies (simulées)
+// Données de classement simulées pour un club complet, inspirées de PingPocket
 const playersRankings = [
-  { name: "Jean Dupont", license: "1234567", officialPoints: 1850, monthlyPoints: 1852.34, category: "Régional" },
-  { name: "Marie Curie", license: "7654321", officialPoints: 1520, monthlyPoints: 1518.90, category: "Départemental" },
-  { name: "Pierre Martin", license: "9876543", officialPoints: 1280, monthlyPoints: 1285.12, category: "Départemental" },
-  { name: "Sophie Dubois", license: "1122334", officialPoints: 1010, monthlyPoints: 1008.76, category: "Départemental" },
-  { name: "Lucas Petit", license: "4455667", officialPoints: 890, monthlyPoints: 893.05, category: "Loisir" },
-  { name: "Chloé Bernard", license: "7788990", officialPoints: 750, monthlyPoints: 748.50, category: "Loisir" },
-  { name: "Antoine Leclerc", license: "2345678", officialPoints: 1600, monthlyPoints: 1605.20, category: "Régional" },
-  { name: "Emma Moreau", license: "8765432", officialPoints: 1350, monthlyPoints: 1347.88, category: "Départemental" },
-  { name: "Hugo Girard", license: "3456789", officialPoints: 950, monthlyPoints: 955.60, category: "Loisir" },
-  { name: "Léa Lefevre", license: "9876123", officialPoints: 1100, monthlyPoints: 1102.15, category: "Départemental" },
+  { name: "Dupont Jean", license: "1234567", club: "St Loub Ping", category: "Senior", officialPoints: 1850, monthlyPoints: 1852.34, rankChange: "+5", gender: "M" },
+  { name: "Curie Marie", license: "7654321", club: "St Loub Ping", category: "Senior", officialPoints: 1520, monthlyPoints: 1518.90, rankChange: "-2", gender: "F" },
+  { name: "Martin Pierre", license: "9876543", club: "St Loub Ping", category: "Junior", officialPoints: 1280, monthlyPoints: 1285.12, rankChange: "+10", gender: "M" },
+  { name: "Dubois Sophie", license: "1122334", club: "St Loub Ping", category: "Senior", officialPoints: 1010, monthlyPoints: 1008.76, rankChange: "NC", gender: "F" },
+  { name: "Petit Lucas", license: "4455667", club: "St Loub Ping", category: "Minime", officialPoints: 890, monthlyPoints: 893.05, rankChange: "+3", gender: "M" },
+  { name: "Bernard Chloé", license: "7788990", club: "St Loub Ping", category: "Cadette", officialPoints: 750, monthlyPoints: 748.50, rankChange: "-1", gender: "F" },
+  { name: "Leclerc Antoine", license: "2345678", club: "St Loub Ping", category: "Senior", officialPoints: 1600, monthlyPoints: 1605.20, rankChange: "+7", gender: "M" },
+  { name: "Moreau Emma", license: "8765432", club: "St Loub Ping", category: "Junior", officialPoints: 1350, monthlyPoints: 1347.88, rankChange: "NC", gender: "F" },
+  { name: "Girard Hugo", license: "3456789", club: "St Loub Ping", category: "Benjamin", officialPoints: 950, monthlyPoints: 955.60, rankChange: "+2", gender: "M" },
+  { name: "Lefevre Léa", license: "9876123", club: "St Loub Ping", category: "Minime", officialPoints: 1100, monthlyPoints: 1102.15, rankChange: "-3", gender: "F" },
+  { name: "Roux Philippe", license: "1000001", club: "St Loub Ping", category: "Vétéran", officialPoints: 1400, monthlyPoints: 1401.50, rankChange: "+1", gender: "M" },
+  { name: "Mounde Yves", license: "1000002", club: "St Loub Ping", category: "Vétéran", officialPoints: 1150, monthlyPoints: 1149.80, rankChange: "NC", gender: "M" },
+  { name: "Gigaud Patrice", license: "1000003", club: "St Loub Ping", category: "Vétéran", officialPoints: 980, monthlyPoints: 982.10, rankChange: "+4", gender: "M" },
+  { name: "Thuault Sandra", license: "1000004", club: "St Loub Ping", category: "Senior", officialPoints: 800, monthlyPoints: 799.50, rankChange: "-1", gender: "F" },
+  { name: "Goux Olivier", license: "1000005", club: "St Loub Ping", category: "Senior", officialPoints: 1050, monthlyPoints: 1053.20, rankChange: "+6", gender: "M" },
+  { name: "Monteignies Jérémie", license: "1000006", club: "St Loub Ping", category: "Junior", officialPoints: 1200, monthlyPoints: 1201.00, rankChange: "NC", gender: "M" },
+  { name: "Durand Dominique", license: "1000007", club: "St Loub Ping", category: "Vétéran", officialPoints: 700, monthlyPoints: 702.40, rankChange: "+1", gender: "M" },
+  { name: "Wesley Smith", license: "1000008", club: "St Loub Ping", category: "Senior", officialPoints: 1300, monthlyPoints: 1300.90, rankChange: "-2", gender: "M" },
+  { name: "Vincent Dubois", license: "1000009", club: "St Loub Ping", category: "Junior", officialPoints: 900, monthlyPoints: 901.10, rankChange: "+3", gender: "M" },
+  { name: "Michel Blanc", license: "1000010", club: "St Loub Ping", category: "Vétéran", officialPoints: 1100, monthlyPoints: 1100.50, rankChange: "NC", gender: "M" },
+  { name: "Yann Dupont", license: "1000011", club: "St Loub Ping", category: "Cadet", officialPoints: 650, monthlyPoints: 651.20, rankChange: "+1", gender: "M" },
+  { name: "Antoine Giraud", license: "1000012", club: "St Loub Ping", category: "Minime", officialPoints: 550, monthlyPoints: 550.80, rankChange: "NC", gender: "M" },
 ];
 
 const ClassementJoueurs = () => {
   const ffttClubNumber = "10330022";
-  // Mise à jour du lien vers la page générale des classements départementaux de la FFTT
   const ffttRankingLink = "https://www.fftt.com/site/competition/classement/classement-departemental";
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
-      <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Classement des Joueurs</h1>
+      <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Classement des Joueurs du Club</h1>
 
       <section className="mb-12">
         <Card className="bg-clubLight shadow-lg rounded-xl">
@@ -54,7 +65,7 @@ const ClassementJoueurs = () => {
       </section>
 
       <section>
-        <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Classement de nos joueurs</h2>
+        <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Classement détaillé de nos joueurs</h2>
         <Card className="bg-clubLight shadow-lg rounded-xl">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
@@ -63,9 +74,11 @@ const ClassementJoueurs = () => {
                   <TableRow className="bg-clubDark text-clubDark-foreground hover:bg-clubDark">
                     <TableHead className="text-clubDark-foreground">Nom</TableHead>
                     <TableHead className="text-clubDark-foreground text-center">Licence</TableHead>
+                    <TableHead className="text-clubDark-foreground text-center">Club</TableHead>
+                    <TableHead className="text-clubDark-foreground text-center">Catégorie</TableHead>
                     <TableHead className="text-clubDark-foreground text-center">Points Officiels</TableHead>
                     <TableHead className="text-clubDark-foreground text-center">Points Mensuels</TableHead>
-                    <TableHead className="text-clubDark-foreground text-center">Catégorie</TableHead>
+                    <TableHead className="text-clubDark-foreground text-center">Évolution</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -73,9 +86,13 @@ const ClassementJoueurs = () => {
                     <TableRow key={index} className="even:bg-clubSection/20 odd:bg-clubLight hover:bg-clubSection/40 transition-colors duration-200 border-b border-border">
                       <TableCell className="font-medium text-clubDark">{player.name}</TableCell>
                       <TableCell className="text-center text-clubLight-foreground">{player.license}</TableCell>
+                      <TableCell className="text-center text-clubLight-foreground">{player.club}</TableCell>
+                      <TableCell className="text-center text-clubLight-foreground">{player.category}</TableCell>
                       <TableCell className="text-center text-clubLight-foreground">{player.officialPoints}</TableCell>
                       <TableCell className="text-center text-clubLight-foreground">{player.monthlyPoints}</TableCell>
-                      <TableCell className="text-center text-clubLight-foreground">{player.category}</TableCell>
+                      <TableCell className={`text-center font-semibold ${player.rankChange.startsWith('+') ? 'text-green-600' : player.rankChange.startsWith('-') ? 'text-red-600' : 'text-muted-foreground'}`}>
+                        {player.rankChange}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
