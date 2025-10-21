@@ -76,6 +76,27 @@ const Accueil = () => {
 
       <Separator className="my-12 bg-clubDark" />
 
+      {/* Calendrier des Matchs Section */}
+      <section className="mb-12">
+        <Card className="bg-clubLight shadow-lg rounded-xl">
+          <CardHeader>
+            <CardTitle className="text-2xl text-clubDark text-center">Calendrier des Compétitions 2025-2026</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <img
+              src="/images/schedule/match-calendar-2025-2026.jpg"
+              alt="Calendrier des Compétitions 2025-2026"
+              className="w-full h-auto object-contain rounded-lg shadow-md"
+            />
+            <p className="mt-4 text-sm text-muted-foreground text-center">
+              Retrouvez toutes les dates importantes des championnats et tournois de la saison.
+            </p>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Separator className="my-12 bg-clubDark" />
+
       {/* Pourquoi nous rejoindre Section */}
       <section className="mb-12 text-center">
         <h2 className="text-3xl font-bold text-clubDark mb-8">Pourquoi nous rejoindre ?</h2>

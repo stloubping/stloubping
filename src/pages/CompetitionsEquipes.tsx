@@ -12,13 +12,6 @@ const teams = [
   { name: "Équipe 6", division: "Départementale 4", captain: "Olivier" },
 ];
 
-const players = [
-  { name: "Félix Lebrun", ranking: "N°1 Français", equipment: "Bois : Tibhar Samsonov Carbon, Revêtement : Tibhar Evolution MX-P", image: "https://picsum.photos/150/150?random=6" },
-  { name: "Alexis Lebrun", ranking: "N°2 Français", equipment: "Bois : Butterfly Viscaria, Revêtement : Butterfly Dignics 09C", image: "https://picsum.photos/150/150?random=7" },
-  { name: "Simon Gauzy", ranking: "N°3 Français", equipment: "Bois : Cornilleau Gatien Absolum, Revêtement : Cornilleau Target Pro GT-H47", image: "https://picsum.photos/150/150?random=8" },
-  { name: "Prithika Pavade", ranking: "N°1 Féminine", equipment: "Bois : Stiga Carbonado 145, Revêtement : Stiga DNA Platinum XH", image: "https://picsum.photos/150/150?random=9" },
-];
-
 const matchCalendar = [
   { date: "20/10/2024", opponent: "TT Villeurbanne", team: "Équipe A", location: "Extérieur", result: "À venir" },
   { date: "27/10/2024", opponent: "ASPTT Lyon", team: "Équipe B", location: "Domicile", result: "À venir" },
@@ -76,6 +69,25 @@ const CompetitionsEquipes = () => {
                 </Card>
               ))}
             </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Calendrier des Compétitions Section */}
+      <section className="mb-12">
+        <Card className="bg-clubLight shadow-lg rounded-xl">
+          <CardHeader>
+            <CardTitle className="text-2xl text-clubDark text-center">Calendrier des Compétitions 2025-2026</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <img
+              src="/images/schedule/match-calendar-2025-2026.jpg"
+              alt="Calendrier des Compétitions 2025-2026"
+              className="w-full h-auto object-contain rounded-lg shadow-md"
+            />
+            <p className="mt-4 text-sm text-muted-foreground text-center">
+              Retrouvez toutes les dates importantes des championnats et tournois de la saison.
+            </p>
           </CardContent>
         </Card>
       </section>
