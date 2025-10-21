@@ -133,12 +133,13 @@ const LeClub = () => {
           </Card>
         </section>
 
-        <section className="mb-12">
-          <TrainingSchedule /> {/* New TrainingSchedule component */}
+        {/* Section "Planning des Entraînements" supprimée */}
+        {/* <section className="mb-12">
+          <TrainingSchedule />
           <p className="mt-4 text-sm text-muted-foreground text-center">
             Les horaires et tarifs sont susceptibles d'être ajustés en début de saison.
           </p>
-        </section>
+        </section> */}
 
         <section className="mb-12">
           <Card className="bg-clubLight shadow-lg rounded-xl">
