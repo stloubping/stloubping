@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"; // Import Dialog components
 
 const teams = [
   { name: "Équipe 1", division: "Régionale 2", captain: "Wesley" },
@@ -80,13 +81,24 @@ const CompetitionsEquipes = () => {
             <CardTitle className="text-2xl text-clubDark text-center">Calendrier des Compétitions 2025-2026</CardTitle>
           </CardHeader>
           <CardContent>
-            <img
-              src="/images/schedule/match-calendar-2025-2026.jpg"
-              alt="Calendrier des Compétitions 2025-2026"
-              className="w-full h-auto object-contain rounded-lg shadow-md max-h-96 mx-auto"
-            />
+            <Dialog>
+              <DialogTrigger asChild>
+                <img
+                  src="/images/schedule/match-calendar-2025-2026.jpg"
+                  alt="Calendrier des Compétitions 2025-2026"
+                  className="w-full h-auto object-contain rounded-lg shadow-md max-h-96 mx-auto cursor-pointer hover:opacity-80 transition-opacity duration-200"
+                />
+              </DialogTrigger>
+              <DialogContent className="max-w-6xl p-0 border-none bg-transparent">
+                <img
+                  src="/images/schedule/match-calendar-2025-2026.jpg"
+                  alt="Calendrier des Compétitions 2025-2026"
+                  className="w-full h-auto object-contain"
+                />
+              </DialogContent>
+            </Dialog>
             <p className="mt-4 text-sm text-muted-foreground text-center">
-              Retrouvez toutes les dates importantes des championnats et tournois de la saison.
+              Retrouvez toutes les dates importantes des championnats et tournois de la saison. Cliquez sur l'image pour l'agrandir.
             </p>
           </CardContent>
         </Card>
