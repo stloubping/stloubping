@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ExternalLink } from 'lucide-react';
 
 // Données de classement simulées pour un club complet, inspirées de PingPocket
+// Ces données sont fictives et ne sont pas extraites en temps réel.
 const playersRankings = [
   { name: "Dupont Jean", license: "1234567", club: "St Loub Ping", category: "Senior", officialPoints: 1850, monthlyPoints: 1852.34, rankChange: "+5", gender: "M" },
   { name: "Curie Marie", license: "7654321", club: "St Loub Ping", category: "Senior", officialPoints: 1520, monthlyPoints: 1518.90, rankChange: "-2", gender: "F" },
@@ -32,6 +33,7 @@ const playersRankings = [
 
 const ClassementJoueurs = () => {
   const ffttClubNumber = "10330022";
+  // Lien vers la page générale des classements départementaux de la FFTT
   const ffttRankingLink = "https://www.fftt.com/site/competition/classement/classement-departemental";
 
   return (
