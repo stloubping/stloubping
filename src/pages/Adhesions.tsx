@@ -30,6 +30,24 @@ const Adhesions = () => {
       <section className="mb-12">
         <Card className="bg-clubLight shadow-lg rounded-xl">
           <CardHeader>
+            <CardTitle className="text-2xl text-clubDark">Planning des Entraînements Saison 2025-2026</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <img
+              src="/images/schedule/training-schedule-2025-2026.jpg"
+              alt="Planning des entraînements Saison 2025-2026"
+              className="w-full h-auto object-contain rounded-lg shadow-md"
+            />
+            <p className="mt-4 text-sm text-muted-foreground text-center">
+              Ces horaires sont susceptibles d'ajustements à l'issue des premiers entraînements.
+            </p>
+          </CardContent>
+        </Card>
+      </section>
+
+      <section className="mb-12">
+        <Card className="bg-clubLight shadow-lg rounded-xl">
+          <CardHeader>
             <CardTitle className="text-2xl text-clubDark">Types de Licences</CardTitle>
           </CardHeader>
           <CardContent>
