@@ -80,27 +80,7 @@ const CompetitionsEquipes = () => {
         </Card>
       </section>
 
-      <section className="mb-12">
-        <Card className="bg-clubLight shadow-lg rounded-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl text-clubDark">Profils des Joueurs</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {players.map((player, index) => (
-                <Card key={index} className="bg-clubLight shadow-md rounded-lg text-center">
-                  <CardContent className="p-4">
-                    <img src={player.image} alt={player.name} className="rounded-full mx-auto mb-4 w-24 h-24 object-cover border-2 border-clubPrimary" />
-                    <h3 className="text-lg font-semibold text-clubDark">{player.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-2">{player.ranking}</p>
-                    <p className="text-xs text-clubLight-foreground">{player.equipment}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </section>
+      {/* Section "Profils des Joueurs" supprimée */}
 
       <section className="mb-12">
         <Card className="bg-clubLight shadow-lg rounded-xl">
@@ -168,7 +148,7 @@ const CompetitionsEquipes = () => {
               Les mises à jour sont effectuées après chaque journée de championnat.
             </p>
             <img src="https://picsum.photos/800/400?random=match_detail" alt="Jeunes joueurs en entraînement" className="w-full h-auto object-cover rounded-lg mb-6 shadow-md" /> {/* Updated to placeholder */}
-            <ul className="list-disc list-inside space-y-2 text-clubPrimary-foreground">
+            <ul className="list-disc list-inside space-y-2 text-clubLight-foreground">
               <li><a href="#" className="text-clubPrimary hover:underline">Résultats de la journée 1 (Régionale 1)</a></li>
               <li><a href="#" className="text-clubPrimary hover:underline">Feuille de rencontre Équipe B - Journée 2</a></li>
               <li><a href="#" className="text-clubPrimary hover:underline">Classements généraux</a></li>
