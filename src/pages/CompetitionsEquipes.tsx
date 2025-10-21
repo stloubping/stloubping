@@ -74,34 +74,32 @@ const CompetitionsEquipes = () => {
         </Card>
       </section>
 
+      {/* Calendrier des Compétitions Section */}
       <section className="mb-12">
         <Card className="bg-clubLight shadow-lg rounded-xl">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubDark">Calendrier des Matchs</CardTitle>
+            <CardTitle className="text-2xl text-clubDark text-center">Calendrier des Compétitions 2025-2026</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-clubDark text-clubDark-foreground hover:bg-clubDark">
-                  <TableHead className="text-clubDark-foreground">Date</TableHead>
-                  <TableHead className="text-clubDark-foreground">Adversaire</TableHead>
-                  <TableHead className="text-clubDark-foreground">Équipe</TableHead>
-                  <TableHead className="text-clubDark-foreground">Lieu</TableHead>
-                  <TableHead className="text-clubDark-foreground">Résultat</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {matchCalendar.map((match, index) => (
-                  <TableRow key={index} className="text-clubLight-foreground">
-                    <TableCell className="font-medium">{match.date}</TableCell>
-                    <TableCell>{match.opponent}</TableCell>
-                    <TableCell>{match.team}</TableCell>
-                    <TableCell>{match.location}</TableCell>
-                    <TableCell>{match.result}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <Dialog>
+              <DialogTrigger asChild>
+                <img
+                  src="/images/schedule/match-calendar-2025-2026.jpg"
+                  alt="Calendrier des Compétitions 2025-2026"
+                  className="w-full h-auto object-contain rounded-lg shadow-md max-h-96 mx-auto cursor-zoom-in hover:opacity-80 transition-opacity duration-200"
+                />
+              </DialogTrigger>
+              <DialogContent className="max-w-6xl bg-background p-6 rounded-lg">
+                <img
+                  src="/images/schedule/match-calendar-2025-2026.jpg"
+                  alt="Calendrier des Compétitions 2025-2026"
+                  className="w-full h-auto max-w-[90vw] max-h-[90vh] object-scale-down"
+                />
+              </DialogContent>
+            </Dialog>
+            <p className="mt-4 text-sm text-muted-foreground text-center">
+              Retrouvez toutes les dates importantes des championnats et tournois de la saison. Cliquez sur l'image pour l'agrandir.
+            </p>
           </CardContent>
         </Card>
       </section>
