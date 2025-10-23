@@ -2,13 +2,24 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; // Keep Select for potential future use or if user wants it back
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { Link } from 'react-router-dom';
 import { Info } from 'lucide-react';
-import { showSuccess, showError } from '@/utils/toast'; // Importation des fonctions de toast de notre utilitaire
+import { showSuccess, showError } from '@/utils/toast';
+
+const individualTableaux = [
+  { id: 't1', time: '8h30', points: '500-799 pts', remaining: 30 },
+  { id: 't2', time: '9h30', points: '500-1399 pts', remaining: 30 },
+  { id: 't3', time: '10h30', points: '500-999 pts', remaining: 30 },
+  { id: 't4', time: '11h30', points: '500-1599 pts', remaining: 30 },
+  { id: 't5', time: '13h30', points: '500-1199 pts', remaining: 30 },
+  { id: 't6', time: '14h30', points: '500-Non Num FR', remaining: 30 },
+];
+
+const doublesTableau = { id: 'd1', time: '16h00', points: 'Doubles <2800 pts', remaining: 30 };
 
 const TournamentRegistration = () => {
   const [formData, setFormData] = useState({
@@ -18,7 +29,7 @@ const TournamentRegistration = () => {
     phone: '',
     licenceNumber: '',
     club: '',
-    category: '',
+    selectedTableaux: [] as string[], // Array to store selected tableau IDs
     doublesPartner: '',
     consent: false,
   });
@@ -29,17 +40,45 @@ const TournamentRegistration = () => {
     setFormData(prev => ({ ...prev, [id]: value }));
   };
 
-  const handleSelectChange = (id: string, value: string) => {
-    setFormData(prev => ({ ...prev, [id]: value }));
+  const handleTableauChange = (tableauId: string, checked: boolean) => {
+    setFormData(prev => {
+      const newSelectedTableaux = checked
+        ? [...prev.selectedTableaux, tableauId]
+        : prev.selectedTableaux.filter(id => id !== tableauId);
+      return { ...prev, selectedTableaux: newSelectedTableaux };
+    });
   };
 
   const handleCheckboxChange = (checked: boolean) => {
     setFormData(prev => ({ ...prev, consent: checked }));
   };
 
+  const calculateTotalFee = () => {
+    let individualCount = 0;
+    let hasDoubles = false;
+
+    formData.selectedTableaux.forEach(id => {
+      if (id === doublesTableau.id) {
+        hasDoubles = true;
+      } else {
+        individualCount++;
+      }
+    });
+
+    let fee = 0;
+    if (individualCount === 1) fee = 8;
+    else if (individualCount === 2) fee = 15;
+    else if (individualCount >= 3) fee = 20;
+
+    if (hasDoubles) {
+      fee += 3; // 3€ per player for doubles
+    }
+    return fee;
+  };
+
   const validateForm = () => {
-    const { firstName, lastName, email, phone, licenceNumber, club, category, consent } = formData;
-    return firstName && lastName && email && phone && licenceNumber && club && category && consent;
+    const { firstName, lastName, email, phone, licenceNumber, club, selectedTableaux, consent } = formData;
+    return firstName && lastName && email && phone && licenceNumber && club && selectedTableaux.length > 0 && consent;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -47,9 +86,8 @@ const TournamentRegistration = () => {
     setFormSubmitted(true);
 
     if (validateForm()) {
-      // Here you would typically send the data to a backend service
       console.log("Form Data Submitted:", formData);
-      showSuccess("Inscription envoyée avec succès !");
+      showSuccess("Inscription envoyée avec succès ! Paiement à effectuer sur place.");
       // Reset form after successful submission
       setFormData({
         firstName: '',
@@ -58,15 +96,17 @@ const TournamentRegistration = () => {
         phone: '',
         licenceNumber: '',
         club: '',
-        category: '',
+        selectedTableaux: [],
         doublesPartner: '',
         consent: false,
       });
       setFormSubmitted(false);
     } else {
-      showError("Veuillez remplir tous les champs obligatoires et accepter les conditions.");
+      showError("Veuillez remplir tous les champs obligatoires, sélectionner au moins un tableau et accepter les conditions.");
     }
   };
+
+  const totalFee = calculateTotalFee();
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
@@ -129,28 +169,48 @@ const TournamentRegistration = () => {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="category" className="text-clubLight-foreground">Catégorie de tableau souhaitée*</Label>
-              <Select onValueChange={(value) => handleSelectChange('category', value)} value={formData.category}>
-                <SelectTrigger className={cn("w-full bg-input text-clubLight-foreground", formSubmitted && !formData.category && "border-destructive")}>
-                  <SelectValue placeholder="Sélectionnez une catégorie" />
-                </SelectTrigger>
-                <SelectContent className="bg-clubLight text-clubLight-foreground">
-                  <SelectItem value="senior-a">Senior A (Classement > 1500)</SelectItem>
-                  <SelectItem value="senior-b">Senior B (Classement 1000-1500)</SelectItem>
-                  <SelectItem value="senior-c">Senior C (Classement &lt; 1000)</SelectItem>
-                  <SelectItem value="junior">Junior (-18 ans)</SelectItem>
-                  <SelectItem value="veteran">Vétéran (+40 ans)</SelectItem>
-                </SelectContent>
-              </Select>
-              {formSubmitted && !formData.category && <p className="text-destructive text-sm mt-1">Veuillez sélectionner une catégorie.</p>}
-            </div>
+            {/* 2. Choix des Tableaux */}
+            <Card className="bg-clubSection shadow-md rounded-lg p-6">
+              <CardTitle className="text-2xl font-semibold text-clubDark mb-4">2. Choix des Tableaux</CardTitle>
+              <CardDescription className="text-clubLight-foreground mb-4">
+                Max 3 tableaux individuels + 1 tableau Doubles
+              </CardDescription>
+
+              <h3 className="text-lg font-semibold text-clubDark mb-3">Jeu du Samedi</h3>
+              <div className="space-y-3">
+                {individualTableaux.map((tableau) => (
+                  <div key={tableau.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={tableau.id}
+                      checked={formData.selectedTableaux.includes(tableau.id)}
+                      onCheckedChange={(checked) => handleTableauChange(tableau.id, checked as boolean)}
+                      disabled={tableau.remaining <= 0}
+                    />
+                    <Label htmlFor={tableau.id} className="text-clubLight-foreground cursor-pointer">
+                      {tableau.time} - {tableau.points} ({tableau.remaining} places restantes)
+                    </Label>
+                  </div>
+                ))}
+                <div className="flex items-center space-x-2 mt-4">
+                  <Checkbox
+                    id={doublesTableau.id}
+                    checked={formData.selectedTableaux.includes(doublesTableau.id)}
+                    onCheckedChange={(checked) => handleTableauChange(doublesTableau.id, checked as boolean)}
+                    disabled={doublesTableau.remaining <= 0}
+                  />
+                  <Label htmlFor={doublesTableau.id} className="text-clubLight-foreground cursor-pointer">
+                    {doublesTableau.time} - {doublesTableau.points} ({doublesTableau.remaining} places restantes)
+                  </Label>
+                </div>
+              </div>
+              {formSubmitted && formData.selectedTableaux.length === 0 && <p className="text-destructive text-sm mt-4">Veuillez sélectionner au moins un tableau.</p>}
+            </Card>
 
             <div className="space-y-2">
               <Label htmlFor="doublesPartner" className="text-clubLight-foreground">Partenaire de double (si applicable)</Label>
               <Input id="doublesPartner" placeholder="Nom et prénom du partenaire" value={formData.doublesPartner} onChange={handleInputChange} className="bg-input text-clubLight-foreground" />
               <p className="text-sm text-muted-foreground flex items-center">
-                <Info className="h-4 w-4 mr-1" /> Laissez vide si vous ne participez pas au double ou n'avez pas de partenaire.
+                <Info className="h-4 w-4 mr-1" /> Veuillez indiquer vos partenaires pour le tableau Doubles dans ce champ. Laissez vide si vous ne participez pas au double ou n'avez pas de partenaire.
               </p>
             </div>
 
@@ -173,9 +233,31 @@ const TournamentRegistration = () => {
             </div>
             {formSubmitted && !formData.consent && <p className="text-destructive text-sm mt-1">Vous devez accepter les conditions.</p>}
 
-            <Button type="submit" className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-white text-lg py-6">
-              S'inscrire au Tournoi
-            </Button>
+            {/* 3. Récapitulatif et Paiement */}
+            <Card className="bg-clubSection shadow-md rounded-lg p-6">
+              <CardTitle className="text-2xl font-semibold text-clubDark mb-4">3. Récapitulatif et Paiement</CardTitle>
+              <div className="space-y-2 text-clubLight-foreground mb-4">
+                <p className="font-semibold">Votre Sélection :</p>
+                <ul className="list-disc list-inside ml-4">
+                  {formData.selectedTableaux.length > 0 ? (
+                    formData.selectedTableaux.map(id => {
+                      const tableau = individualTableaux.find(t => t.id === id) || (id === doublesTableau.id ? doublesTableau : null);
+                      return tableau ? <li key={id}>{tableau.time} - {tableau.points}</li> : null;
+                    })
+                  ) : (
+                    <li>Aucun tableau sélectionné</li>
+                  )}
+                </ul>
+                <p className="text-xl font-bold mt-4">Frais d'inscription : {totalFee}€</p>
+              </div>
+              <p className="text-sm text-clubLight-foreground mb-4">
+                En validant ce formulaire, vous déclarez avoir pris connaissance et accepté le règlement du tournoi.
+                Vous recevrez une confirmation par mail, pensez à vérifier dans vos courriers indésirables !
+              </p>
+              <Button type="submit" className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-white text-lg py-6">
+                Valider et payer {totalFee}€ sur place
+              </Button>
+            </Card>
           </form>
         </CardContent>
       </Card>
