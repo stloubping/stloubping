@@ -9,11 +9,12 @@ const navItems = [
   { name: "Accueil", path: "/" },
   { name: "Le Club", path: "/le-club" },
   { name: "Compétitions & Équipes", path: "/competitions-equipes" },
-  { name: "Classement des Joueurs", path: "/classement-joueurs" }, // Nouveau lien ajouté
+  { name: "Classement des Joueurs", path: "/classement-joueurs" },
   { name: "Adhésions", path: "/adhesions" },
   { name: "Boutique", path: "/boutique" },
   { name: "Partenaires", path: "/partenaires" },
   { name: "Tournoi", path: "/tournoi-inscription" },
+  { name: "Liste Inscriptions Tournoi", path: "/tournoi-inscriptions-liste" }, // Nouveau lien ajouté
   { name: "Contact", path: "/contact" },
 ];
 
