@@ -15,6 +15,7 @@ const TournamentRegistration = () => {
     firstName: '',
     lastName: '',
     email: '',
+    phone: '', // Rétabli le champ téléphone
     licenceNumber: '',
     club: '',
     category: '',
@@ -37,8 +38,8 @@ const TournamentRegistration = () => {
   };
 
   const validateForm = () => {
-    const { firstName, lastName, email, licenceNumber, club, category, consent } = formData;
-    return firstName && lastName && email && licenceNumber && club && category && consent;
+    const { firstName, lastName, email, phone, licenceNumber, club, category, consent } = formData; // Ajout de 'phone' à la validation
+    return firstName && lastName && email && phone && licenceNumber && club && category && consent;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -54,6 +55,7 @@ const TournamentRegistration = () => {
         firstName: '',
         lastName: '',
         email: '',
+        phone: '', // Réinitialisation du champ téléphone
         licenceNumber: '',
         club: '',
         category: '',
@@ -91,6 +93,15 @@ const TournamentRegistration = () => {
             <div className="space-y-2">
               <Label htmlFor="email" className="text-clubLight-foreground">Email*</Label>
               <Input id="email" type="email" placeholder="Votre adresse email" value={formData.email} onChange={handleInputChange} required className={cn("bg-input text-clubLight-foreground", formSubmitted && !formData.email && "border-destructive")} />
+            </div>
+
+            {/* Champ Téléphone rétabli */}
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-clubLight-foreground">Téléphone*</Label>
+              <Input id="phone" type="tel" placeholder="Votre numéro de téléphone" value={formData.phone} onChange={handleInputChange} required className={cn("bg-input text-clubLight-foreground", formSubmitted && !formData.phone && "border-destructive")} />
+              <p className="text-sm text-muted-foreground flex items-center">
+                <Info className="h-4 w-4 mr-1" /> Nous pourrions vous contacter en cas d'urgence ou de modification de dernière minute.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
