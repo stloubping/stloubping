@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button"; // Import Button
 import { supabase } from '@/integrations/supabase/client';
-import { showError } from '@/utils/toast';
-import { Loader2 } from 'lucide-react';
+import { showError, showSuccess } from '@/utils/toast'; // Import showSuccess
+import { Loader2, Download } from 'lucide-react'; // Import Download icon
 
 interface Registration {
   id: string;
@@ -64,6 +65,51 @@ const TournamentRegistrationsList = () => {
     }).join(', ');
   };
 
+  const exportToCsv = () => {
+    if (registrations.length === 0) {
+      showError("Aucune donnée à exporter.");
+      return;
+    }
+
+    const headers = [
+      "Date d'inscription", "Prénom", "Nom", "Email", "Téléphone",
+      "Numéro de licence", "Club", "Tableaux sélectionnés", "Partenaire de double", "Consentement"
+    ];
+
+    const csvRows = [
+      headers.join(';'), // CSV headers
+      ...registrations.map(reg => {
+        const formattedDate = new Date(reg.created_at).toLocaleDateString('fr-FR');
+        const formattedTableaux = formatTableaux(reg.selected_tableaux);
+        const doublesPartner = reg.doubles_partner || '';
+        const consent = reg.consent ? 'Oui' : 'Non';
+
+        return [
+          formattedDate,
+          reg.first_name,
+          reg.last_name,
+          reg.email,
+          reg.phone,
+          reg.licence_number,
+          reg.club,
+          `"${formattedTableaux}"`, // Enclose in quotes to handle commas
+          `"${doublesPartner}"`, // Enclose in quotes
+          consent
+        ].join(';');
+      })
+    ];
+
+    const csvString = csvRows.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'inscriptions_tournoi.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showSuccess("Les inscriptions ont été exportées en CSV.");
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[50vh]">
@@ -90,6 +136,11 @@ const TournamentRegistrationsList = () => {
           <CardDescription className="text-clubLight-foreground">
             Retrouvez ici toutes les inscriptions soumises pour le tournoi.
           </CardDescription>
+          <div className="mt-4">
+            <Button onClick={exportToCsv} className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground">
+              <Download className="mr-2 h-4 w-4" /> Exporter en CSV
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           {registrations.length === 0 ? (
