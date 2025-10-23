@@ -6,9 +6,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
-import { Mail, Info } from 'lucide-react';
+import { Info } from 'lucide-react';
+import { showSuccess, showError } from '@/utils/toast'; // Importation des fonctions de toast de notre utilitaire
 
 const TournamentRegistration = () => {
   const [formData, setFormData] = useState({
@@ -48,7 +48,7 @@ const TournamentRegistration = () => {
     if (validateForm()) {
       // Here you would typically send the data to a backend service
       console.log("Form Data Submitted:", formData);
-      toast.success("Inscription envoyée avec succès !");
+      showSuccess("Inscription envoyée avec succès !"); // Utilisation de showSuccess
       // Reset form after successful submission
       setFormData({
         firstName: '',
@@ -62,7 +62,7 @@ const TournamentRegistration = () => {
       });
       setFormSubmitted(false);
     } else {
-      toast.error("Veuillez remplir tous les champs obligatoires et accepter les conditions.");
+      showError("Veuillez remplir tous les champs obligatoires et accepter les conditions."); // Utilisation de showError
     }
   };
 
