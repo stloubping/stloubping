@@ -15,7 +15,7 @@ const TournamentRegistration = () => {
     firstName: '',
     lastName: '',
     email: '',
-    phone: '', // Rétabli le champ téléphone
+    phone: '',
     licenceNumber: '',
     club: '',
     category: '',
@@ -38,7 +38,7 @@ const TournamentRegistration = () => {
   };
 
   const validateForm = () => {
-    const { firstName, lastName, email, phone, licenceNumber, club, category, consent } = formData; // Ajout de 'phone' à la validation
+    const { firstName, lastName, email, phone, licenceNumber, club, category, consent } = formData;
     return firstName && lastName && email && phone && licenceNumber && club && category && consent;
   };
 
@@ -49,13 +49,13 @@ const TournamentRegistration = () => {
     if (validateForm()) {
       // Here you would typically send the data to a backend service
       console.log("Form Data Submitted:", formData);
-      showSuccess("Inscription envoyée avec succès !"); // Utilisation de showSuccess
+      showSuccess("Inscription envoyée avec succès !");
       // Reset form after successful submission
       setFormData({
         firstName: '',
         lastName: '',
         email: '',
-        phone: '', // Réinitialisation du champ téléphone
+        phone: '',
         licenceNumber: '',
         club: '',
         category: '',
@@ -64,7 +64,7 @@ const TournamentRegistration = () => {
       });
       setFormSubmitted(false);
     } else {
-      showError("Veuillez remplir tous les champs obligatoires et accepter les conditions."); // Utilisation de showError
+      showError("Veuillez remplir tous les champs obligatoires et accepter les conditions.");
     }
   };
 
@@ -78,6 +78,21 @@ const TournamentRegistration = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Informations Clés du Tournoi */}
+          <Card className="mb-8 bg-clubSection shadow-md rounded-lg p-6">
+            <CardTitle className="text-2xl font-semibold text-clubDark mb-4">Informations Clés du Tournoi</CardTitle>
+            <div className="space-y-3 text-clubLight-foreground">
+              <p><span className="font-semibold">Dates :</span> Samedi 11 Avril 2026</p>
+              <p><span className="font-semibold">Lieu :</span> Complexe Sportif, Impasse Max Linder, 33450 Saint-Loubès, France</p>
+              <p><span className="font-semibold">Tarifs :</span> 1 tableau : 8€, 2 tableaux : 15€, 3 tableaux : 20€, Doubles : 3€/joueur.</p>
+              <p><span className="font-semibold">Limite de classement :</span> Doubles &lt; 2800 pts.</p>
+              <p><span className="font-semibold">Commentaire / Partenaires :</span> Veuillez indiquer vos partenaires pour le tableau Doubles dans le champ 'Partenaire de double'.</p>
+              <p>
+                <span className="font-semibold">Règlement :</span> Consultez le <Link to="/reglement-tournoi" className="text-clubPrimary hover:underline">règlement du tournoi</Link>.
+              </p>
+            </div>
+          </Card>
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
@@ -95,7 +110,6 @@ const TournamentRegistration = () => {
               <Input id="email" type="email" placeholder="Votre adresse email" value={formData.email} onChange={handleInputChange} required className={cn("bg-input text-clubLight-foreground", formSubmitted && !formData.email && "border-destructive")} />
             </div>
 
-            {/* Champ Téléphone rétabli */}
             <div className="space-y-2">
               <Label htmlFor="phone" className="text-clubLight-foreground">Téléphone*</Label>
               <Input id="phone" type="tel" placeholder="Votre numéro de téléphone" value={formData.phone} onChange={handleInputChange} required className={cn("bg-input text-clubLight-foreground", formSubmitted && !formData.phone && "border-destructive")} />
