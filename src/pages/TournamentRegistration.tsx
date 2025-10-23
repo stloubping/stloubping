@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; // Keep Select for potential future use or if user wants it back
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { Link } from 'react-router-dom';
 import { Info } from 'lucide-react';
 import { showSuccess, showError } from '@/utils/toast';
+import { supabase } from '@/integrations/supabase/client'; // Import Supabase client
 
 const individualTableaux = [
   { id: 't1', time: '8h30', points: '500-799 pts', remaining: 30 },
@@ -29,11 +30,12 @@ const TournamentRegistration = () => {
     phone: '',
     licenceNumber: '',
     club: '',
-    selectedTableaux: [] as string[], // Array to store selected tableau IDs
+    selectedTableaux: [] as string[],
     doublesPartner: '',
     consent: false,
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
@@ -81,28 +83,58 @@ const TournamentRegistration = () => {
     return firstName && lastName && email && phone && licenceNumber && club && selectedTableaux.length > 0 && consent;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
 
-    if (validateForm()) {
-      console.log("Form Data Submitted:", formData);
-      showSuccess("Inscription envoyée avec succès ! Paiement à effectuer sur place.");
-      // Reset form after successful submission
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        licenceNumber: '',
-        club: '',
-        selectedTableaux: [],
-        doublesPartner: '',
-        consent: false,
-      });
-      setFormSubmitted(false);
-    } else {
+    if (!validateForm()) {
       showError("Veuillez remplir tous les champs obligatoires, sélectionner au moins un tableau et accepter les conditions.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const { data, error } = await supabase
+        .from('tournament_registrations')
+        .insert([
+          {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            email: formData.email,
+            phone: formData.phone,
+            licence_number: formData.licenceNumber,
+            club: formData.club,
+            selected_tableaux: formData.selectedTableaux,
+            doubles_partner: formData.doublesPartner,
+            consent: formData.consent,
+          },
+        ]);
+
+      if (error) {
+        console.error("Error submitting registration:", error);
+        showError("Erreur lors de l'envoi de l'inscription : " + error.message);
+      } else {
+        console.log("Registration submitted successfully:", data);
+        showSuccess("Inscription envoyée avec succès ! Paiement à effectuer sur place.");
+        // Reset form after successful submission
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          licenceNumber: '',
+          club: '',
+          selectedTableaux: [],
+          doublesPartner: '',
+          consent: false,
+        });
+        setFormSubmitted(false); // Reset form submission state
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      showError("Une erreur inattendue est survenue.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -260,8 +292,8 @@ const TournamentRegistration = () => {
                 En validant ce formulaire, vous déclarez avoir pris connaissance et accepté le règlement du tournoi.
                 Vous recevrez une confirmation par mail, pensez à vérifier dans vos courriers indésirables !
               </p>
-              <Button type="submit" className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-white text-lg py-6">
-                Valider et payer {totalFee}€ sur place
+              <Button type="submit" className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-white text-lg py-6" disabled={isSubmitting}>
+                {isSubmitting ? "Envoi en cours..." : `Valider et payer ${totalFee}€ sur place`}
               </Button>
             </Card>
           </form>
