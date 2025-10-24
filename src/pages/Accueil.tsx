@@ -73,7 +73,7 @@ const Accueil = () => {
 
       {/* Actualités Section */}
       <section className="py-16 px-4 md:px-8 lg:px-16">
-        <h2 className="text-3xl font-bold text-center text-clubDark mb-8">Dernières Actualités 2025</h2>
+        <h2 className="text-3xl font-bold text-center text-clubDark mb-8">Dernières Actualités</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {newsItems.map((news) => (
             <Card key={news.id} className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
