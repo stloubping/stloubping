@@ -13,7 +13,8 @@ const newsItems = [
     date: "15 Mai 2025",
     location: "Salle Omnisports, Ville",
     description: "Inscrivez-vous dès maintenant pour notre tournoi annuel de printemps ! Catégories jeunes et adultes.",
-    link: "/tournois"
+    link: "/tournois",
+    image: "/images/actualites/FB_IMG_1759672983725.jpg" // Ajout de l'image
   },
   {
     id: 2,
@@ -21,7 +22,8 @@ const newsItems = [
     date: "1er Juillet 2025",
     location: "Club de Tennis de Table",
     description: "Découvrez le tennis de table avec nos cours intensifs d'été. Tous niveaux acceptés.",
-    link: "/cours"
+    link: "/cours",
+    image: "/images/actualites/FB_IMG_1759672948691.jpg" // Ajout de l'image
   },
   {
     id: 3,
@@ -29,7 +31,8 @@ const newsItems = [
     date: "20 Septembre 2025",
     location: "Maison des Associations",
     description: "Venez participer aux décisions importantes de la vie du club. Votre avis compte !",
-    link: "/evenements"
+    link: "/evenements",
+    image: "/images/actualites/FB_IMG_1759672898128.jpg" // Ajout de l'image
   },
 ];
 
@@ -77,6 +80,7 @@ const Accueil = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {newsItems.map((news) => (
             <Card key={news.id} className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
+              <img src={news.image} alt={news.title} className="w-full h-48 object-cover" /> {/* Ajout de l'image */}
               <CardHeader>
                 <CardTitle className="text-2xl font-semibold text-clubPrimary">{news.title}</CardTitle>
                 <CardDescription className="flex items-center text-clubGray mt-2">
