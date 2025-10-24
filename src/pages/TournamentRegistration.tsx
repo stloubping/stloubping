@@ -151,7 +151,7 @@ const TournamentRegistration = () => {
         </CardHeader>
         <CardContent>
           <img
-            src="/images/actualites/tournoi-2026-affiche.png"
+            src="/images/actualites/FB_IMG_1759672898128.jpg"
             alt="Affiche du Tournoi Régional Saint-Loub'Ping 2026"
             className="w-full h-auto object-cover rounded-lg mb-8 shadow-md"
           />

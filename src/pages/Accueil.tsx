@@ -56,7 +56,7 @@ const Accueil = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-clubLight to-clubLighter text-clubDark">
       {/* Hero Section */}
-      <section className="relative h-[60vh] flex items-center justify-center text-center bg-cover bg-center" style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}>
+      <section className="relative h-[60vh] flex items-center justify-center text-center bg-cover bg-center" style={{ backgroundImage: "url('/images/hero/club-training.jpg')" }}>
         <div className="absolute inset-0 bg-black opacity-60"></div>
         <div className="relative z-10 text-white p-6 max-w-4xl">
           <h1 className="text-5xl md:text-6xl font-extrabold mb-4 leading-tight">
