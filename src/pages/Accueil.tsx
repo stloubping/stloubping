@@ -81,8 +81,6 @@ const eventItems = [
 const Accueil = () => {
   const { openLightbox } = useLightbox();
 
-  // Pas besoin de useEffect pour la solution iframe
-
   return (
     <div className="bg-clubLight text-clubLight-foreground">
       <HeroSection
