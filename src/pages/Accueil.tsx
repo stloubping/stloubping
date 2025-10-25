@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react'; // Import useState
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, MapPin } from "lucide-react";
@@ -9,6 +9,14 @@ import NewsCard from "@/components/NewsCard";
 import { useLightbox } from '@/context/LightboxContext';
 import HeroSection from "@/components/HeroSection"; 
 // import TrainingSchedule from "@/components/TrainingSchedule"; // Removed TrainingSchedule import
+
+// Déclaration globale pour window.FB et window.fbAsyncInit
+declare global {
+  interface Window {
+    fbAsyncInit: () => void;
+    FB: any; 
+  }
+}
 
 const newsItems = [
   {
@@ -81,39 +89,51 @@ const eventItems = [
 
 const Accueil = () => {
   const { openLightbox } = useLightbox();
+  const [fbSdkLoaded, setFbSdkLoaded] = useState(false); // Nouvel état pour suivre le chargement du SDK
 
   useEffect(() => {
-    // Load Facebook SDK script
-    if (document.getElementById('facebook-jssdk')) return;
-
-    const script = document.createElement('script');
-    script.id = 'facebook-jssdk';
-    script.src = "https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v18.0";
-    script.async = true;
-    script.defer = true;
-    script.crossOrigin = "anonymous";
-    document.body.appendChild(script);
-
-    // Initialize FB when it's loaded
+    // Définir window.fbAsyncInit avant de charger le script
     window.fbAsyncInit = function() {
       window.FB.init({
-        xfbml: true,
+        xfbml: true, // Cela devrait permettre le parsing automatique des balises XFBML
         version: 'v18.0'
       });
+      setFbSdkLoaded(true); // Le SDK est chargé et initialisé
     };
 
+    // Charger le script du SDK Facebook
+    if (!document.getElementById('facebook-jssdk')) {
+      const script = document.createElement('script');
+      script.id = 'facebook-jssdk';
+      script.src = "https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v18.0";
+      script.async = true;
+      script.defer = true;
+      script.crossOrigin = "anonymous";
+      document.body.appendChild(script);
+    } else {
+      // Si le script existe déjà (ex: hot reload), et FB est initialisé,
+      // on peut considérer le SDK comme chargé.
+      if (window.FB) {
+        setFbSdkLoaded(true);
+      }
+    }
+
     return () => {
-      // Clean up if component unmounts
+      // Nettoyage du contenu de fb-root lors du démontage du composant
       const fbRoot = document.getElementById('fb-root');
       if (fbRoot) {
-        fbRoot.innerHTML = ''; // Clear content
+        fbRoot.innerHTML = '';
       }
-      const fbScript = document.getElementById('facebook-jssdk');
-      if (fbScript) {
-        fbScript.remove();
-      }
+      // Le script du SDK n'est généralement pas supprimé car il peut être utilisé globalement.
     };
-  }, []);
+  }, []); // S'exécute une seule fois au montage du composant
+
+  useEffect(() => {
+    // Une fois que le SDK est chargé et que le composant est rendu, on force le parsing
+    if (fbSdkLoaded && window.FB) {
+      window.FB.XFBML.parse();
+    }
+  }, [fbSdkLoaded]); // S'exécute lorsque fbSdkLoaded passe à true
 
   return (
     <div className="bg-clubLight text-clubLight-foreground">
