@@ -1,84 +1,179 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import React from 'react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Users, Trophy } from "lucide-react";
+import { CalendarDays, MapPin, Facebook } from "lucide-react";
+import { Link } from 'react-router-dom';
+
+const newsItems = [
+  {
+    id: 1,
+    title: "Tournoi de Printemps 2025",
+    date: "15 Mai 2025",
+    location: "Salle Omnisports, Ville",
+    description: "Inscrivez-vous dès maintenant pour notre tournoi annuel de printemps ! Catégories jeunes et adultes.",
+    link: "/tournois",
+    image: "/images/actualites/FB_IMG_1759672983725.jpg"
+  },
+  {
+    id: 2,
+    title: "Cours d'été pour débutants",
+    date: "1er Juillet 2025",
+    location: "Club de Tennis de Table",
+    description: "Découvrez le tennis de table avec nos cours intensifs d'été. Tous niveaux acceptés.",
+    link: "/cours",
+    image: "/images/actualites/FB_IMG_1759672948691.jpg"
+  },
+  {
+    id: 3,
+    title: "Assemblée Générale Annuelle",
+    date: "20 Septembre 2025",
+    location: "Maison des Associations",
+    description: "Venez participer aux décisions importantes de la vie du club. Votre avis compte !",
+    link: "/evenements",
+    image: "/images/actualites/FB_IMG_1759672898128.jpg"
+  },
+];
+
+const eventItems = [
+  {
+    id: 1,
+    title: "Match de Championnat Régional",
+    date: "22 Juin 2025",
+    time: "14:00",
+    location: "Gymnase Municipal",
+    description: "Venez soutenir notre équipe première lors de ce match crucial pour le maintien !",
+  },
+  {
+    id: 2,
+    title: "Journée Portes Ouvertes",
+    date: "6 Septembre 2025",
+    time: "10:00 - 17:00",
+    location: "Club de Tennis de Table",
+    description: "Découvrez nos installations, rencontrez nos entraîneurs et essayez le tennis de table gratuitement.",
+  },
+];
 
 const Accueil = () => {
   return (
-    <div className="min-h-screen bg-clubBackground text-clubDark-foreground">
+    <div className="min-h-screen bg-gradient-to-br from-clubLight to-clubLighter text-clubDark">
       {/* Hero Section */}
-      <section className="relative h-[60vh] flex items-center justify-center text-center bg-cover bg-center" style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}>
-        <div className="absolute inset-0 bg-clubDark opacity-70"></div>
-        <div className="relative z-10 text-white p-4 md:p-8">
-          <h1 className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
-            Bienvenue au <span className="text-clubPrimary">St Loub Ping</span>
+      <section className="relative h-[60vh] flex items-center justify-center text-center bg-cover bg-center" style={{ backgroundImage: "url('/images/hero/club-training.jpg')" }}>
+        <div className="absolute inset-0 bg-black opacity-60"></div>
+        <div className="relative z-10 text-white p-6 max-w-4xl">
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-4 leading-tight">
+            Bienvenue au Club de Tennis de Table
           </h1>
-          <p className="text-lg md:text-xl mb-8 max-w-3xl mx-auto">
-            Votre club de tennis de table à Saint-Loubès. Passion, compétition et convivialité.
+          <p className="text-xl md:text-2xl mb-8">
+            Passion, Compétition et Convivialité
           </p>
-          <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-white text-lg px-8 py-6 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
-            <Link to="/adhesions">Rejoignez-nous !</Link>
+          <Button asChild className="bg-clubPrimary hover:bg-clubSecondary text-white text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+            <Link to="/inscription">Rejoignez-nous !</Link>
           </Button>
         </div>
       </section>
 
-      {/* About Section */}
-      <section className="py-16 px-4 md:px-8 lg:px-16 bg-clubLighter text-clubDark">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-6 text-clubDarker">À Propos de Notre Club</h2>
-          <p className="text-lg leading-relaxed mb-8">
-            Le St Loub Ping est un club dynamique dédié au tennis de table, offrant des opportunités pour tous les âges et tous les niveaux. Que vous soyez débutant ou joueur confirmé, venez partager notre passion dans une ambiance conviviale et stimulante.
-          </p>
-          <Button asChild variant="outline" className="border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white transition-colors duration-300">
-            <Link to="/le-club">En savoir plus</Link>
-          </Button>
+      {/* Actualités Section */}
+      <section className="py-16 px-4 md:px-8 lg:px-16">
+        <h2 className="text-3xl font-bold text-center text-clubDark mb-8">Dernières Actualités</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {newsItems.map((news) => (
+            <Card key={news.id} className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
+              <img src={news.image} alt={news.title} className="w-full h-48 object-cover" />
+              <CardHeader>
+                <CardTitle className="text-2xl font-semibold text-clubPrimary">{news.title}</CardTitle>
+                <CardDescription className="flex items-center text-clubGray mt-2">
+                  <CalendarDays className="mr-2 h-4 w-4" /> {news.date}
+                </CardDescription>
+                <CardDescription className="flex items-center text-clubGray">
+                  <MapPin className="mr-2 h-4 w-4" /> {news.location}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-clubDarker">{news.description}</p>
+              </CardContent>
+              <CardFooter>
+                <Button asChild className="w-full bg-clubSecondary hover:bg-clubPrimary text-white">
+                  <Link to={news.link}>En savoir plus</Link>
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 px-4 md:px-8 lg:px-16 bg-clubDark text-clubDark-foreground">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12 text-clubPrimary">Ce que nous offrons</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="bg-clubDarker border-clubPrimary text-clubDark-foreground shadow-lg">
-              <CardHeader className="flex flex-col items-center text-center">
-                <Calendar className="h-12 w-12 text-clubPrimary mb-4" />
-                <CardTitle className="text-xl font-semibold">Entraînements Réguliers</CardTitle>
-              </CardHeader>
-              <CardContent className="text-center">
-                Des séances d'entraînement adaptées à tous les niveaux, encadrées par des coachs expérimentés.
-              </CardContent>
-            </Card>
-            <Card className="bg-clubDarker border-clubPrimary text-clubDark-foreground shadow-lg">
-              <CardHeader className="flex flex-col items-center text-center">
-                <Users className="h-12 w-12 text-clubPrimary mb-4" />
-                <CardTitle className="text-xl font-semibold">Communauté Accueillante</CardTitle>
-              </CardHeader>
-              <CardContent className="text-center">
-                Rejoignez une famille de passionnés et partagez des moments inoubliables sur et en dehors des tables.
-              </CardContent>
-            </Card>
-            <Card className="bg-clubDarker border-clubPrimary text-clubDark-foreground shadow-lg">
-              <CardHeader className="flex flex-col items-center text-center">
-                <Trophy className="h-12 w-12 text-clubPrimary mb-4" />
-                <CardTitle className="text-xl font-semibold">Compétitions Locales</CardTitle>
-              </CardHeader>
-              <CardContent className="text-center">
-                Participez à des tournois et des championnats pour tester vos compétences et progresser.
-              </CardContent>
-            </Card>
-          </div>
+      {/* Section du Plugin de Page Facebook */}
+      <section className="py-16 px-4 md:px-8 lg:px-16 bg-clubSection text-clubDark">
+        <h2 className="text-3xl font-bold text-center mb-8">Notre Page Facebook</h2>
+        <div className="max-w-2xl mx-auto flex justify-center">
+          <iframe
+            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fp%2FSaint-LoubPing-100085857905183%2F&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true"
+            width="100%"
+            height="500"
+            style={{ border: 'none', overflow: 'hidden' }}
+            scrolling="no"
+            frameBorder="0"
+            allowFullScreen={true}
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+            title="Facebook Page Plugin"
+            className="rounded-lg shadow-lg"
+          ></iframe>
         </div>
-      </section>
-
-      {/* Call to Action Section */}
-      <section className="py-16 px-4 md:px-8 lg:px-16 text-center bg-clubPrimary text-white">
-        <h2 className="text-3xl font-bold mb-6">Prêt à jouer ?</h2>
-        <p className="text-lg mb-8 max-w-2xl mx-auto">
-          N'attendez plus pour rejoindre le St Loub Ping. Que vous souhaitiez vous entraîner, participer à des compétitions ou simplement vous amuser, nous avons une place pour vous.
+        <p className="mt-8 text-center text-muted-foreground">
+          Suivez notre page Facebook pour toutes les dernières nouvelles et mises à jour !
         </p>
-        <Button asChild variant="secondary" className="bg-white text-clubPrimary hover:bg-gray-100 text-lg px-8 py-6 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
-          <Link to="/contact">Contactez-nous</Link>
+      </section>
+
+      {/* Prochains Événements Section */}
+      <section className="bg-clubDark py-16 px-4 md:px-8 lg:px-16 text-white">
+        <h2 className="text-3xl font-bold text-center mb-8">Prochains Événements</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {eventItems.map((event) => (
+            <Card key={event.id} className="bg-clubLight shadow-lg rounded-xl overflow-hidden text-clubDark">
+              <CardHeader>
+                <CardTitle className="text-2xl font-semibold text-clubPrimary">{event.title}</CardTitle>
+                <CardDescription className="flex items-center text-clubGray mt-2">
+                  <CalendarDays className="mr-2 h-4 w-4" /> {event.date} à {event.time}
+                </CardDescription>
+                <CardDescription className="flex items-center text-clubGray">
+                  <MapPin className="mr-2 h-4 w-4" /> {event.location}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-clubDarker">{event.description}</p>
+              </CardContent>
+              <CardFooter>
+                <Button className="w-full bg-clubSecondary hover:bg-clubPrimary text-white">
+                  Détails
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Facebook Section (existing, kept for the main link) */}
+      <section className="py-16 px-4 md:px-8 lg:px-16 text-center bg-clubLighter">
+        <h2 className="text-3xl font-bold text-clubDark mb-8">Suivez-nous sur Facebook !</h2>
+        <p className="text-lg text-clubDarker mb-8 max-w-2xl mx-auto">
+          Restez connecté avec toutes les dernières nouvelles, photos et événements de notre club.
+        </p>
+        <Button asChild className="bg-[#1877F2] hover:bg-[#1877F2]/90 text-white text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+          <a href="https://www.facebook.com/p/Saint-LoubPing-100085857905183/?locale=fr_FR" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+            <Facebook className="mr-3 h-6 w-6" /> Notre Page Facebook
+          </a>
+        </Button>
+      </section>
+
+      {/* Contact Section */}
+      <section className="py-16 px-4 md:px-8 lg:px-16 text-center bg-clubLighter">
+        <h2 className="text-3xl font-bold text-clubDark mb-8">Contactez-nous</h2>
+        <p className="text-lg text-clubDarker mb-8 max-w-2xl mx-auto">
+          Vous avez des questions ? N'hésitez pas à nous contacter. Nous serons ravis de vous aider.
+        </p>
+        <Button asChild className="bg-clubPrimary hover:bg-clubSecondary text-white text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+          <Link to="/contact">Nous Contacter</Link>
         </Button>
       </section>
     </div>
