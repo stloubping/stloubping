@@ -1,9 +1,9 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, MapPin } from "lucide-react"; // Removed Facebook import as it's replaced by iframe
+import { CalendarDays, MapPin } from "lucide-react";
 import { Link } from 'react-router-dom';
 import NewsCard from "@/components/NewsCard";
 import { useLightbox } from '@/context/LightboxContext';
@@ -82,8 +82,44 @@ const eventItems = [
 const Accueil = () => {
   const { openLightbox } = useLightbox();
 
+  useEffect(() => {
+    // Load Facebook SDK script
+    if (document.getElementById('facebook-jssdk')) return;
+
+    const script = document.createElement('script');
+    script.id = 'facebook-jssdk';
+    script.src = "https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v18.0";
+    script.async = true;
+    script.defer = true;
+    script.crossOrigin = "anonymous";
+    document.body.appendChild(script);
+
+    // Initialize FB when it's loaded
+    window.fbAsyncInit = function() {
+      window.FB.init({
+        xfbml: true,
+        version: 'v18.0'
+      });
+    };
+
+    return () => {
+      // Clean up if component unmounts
+      const fbRoot = document.getElementById('fb-root');
+      if (fbRoot) {
+        fbRoot.innerHTML = ''; // Clear content
+      }
+      const fbScript = document.getElementById('facebook-jssdk');
+      if (fbScript) {
+        fbScript.remove();
+      }
+    };
+  }, []);
+
   return (
     <div className="bg-clubLight text-clubLight-foreground">
+      {/* Facebook SDK root element */}
+      <div id="fb-root"></div>
+
       {/* Hero Section */}
       <HeroSection
         title="Bienvenue au St Loub Ping"
@@ -166,19 +202,22 @@ const Accueil = () => {
               <p className="mb-6 text-clubLight-foreground">
                 Restez connecté avec le club et ne manquez aucune actualité, événement ou résultat directement depuis notre page Facebook.
               </p>
-              <div className="mt-8 flex justify-center w-full"> {/* Ajout de w-full ici */}
-                <iframe
-                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fpeople%2FSaint-LoubPing%2F100085857905183%2F&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=247094068655000"
-                  width="500"
-                  height="500"
-                  style={{ border: 'none', overflow: 'hidden' }}
-                  scrolling="no"
-                  frameBorder="0"
-                  allowTransparency={true} // Ajout de allowTransparency
-                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                  title="Facebook Page Plugin - Saint-Loub'Ping"
-                  className="max-w-full" // Ajout de max-w-full pour la réactivité
-                ></iframe>
+              <div className="mt-8 flex justify-center w-full">
+                <div
+                  className="fb-page"
+                  data-href="https://www.facebook.com/people/Saint-LoubPing/100085857905183/"
+                  data-tabs="timeline"
+                  data-width="500"
+                  data-height="500"
+                  data-small-header="false"
+                  data-adapt-container-width="true"
+                  data-hide-cover="false"
+                  data-show-facepile="true"
+                >
+                  <blockquote cite="https://www.facebook.com/people/Saint-LoubPing/100085857905183/" className="fb-xfbml-parse-ignore">
+                    <a href="https://www.facebook.com/people/Saint-LoubPing/100085857905183/">Saint-LoubPing</a>
+                  </blockquote>
+                </div>
               </div>
             </CardContent>
           </Card>
