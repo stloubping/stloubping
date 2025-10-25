@@ -24,13 +24,13 @@ const Navbar = () => {
   const location = useLocation();
 
   // TEMPORARY DEBUGGING AID: Display current window width
-  const [currentWidth, setCurrentWidth] = useState(0);
-  useEffect(() => {
-    const handleResize = () => setCurrentWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    setCurrentWidth(window.innerWidth); // Set initial width
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  // const [currentWidth, setCurrentWidth] = useState(0);
+  // useEffect(() => {
+  //   const handleResize = () => setCurrentWidth(window.innerWidth);
+  //   window.addEventListener('resize', handleResize);
+  //   setCurrentWidth(window.innerWidth); // Set initial width
+  //   return () => window.removeEventListener('resize', handleResize);
+  // }, []);
   // END TEMPORARY DEBUGGING AID
 
   console.log("Navbar - isMobile:", isMobile, "Window width:", window.innerWidth);
@@ -82,9 +82,9 @@ const Navbar = () => {
         )}
       </div>
       {/* TEMPORARY DEBUGGING AID */}
-      <div className="fixed bottom-0 left-0 bg-yellow-400 text-black p-1 text-xs z-[9999]">
+      {/* <div className="fixed bottom-0 left-0 bg-yellow-400 text-black p-1 text-xs z-[9999]">
         Mobile: {isMobile ? 'true' : 'false'}, Largeur: {currentWidth}px
-      </div>
+      </div> */}
       {/* END TEMPORARY DEBUGGING AID */}
     </header>
   );

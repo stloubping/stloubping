@@ -1,6 +1,6 @@
 import * as React from "react";
 
-const MOBILE_BREAKPOINT = 768;
+const MOBILE_BREAKPOINT = 1024; // Increased breakpoint to 1024px
 
 export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(
@@ -12,7 +12,7 @@ export function useIsMobile() {
     const onChange = () => {
       const currentIsMobile = window.innerWidth < MOBILE_BREAKPOINT;
       setIsMobile(currentIsMobile);
-      console.log("Is mobile:", currentIsMobile, "Window width:", window.innerWidth); // Added console log for debugging
+      // console.log("Is mobile:", currentIsMobile, "Window width:", window.innerWidth); // Removed console log for debugging
     };
     mql.addEventListener("change", onChange);
     setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
