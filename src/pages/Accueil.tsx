@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import NewsCard from "@/components/NewsCard";
 import { useLightbox } from '@/context/LightboxContext';
 import HeroSection from "@/components/HeroSection"; // Import HeroSection
-import TrainingSchedule from "@/components/TrainingSchedule"; // Import TrainingSchedule
+// import TrainingSchedule from "@/components/TrainingSchedule"; // Removed TrainingSchedule import
 
 const newsItems = [
   {
@@ -143,10 +143,10 @@ const Accueil = () => {
         </section>
 
         {/* Planning des Entraînements Section */}
-        <section className="mb-12">
+        {/* <section className="mb-12">
           <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Planning des Entraînements</h2>
           <TrainingSchedule />
-        </section>
+        </section> */}
 
         {/* Rejoignez-nous Section */}
         <section className="text-center mb-12">
