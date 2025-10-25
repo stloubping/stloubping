@@ -47,7 +47,8 @@ const App = () => (
     </QueryClientProvider>
     {/* CustomToaster désactivé temporairement pour le débogage de l'erreur React.Children.only */}
     {/* <CustomToaster /> */}
-    <Sonner />
+    {/* Sonner désactivé temporairement pour le débogage de l'erreur React.Children.only */}
+    {/* <Sonner /> */}
   </div>
 );
 
