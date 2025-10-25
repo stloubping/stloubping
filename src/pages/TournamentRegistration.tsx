@@ -20,13 +20,13 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const tableauxOptions = [
-  { id: "tableau1", label: "Tableau 1 : 500-799" },
-  { id: "tableau2", label: "Tableau 2 : 500-1399" },
-  { id: "tableau3", label: "Tableau 3 : 500-999" },
-  { id: "tableau4", label: "Tableau 4 : 500-1599" },
-  { id: "tableau5", label: "Tableau 5 : 500-1199" },
-  { id: "tableau6", label: "Tableau 6 : 500-NON NUM FR" },
-  { id: "tableau7", label: "Tableau 7 : Doubles <2800 PTS" },
+  { id: "t1", label: "Tableau 1 : 8h30 (500-799)", price: 10 },
+  { id: "t2", label: "Tableau 2 : 9h30 (500-1399)", price: 10 },
+  { id: "t3", label: "Tableau 3 : 10h30 (500-999)", price: 10 },
+  { id: "t4", label: "Tableau 4 : 11h30 (500-1599)", price: 10 },
+  { id: "t5", label: "Tableau 5 : 13h30 (500-1199)", price: 10 },
+  { id: "t6", label: "Tableau 6 : 14h30 (500-Non Num FR)", price: 10 },
+  { id: "d1", label: "Tableau 7 : 16h00 (Doubles <2800)", price: 5 }, // Prix par personne pour les doubles
 ];
 
 const formSchema = z.object({
@@ -57,6 +57,20 @@ const TournamentRegistration = () => {
     },
   });
 
+  const [totalPrice, setTotalPrice] = useState(0);
+  const selectedTableaux = form.watch("selected_tableaux");
+
+  useEffect(() => {
+    let currentTotal = 0;
+    selectedTableaux.forEach(selectedId => {
+      const option = tableauxOptions.find(opt => opt.id === selectedId);
+      if (option) {
+        currentTotal += option.price;
+      }
+    });
+    setTotalPrice(currentTotal);
+  }, [selectedTableaux]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const { data, error } = await supabase
@@ -75,15 +89,14 @@ const TournamentRegistration = () => {
     }
   };
 
-  const selectedTableaux = form.watch("selected_tableaux");
-  const showDoublesPartner = selectedTableaux.includes("tableau7");
+  const showDoublesPartner = selectedTableaux.includes("d1");
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <Card className="max-w-3xl mx-auto bg-clubLight text-clubLight-foreground shadow-lg"> {/* Changed text-clubDark-foreground to text-clubLight-foreground */}
+      <Card className="max-w-3xl mx-auto bg-clubLight text-clubLight-foreground shadow-lg">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold text-clubPrimary">Inscription au Tournoi</CardTitle>
-          <CardDescription className="text-clubLight-foreground/80 mt-2"> {/* Changed text-clubDark-foreground/80 to text-clubLight-foreground/80 */}
+          <CardDescription className="text-clubLight-foreground/80 mt-2">
             Remplissez le formulaire ci-dessous pour vous inscrire à notre tournoi.
           </CardDescription>
         </CardHeader>
@@ -158,7 +171,7 @@ const TournamentRegistration = () => {
                     <FormControl>
                       <Input placeholder="Votre numéro de licence" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
                     </FormControl>
-                    <FormDescription className="text-clubLight-foreground/70"> {/* Changed text-clubDark-foreground/70 to text-clubLight-foreground/70 */}
+                    <FormDescription className="text-clubLight-foreground/70">
                       Ex: 1234567A (7 caractères minimum)
                     </FormDescription>
                     <FormMessage />
@@ -211,8 +224,8 @@ const TournamentRegistration = () => {
                                     className="border-clubPrimary data-[state=checked]:bg-clubPrimary data-[state=checked]:text-clubDark-foreground"
                                   />
                                 </FormControl>
-                                <FormLabel className="font-normal text-clubLight-foreground"> {/* Changed text-clubDark-foreground to text-clubLight-foreground */}
-                                  {item.label}
+                                <FormLabel className="font-normal text-clubLight-foreground">
+                                  {item.label} <span className="font-semibold">({item.price}€)</span>
                                 </FormLabel>
                               </FormItem>
                             );
@@ -234,7 +247,7 @@ const TournamentRegistration = () => {
                       <FormControl>
                         <Input placeholder="Nom et Prénom du partenaire" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
                       </FormControl>
-                      <FormDescription className="text-clubLight-foreground/70"> {/* Changed text-clubDark-foreground/70 to text-clubLight-foreground/70 */}
+                      <FormDescription className="text-clubLight-foreground/70">
                         Uniquement si vous participez au tableau de doubles.
                       </FormDescription>
                       <FormMessage />
@@ -255,10 +268,10 @@ const TournamentRegistration = () => {
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                      <FormLabel className="text-clubLight-foreground"> {/* Changed text-clubDark-foreground to text-clubLight-foreground */}
+                      <FormLabel className="text-clubLight-foreground">
                         J'accepte les conditions de participation et le règlement du tournoi.
                       </FormLabel>
-                      <FormDescription className="text-clubLight-foreground/70"> {/* Changed text-clubDark-foreground/70 to text-clubLight-foreground/70 */}
+                      <FormDescription className="text-clubLight-foreground/70">
                         (Les conditions sont affichées sur l'affiche ci-dessus)
                       </FormDescription>
                     </div>
@@ -266,6 +279,17 @@ const TournamentRegistration = () => {
                   </FormItem>
                 )}
               />
+
+              {/* Affichage du prix total */}
+              <div className="mt-8 p-4 bg-clubSection rounded-md text-center">
+                <p className="text-lg font-semibold text-clubDark">
+                  Coût total de votre inscription : <span className="text-clubPrimary">{totalPrice}€</span>
+                </p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Le paiement sera effectué sur place le jour du tournoi.
+                </p>
+              </div>
+
               <Button type="submit" className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-clubDark-foreground">
                 S'inscrire
               </Button>
