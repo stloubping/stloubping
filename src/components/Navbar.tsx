@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // Import useState and useEffect
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -22,25 +22,15 @@ const navItems = [
 const Navbar = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
+  const [isSheetOpen, setIsSheetOpen] = useState(false); // État pour contrôler l'ouverture de la Sheet
 
-  // TEMPORARY DEBUGGING AID: Display current window width
-  // const [currentWidth, setCurrentWidth] = useState(0);
-  // useEffect(() => {
-  //   const handleResize = () => setCurrentWidth(window.innerWidth);
-  //   window.addEventListener('resize', handleResize);
-  //   setCurrentWidth(window.innerWidth); // Set initial width
-  //   return () => window.removeEventListener('resize', handleResize);
-  // }, []);
-  // END TEMPORARY DEBUGGING AID
-
-  console.log("Navbar - isMobile:", isMobile, "Window width:", window.innerWidth);
-
-  const NavLinks = ({ className }: { className?: string }) => (
+  const NavLinks = ({ className, closeSheet }: { className?: string; closeSheet?: () => void }) => (
     <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)}>
       {navItems.map((item) => (
         <Link
           key={item.name}
           to={item.path}
+          onClick={closeSheet} // Ferme la sheet au clic
           className={cn(
             "text-sm font-medium transition-colors hover:text-clubPrimary",
             location.pathname === item.path ? "text-clubPrimary" : "text-clubDark-foreground"
@@ -60,7 +50,7 @@ const Navbar = () => {
           <span>St Loub Ping</span>
         </Link>
         {isMobile ? (
-          <Sheet>
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}> {/* Contrôle l'ouverture/fermeture */}
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="text-clubDark-foreground z-50">
                 <Menu className="h-6 w-6" />
@@ -74,18 +64,13 @@ const Navbar = () => {
                   Explorez les sections du club.
                 </SheetDescription>
               </SheetHeader>
-              <NavLinks className="flex flex-col space-x-0 space-y-4 p-0" />
+              <NavLinks className="flex flex-col space-x-0 space-y-4 p-0" closeSheet={() => setIsSheetOpen(false)} />
             </SheetContent>
           </Sheet>
         ) : (
           <NavLinks />
         )}
       </div>
-      {/* TEMPORARY DEBUGGING AID */}
-      {/* <div className="fixed bottom-0 left-0 bg-yellow-400 text-black p-1 text-xs z-[9999]">
-        Mobile: {isMobile ? 'true' : 'false'}, Largeur: {currentWidth}px
-      </div> */}
-      {/* END TEMPORARY DEBUGGING AID */}
     </header>
   );
 };
