@@ -3,15 +3,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import HeroSection from "@/components/HeroSection";
 import TrainingSchedule from "@/components/TrainingSchedule"; // Import the new TrainingSchedule component
+import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
 
 const LeClub = () => {
+  const { openLightbox } = useLightbox(); // Use the lightbox hook
+
   return (
     <div className="bg-clubLight text-clubLight-foreground">
       <HeroSection
         title="Le Club"
         description="Découvrez l'histoire, les valeurs, les infrastructures et l'équipe qui font la richesse de notre club de tennis de table."
         imageUrl="/images/hero/FB_IMG_1759672983725.jpg" // Updated to use the uploaded image
-        imageAlt="Vue d'ensemble du club de tennis de table"
+        imageAlt="Vue d'overview du club de tennis de table"
       />
 
       <div className="container mx-auto px-4 py-8">
@@ -128,18 +131,15 @@ const LeClub = () => {
                 <li><span className="font-semibold">2 créneaux d'entraînement libres</span>.</li>
                 <li><span className="font-semibold">1 entraîneur à 17h00 / semaine annualisé</span>.</li>
               </ul>
-              <img src="/images/club/FB_IMG_1759672880255.jpg" alt="Infrastructure du club" className="mt-6 rounded-lg shadow-md w-full object-cover" />
+              <img
+                src="/images/club/FB_IMG_1759672880255.jpg"
+                alt="Infrastructure du club"
+                className="mt-6 rounded-lg shadow-md w-full object-cover cursor-zoom-in"
+                onClick={() => openLightbox("/images/club/FB_IMG_1759672880255.jpg")} // Open lightbox on image click
+              />
             </CardContent>
           </Card>
         </section>
-
-        {/* Section "Planning des Entraînements" supprimée */}
-        {/* <section className="mb-12">
-          <TrainingSchedule />
-          <p className="mt-4 text-sm text-muted-foreground text-center">
-            Les horaires et tarifs sont susceptibles d'être ajustés en début de saison.
-          </p>
-        </section> */}
 
         <section className="mb-12">
           <Card className="bg-clubLight shadow-lg rounded-xl">
@@ -174,73 +174,133 @@ const LeClub = () => {
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=102" alt="Président" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <img
+                    src="https://picsum.photos/150/150?random=102"
+                    alt="Président"
+                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
+                    onClick={() => openLightbox("https://picsum.photos/150/150?random=102")}
+                  />
                   <h4 className="font-semibold text-lg text-clubDark">Philippe Roux</h4>
                   <p className="text-sm text-muted-foreground">Président</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Visionnaire et pilier du club, il assure la direction générale.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=103" alt="Vice-Président" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <img
+                    src="https://picsum.photos/150/150?random=103"
+                    alt="Vice-Président"
+                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
+                    onClick={() => openLightbox("https://picsum.photos/150/150?random=103")}
+                  />
                   <h4 className="font-semibold text-lg text-clubDark">Yves Mounde</h4>
                   <p className="text-sm text-muted-foreground">Vice-Président</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Soutient le président et participe à la gestion du club.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=104" alt="Trésorier" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <img
+                    src="https://picsum.photos/150/150?random=104"
+                    alt="Trésorier"
+                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
+                    onClick={() => openLightbox("https://picsum.photos/150/150?random=104")}
+                  />
                   <h4 className="font-semibold text-lg text-clubDark">Patrice Gigaud</h4>
                   <p className="text-sm text-muted-foreground">Trésorier</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Responsable des finances et de la gestion budgétaire.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=105" alt="Trésorier adjoint" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <img
+                    src="https://picsum.photos/150/150?random=105"
+                    alt="Trésorier adjoint"
+                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
+                    onClick={() => openLightbox("https://picsum.photos/150/150?random=105")}
+                  />
                   <h4 className="font-semibold text-lg text-clubDark">Sandra Thuault</h4>
                   <p className="text-sm text-muted-foreground">Trésorier adjoint</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Assiste le trésorier dans ses fonctions.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=106" alt="Secrétaire" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <img
+                    src="https://picsum.photos/150/150?random=106"
+                    alt="Secrétaire"
+                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
+                    onClick={() => openLightbox("https://picsum.photos/150/150?random=106")}
+                  />
                   <h4 className="font-semibold text-lg text-clubDark">Olivier Goux</h4>
                   <p className="text-sm text-muted-foreground">Secrétaire</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Gère l'administration et la communication interne.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=107" alt="Secrétaire adjoint" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <img
+                    src="https://picsum.photos/150/150?random=107"
+                    alt="Secrétaire adjoint"
+                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
+                    onClick={() => openLightbox("https://picsum.photos/150/150?random=107")}
+                  />
                   <h4 className="font-semibold text-lg text-clubDark">Jérémie Monteignies</h4>
                   <p className="text-sm text-muted-foreground">Secrétaire adjoint</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Assiste le secrétaire dans ses tâches.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=108" alt="Membre du bureau" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <img
+                    src="https://picsum.photos/150/150?random=108"
+                    alt="Membre du bureau"
+                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
+                    onClick={() => openLightbox("https://picsum.photos/150/150?random=108")}
+                  />
                   <h4 className="font-semibold text-lg text-clubDark">Dominique</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=109" alt="Membre du bureau" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <img
+                    src="https://picsum.photos/150/150?random=109"
+                    alt="Membre du bureau"
+                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
+                    onClick={() => openLightbox("https://picsum.photos/150/150?random=109")}
+                  />
                   <h4 className="font-semibold text-lg text-clubDark">Wesley</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=110" alt="Membre du bureau" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <img
+                    src="https://picsum.photos/150/150?random=110"
+                    alt="Membre du bureau"
+                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
+                    onClick={() => openLightbox("https://picsum.photos/150/150?random=110")}
+                  />
                   <h4 className="font-semibold text-lg text-clubDark">Vincent</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=111" alt="Membre du bureau" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <img
+                    src="https://picsum.photos/150/150?random=111"
+                    alt="Membre du bureau"
+                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
+                    onClick={() => openLightbox("https://picsum.photos/150/150?random=111")}
+                  />
                   <h4 className="font-semibold text-lg text-clubDark">Michel</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=112" alt="Membre du bureau" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <img
+                    src="https://picsum.photos/150/150?random=112"
+                    alt="Membre du bureau"
+                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
+                    onClick={() => openLightbox("https://picsum.photos/150/150?random=112")}
+                  />
                   <h4 className="font-semibold text-lg text-clubDark">Yann</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img src="https://picsum.photos/150/150?random=113" alt="Membre du bureau" className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary" />
+                  <img
+                    src="https://picsum.photos/150/150?random=113"
+                    alt="Membre du bureau"
+                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
+                    onClick={() => openLightbox("https://picsum.photos/150/150?random=113")}
+                  />
                   <h4 className="font-semibold text-lg text-clubDark">Antoine</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
@@ -267,7 +327,12 @@ const LeClub = () => {
               <p className="text-clubLight-foreground mb-6">
                 Ces labels sont le reflet de notre travail quotidien pour offrir un environnement propice à l'épanouissement sportif et personnel de tous nos adhérents.
               </p>
-              <img src="https://picsum.photos/300/100?random=108" alt="Logos Labels FFTT" className="mt-6 mx-auto" />
+              <img
+                src="https://picsum.photos/300/100?random=108"
+                alt="Logos Labels FFTT"
+                className="mt-6 mx-auto cursor-zoom-in"
+                onClick={() => openLightbox("https://picsum.photos/300/100?random=108")} // Open lightbox on image click
+              />
             </CardContent>
           </Card>
         </section>

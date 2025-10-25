@@ -3,8 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Link } from 'react-router-dom';
+import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
 
 const Adhesions = () => {
+  const { openLightbox } = useLightbox(); // Use the lightbox hook
+
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Adhésions</h1>
@@ -36,7 +39,8 @@ const Adhesions = () => {
             <img
               src="/images/schedule/training-schedule-2025-2026.jpg"
               alt="Planning des entraînements Saison 2025-2026"
-              className="w-full h-auto object-contain rounded-lg shadow-md"
+              className="w-full h-auto object-contain rounded-lg shadow-md cursor-zoom-in"
+              onClick={() => openLightbox("/images/schedule/training-schedule-2025-2026.jpg")} // Open lightbox on image click
             />
             <p className="mt-4 text-sm text-muted-foreground text-center">
               Ces horaires sont susceptibles d'ajustements à l'issue des premiers entraînements.

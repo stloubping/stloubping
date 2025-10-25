@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
 
 const tableauxOptions = [
   { id: "t1", label: "Tableau 1 : 8h30 (500-799)" },
@@ -59,6 +60,7 @@ const TournamentRegistration = () => {
 
   const [totalPrice, setTotalPrice] = useState(0);
   const selectedTableaux = form.watch("selected_tableaux");
+  const { openLightbox } = useLightbox(); // Use the lightbox hook
 
   useEffect(() => {
     let currentTotal = 0;
@@ -118,7 +120,8 @@ const TournamentRegistration = () => {
           <img
             src="/images/actualites/Gemini_Generated_Image_mlgzatmlgzatmlgz.png"
             alt="Affiche du Tournoi Régional Saint-Loub'Ping 2026"
-            className="w-full h-auto object-cover rounded-lg mb-8 shadow-md"
+            className="w-full h-auto object-cover rounded-lg mb-8 shadow-md cursor-zoom-in"
+            onClick={() => openLightbox("/images/actualites/Gemini_Generated_Image_mlgzatmlgzatmlgz.png")} // Open lightbox on image click
           />
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

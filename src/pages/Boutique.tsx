@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
+import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
 
 const jerseys = [
   {
@@ -28,6 +29,8 @@ const jerseys = [
 ];
 
 const Boutique = () => {
+  const { openLightbox } = useLightbox(); // Use the lightbox hook
+
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Boutique du Club</h1>
@@ -58,7 +61,12 @@ const Boutique = () => {
           {jerseys.map((jersey) => (
             <Card key={jersey.id} className="bg-clubLight shadow-md hover:shadow-lg transition-shadow duration-300 text-center rounded-xl">
               <CardContent className="p-6">
-                <img src={jersey.image} alt={jersey.name} className="w-full h-48 object-cover rounded-md mb-4" />
+                <img
+                  src={jersey.image}
+                  alt={jersey.name}
+                  className="w-full h-48 object-cover rounded-md mb-4 cursor-zoom-in"
+                  onClick={() => openLightbox(jersey.image)} // Open lightbox on image click
+                />
                 <h3 className="text-xl font-semibold mb-2 text-clubDark">{jersey.name}</h3>
                 <p className="text-sm text-muted-foreground mb-4">{jersey.description}</p>
                 <p className="text-2xl font-bold text-clubPrimary mb-4">{jersey.price}</p>

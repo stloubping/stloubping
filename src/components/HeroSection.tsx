@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
+import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
 
 interface HeroSectionProps {
   imageUrl: string;
@@ -10,12 +11,15 @@ interface HeroSectionProps {
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ imageUrl, imageAlt, title, description }) => {
+  const { openLightbox } = useLightbox();
+
   return (
     <section className="relative bg-clubDark text-clubDark-foreground rounded-xl shadow-lg mb-12 overflow-hidden">
       <img
         src={imageUrl}
         alt={imageAlt}
-        className="absolute inset-0 w-full h-full object-cover opacity-40"
+        className="absolute inset-0 w-full h-full object-cover opacity-40 cursor-zoom-in"
+        onClick={() => openLightbox(imageUrl)}
       />
       <div className="relative z-10 flex flex-col items-center justify-center text-center py-20 px-6">
         <h1 className="text-5xl font-extrabold mb-4 leading-tight">{title}</h1>

@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { CalendarDays, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
 
 interface NewsItem {
   id: number;
@@ -24,6 +25,7 @@ interface NewsCardProps {
 const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
   const truncateLength = 200; // Nombre de caractères pour l'aperçu
+  const { openLightbox } = useLightbox(); // Use the lightbox hook
 
   const truncatedDescription = news.description.length > truncateLength
     ? news.description.substring(0, truncateLength) + "..."
@@ -31,7 +33,12 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
 
   return (
     <Card className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <img src={news.image} alt={news.title} className="w-full h-48 object-cover" />
+      <img
+        src={news.image}
+        alt={news.title}
+        className="w-full h-48 object-cover cursor-zoom-in"
+        onClick={() => openLightbox(news.image)} // Open lightbox on image click
+      />
       <CardHeader>
         <CardTitle className="text-2xl font-semibold text-clubPrimary">{news.title}</CardTitle>
         <CardDescription className="flex items-center text-clubLight-foreground/80 mt-2">

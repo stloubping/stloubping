@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"; // Import Dialog components
+import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
 
 const teams = [
   { name: "Équipe 1", division: "Régionale 2", captain: "Wesley" },
@@ -47,6 +48,8 @@ const recentMatchResults = [
 ];
 
 const CompetitionsEquipes = () => {
+  const { openLightbox } = useLightbox(); // Use the lightbox hook
+
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Compétitions & Équipes</h1>
@@ -74,7 +77,7 @@ const CompetitionsEquipes = () => {
         </Card>
       </section>
 
-      {/* Calendrier des Compétitions Section */}
+      {/* Calendrier des Compétitions Section (already has its own Dialog) */}
       <section className="mb-12">
         <Card className="bg-clubLight shadow-lg rounded-xl">
           <CardHeader>
@@ -114,7 +117,12 @@ const CompetitionsEquipes = () => {
               {recentMatchResults.map((match) => (
                 <Card key={match.id} className="bg-clubLight shadow-md rounded-lg text-center">
                   <CardContent className="p-4">
-                    <img src={match.image} alt={match.alt} className="w-full h-auto object-cover rounded-md mb-4" />
+                    <img
+                      src={match.image}
+                      alt={match.alt}
+                      className="w-full h-auto object-cover rounded-md mb-4 cursor-zoom-in"
+                      onClick={() => openLightbox(match.image)} // Open lightbox on image click
+                    />
                     <p className="text-lg font-semibold text-clubDark">{match.result}</p>
                   </CardContent>
                 </Card>

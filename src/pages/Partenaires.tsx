@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from 'react-router-dom';
+import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
 
 const sponsors = [
   { name: "Sport & Raquettes", logo: "https://picsum.photos/150/80?random=13", description: "Fournisseur officiel d'équipements de tennis de table." },
@@ -10,6 +11,8 @@ const sponsors = [
 ];
 
 const Partenaires = () => {
+  const { openLightbox } = useLightbox(); // Use the lightbox hook
+
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Nos Partenaires</h1>
@@ -38,7 +41,12 @@ const Partenaires = () => {
           {sponsors.map((sponsor, index) => (
             <Card key={index} className="bg-clubLight shadow-md hover:shadow-lg transition-shadow duration-300 text-center rounded-xl">
               <CardContent className="p-6 flex flex-col items-center justify-center h-full">
-                <img src={sponsor.logo} alt={sponsor.name} className="mb-4 max-h-20 object-contain" />
+                <img
+                  src={sponsor.logo}
+                  alt={sponsor.name}
+                  className="mb-4 max-h-20 object-contain cursor-zoom-in"
+                  onClick={() => openLightbox(sponsor.logo)} // Open lightbox on image click
+                />
                 <h3 className="text-xl font-semibold mb-2 text-clubDark">{sponsor.name}</h3>
                 <p className="text-sm text-muted-foreground">{sponsor.description}</p>
               </CardContent>

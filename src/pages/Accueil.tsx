@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { CalendarDays, MapPin, Facebook } from "lucide-react";
 import { Link } from 'react-router-dom';
 import NewsCard from "@/components/NewsCard"; // Import the new NewsCard component
+import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
 
 const newsItems = [
   {
@@ -50,6 +51,8 @@ const eventItems = [
 ];
 
 const Accueil = () => {
+  const { openLightbox } = useLightbox(); // Use the lightbox hook
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-clubLight to-clubLighter text-clubDark">
       {/* Hero Section */}

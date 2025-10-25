@@ -15,6 +15,7 @@ import TournamentRegistration from "./pages/TournamentRegistration"; // Import t
 import TournamentRegistrationsList from "./pages/TournamentRegistrationsList"; // Import the new TournamentRegistrationsList component
 import ClassementJoueurs from "./pages/ClassementJoueurs"; // Import the new ClassementJoueurs component
 import NotFound from "./pages/NotFound";
+import { LightboxProvider } from "./context/LightboxContext"; // Import LightboxProvider
 
 const queryClient = new QueryClient();
 
@@ -24,22 +25,24 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Layout> {/* Wrap all routes with the Layout component */}
-          <Routes>
-            <Route path="/" element={<Accueil />} />
-            <Route path="/le-club" element={<LeClub />} />
-            <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
-            <Route path="/adhesions" element={<Adhesions />} />
-            <Route path="/boutique" element={<Boutique />} />
-            <Route path="/partenaires" element={<Partenaires />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/tournoi-inscription" element={<TournamentRegistration />} /> {/* New route for tournament registration */}
-            <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} /> {/* New route for tournament registrations list */}
-            <Route path="/classement-joueurs" element={<ClassementJoueurs />} /> {/* New route for player rankings */}
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
+        <LightboxProvider> {/* Wrap Layout with LightboxProvider */}
+          <Layout> {/* Wrap all routes with the Layout component */}
+            <Routes>
+              <Route path="/" element={<Accueil />} />
+              <Route path="/le-club" element={<LeClub />} />
+              <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
+              <Route path="/adhesions" element={<Adhesions />} />
+              <Route path="/boutique" element={<Boutique />} />
+              <Route path="/partenaires" element={<Partenaires />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/tournoi-inscription" element={<TournamentRegistration />} /> {/* New route for tournament registration */}
+              <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} /> {/* New route for tournament registrations list */}
+              <Route path="/classement-joueurs" element={<ClassementJoueurs />} /> {/* New route for player rankings */}
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        </LightboxProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
