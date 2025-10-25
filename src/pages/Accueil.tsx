@@ -166,17 +166,18 @@ const Accueil = () => {
               <p className="mb-6 text-clubLight-foreground">
                 Restez connecté avec le club et ne manquez aucune actualité, événement ou résultat directement depuis notre page Facebook.
               </p>
-              <div className="mt-8 flex justify-center">
+              <div className="mt-8 flex justify-center w-full"> {/* Ajout de w-full ici */}
                 <iframe
-                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fpeople%2FSaint-LoubPing%2F100085857905183%2F&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true"
-                  width="100%"
+                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fpeople%2FSaint-LoubPing%2F100085857905183%2F&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=247094068655000"
+                  width="500"
                   height="500"
-                  style={{ border: 'none', overflow: 'hidden', maxWidth: '500px' }}
+                  style={{ border: 'none', overflow: 'hidden' }}
                   scrolling="no"
                   frameBorder="0"
-                  allowFullScreen={true}
+                  allowTransparency={true} // Ajout de allowTransparency
                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                   title="Facebook Page Plugin - Saint-Loub'Ping"
+                  className="max-w-full" // Ajout de max-w-full pour la réactivité
                 ></iframe>
               </div>
             </CardContent>
