@@ -85,16 +85,16 @@ const Accueil = () => {
   return (
     <div className="bg-clubLight text-clubLight-foreground">
       {/* Hero Section */}
-      {/* <HeroSection
+      <HeroSection
         title="Bienvenue au St Loub Ping"
         description="Votre club de tennis de table à Saint-Loubès. Passion, convivialité et compétition pour tous les âges et tous les niveaux."
         imageUrl="/images/hero/club-training.jpg"
         imageAlt="Joueurs de tennis de table en plein entraînement"
-      /> */}
+      />
 
       <div className="container mx-auto px-4 py-8">
         {/* Actualités Section */}
-        {/* <section className="mb-12">
+        <section className="mb-12">
           <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Dernières Actualités</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {newsItems.map((news) => (
@@ -106,10 +106,10 @@ const Accueil = () => {
               <Link to="/actualites">Voir toutes les actualités</Link>
             </Button>
           </div>
-        </section> */}
+        </section>
 
         {/* Événements à Venir Section */}
-        {/* <section className="mb-12">
+        <section className="mb-12">
           <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Événements à Venir</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {eventItems.map((event) => (
@@ -140,7 +140,7 @@ const Accueil = () => {
               </Card>
             ))}
           </div>
-        </section> */}
+        </section>
 
         {/* Planning des Entraînements Section */}
         <section className="mb-12">
