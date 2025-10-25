@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react" // Import React for React.Fragment
 import {
   Toast,
   ToastClose,
@@ -15,21 +16,23 @@ export function Toaster() {
 
   return (
     <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
-        return (
-          <Toast key={id} {...props}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && (
-                <ToastDescription>{description}</ToastDescription>
-              )}
-            </div>
-            {action}
-            <ToastClose />
-          </Toast>
-        )
-      })}
-      <ToastViewport />
+      <React.Fragment> {/* Enveloppe tous les enfants dans un Fragment */}
+        {toasts.map(function ({ id, title, description, action, ...props }) {
+          return (
+            <Toast key={id} {...props}>
+              <div className="grid gap-1">
+                {title && <ToastTitle>{title}</ToastTitle>}
+                {description && (
+                  <ToastDescription>{description}</ToastDescription>
+                )}
+              </div>
+              {action}
+              <ToastClose />
+            </Toast>
+          )
+        })}
+        <ToastViewport />
+      </React.Fragment>
     </ToastProvider>
   )
 }
