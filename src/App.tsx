@@ -23,30 +23,28 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <React.Fragment> {/* Wrap multiple children in a Fragment */}
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <LightboxProvider> {/* Wrap Layout with LightboxProvider */}
-            <Layout> {/* Wrap all routes with the Layout component */}
-              <Routes>
-                <Route path="/" element={<Accueil />} />
-                <Route path="/le-club" element={<LeClub />} />
-                <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
-                <Route path="/adhesions" element={<Adhesions />} />
-                <Route path="/boutique" element={<Boutique />} />
-                <Route path="/partenaires" element={<Partenaires />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/tournoi-inscription" element={<TournamentRegistration />} /> {/* New route for tournament registration */}
-                <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} /> {/* New route for tournament registrations list */}
-                <Route path="/classement-joueurs" element={<ClassementJoueurs />} /> {/* New route for player rankings */}
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Layout>
-          </LightboxProvider>
-        </BrowserRouter>
-      </React.Fragment>
+      <BrowserRouter>
+        <LightboxProvider>
+          <Layout> {/* Wrap all routes with the Layout component */}
+            <Toaster /> {/* Moved here */}
+            <Sonner /> {/* Moved here */}
+            <Routes>
+              <Route path="/" element={<Accueil />} />
+              <Route path="/le-club" element={<LeClub />} />
+              <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
+              <Route path="/adhesions" element={<Adhesions />} />
+              <Route path="/boutique" element={<Boutique />} />
+              <Route path="/partenaires" element={<Partenaires />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/tournoi-inscription" element={<TournamentRegistration />} /> {/* New route for tournament registration */}
+              <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} /> {/* New route for tournament registrations list */}
+              <Route path="/classement-joueurs" element={<ClassementJoueurs />} /> {/* New route for player rankings */}
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        </LightboxProvider>
+      </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
