@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, MapPin } from "lucide-react";
+import { CalendarDays, MapPin, Facebook } from "lucide-react"; // Import Facebook icon
 import { Link } from 'react-router-dom';
 
 const newsItems = [
@@ -129,6 +129,19 @@ const Accueil = () => {
             </Card>
           ))}
         </div>
+      </section>
+
+      {/* Facebook Section */}
+      <section className="py-16 px-4 md:px-8 lg:px-16 text-center bg-clubLighter">
+        <h2 className="text-3xl font-bold text-clubDark mb-8">Suivez-nous sur Facebook !</h2>
+        <p className="text-lg text-clubDarker mb-8 max-w-2xl mx-auto">
+          Restez connecté avec toutes les dernières nouvelles, photos et événements de notre club.
+        </p>
+        <Button asChild className="bg-[#1877F2] hover:bg-[#1877F2]/90 text-white text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+          <a href="https://www.facebook.com/votrepagefacebook" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+            <Facebook className="mr-3 h-6 w-6" /> Notre Page Facebook
+          </a>
+        </Button>
       </section>
 
       {/* Contact Section */}
