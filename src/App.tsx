@@ -22,8 +22,8 @@ import React from "react";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <React.Fragment> {/* Enveloppe tous les enfants du QueryClientProvider dans un Fragment */}
+  <React.Fragment> {/* App retourne un seul Fragment de niveau supérieur */}
+    <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <BrowserRouter>
           <LightboxProvider>
@@ -45,11 +45,11 @@ const App = () => (
           </LightboxProvider>
         </BrowserRouter>
       </TooltipProvider>
-      {/* Toaster et Sonner sont des composants globaux, placés en dehors de tous les fournisseurs stricts */}
-      <Toaster />
-      <Sonner />
-    </React.Fragment>
-  </QueryClientProvider>
+    </QueryClientProvider>
+    {/* Toaster et Sonner sont des composants globaux, placés en tant que frères du QueryClientProvider */}
+    <Toaster />
+    <Sonner />
+  </React.Fragment>
 );
 
 export default App;
