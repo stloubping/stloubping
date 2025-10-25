@@ -19,12 +19,12 @@ const newsItems = [
   },
   {
     id: 2,
-    title: "Championnat par équipe : Journée 4 Phase 1",
-    date: "Samedi 26 Octobre",
+    title: "Championnat par équipe : Journée 3 Phase 1",
+    date: "Samedi prochain",
     location: "Divers lieux",
-    description: "Découvrez le programme de la 4ème journée de la Phase 1 du Championnat par équipe ! Nos équipes Saint Loub' Ping 1 (R2), 2 (PR), 3 (D2), 4 (D2), 5 (D3) et 6 (D4) seront en action contre divers adversaires. Venez nombreux encourager nos joueurs !",
+    description: "Découvrez le programme de la 3ème journée de la Phase 1 du Championnat par équipe ! Nos équipes Saint Loub' Ping 1 (R2), 2 (PR), 4 (D2), 5 (D3) et 6 (D4) seront en action contre des adversaires comme CA Beglais 4, US Cenon 5, CA Ste Helene 4, Le Haillan TT 7 et TT Farguais 4. L'équipe Saint Loub' Ping 3 (D2) sera exempte cette journée. Venez nombreux encourager nos joueurs !",
     link: "/competitions-equipes", // Lien vers la page des compétitions
-    image: "/images/actualites/championnat-equipe-journee-4-phase-1.jpg"
+    image: "/images/actualites/championnat-equipe-journee-3-phase-1.png"
   },
   {
     id: 3,
