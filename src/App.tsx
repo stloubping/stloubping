@@ -17,12 +17,14 @@ import ClassementJoueurs from "./pages/ClassementJoueurs";
 import NotFound from "./pages/NotFound";
 import { LightboxProvider } from "./context/LightboxContext";
 import React from "react";
-// ToastProvider n'est plus importé ici car il est géré à l'intérieur de Toaster
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <React.Fragment> {/* App retourne un seul Fragment de niveau supérieur */}
+  // Enveloppe tout le contenu de l'application dans un seul div racine.
+  // Cela garantit que le composant App retourne toujours un seul élément DOM,
+  // ce qui peut résoudre les problèmes avec React.Children.only.
+  <div className="app-root">
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <BrowserRouter>
@@ -46,10 +48,11 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
-    {/* Toaster et Sonner sont des composants globaux, placés en tant que frères du QueryClientProvider */}
+    {/* Toaster et Sonner sont des composants globaux, placés comme frères de l'arbre principal de l'application,
+        mais toujours à l'intérieur du div racine unique. */}
     <Toaster />
     <Sonner />
-  </React.Fragment>
+  </div>
 );
 
 export default App;
