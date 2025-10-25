@@ -12,12 +12,12 @@ interface LightboxModalProps {
 const LightboxModal: React.FC<LightboxModalProps> = ({ imageUrl, onClose }) => {
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-full h-full flex items-center justify-center p-0 bg-transparent border-none shadow-none">
+      <DialogContent className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 cursor-pointer">
         <img
           src={imageUrl}
           alt="Image agrandie"
-          className="max-w-[90vw] max-h-[90vh] object-contain cursor-zoom-out"
-          onClick={onClose} // Close on image click
+          className="max-w-[90vw] max-h-[90vh] object-contain"
+          onClick={(e) => e.stopPropagation()} // Prevent closing when clicking on the image itself
         />
       </DialogContent>
     </Dialog>
