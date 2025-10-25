@@ -40,19 +40,12 @@ const newsItems = [
 const eventItems = [
   {
     id: 1,
-    title: "Match de Championnat Régional",
-    date: "22 Juin 2025",
-    time: "14:00",
-    location: "Gymnase Municipal",
-    description: "Venez soutenir notre équipe première lors de ce match crucial pour le maintien !",
-  },
-  {
-    id: 2,
-    title: "Journée Portes Ouvertes",
-    date: "6 Septembre 2025",
-    time: "10:00 - 17:00",
-    location: "Club de Tennis de Table",
-    description: "Découvrez nos installations, rencontrez nos entraîneurs et essayez le tennis de table gratuitement.",
+    title: "Championnat par équipe : Journée 3 Phase 1",
+    date: "Samedi 26 Octobre 2025",
+    location: "Divers lieux",
+    description: "Découvrez le programme de la 3ème journée de la Phase 1 du Championnat par équipe ! Nos équipes Saint Loub' Ping 1 (R2), 2 (PR), 4 (D2), 5 (D3) et 6 (D4) seront en action contre des adversaires comme CA Beglais 4, US Cenon 5, CA Ste Helene 4, Le Haillan TT 7 et TT Farguais 4. L'équipe Saint Loub' Ping 3 (D2) sera exempte cette journée. Venez nombreux encourager nos joueurs !",
+    link: "/competitions-equipes",
+    image: "/images/events/championnat-equipe-journee-3-phase-1.png"
   },
 ];
 
@@ -110,27 +103,9 @@ const Accueil = () => {
       {/* Prochains Événements Section */}
       <section className="bg-clubDark py-16 px-4 md:px-8 lg:px-16 text-white">
         <h2 className="text-3xl font-bold text-center mb-8">Prochains Événements</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
           {eventItems.map((event) => (
-            <Card key={event.id} className="bg-clubLight shadow-lg rounded-xl overflow-hidden text-clubDark">
-              <CardHeader>
-                <CardTitle className="text-2xl font-semibold text-clubPrimary">{event.title}</CardTitle>
-                <CardDescription className="flex items-center text-clubLight-foreground/80 mt-2">
-                  <CalendarDays className="mr-2 h-4 w-4" /> {event.date} à {event.time}
-                </CardDescription>
-                <CardDescription className="flex items-center text-clubLight-foreground/80">
-                  <MapPin className="mr-2 h-4 w-4" /> {event.location}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-clubDarker">{event.description}</p>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full bg-clubSecondary hover:bg-clubPrimary text-white">
-                  Détails
-                </Button>
-              </CardFooter>
-            </Card>
+            <NewsCard key={event.id} news={event} />
           ))}
         </div>
       </section>
