@@ -153,19 +153,6 @@ const Accueil = () => {
         </div>
       </section>
 
-      {/* Facebook Section (existing, kept for the main link) */}
-      <section className="py-16 px-4 md:px-8 lg:px-16 text-center bg-clubLighter">
-        <h2 className="text-3xl font-bold text-clubDark mb-8">Suivez-nous sur Facebook !</h2>
-        <p className="text-lg text-clubDarker mb-8 max-w-2xl mx-auto">
-          Restez connecté avec toutes les dernières nouvelles, photos et événements de notre club.
-        </p>
-        <Button asChild className="bg-[#1877F2] hover:bg-[#1877F2]/90 text-white text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
-          <a href="https://www.facebook.com/p/Saint-LoubPing-100085857905183/?locale=fr_FR" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-            <Facebook className="mr-3 h-6 w-6" /> Notre Page Facebook
-          </a>
-        </Button>
-      </section>
-
       {/* Contact Section */}
       <section className="py-16 px-4 md:px-8 lg:px-16 text-center bg-clubLighter">
         <h2 className="text-3xl font-bold text-clubDark mb-8">Contactez-nous</h2>
