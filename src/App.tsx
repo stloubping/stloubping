@@ -27,8 +27,19 @@ const App = () => (
         <BrowserRouter>
           <LightboxProvider>
             <Layout>
-              {/* Les routes seront réintroduites après */}
-              <h1>Application en cours de débogage... (Layout réactivé)</h1>
+              <Routes>
+                <Route path="/" element={<Accueil />} />
+                <Route path="/le-club" element={<LeClub />} />
+                <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
+                <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
+                <Route path="/adhesions" element={<Adhesions />} />
+                <Route path="/boutique" element={<Boutique />} />
+                <Route path="/partenaires" element={<Partenaires />} />
+                <Route path="/tournoi-inscription" element={<TournamentRegistration />} />
+                <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
             </Layout>
           </LightboxProvider>
         </BrowserRouter>
