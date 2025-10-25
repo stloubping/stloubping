@@ -26,8 +26,10 @@ const App = () => (
       <TooltipProvider>
         <BrowserRouter>
           <LightboxProvider>
-            {/* Les autres composants seront réintroduits progressivement */}
-            <h1>Application en cours de débogage... (BrowserRouter et LightboxProvider réactivés)</h1>
+            <Layout>
+              {/* Les routes seront réintroduites après */}
+              <h1>Application en cours de débogage... (Layout réactivé)</h1>
+            </Layout>
           </LightboxProvider>
         </BrowserRouter>
       </TooltipProvider>
