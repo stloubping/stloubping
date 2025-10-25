@@ -9,12 +9,12 @@ import { Link } from 'react-router-dom';
 const newsItems = [
   {
     id: 1,
-    title: "Tournoi de Printemps 2025",
-    date: "15 Mai 2025",
-    location: "Salle Omnisports, Ville",
-    description: "Inscrivez-vous dès maintenant pour notre tournoi annuel de printemps ! Catégories jeunes et adultes.",
-    link: "/tournois",
-    image: "/images/actualites/FB_IMG_1759672983725.jpg"
+    title: "🏓 Tournoi des Familles 2025 : une soirée pleine d’énergie et de sourires !",
+    date: "Vendredi dernier",
+    location: "Club de Tennis de Table",
+    description: "Vendredi dernier, notre club a accueilli le traditionnel Tournoi des Familles, un moment toujours très attendu où chaque licencié peut faire découvrir le tennis de table à un proche — parent, enfant, ami… le temps d’une soirée placée sous le signe du partage et de la convivialité.\n\n🎉 43 équipes se sont affrontées dans une ambiance bon enfant, avec 108 matchs disputés et 324 manches jouées ! Autant dire que les balles ont volé dans tous les sens… et les rires aussi !\n\n🍽️ Pendant que certains s’acharnaient à la table, d’autres profitaient du buffet façon auberge espagnole, riche en saveurs et en échanges. Un vrai régal pour les papilles et pour les liens humains.\n\n🥇 Le podium 2025 :\n- Famille Serelle\n- Famille Legoix\n- Famille Reynaud\n\nBravo à tous les participants pour leur bonne humeur et leur esprit sportif ! Et un grand merci à celles et ceux qui ont contribué à l’organisation de cette belle soirée 💙\n\nMerci à Margaux pour les photos ci jointes.",
+    link: "/actualites/tournoi-familles-2025", // Un lien plus spécifique si une page dédiée existe
+    image: "/images/actualites/559050727_785921184279805_5144790509263314206_n.jpg"
   },
   {
     id: 2,
@@ -91,7 +91,7 @@ const Accueil = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-clubDarker">{news.description}</p>
+                <p className="text-clubDarker whitespace-pre-line">{news.description}</p>
               </CardContent>
               <CardFooter>
                 <Button asChild className="w-full bg-clubSecondary hover:bg-clubPrimary text-white">
