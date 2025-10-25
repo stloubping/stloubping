@@ -10,15 +10,15 @@ import { useLightbox } from '@/context/LightboxContext';
 import HeroSection from "@/components/HeroSection";
 
 const newsItems = [
-  {
-    id: 1,
-    title: "Championnat par équipe - Journée 4 Phase 1",
-    date: "20 Octobre 2024",
-    location: "Salle du club",
-    description: "Venez nombreux encourager nos équipes lors de la 4ème journée du championnat par équipe. Ambiance garantie et matchs de haut niveau en perspective !",
-    link: "/actualites/championnat-journee-4",
-    image: "/images/actualites/championnat-equipe-journee-4-phase-1.jpg",
-  },
+  // {
+  //   id: 1,
+  //   title: "Championnat par équipe - Journée 4 Phase 1",
+  //   date: "20 Octobre 2024",
+  //   location: "Salle du club",
+  //   description: "Venez nombreux encourager nos équipes lors de la 4ème journée du championnat par équipe. Ambiance garantie et matchs de haut niveau en perspective !",
+  //   link: "/actualites/championnat-journee-4",
+  //   image: "/images/actualites/championnat-equipe-journee-4-phase-1.jpg",
+  // },
   {
     id: 2,
     title: "Tournoi Régional Saint-Loub'Ping 2026",
@@ -49,15 +49,15 @@ const newsItems = [
 ];
 
 const eventItems = [
-  // {
-  //   id: 1,
-  //   title: "Portes Ouvertes du Club",
-  //   date: "02 Septembre 2025",
-  //   time: "14h00 - 18h00",
-  //   location: "Salle du club",
-  //   description: "Venez découvrir le tennis de table, essayer nos tables et rencontrer nos entraîneurs. Initiation gratuite pour tous !",
-  //   image: "/images/actualites/FB_IMG_1759672898128.jpg",
-  // },
+  {
+    id: 1,
+    title: "Portes Ouvertes du Club",
+    date: "02 Septembre 2025",
+    time: "14h00 - 18h00",
+    location: "Salle du club",
+    description: "Venez découvrir le tennis de table, essayer nos tables et rencontrer nos entraîneurs. Initiation gratuite pour tous !",
+    image: "/images/actualites/FB_IMG_1759672898128.jpg",
+  },
   {
     id: 2,
     title: "Stage de Perfectionnement Jeunes",
