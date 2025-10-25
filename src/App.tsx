@@ -1,4 +1,4 @@
-import { CustomToaster } from "@/components/CustomToaster"; // Importation du CustomToaster
+import { CustomToaster } from "@/components/CustomToaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -45,8 +45,8 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
-    {/* Utilisation du CustomToaster à la place du Toaster de shadcn/ui */}
-    <CustomToaster />
+    {/* CustomToaster désactivé temporairement pour le débogage de l'erreur React.Children.only */}
+    {/* <CustomToaster /> */}
     <Sonner />
   </div>
 );
