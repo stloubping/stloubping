@@ -138,7 +138,7 @@ const Accueil = () => {
           Restez connecté avec toutes les dernières nouvelles, photos et événements de notre club.
         </p>
         <Button asChild className="bg-[#1877F2] hover:bg-[#1877F2]/90 text-white text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
-          <a href="https://www.facebook.com/votrepagefacebook" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+          <a href="https://www.facebook.com/p/Saint-LoubPing-100085857905183/?locale=fr_FR" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
             <Facebook className="mr-3 h-6 w-6" /> Notre Page Facebook
           </a>
         </Button>
