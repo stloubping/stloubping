@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import LightboxModal from '@/components/Lightbox'; // Importation du vrai composant LightboxModal
 
 interface LightboxContextType {
   openLightbox: (imageUrl: string) => void;
@@ -39,16 +40,4 @@ export const useLightbox = () => {
     throw new Error('useLightbox must be used within a LightboxProvider');
   }
   return context;
-};
-
-// Internal LightboxModal component (will be defined in Lightbox.tsx)
-interface LightboxModalProps {
-  imageUrl: string;
-  onClose: () => void;
-}
-
-const LightboxModal: React.FC<LightboxModalProps> = ({ imageUrl, onClose }) => {
-  // This component will be replaced by the actual Lightbox.tsx content
-  // For now, it's a placeholder to avoid compilation errors.
-  return null;
 };
