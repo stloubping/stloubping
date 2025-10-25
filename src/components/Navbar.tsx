@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"; // Import SheetHeader, SheetTitle, SheetDescription
 import { Menu } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -14,7 +14,7 @@ const navItems = [
   { name: "Boutique", path: "/boutique" },
   { name: "Partenaires", path: "/partenaires" },
   { name: "Tournoi", path: "/tournoi-inscription" },
-  { name: "Liste Inscriptions Tournoi", path: "/tournoi-inscriptions-liste" }, // Nouveau lien ajouté
+  { name: "Liste Inscriptions Tournoi", path: "/tournoi-inscriptions-liste" },
   { name: "Contact", path: "/contact" },
 ];
 
@@ -22,7 +22,7 @@ const Navbar = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
 
-  console.log("Navbar - isMobile:", isMobile, "Window width:", window.innerWidth); // Added console log here
+  console.log("Navbar - isMobile:", isMobile, "Window width:", window.innerWidth);
 
   const NavLinks = ({ className }: { className?: string }) => (
     <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)}>
@@ -51,13 +51,19 @@ const Navbar = () => {
         {isMobile ? (
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-clubDark-foreground">
+              <Button variant="ghost" size="icon" className="text-clubDark-foreground z-50"> {/* Added z-50 */}
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-clubDark text-clubDark-foreground border-clubPrimary w-full sm:w-3/4 md:max-w-xs">
-              <NavLinks className="flex flex-col space-x-0 space-y-4 p-4" />
+            <SheetContent side="right" className="bg-clubDark text-clubDark-foreground border-clubPrimary w-full sm:w-3/4 md:max-w-xs p-6"> {/* Added p-6 for padding */}
+              <SheetHeader className="mb-6"> {/* Added SheetHeader and mb-6 */}
+                <SheetTitle className="text-clubPrimary text-2xl font-bold">Navigation</SheetTitle>
+                <SheetDescription className="text-clubDark-foreground/80">
+                  Explorez les sections du club.
+                </SheetDescription>
+              </SheetHeader>
+              <NavLinks className="flex flex-col space-x-0 space-y-4 p-0" /> {/* Removed p-4, added space-y-4 */}
             </SheetContent>
           </Sheet>
         ) : (
