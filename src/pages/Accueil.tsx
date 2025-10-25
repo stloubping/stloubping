@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { CalendarDays, MapPin, Facebook } from "lucide-react";
 import { Link } from 'react-router-dom';
+import NewsCard from "@/components/NewsCard"; // Import the new NewsCard component
 
 const newsItems = [
   {
@@ -79,26 +80,7 @@ const Accueil = () => {
         <h2 className="text-3xl font-bold text-center text-clubDark mb-8">Dernières Actualités</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {newsItems.map((news) => (
-            <Card key={news.id} className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
-              <img src={news.image} alt={news.title} className="w-full h-48 object-cover" />
-              <CardHeader>
-                <CardTitle className="text-2xl font-semibold text-clubPrimary">{news.title}</CardTitle>
-                <CardDescription className="flex items-center text-clubGray mt-2">
-                  <CalendarDays className="mr-2 h-4 w-4" /> {news.date}
-                </CardDescription>
-                <CardDescription className="flex items-center text-clubGray">
-                  <MapPin className="mr-2 h-4 w-4" /> {news.location}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-clubDarker whitespace-pre-line">{news.description}</p>
-              </CardContent>
-              <CardFooter>
-                <Button asChild className="w-full bg-clubSecondary hover:bg-clubPrimary text-white">
-                  <Link to={news.link}>En savoir plus</Link>
-                </Button>
-              </CardFooter>
-            </Card>
+            <NewsCard key={news.id} news={news} />
           ))}
         </div>
       </section>
@@ -133,10 +115,10 @@ const Accueil = () => {
             <Card key={event.id} className="bg-clubLight shadow-lg rounded-xl overflow-hidden text-clubDark">
               <CardHeader>
                 <CardTitle className="text-2xl font-semibold text-clubPrimary">{event.title}</CardTitle>
-                <CardDescription className="flex items-center text-clubGray mt-2">
+                <CardDescription className="flex items-center text-clubLight-foreground/80 mt-2">
                   <CalendarDays className="mr-2 h-4 w-4" /> {event.date} à {event.time}
                 </CardDescription>
-                <CardDescription className="flex items-center text-clubGray">
+                <CardDescription className="flex items-center text-clubLight-foreground/80">
                   <MapPin className="mr-2 h-4 w-4" /> {event.location}
                 </CardDescription>
               </CardHeader>
