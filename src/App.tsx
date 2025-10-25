@@ -24,7 +24,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <ToastProvider> {/* ToastProvider now wraps only BrowserRouter */}
+      <ToastProvider>
         <BrowserRouter>
           <LightboxProvider>
             <Layout>
@@ -45,10 +45,10 @@ const App = () => (
           </LightboxProvider>
         </BrowserRouter>
       </ToastProvider>
-      {/* Toaster and Sonner are global components, placed as siblings to ToastProvider */}
-      <Toaster />
-      <Sonner />
     </TooltipProvider>
+    {/* Toaster and Sonner are global components, placed as siblings to TooltipProvider */}
+    <Toaster />
+    <Sonner />
   </QueryClientProvider>
 );
 
