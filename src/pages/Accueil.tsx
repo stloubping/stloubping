@@ -49,15 +49,15 @@ const newsItems = [
 ];
 
 const eventItems = [
-  {
-    id: 1,
-    title: "Portes Ouvertes du Club",
-    date: "02 Septembre 2025",
-    time: "14h00 - 18h00",
-    location: "Salle du club",
-    description: "Venez découvrir le tennis de table, essayer nos tables et rencontrer nos entraîneurs. Initiation gratuite pour tous !",
-    image: "/images/actualites/FB_IMG_1759672898128.jpg",
-  },
+  // {
+  //   id: 1,
+  //   title: "Portes Ouvertes du Club",
+  //   date: "02 Septembre 2025",
+  //   time: "14h00 - 18h00",
+  //   location: "Salle du club",
+  //   description: "Venez découvrir le tennis de table, essayer nos tables et rencontrer nos entraîneurs. Initiation gratuite pour tous !",
+  //   image: "/images/actualites/FB_IMG_1759672898128.jpg",
+  // },
   {
     id: 2,
     title: "Stage de Perfectionnement Jeunes",
