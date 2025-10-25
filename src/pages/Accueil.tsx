@@ -10,23 +10,15 @@ import { useLightbox } from '@/context/LightboxContext';
 import HeroSection from "@/components/HeroSection";
 
 const newsItems = [
-  // {
-  //   id: 1,
-  //   title: "Championnat par équipe - Journée 4 Phase 1",
-  //   date: "20 Octobre 2024",
-  //   location: "Salle du club",
-  //   description: "Venez nombreux encourager nos équipes lors de la 4ème journée du championnat par équipe. Ambiance garantie et matchs de haut niveau en perspective !",
-  //   link: "/actualites/championnat-journee-4",
-  //   image: "/images/actualites/championnat-equipe-journee-4-phase-1.jpg",
-  // },
+  // Stage de Perfectionnement Jeunes, déplacé depuis les événements
   {
-    id: 2,
-    title: "Tournoi Régional Saint-Loub'Ping 2026",
-    date: "15 Février 2026",
-    location: "Gymnase de Saint-Loubès",
-    description: "Préparez vos raquettes ! Notre tournoi régional annuel revient avec de nouvelles catégories et de nombreux lots à gagner. Inscriptions ouvertes prochainement.",
-    link: "/tournoi-inscription",
-    image: "/images/actualites/Gemini_Generated_Image_mlgzatmlgzatmlgz.png",
+    id: 101, // Nouvel ID unique
+    title: "Stage de Perfectionnement Jeunes",
+    date: "20-24 Août 2025",
+    location: "Salle du club",
+    description: "Un stage intensif pour les jeunes compétiteurs souhaitant améliorer leur technique et leur stratégie. Encadrement par nos meilleurs entraîneurs.",
+    link: "/actualites/stage-perfectionnement", // Ajout d'un lien pour la carte d'actualité
+    image: "/images/actualites/FB_IMG_1759672983725.jpg",
   },
   {
     id: 3,
@@ -49,23 +41,15 @@ const newsItems = [
 ];
 
 const eventItems = [
+  // Tournoi Régional Saint-Loub'Ping 2026, déplacé depuis les actualités
   {
-    id: 1,
-    title: "Portes Ouvertes du Club",
-    date: "02 Septembre 2025",
-    time: "14h00 - 18h00",
-    location: "Salle du club",
-    description: "Venez découvrir le tennis de table, essayer nos tables et rencontrer nos entraîneurs. Initiation gratuite pour tous !",
-    image: "/images/actualites/FB_IMG_1759672898128.jpg",
-  },
-  {
-    id: 2,
-    title: "Stage de Perfectionnement Jeunes",
-    date: "20-24 Août 2025",
-    time: "Toute la journée",
-    location: "Salle du club",
-    description: "Un stage intensif pour les jeunes compétiteurs souhaitant améliorer leur technique et leur stratégie. Encadrement par nos meilleurs entraîneurs.",
-    image: "/images/actualites/FB_IMG_1759672983725.jpg",
+    id: 102, // Nouvel ID unique
+    title: "Tournoi Régional Saint-Loub'Ping 2026",
+    date: "15 Février 2026",
+    time: "Dès 8h30", // Ajout de l'heure pour la carte d'événement
+    location: "Gymnase de Saint-Loubès",
+    description: "Préparez vos raquettes ! Notre tournoi régional annuel revient avec de nouvelles catégories et de nombreux lots à gagner. Inscriptions ouvertes prochainement.",
+    image: "/images/actualites/Gemini_Generated_Image_mlgzatmlgzatmlgz.png",
   },
   {
     id: 3,
