@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from 'react'; // Removed useState as fbSdkLoaded is no longer needed
+import React from 'react'; // Removed useEffect as SDK loading is no longer needed
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, MapPin } from "lucide-react";
@@ -10,13 +10,13 @@ import { useLightbox } from '@/context/LightboxContext';
 import HeroSection from "@/components/HeroSection"; 
 // import TrainingSchedule from "@/components/TrainingSchedule"; // Removed TrainingSchedule import
 
-// Déclaration globale pour window.FB et window.fbAsyncInit
-declare global {
-  interface Window {
-    fbAsyncInit: () => void;
-    FB: any; 
-  }
-}
+// Déclaration globale pour window.FB et window.fbAsyncInit n'est plus nécessaire avec l'iframe
+// declare global {
+//   interface Window {
+//     fbAsyncInit: () => void;
+//     FB: any; 
+//   }
+// }
 
 const newsItems = [
   {
@@ -90,49 +90,15 @@ const eventItems = [
 const Accueil = () => {
   const { openLightbox } = useLightbox();
 
-  useEffect(() => {
-    // 1. Définir window.fbAsyncInit avant de charger le script du SDK
-    window.fbAsyncInit = function() {
-      window.FB.init({
-        xfbml: true, // Cela permet le parsing automatique des balises XFBML
-        version: 'v18.0'
-      });
-      // 2. Forcer le parsing des balises XFBML une fois le SDK initialisé
-      if (window.FB && window.FB.XFBML) {
-        window.FB.XFBML.parse();
-      }
-    };
-
-    // 3. Charger le script du SDK Facebook seulement s'il n'est pas déjà présent
-    if (!document.getElementById('facebook-jssdk')) {
-      const script = document.createElement('script');
-      script.id = 'facebook-jssdk';
-      script.src = "https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v18.0";
-      script.async = true;
-      script.defer = true;
-      script.crossOrigin = "anonymous";
-      document.body.appendChild(script);
-    } else {
-      // Si le script est déjà là (ex: hot reload), et FB est initialisé, on force le parsing
-      if (window.FB && window.FB.XFBML) {
-        window.FB.XFBML.parse();
-      }
-    }
-
-    return () => {
-      // Nettoyage du contenu de fb-root lors du démontage du composant
-      const fbRoot = document.getElementById('fb-root');
-      if (fbRoot) {
-        fbRoot.innerHTML = '';
-      }
-      // Le script du SDK n'est généralement pas supprimé car il peut être utilisé globalement.
-    };
-  }, []); // S'exécute une seule fois au montage du composant
+  // Le useEffect pour le SDK Facebook n'est plus nécessaire avec l'iframe
+  // useEffect(() => {
+  //   // ... (ancien code du SDK Facebook)
+  // }, []);
 
   return (
     <div className="bg-clubLight text-clubLight-foreground">
-      {/* Facebook SDK root element */}
-      <div id="fb-root"></div>
+      {/* Facebook SDK root element n'est plus nécessaire avec l'iframe */}
+      {/* <div id="fb-root"></div> */}
 
       {/* Hero Section */}
       <HeroSection
@@ -217,21 +183,17 @@ const Accueil = () => {
                 Restez connecté avec le club et ne manquez aucune actualité, événement ou résultat directement depuis notre page Facebook.
               </p>
               <div className="mt-8 flex justify-center w-full">
-                <div
-                  className="fb-page"
-                  data-href="https://www.facebook.com/people/Saint-LoubPing/100085857905183/"
-                  data-tabs="timeline"
-                  data-width="500"
-                  data-height="500"
-                  data-small-header="false"
-                  data-adapt-container-width="true"
-                  data-hide-cover="false"
-                  data-show-facepile="true"
-                >
-                  <blockquote cite="https://www.facebook.com/people/Saint-LoubPing/100085857905183/" className="fb-xfbml-parse-ignore">
-                    <a href="https://www.facebook.com/people/Saint-LoubPing/100085857905183/">Saint-LoubPing</a>
-                  </blockquote>
-                </div>
+                <iframe 
+                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fpeople%2FSaint-LoubPing%2F100085857905183%2F&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true"
+                  width="500"
+                  height="500"
+                  style={{ border: 'none', overflow: 'hidden' }}
+                  scrolling="no"
+                  frameBorder="0"
+                  allowFullScreen={true}
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  title="Facebook Page Plugin"
+                ></iframe>
               </div>
             </CardContent>
           </Card>
