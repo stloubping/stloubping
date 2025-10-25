@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react'; // Import useState
+import React, { useEffect } from 'react'; // Removed useState as fbSdkLoaded is no longer needed
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, MapPin } from "lucide-react";
@@ -89,19 +89,21 @@ const eventItems = [
 
 const Accueil = () => {
   const { openLightbox } = useLightbox();
-  const [fbSdkLoaded, setFbSdkLoaded] = useState(false); // Nouvel état pour suivre le chargement du SDK
 
   useEffect(() => {
-    // Définir window.fbAsyncInit avant de charger le script
+    // 1. Définir window.fbAsyncInit avant de charger le script du SDK
     window.fbAsyncInit = function() {
       window.FB.init({
-        xfbml: true, // Cela devrait permettre le parsing automatique des balises XFBML
+        xfbml: true, // Cela permet le parsing automatique des balises XFBML
         version: 'v18.0'
       });
-      setFbSdkLoaded(true); // Le SDK est chargé et initialisé
+      // 2. Forcer le parsing des balises XFBML une fois le SDK initialisé
+      if (window.FB && window.FB.XFBML) {
+        window.FB.XFBML.parse();
+      }
     };
 
-    // Charger le script du SDK Facebook
+    // 3. Charger le script du SDK Facebook seulement s'il n'est pas déjà présent
     if (!document.getElementById('facebook-jssdk')) {
       const script = document.createElement('script');
       script.id = 'facebook-jssdk';
@@ -111,10 +113,9 @@ const Accueil = () => {
       script.crossOrigin = "anonymous";
       document.body.appendChild(script);
     } else {
-      // Si le script existe déjà (ex: hot reload), et FB est initialisé,
-      // on peut considérer le SDK comme chargé.
-      if (window.FB) {
-        setFbSdkLoaded(true);
+      // Si le script est déjà là (ex: hot reload), et FB est initialisé, on force le parsing
+      if (window.FB && window.FB.XFBML) {
+        window.FB.XFBML.parse();
       }
     }
 
@@ -127,13 +128,6 @@ const Accueil = () => {
       // Le script du SDK n'est généralement pas supprimé car il peut être utilisé globalement.
     };
   }, []); // S'exécute une seule fois au montage du composant
-
-  useEffect(() => {
-    // Une fois que le SDK est chargé et que le composant est rendu, on force le parsing
-    if (fbSdkLoaded && window.FB) {
-      window.FB.XFBML.parse();
-    }
-  }, [fbSdkLoaded]); // S'exécute lorsque fbSdkLoaded passe à true
 
   return (
     <div className="bg-clubLight text-clubLight-foreground">
