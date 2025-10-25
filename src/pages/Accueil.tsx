@@ -1,22 +1,13 @@
 "use client";
 
-import React from 'react'; // Removed useEffect as SDK loading is no longer needed
+import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, MapPin } from "lucide-react";
 import { Link } from 'react-router-dom';
 import NewsCard from "@/components/NewsCard";
 import { useLightbox } from '@/context/LightboxContext';
-import HeroSection from "@/components/HeroSection"; 
-// import TrainingSchedule from "@/components/TrainingSchedule"; // Removed TrainingSchedule import
-
-// Déclaration globale pour window.FB et window.fbAsyncInit n'est plus nécessaire avec l'iframe
-// declare global {
-//   interface Window {
-//     fbAsyncInit: () => void;
-//     FB: any; 
-//   }
-// }
+import HeroSection from "@/components/HeroSection";
 
 const newsItems = [
   {
@@ -90,17 +81,10 @@ const eventItems = [
 const Accueil = () => {
   const { openLightbox } = useLightbox();
 
-  // Le useEffect pour le SDK Facebook n'est plus nécessaire avec l'iframe
-  // useEffect(() => {
-  //   // ... (ancien code du SDK Facebook)
-  // }, []);
+  // Pas besoin de useEffect pour la solution iframe
 
   return (
     <div className="bg-clubLight text-clubLight-foreground">
-      {/* Facebook SDK root element n'est plus nécessaire avec l'iframe */}
-      {/* <div id="fb-root"></div> */}
-
-      {/* Hero Section */}
       <HeroSection
         title="Bienvenue au St Loub Ping"
         description="Votre club de tennis de table à Saint-Loubès. Passion, convivialité et compétition pour tous les âges et tous les niveaux."
@@ -184,15 +168,15 @@ const Accueil = () => {
               </p>
               <div className="mt-8 flex justify-center w-full">
                 <iframe 
-                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fpeople%2FSaint-LoubPing%2F100085857905183%2F&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true"
+                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fpeople%2FSaint-LoubPing%2F100085857905183%2F&tabs=timeline&width=500&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
                   width="500"
-                  height="500"
+                  height="600"
                   style={{ border: 'none', overflow: 'hidden' }}
                   scrolling="no"
                   frameBorder="0"
                   allowFullScreen={true}
                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                  title="Facebook Page Plugin"
+                  title="Page Facebook Saint-LoubPing"
                 ></iframe>
               </div>
             </CardContent>
