@@ -54,7 +54,7 @@ const Navbar = () => {
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-clubDark text-clubDark-foreground border-clubPrimary">
+            <SheetContent side="right" className="bg-clubDark text-clubDark-foreground border-clubPrimary w-full sm:w-3/4 md:max-w-xs"> {/* Added width classes */}
               <NavLinks className="flex flex-col space-x-0 space-y-4 p-4" />
             </SheetContent>
           </Sheet>
