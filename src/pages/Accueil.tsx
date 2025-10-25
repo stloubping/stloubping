@@ -3,11 +3,11 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, MapPin, Facebook } from "lucide-react";
+import { CalendarDays, MapPin } from "lucide-react"; // Removed Facebook import as it's replaced by iframe
 import { Link } from 'react-router-dom';
 import NewsCard from "@/components/NewsCard";
 import { useLightbox } from '@/context/LightboxContext';
-import HeroSection from "@/components/HeroSection"; // Import HeroSection
+import HeroSection from "@/components/HeroSection"; 
 // import TrainingSchedule from "@/components/TrainingSchedule"; // Removed TrainingSchedule import
 
 const newsItems = [
@@ -158,38 +158,27 @@ const Accueil = () => {
           </Card>
         </section>
 
-        {/* Suivez-nous Section */}
+        {/* Suivez-nous Section avec flux Facebook */}
         <section className="text-center">
           <Card className="bg-clubLight shadow-lg p-8 rounded-xl">
-            <CardTitle className="text-2xl text-clubDark mb-4">Suivez-nous sur les réseaux sociaux !</CardTitle>
+            <CardTitle className="text-2xl font-bold text-clubDark mb-4">Suivez-nous sur Facebook !</CardTitle>
             <CardContent>
               <p className="mb-6 text-clubLight-foreground">
-                Restez connecté avec le club et ne manquez aucune actualité, événement ou résultat.
+                Restez connecté avec le club et ne manquez aucune actualité, événement ou résultat directement depuis notre page Facebook.
               </p>
-              <div className="flex justify-center space-x-6">
-                <a href="https://www.facebook.com/votrepageclub" target="_blank" rel="noopener noreferrer" className="text-clubPrimary hover:text-clubPrimary/80 transition-colors">
-                  <Facebook size={40} />
-                </a>
-                {/* Ajoutez d'autres icônes de réseaux sociaux si nécessaire */}
+              <div className="mt-8 flex justify-center">
+                <iframe
+                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fpeople%2FSaint-LoubPing%2F100085857905183%2F&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true"
+                  width="100%"
+                  height="500"
+                  style={{ border: 'none', overflow: 'hidden', maxWidth: '500px' }}
+                  scrolling="no"
+                  frameBorder="0"
+                  allowFullScreen={true}
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  title="Facebook Page Plugin - Saint-Loub'Ping"
+                ></iframe>
               </div>
-              {/* Pour intégrer un flux Facebook dynamique (timeline de page), vous devrez utiliser le "Page Plugin" de Facebook.
-                  1. Rendez-vous sur https://developers.facebook.com/docs/plugins/page-plugin/
-                  2. Configurez votre plugin avec l'URL de votre page Facebook et les options souhaitées.
-                  3. Copiez le code HTML (généralement un iframe) et collez-le ici.
-                  Exemple (remplacez YOUR_FACEBOOK_PAGE_URL par l'URL de votre page) :
-                  <div className="mt-8">
-                    <iframe
-                      src="https://www.facebook.com/plugins/page.php?href=YOUR_FACEBOOK_PAGE_URL&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
-                      width="340"
-                      height="500"
-                      style={{ border: 'none', overflow: 'hidden' }}
-                      scrolling="no"
-                      frameBorder="0"
-                      allowFullScreen={true}
-                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                    ></iframe>
-                  </div>
-              */}
             </CardContent>
           </Card>
         </section>

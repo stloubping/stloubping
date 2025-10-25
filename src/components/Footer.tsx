@@ -18,7 +18,7 @@ const Footer = () => {
               Le club de tennis de table pour tous les niveaux, du loisir à la compétition.
             </p>
             <div className="flex justify-center md:justify-start space-x-4">
-              <a href="#" className="text-clubDark-foreground hover:text-clubPrimary transition-colors"><Facebook size={20} /></a>
+              <a href="https://www.facebook.com/people/Saint-LoubPing/100085857905183/" target="_blank" rel="noopener noreferrer" className="text-clubDark-foreground hover:text-clubPrimary transition-colors"><Facebook size={20} /></a>
               <a href="#" className="text-clubDark-foreground hover:text-clubPrimary transition-colors"><Instagram size={20} /></a>
               <a href="#" className="text-clubDark-foreground hover:text-clubPrimary transition-colors"><Youtube size={20} /></a>
             </div>
