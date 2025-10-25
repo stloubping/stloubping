@@ -66,7 +66,7 @@ const Accueil = () => {
             Passion, Compétition et Convivialité
           </p>
           <Button asChild className="bg-clubPrimary hover:bg-clubSecondary text-white text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
-            <Link to="/inscription">Rejoignez-nous !</Link>
+            <Link to="/adhesions">Rejoignez-nous !</Link> {/* Corrected link */}
           </Button>
         </div>
       </section>
