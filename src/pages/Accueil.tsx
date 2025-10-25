@@ -1,10 +1,12 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, MapPin, Facebook } from "lucide-react"; // Import Facebook icon
+import { CalendarDays, MapPin, Facebook, Loader2 } from "lucide-react"; // Import Facebook and Loader2 icon
 import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { showError } from '@/utils/toast';
 
 const newsItems = [
   {
@@ -55,7 +57,43 @@ const eventItems = [
   },
 ];
 
+interface FacebookPost {
+  message: string;
+  permalink_url: string;
+  created_time: string;
+}
+
 const Accueil = () => {
+  const [latestFacebookPost, setLatestFacebookPost] = useState<FacebookPost | null>(null);
+  const [loadingFacebookPost, setLoadingFacebookPost] = useState(true);
+
+  useEffect(() => {
+    const fetchLatestFacebookPost = async () => {
+      setLoadingFacebookPost(true);
+      try {
+        const { data, error } = await supabase.functions.invoke('get-latest-facebook-post');
+
+        if (error) {
+          console.error("Error fetching latest Facebook post:", error);
+          showError("Erreur lors du chargement du dernier post Facebook.");
+          setLatestFacebookPost(null);
+        } else if (data && data.latestPost) {
+          setLatestFacebookPost(data.latestPost);
+        } else {
+          setLatestFacebookPost(null);
+        }
+      } catch (err) {
+        console.error("Unexpected error fetching Facebook post:", err);
+        showError("Une erreur inattendue est survenue lors du chargement du post Facebook.");
+        setLatestFacebookPost(null);
+      } finally {
+        setLoadingFacebookPost(false);
+      }
+    };
+
+    fetchLatestFacebookPost();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-clubLight to-clubLighter text-clubDark">
       {/* Hero Section */}
@@ -103,6 +141,42 @@ const Accueil = () => {
         </div>
       </section>
 
+      {/* Dernier Post Facebook Section */}
+      <section className="py-16 px-4 md:px-8 lg:px-16 bg-clubSection text-clubDark">
+        <h2 className="text-3xl font-bold text-center mb-8">Dernier Post Facebook</h2>
+        <div className="max-w-2xl mx-auto">
+          {loadingFacebookPost ? (
+            <div className="flex justify-center items-center p-8">
+              <Loader2 className="h-8 w-8 animate-spin text-clubPrimary" />
+              <p className="ml-2 text-clubDark">Chargement du post Facebook...</p>
+            </div>
+          ) : latestFacebookPost ? (
+            <Card className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
+              <CardHeader>
+                <CardTitle className="text-2xl font-semibold text-clubPrimary">
+                  {latestFacebookPost.message ? latestFacebookPost.message.substring(0, 100) + '...' : 'Nouveau post sur Facebook !'}
+                </CardTitle>
+                <CardDescription className="flex items-center text-clubGray mt-2">
+                  <CalendarDays className="mr-2 h-4 w-4" /> {new Date(latestFacebookPost.created_time).toLocaleDateString('fr-FR')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-clubDarker line-clamp-3">{latestFacebookPost.message}</p>
+              </CardContent>
+              <CardFooter>
+                <Button asChild className="w-full bg-[#1877F2] hover:bg-[#1877F2]/90 text-white">
+                  <a href={latestFacebookPost.permalink_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+                    <Facebook className="mr-2 h-4 w-4" /> Voir le post sur Facebook
+                  </a>
+                </Button>
+              </CardFooter>
+            </Card>
+          ) : (
+            <p className="text-center text-muted-foreground">Impossible de charger le dernier post Facebook pour le moment.</p>
+          )}
+        </div>
+      </section>
+
       {/* Prochains Événements Section */}
       <section className="bg-clubDark py-16 px-4 md:px-8 lg:px-16 text-white">
         <h2 className="text-3xl font-bold text-center mb-8">Prochains Événements</h2>
@@ -131,7 +205,7 @@ const Accueil = () => {
         </div>
       </section>
 
-      {/* Facebook Section */}
+      {/* Facebook Section (existing, kept for the main link) */}
       <section className="py-16 px-4 md:px-8 lg:px-16 text-center bg-clubLighter">
         <h2 className="text-3xl font-bold text-clubDark mb-8">Suivez-nous sur Facebook !</h2>
         <p className="text-lg text-clubDarker mb-8 max-w-2xl mx-auto">
