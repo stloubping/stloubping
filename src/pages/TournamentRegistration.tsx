@@ -20,13 +20,13 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const tableauxOptions = [
-  { id: "t1", label: "Tableau 1 : 8h30 (500-799)", price: 10 },
-  { id: "t2", label: "Tableau 2 : 9h30 (500-1399)", price: 10 },
-  { id: "t3", label: "Tableau 3 : 10h30 (500-999)", price: 10 },
-  { id: "t4", label: "Tableau 4 : 11h30 (500-1599)", price: 10 },
-  { id: "t5", label: "Tableau 5 : 13h30 (500-1199)", price: 10 },
-  { id: "t6", label: "Tableau 6 : 14h30 (500-Non Num FR)", price: 10 },
-  { id: "d1", label: "Tableau 7 : 16h00 (Doubles <2800)", price: 5 }, // Prix par personne pour les doubles
+  { id: "t1", label: "Tableau 1 : 8h30 (500-799)" },
+  { id: "t2", label: "Tableau 2 : 9h30 (500-1399)" },
+  { id: "t3", label: "Tableau 3 : 10h30 (500-999)" },
+  { id: "t4", label: "Tableau 4 : 11h30 (500-1599)" },
+  { id: "t5", label: "Tableau 5 : 13h30 (500-1199)" },
+  { id: "t6", label: "Tableau 6 : 14h30 (500-Non Num FR)" },
+  { id: "d1", label: "Tableau 7 : 16h00 (Doubles <2800)", price: 3 }, // Prix spécifique pour les doubles
 ];
 
 const formSchema = z.object({
@@ -62,12 +62,26 @@ const TournamentRegistration = () => {
 
   useEffect(() => {
     let currentTotal = 0;
-    selectedTableaux.forEach(selectedId => {
-      const option = tableauxOptions.find(opt => opt.id === selectedId);
-      if (option) {
-        currentTotal += option.price;
+    const individualTableaux = selectedTableaux.filter(id => id !== "d1");
+    const numIndividualTableaux = individualTableaux.length;
+
+    // Logique de prix dégressifs pour les tableaux individuels
+    if (numIndividualTableaux === 1) {
+      currentTotal += 8;
+    } else if (numIndividualTableaux === 2) {
+      currentTotal += 15;
+    } else if (numIndividualTableaux >= 3) {
+      currentTotal += 20; // 20€ pour 3 tableaux ou plus
+    }
+
+    // Ajout du prix pour le tableau de doubles si sélectionné
+    if (selectedTableaux.includes("d1")) {
+      const doublesOption = tableauxOptions.find(opt => opt.id === "d1");
+      if (doublesOption) {
+        currentTotal += doublesOption.price;
       }
-    });
+    }
+
     setTotalPrice(currentTotal);
   }, [selectedTableaux]);
 
@@ -225,7 +239,7 @@ const TournamentRegistration = () => {
                                   />
                                 </FormControl>
                                 <FormLabel className="font-normal text-clubLight-foreground">
-                                  {item.label} <span className="font-semibold">({item.price}€)</span>
+                                  {item.label} {item.id === "d1" && <span className="font-semibold">({item.price}€)</span>}
                                 </FormLabel>
                               </FormItem>
                             );
@@ -233,6 +247,9 @@ const TournamentRegistration = () => {
                         />
                       ))}
                     </div>
+                    <FormDescription className="text-clubLight-foreground/70">
+                      Tarifs : 1 tableau = 8€, 2 tableaux = 15€, 3 tableaux et plus = 20€. Doubles = 3€ en supplément.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
