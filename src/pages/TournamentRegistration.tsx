@@ -1,302 +1,276 @@
-import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
-import { Link } from 'react-router-dom';
-import { Info } from 'lucide-react';
-import { showSuccess, showError } from '@/utils/toast';
-import { supabase } from '@/integrations/supabase/client'; // Import Supabase client
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const individualTableaux = [
-  { id: 't1', time: '8h30', points: '500-799 pts', remaining: 30 },
-  { id: 't2', time: '9h30', points: '500-1399 pts', remaining: 30 },
-  { id: 't3', time: '10h30', points: '500-999 pts', remaining: 30 },
-  { id: 't4', time: '11h30', points: '500-1599 pts', remaining: 30 },
-  { id: 't5', time: '13h30', points: '500-1199 pts', remaining: 30 },
-  { id: 't6', time: '14h30', points: '500-Non Num FR', remaining: 30 },
+const tableauxOptions = [
+  { id: "tableau1", label: "Tableau 1 : 500-799" },
+  { id: "tableau2", label: "Tableau 2 : 500-1399" },
+  { id: "tableau3", label: "Tableau 3 : 500-999" },
+  { id: "tableau4", label: "Tableau 4 : 500-1599" },
+  { id: "tableau5", label: "Tableau 5 : 500-1199" },
+  { id: "tableau6", label: "Tableau 6 : 500-NON NUM FR" },
+  { id: "tableau7", label: "Tableau 7 : Doubles <2800 PTS" },
 ];
 
-const doublesTableau = { id: 'd1', time: '16h00', points: 'Doubles <2800 pts', remaining: 30 };
+const formSchema = z.object({
+  first_name: z.string().min(2, { message: "Le prénom doit contenir au moins 2 caractères." }),
+  last_name: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères." }),
+  email: z.string().email({ message: "Veuillez entrer une adresse email valide." }),
+  phone: z.string().regex(/^(\+33|0)[1-9](\d{2}){4}$/, { message: "Veuillez entrer un numéro de téléphone français valide." }),
+  licence_number: z.string().min(7, { message: "Le numéro de licence doit contenir au moins 7 caractères." }),
+  club: z.string().min(2, { message: "Le nom du club doit contenir au moins 2 caractères." }),
+  selected_tableaux: z.array(z.string()).min(1, { message: "Veuillez sélectionner au moins un tableau." }),
+  doubles_partner: z.string().optional(),
+  consent: z.boolean().refine(val => val === true, { message: "Vous devez accepter les conditions pour vous inscrire." }),
+});
 
 const TournamentRegistration = () => {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    licenceNumber: '',
-    club: '',
-    selectedTableaux: [] as string[],
-    doublesPartner: '',
-    consent: false,
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone: "",
+      licence_number: "",
+      club: "",
+      selected_tableaux: [],
+      doubles_partner: "",
+      consent: false,
+    },
   });
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({ ...prev, [id]: value }));
-  };
-
-  const handleTableauChange = (tableauId: string, checked: boolean) => {
-    setFormData(prev => {
-      const newSelectedTableaux = checked
-        ? [...prev.selectedTableaux, tableauId]
-        : prev.selectedTableaux.filter(id => id !== tableauId);
-      return { ...prev, selectedTableaux: newSelectedTableaux };
-    });
-  };
-
-  const handleCheckboxChange = (checked: boolean) => {
-    setFormData(prev => ({ ...prev, consent: checked }));
-  };
-
-  const calculateTotalFee = () => {
-    let individualCount = 0;
-    let hasDoubles = false;
-
-    formData.selectedTableaux.forEach(id => {
-      if (id === doublesTableau.id) {
-        hasDoubles = true;
-      } else {
-        individualCount++;
-      }
-    });
-
-    let fee = 0;
-    if (individualCount === 1) fee = 8;
-    else if (individualCount === 2) fee = 15;
-    else if (individualCount >= 3) fee = 20;
-
-    if (hasDoubles) {
-      fee += 3; // 3€ per player for doubles
-    }
-    return fee;
-  };
-
-  const validateForm = () => {
-    const { firstName, lastName, email, phone, licenceNumber, club, selectedTableaux, consent } = formData;
-    return firstName && lastName && email && phone && licenceNumber && club && selectedTableaux.length > 0 && consent;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormSubmitted(true);
-
-    if (!validateForm()) {
-      showError("Veuillez remplir tous les champs obligatoires, sélectionner au moins un tableau et accepter les conditions.");
-      return;
-    }
-
-    setIsSubmitting(true);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const { data, error } = await supabase
-        .from('tournament_registrations')
-        .insert([
-          {
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-            email: formData.email,
-            phone: formData.phone,
-            licence_number: formData.licenceNumber,
-            club: formData.club,
-            selected_tableaux: formData.selectedTableaux,
-            doubles_partner: formData.doublesPartner,
-            consent: formData.consent,
-          },
-        ]);
+        .from("tournament_registrations")
+        .insert([values]);
 
       if (error) {
-        console.error("Error submitting registration:", error);
-        showError("Erreur lors de l'envoi de l'inscription : " + error.message);
-      } else {
-        console.log("Registration submitted successfully:", data);
-        showSuccess("Inscription envoyée avec succès ! Paiement à effectuer sur place.");
-        // Reset form after successful submission
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          phone: '',
-          licenceNumber: '',
-          club: '',
-          selectedTableaux: [],
-          doublesPartner: '',
-          consent: false,
-        });
-        setFormSubmitted(false); // Reset form submission state
+        throw error;
       }
-    } catch (err) {
-      console.error("Unexpected error:", err);
-      showError("Une erreur inattendue est survenue.");
-    } finally {
-      setIsSubmitting(false);
+
+      toast.success("Inscription enregistrée avec succès !");
+      form.reset();
+    } catch (error: any) {
+      console.error("Erreur lors de l'inscription:", error.message);
+      toast.error("Erreur lors de l'inscription: " + error.message);
     }
   };
 
-  const totalFee = calculateTotalFee();
+  const selectedTableaux = form.watch("selected_tableaux");
+  const showDoublesPartner = selectedTableaux.includes("tableau7");
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
-      <Card className="max-w-3xl mx-auto bg-clubLight shadow-lg rounded-xl p-6">
+    <div className="container mx-auto py-8 px-4">
+      <Card className="max-w-3xl mx-auto bg-clubLight text-clubDark-foreground shadow-lg">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-clubDark mb-2">Inscription au Tournoi Régional Saint-Loub'Ping 2026</CardTitle>
-          <CardDescription className="text-clubLight-foreground">
-            Remplissez le formulaire ci-dessous pour vous inscrire à notre tournoi annuel.
+          <CardTitle className="text-3xl font-bold text-clubPrimary">Inscription au Tournoi</CardTitle>
+          <CardDescription className="text-clubDark-foreground/80 mt-2">
+            Remplissez le formulaire ci-dessous pour vous inscrire à notre tournoi.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <img
-            src="/images/actualites/FB_IMG_1759672898128.jpg"
+            src="/images/actualites/Gemini_Generated_Image_mlgzatmlgzatmlgz.png"
             alt="Affiche du Tournoi Régional Saint-Loub'Ping 2026"
             className="w-full h-auto object-cover rounded-lg mb-8 shadow-md"
           />
-
-          {/* Informations Clés du Tournoi */}
-          <Card className="mb-8 bg-clubSection shadow-md rounded-lg p-6">
-            <CardTitle className="text-2xl font-semibold text-clubDark mb-4">Informations Clés du Tournoi</CardTitle>
-            <div className="space-y-3 text-clubLight-foreground">
-              <p><span className="font-semibold">Dates :</span> Samedi 11 Avril 2026</p>
-              <p><span className="font-semibold">Lieu :</span> Complexe Sportif, Impasse Max Linder, 33450 Saint-Loubès, France</p>
-              <p><span className="font-semibold">Tarifs :</span> 1 tableau : 8€, 2 tableaux : 15€, 3 tableaux : 20€, Doubles : 3€/joueur.</p>
-              <p><span className="font-semibold">Limite de classement :</span> Doubles &lt; 2800 pts.</p>
-              <p><span className="font-semibold">Commentaire / Partenaires :</span> Veuillez indiquer vos partenaires pour le tableau Doubles dans le champ 'Partenaire de double'.</p>
-              <p>
-                <span className="font-semibold">Règlement :</span> Consultez le <Link to="/reglement-tournoi" className="text-clubPrimary hover:underline">règlement du tournoi</Link>.
-              </p>
-            </div>
-          </Card>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="firstName" className="text-clubLight-foreground">Prénom*</Label>
-                <Input id="firstName" placeholder="Votre prénom" value={formData.firstName} onChange={handleInputChange} required className={cn("bg-input text-clubLight-foreground", formSubmitted && !formData.firstName && "border-destructive")} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-clubLight-foreground">Nom*</Label>
-                <Input id="lastName" placeholder="Votre nom" value={formData.lastName} onChange={handleInputChange} required className={cn("bg-input text-clubLight-foreground", formSubmitted && !formData.lastName && "border-destructive")} />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-clubLight-foreground">Email*</Label>
-              <Input id="email" type="email" placeholder="Votre adresse email" value={formData.email} onChange={handleInputChange} required className={cn("bg-input text-clubLight-foreground", formSubmitted && !formData.email && "border-destructive")} />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="phone" className="text-clubLight-foreground">Téléphone*</Label>
-              <Input id="phone" type="tel" placeholder="Votre numéro de téléphone" value={formData.phone} onChange={handleInputChange} required className={cn("bg-input text-clubLight-foreground", formSubmitted && !formData.phone && "border-destructive")} />
-              <p className="text-sm text-muted-foreground flex items-center">
-                <Info className="h-4 w-4 mr-1" /> Nous pourrions vous contacter en cas d'urgence ou de modification de dernière minute.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="licenceNumber" className="text-clubLight-foreground">Numéro de licence FFTT*</Label>
-                <Input id="licenceNumber" placeholder="Ex: 1234567" value={formData.licenceNumber} onChange={handleInputChange} required className={cn("bg-input text-clubLight-foreground", formSubmitted && !formData.licenceNumber && "border-destructive")} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="club" className="text-clubLight-foreground">Club*</Label>
-                <Input id="club" placeholder="Votre club" value={formData.club} onChange={handleInputChange} required className={cn("bg-input text-clubLight-foreground", formSubmitted && !formData.club && "border-destructive")} />
-              </div>
-            </div>
-
-            {/* 2. Choix des Tableaux */}
-            <Card className="bg-clubSection shadow-md rounded-lg p-6">
-              <CardTitle className="text-2xl font-semibold text-clubDark mb-4">2. Choix des Tableaux</CardTitle>
-              <CardDescription className="text-clubLight-foreground mb-4">
-                Max 3 tableaux individuels + 1 tableau Doubles
-              </CardDescription>
-
-              <h3 className="text-lg font-semibold text-clubDark mb-3">Jeu du Samedi</h3>
-              <div className="space-y-3">
-                {individualTableaux.map((tableau) => (
-                  <div key={tableau.id} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={tableau.id}
-                      checked={formData.selectedTableaux.includes(tableau.id)}
-                      onCheckedChange={(checked) => handleTableauChange(tableau.id, checked as boolean)}
-                      disabled={tableau.remaining <= 0}
-                    />
-                    <Label htmlFor={tableau.id} className="text-clubLight-foreground cursor-pointer">
-                      {tableau.time} - {tableau.points} ({tableau.remaining} places restantes)
-                    </Label>
-                  </div>
-                ))}
-                <div className="flex items-center space-x-2 mt-4">
-                  <Checkbox
-                    id={doublesTableau.id}
-                    checked={formData.selectedTableaux.includes(doublesTableau.id)}
-                    onCheckedChange={(checked) => handleTableauChange(doublesTableau.id, checked as boolean)}
-                    disabled={doublesTableau.remaining <= 0}
-                  />
-                  <Label htmlFor={doublesTableau.id} className="text-clubLight-foreground cursor-pointer">
-                    {doublesTableau.time} - {doublesTableau.points} ({doublesTableau.remaining} places restantes)
-                  </Label>
-                </div>
-              </div>
-              {formSubmitted && formData.selectedTableaux.length === 0 && <p className="text-destructive text-sm mt-4">Veuillez sélectionner au moins un tableau.</p>}
-            </Card>
-
-            <div className="space-y-2">
-              <Label htmlFor="doublesPartner" className="text-clubLight-foreground">Partenaire de double (si applicable)</Label>
-              <Input id="doublesPartner" placeholder="Nom et prénom du partenaire" value={formData.doublesPartner} onChange={handleInputChange} className="bg-input text-clubLight-foreground" />
-              <p className="text-sm text-muted-foreground flex items-center">
-                <Info className="h-4 w-4 mr-1" /> Veuillez indiquer vos partenaires pour le tableau Doubles dans ce champ. Laissez vide si vous ne participez pas au double ou n'avez pas de partenaire.
-              </p>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="consent"
-                checked={formData.consent}
-                onCheckedChange={handleCheckboxChange}
-                className={cn(formSubmitted && !formData.consent && "border-destructive")}
-              />
-              <label
-                htmlFor="consent"
-                className={cn(
-                  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-                  formSubmitted && !formData.consent && "text-destructive"
-                )}
-              >
-                J'accepte les <Link to="/reglement-tournoi" className="text-clubPrimary hover:underline">conditions et le règlement du tournoi</Link>.*
-              </label>
-            </div>
-            {formSubmitted && !formData.consent && <p className="text-destructive text-sm mt-1">Vous devez accepter les conditions.</p>}
-
-            {/* 3. Récapitulatif et Paiement */}
-            <Card className="bg-clubSection shadow-md rounded-lg p-6">
-              <CardTitle className="text-2xl font-semibold text-clubDark mb-4">3. Récapitulatif et Paiement</CardTitle>
-              <div className="space-y-2 text-clubLight-foreground mb-4">
-                <p className="font-semibold">Votre Sélection :</p>
-                <ul className="list-disc list-inside ml-4">
-                  {formData.selectedTableaux.length > 0 ? (
-                    formData.selectedTableaux.map(id => {
-                      const tableau = individualTableaux.find(t => t.id === id) || (id === doublesTableau.id ? doublesTableau : null);
-                      return tableau ? <li key={id}>{tableau.time} - {tableau.points}</li> : null;
-                    })
-                  ) : (
-                    <li>Aucun tableau sélectionné</li>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="first_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Prénom</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Votre prénom" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                </ul>
-                <p className="text-xl font-bold mt-4">Frais d'inscription : {totalFee}€</p>
+                />
+                <FormField
+                  control={form.control}
+                  name="last_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nom</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Votre nom" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <p className="text-sm text-clubLight-foreground mb-4">
-                En validant ce formulaire, vous déclarez avoir pris connaissance et accepté le règlement du tournoi.
-                Vous recevrez une confirmation par mail, pensez à vérifier dans vos courriers indésirables !
-              </p>
-              <Button type="submit" className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-white text-lg py-6" disabled={isSubmitting}>
-                {isSubmitting ? "Envoi en cours..." : `Valider et payer ${totalFee}€ sur place`}
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="Votre email" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Téléphone</FormLabel>
+                    <FormControl>
+                      <Input type="tel" placeholder="Votre numéro de téléphone" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="licence_number"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Numéro de licence FFTT</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Votre numéro de licence" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
+                    </FormControl>
+                    <FormDescription className="text-clubDark-foreground/70">
+                      Ex: 1234567A (7 caractères minimum)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="club"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Club</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Votre club" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="selected_tableaux"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Tableaux sélectionnés</FormLabel>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {tableauxOptions.map((item) => (
+                        <FormField
+                          key={item.id}
+                          control={form.control}
+                          name="selected_tableaux"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={item.id}
+                                className="flex flex-row items-start space-x-3 space-y-0"
+                              >
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes(item.id)}
+                                    onCheckedChange={(checked) => {
+                                      return checked
+                                        ? field.onChange([...field.value, item.id])
+                                        : field.onChange(
+                                            field.value?.filter(
+                                              (value) => value !== item.id
+                                            )
+                                          );
+                                    }}
+                                    className="border-clubPrimary data-[state=checked]:bg-clubPrimary data-[state=checked]:text-clubDark-foreground"
+                                  />
+                                </FormControl>
+                                <FormLabel className="font-normal text-clubDark-foreground">
+                                  {item.label}
+                                </FormLabel>
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {showDoublesPartner && (
+                <FormField
+                  control={form.control}
+                  name="doubles_partner"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nom et Prénom du partenaire de double</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Nom et Prénom du partenaire" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
+                      </FormControl>
+                      <FormDescription className="text-clubDark-foreground/70">
+                        Uniquement si vous participez au tableau de doubles.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              <FormField
+                control={form.control}
+                name="consent"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className="border-clubPrimary data-[state=checked]:bg-clubPrimary data-[state=checked]:text-clubDark-foreground"
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel className="text-clubDark-foreground">
+                        J'accepte les conditions de participation et le règlement du tournoi.
+                      </FormLabel>
+                      <FormDescription className="text-clubDark-foreground/70">
+                        (Les conditions sont affichées sur l'affiche ci-dessus)
+                      </FormDescription>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-clubDark-foreground">
+                S'inscrire
               </Button>
-            </Card>
-          </form>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>
