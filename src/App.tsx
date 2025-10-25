@@ -24,32 +24,31 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <React.Fragment> {/* Enveloppe tous les enfants du TooltipProvider dans un Fragment */}
-        <ToastProvider>
-          <BrowserRouter>
-            <LightboxProvider>
-              <Layout>
-                <Routes>
-                  <Route path="/" element={<Accueil />} />
-                  <Route path="/le-club" element={<LeClub />} />
-                  <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
-                  <Route path="/adhesions" element={<Adhesions />} />
-                  <Route path="/boutique" element={<Boutique />} />
-                  <Route path="/partenaires" element={<Partenaires />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/tournoi-inscription" element={<TournamentRegistration />} />
-                  <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} />
-                  <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Layout>
-            </LightboxProvider>
-          </BrowserRouter>
-        </ToastProvider>
-        <Toaster />
-        <Sonner />
-      </React.Fragment>
+      <ToastProvider>
+        <BrowserRouter>
+          <LightboxProvider>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Accueil />} />
+                <Route path="/le-club" element={<LeClub />} />
+                <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
+                <Route path="/adhesions" element={<Adhesions />} />
+                <Route path="/boutique" element={<Boutique />} />
+                <Route path="/partenaires" element={<Partenaires />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/tournoi-inscription" element={<TournamentRegistration />} />
+                <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} />
+                <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Layout>
+          </LightboxProvider>
+        </BrowserRouter>
+      </ToastProvider>
     </TooltipProvider>
+    {/* Toaster and Sonner are global components, placed outside all strict providers */}
+    <Toaster />
+    <Sonner />
   </QueryClientProvider>
 );
 
