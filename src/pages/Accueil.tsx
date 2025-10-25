@@ -103,7 +103,7 @@ const Accueil = () => {
       {/* Prochains Événements Section */}
       <section className="bg-clubDark py-16 px-4 md:px-8 lg:px-16 text-white">
         <h2 className="text-3xl font-bold text-center mb-8">Prochains Événements</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto justify-items-center">
           {eventItems.map((event) => (
             <NewsCard key={event.id} news={event} />
           ))}
