@@ -12,7 +12,7 @@ interface LightboxModalProps {
 const LightboxModal: React.FC<LightboxModalProps> = ({ imageUrl, onClose }) => {
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <LightboxContent> {/* Use the new LightboxContent component */}
+      <LightboxContent onClose={onClose}> {/* Pass onClose to LightboxContent */}
         <img
           src={imageUrl}
           alt="Image agrandie"

@@ -6,12 +6,13 @@ import { cn } from "@/lib/utils";
 
 interface LightboxContentProps extends React.ComponentPropsWithoutRef<typeof DialogContent> {
   children: React.ReactNode;
+  onClose?: () => void; // Add onClose prop
 }
 
 const LightboxContent = React.forwardRef<
   React.ElementRef<typeof DialogContent>,
   LightboxContentProps
->(({ className, children, ...props }, ref) => (
+>(({ className, children, onClose, ...props }, ref) => (
   <DialogContent
     ref={ref}
     className={cn(
@@ -21,10 +22,10 @@ const LightboxContent = React.forwardRef<
       "data-[state=open]:animate-in data-[state=closed]:animate-out", // Keep animations
       "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
-      // Removed slide animations as they might conflict with full-screen positioning
       "sm:max-w-none sm:rounded-none", // Override default max-width and rounded corners for small screens
       className
     )}
+    onClick={onClose} // Add onClick handler to close the lightbox
     {...props}
   >
     {children}
