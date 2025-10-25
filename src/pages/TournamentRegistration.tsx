@@ -80,10 +80,10 @@ const TournamentRegistration = () => {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <Card className="max-w-3xl mx-auto bg-clubLight text-clubDark-foreground shadow-lg">
+      <Card className="max-w-3xl mx-auto bg-clubLight text-clubLight-foreground shadow-lg"> {/* Changed text-clubDark-foreground to text-clubLight-foreground */}
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold text-clubPrimary">Inscription au Tournoi</CardTitle>
-          <CardDescription className="text-clubDark-foreground/80 mt-2">
+          <CardDescription className="text-clubLight-foreground/80 mt-2"> {/* Changed text-clubDark-foreground/80 to text-clubLight-foreground/80 */}
             Remplissez le formulaire ci-dessous pour vous inscrire à notre tournoi.
           </CardDescription>
         </CardHeader>
@@ -158,7 +158,7 @@ const TournamentRegistration = () => {
                     <FormControl>
                       <Input placeholder="Votre numéro de licence" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
                     </FormControl>
-                    <FormDescription className="text-clubDark-foreground/70">
+                    <FormDescription className="text-clubLight-foreground/70"> {/* Changed text-clubDark-foreground/70 to text-clubLight-foreground/70 */}
                       Ex: 1234567A (7 caractères minimum)
                     </FormDescription>
                     <FormMessage />
@@ -211,7 +211,7 @@ const TournamentRegistration = () => {
                                     className="border-clubPrimary data-[state=checked]:bg-clubPrimary data-[state=checked]:text-clubDark-foreground"
                                   />
                                 </FormControl>
-                                <FormLabel className="font-normal text-clubDark-foreground">
+                                <FormLabel className="font-normal text-clubLight-foreground"> {/* Changed text-clubDark-foreground to text-clubLight-foreground */}
                                   {item.label}
                                 </FormLabel>
                               </FormItem>
@@ -234,7 +234,7 @@ const TournamentRegistration = () => {
                       <FormControl>
                         <Input placeholder="Nom et Prénom du partenaire" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
                       </FormControl>
-                      <FormDescription className="text-clubDark-foreground/70">
+                      <FormDescription className="text-clubLight-foreground/70"> {/* Changed text-clubDark-foreground/70 to text-clubLight-foreground/70 */}
                         Uniquement si vous participez au tableau de doubles.
                       </FormDescription>
                       <FormMessage />
@@ -255,10 +255,10 @@ const TournamentRegistration = () => {
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                      <FormLabel className="text-clubDark-foreground">
+                      <FormLabel className="text-clubLight-foreground"> {/* Changed text-clubDark-foreground to text-clubLight-foreground */}
                         J'accepte les conditions de participation et le règlement du tournoi.
                       </FormLabel>
-                      <FormDescription className="text-clubDark-foreground/70">
+                      <FormDescription className="text-clubLight-foreground/70"> {/* Changed text-clubDark-foreground/70 to text-clubLight-foreground/70 */}
                         (Les conditions sont affichées sur l'affiche ci-dessus)
                       </FormDescription>
                     </div>
