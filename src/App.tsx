@@ -1,4 +1,4 @@
-import { Toaster } from "@/components/ui/toaster";
+import { CustomToaster } from "@/components/CustomToaster"; // Importation du CustomToaster
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -21,9 +21,6 @@ import React from "react";
 const queryClient = new QueryClient();
 
 const App = () => (
-  // Enveloppe tout le contenu de l'application dans un seul div racine.
-  // Cela garantit que le composant App retourne toujours un seul élément DOM,
-  // ce qui peut résoudre les problèmes avec React.Children.only.
   <div className="app-root">
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -48,9 +45,8 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
-    {/* Toaster et Sonner sont des composants globaux, placés comme frères de l'arbre principal de l'application,
-        mais toujours à l'intérieur du div racine unique. */}
-    <Toaster />
+    {/* Utilisation du CustomToaster à la place du Toaster de shadcn/ui */}
+    <CustomToaster />
     <Sonner />
   </div>
 );
