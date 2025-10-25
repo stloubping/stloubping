@@ -17,38 +17,37 @@ import ClassementJoueurs from "./pages/ClassementJoueurs";
 import NotFound from "./pages/NotFound";
 import { LightboxProvider } from "./context/LightboxContext";
 import React from "react";
-import { ToastProvider } from "@/components/ui/toast"; // Import ToastProvider
+import { ToastProvider } from "@/components/ui/toast";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <ToastProvider> {/* ToastProvider attend un seul enfant */}
-        <React.Fragment> {/* Enveloppe tous les enfants de ToastProvider dans un Fragment */}
-          <BrowserRouter>
-            <LightboxProvider>
-              <Layout>
-                <Routes>
-                  <Route path="/" element={<Accueil />} />
-                  <Route path="/le-club" element={<LeClub />} />
-                  <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
-                  <Route path="/adhesions" element={<Adhesions />} />
-                  <Route path="/boutique" element={<Boutique />} />
-                  <Route path="/partenaires" element={<Partenaires />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/tournoi-inscription" element={<TournamentRegistration />} />
-                  <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} />
-                  <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Layout>
-            </LightboxProvider>
-          </BrowserRouter>
-          <Toaster /> {/* Toaster (maintenant sans son propre ToastProvider) */}
-          <Sonner /> {/* Sonner est indépendant */}
-        </React.Fragment>
+      <ToastProvider> {/* ToastProvider now wraps only BrowserRouter */}
+        <BrowserRouter>
+          <LightboxProvider>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Accueil />} />
+                <Route path="/le-club" element={<LeClub />} />
+                <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
+                <Route path="/adhesions" element={<Adhesions />} />
+                <Route path="/boutique" element={<Boutique />} />
+                <Route path="/partenaires" element={<Partenaires />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/tournoi-inscription" element={<TournamentRegistration />} />
+                <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} />
+                <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Layout>
+          </LightboxProvider>
+        </BrowserRouter>
       </ToastProvider>
+      {/* Toaster and Sonner are global components, placed as siblings to ToastProvider */}
+      <Toaster />
+      <Sonner />
     </TooltipProvider>
   </QueryClientProvider>
 );
