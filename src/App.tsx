@@ -24,8 +24,12 @@ const App = () => (
   <div className="app-root">
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        {/* Les autres composants seront réintroduits progressivement */}
-        <h1>Application en cours de débogage... (Providers réactivés)</h1>
+        <BrowserRouter>
+          <LightboxProvider>
+            {/* Les autres composants seront réintroduits progressivement */}
+            <h1>Application en cours de débogage... (BrowserRouter et LightboxProvider réactivés)</h1>
+          </LightboxProvider>
+        </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
     {/* CustomToaster et Sonner restent désactivés pour le moment */}
