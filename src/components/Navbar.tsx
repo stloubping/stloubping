@@ -22,6 +22,8 @@ const Navbar = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
 
+  console.log("Navbar - isMobile:", isMobile, "Window width:", window.innerWidth); // Added console log here
+
   const NavLinks = ({ className }: { className?: string }) => (
     <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)}>
       {navItems.map((item) => (
@@ -54,7 +56,7 @@ const Navbar = () => {
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-clubDark text-clubDark-foreground border-clubPrimary w-full sm:w-3/4 md:max-w-xs"> {/* Added width classes */}
+            <SheetContent side="right" className="bg-clubDark text-clubDark-foreground border-clubPrimary w-full sm:w-3/4 md:max-w-xs">
               <NavLinks className="flex flex-col space-x-0 space-y-4 p-4" />
             </SheetContent>
           </Sheet>
