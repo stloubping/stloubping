@@ -26,10 +26,12 @@ export const LightboxProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <LightboxContext.Provider value={{ openLightbox, closeLightbox }}>
-      {children}
-      {isOpen && currentImage && (
-        <LightboxModal imageUrl={currentImage} onClose={closeLightbox} />
-      )}
+      <React.Fragment> {/* Enveloppe les enfants dans un Fragment */}
+        {children}
+        {isOpen && currentImage && (
+          <LightboxModal imageUrl={currentImage} onClose={closeLightbox} />
+        )}
+      </React.Fragment>
     </LightboxContext.Provider>
   );
 };
