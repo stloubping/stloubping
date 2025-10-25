@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import NewsCard from "@/components/NewsCard";
 import { useLightbox } from '@/context/LightboxContext';
 import HeroSection from "@/components/HeroSection"; // Import HeroSection
-// import TrainingSchedule from "@/components/TrainingSchedule"; // Removed TrainingSchedule import
+import TrainingSchedule from "@/components/TrainingSchedule"; // Re-import TrainingSchedule
 
 const newsItems = [
   {
@@ -142,6 +142,12 @@ const Accueil = () => {
           </div>
         </section>
 
+        {/* Planning des Entraînements Section */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Planning des Entraînements</h2>
+          <TrainingSchedule />
+        </section>
+
         {/* Rejoignez-nous Section */}
         <section className="text-center mb-12">
           <Card className="bg-clubLight shadow-lg p-8 rounded-xl">
@@ -170,9 +176,7 @@ const Accueil = () => {
                 <a href="https://www.facebook.com/votrepageclub" target="_blank" rel="noopener noreferrer" className="text-clubPrimary hover:text-clubPrimary/80 transition-colors">
                   <Facebook size={40} />
                 </a>
-                {/* Ajoutez d'autres icônes de réseaux sociaux si nécessaire */}
-              </div>
-              {/* Pour intégrer un flux Facebook dynamique (timeline de page), vous devrez utiliser le "Page Plugin" de Facebook.
+                {/* Pour intégrer un flux Facebook dynamique (timeline de page), vous devrez utiliser le "Page Plugin" de Facebook.
                   1. Rendez-vous sur https://developers.facebook.com/docs/plugins/page-plugin/
                   2. Configurez votre plugin avec l'URL de votre page Facebook et les options souhaitées.
                   3. Copiez le code HTML (généralement un iframe) et collez-le ici.
