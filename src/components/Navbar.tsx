@@ -9,7 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const navItems = [
   { name: "Accueil", path: "/" },
   { name: "Le Club", path: "/le-club" },
-  { name: "Compétitions & Équipes", path: "/competitions-equipes" },
+  { name: "Équipes", path: "/competitions-equipes" },
   { name: "Classement des Joueurs", path: "/classement-joueurs" },
   { name: "Adhésions", path: "/adhesions" },
   { name: "Boutique", path: "/boutique" },
