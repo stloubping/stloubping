@@ -45,6 +45,12 @@ const recentMatchResults = [
     alt: "Équipe St Loub Ping 6",
     result: "Victoire 12-2 contre TT FARGUIAIS 4",
   },
+  {
+    id: 5, // Nouveau résultat
+    image: "/images/actualites/561695574_777489311789659_3783358259365139184_n.jpg",
+    alt: "Équipe St Loub Ping 1",
+    result: "Victoire 9-5 contre CA BEGLAIS 4",
+  },
 ];
 
 const CompetitionsEquipes = () => {
