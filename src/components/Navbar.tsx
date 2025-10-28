@@ -10,7 +10,7 @@ const navItems = [
   { name: "Accueil", path: "/" },
   { name: "Le Club", path: "/le-club" },
   { name: "Équipes", path: "/competitions-equipes" },
-  { name: "Classement des Joueurs", path: "/classement-joueurs" },
+  { name: "Les Joueurs", path: "/classement-joueurs" },
   { name: "Adhésions", path: "/adhesions" },
   { name: "Boutique", path: "/boutique" },
   { name: "Partenaires", path: "/partenaires" },
