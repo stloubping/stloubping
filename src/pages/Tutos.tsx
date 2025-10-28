@@ -15,7 +15,7 @@ const Tutos = () => {
             <p className="mb-4 text-clubLight-foreground">
               Que vous soyez débutant ou joueur confirmé, cette section est dédiée à vous aider à progresser.
               Découvrez des tutoriels vidéo sur les techniques de base, les services, les topspins, les défenses,
-              ainsi que des conseils tactiques pour dominer vos adversaires.
+              ains_i que des conseils tactiques pour dominer vos adversaires.
             </p>
             <p className="text-clubLight-foreground">
               Nos entraîneurs et des experts du tennis de table partagent leurs astuces pour affiner votre jeu.
@@ -25,23 +25,23 @@ const Tutos = () => {
               {/* Exemple de vidéos de tutoriels */}
               <div className="aspect-w-16 aspect-h-9 w-full">
                 <iframe
-                  src="https://www.youtube.com/embed/dQw4w9WgXcQ" // Placeholder video 1 (Rick Astley)
-                  title="Tuto: Le Service de Base"
+                  src="https://www.youtube.com/embed/RXSJkvkzVpY" // Nouvelle vidéo : Le Service Revers
+                  title="Tuto: Le Service Revers"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   referrerPolicy="strict-origin-when-cross-origin"
                   allowFullScreen
                   className="w-full h-full rounded-lg shadow-md"
                 ></iframe>
-                <p className="mt-2 text-sm text-center text-muted-foreground">Le Service de Base : Maîtrisez les Fondamentaux</p>
+                <p className="mt-2 text-sm text-center text-muted-foreground">Le Service Revers : Surprenez vos adversaires</p>
               </div>
               <div className="aspect-w-16 aspect-h-9 w-full">
                 <iframe
-                  src="https://www.youtube.com/embed/2Te0542ZiaE" // Nouvelle vidéo : Le Topspin Coup Droit
+                  src="https://www.youtube.com/embed/2Te0542ZiaE" // Vidéo existante : Le Topspin Coup Droit
                   title="Tuto: Le Topspin Coup Droit"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
+                  referrerPolicy="strict-origin-origin"
                   allowFullScreen
                   className="w-full h-full rounded-lg shadow-md"
                 ></iframe>
