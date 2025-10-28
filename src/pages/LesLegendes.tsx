@@ -34,7 +34,7 @@ const LesLegendes = () => {
               </div>
               <div className="aspect-w-16 aspect-h-9 w-full">
                 <iframe
-                  src="https://www.youtube.com/embed/X_y_2222222" // Exemple: Jan-Ove Waldner
+                  src="https://www.youtube.com/embed/7KtWBNL9yEQ" // Jan-Ove Waldner - The Mozart of Table Tennis
                   title="Jan-Ove Waldner - The Mozart of Table Tennis"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
