@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"; // Import Accordion components
 
 interface NavItem {
   name: string;
@@ -42,89 +43,100 @@ const Navbar = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Nouvel état pour le menu déroulant
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // État pour le menu déroulant desktop
 
-  const NavLinks = ({ className, closeSheet, isMobileView = false }: { className?: string; closeSheet?: () => void; isMobileView?: boolean }) => (
-    <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)}>
-      {navItems.map((item) => {
-        if (item.type === "dropdown" && !isMobileView) {
-          return (
-            <DropdownMenu key={item.name} open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className={cn(
-                    "text-sm font-medium transition-colors hover:text-clubPrimary",
-                    item.children?.some(child => location.pathname === child.path) ? "text-clubPrimary" : "text-clubDark-foreground"
-                  )}
-                  onMouseEnter={() => setIsDropdownOpen(true)} // Ouvre au survol
-                  onMouseLeave={() => setIsDropdownOpen(false)} // Ferme quand la souris quitte
-                >
-                  {item.name}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="bg-clubLight text-clubLight-foreground border-border"
-                onMouseEnter={() => setIsDropdownOpen(true)} // Maintient ouvert si la souris est sur le contenu
-                onMouseLeave={() => setIsDropdownOpen(false)} // Ferme quand la souris quitte le contenu
-              >
-                {item.children?.map((child) => (
-                  <DropdownMenuItem key={child.name} asChild>
-                    <Link
-                      to={child.path || "#"}
-                      onClick={() => {
-                        closeSheet?.();
-                        setIsDropdownOpen(false); // Ferme le dropdown après le clic
-                      }}
+  const NavLinks = ({ className, closeSheet, isMobileView = false }: { className?: string; closeSheet?: () => void; isMobileView?: boolean }) => {
+    return (
+      <nav className={cn("flex", isMobileView ? "flex-col space-x-0 space-y-4 p-0" : "items-center space-x-4 lg:space-x-6", className)}>
+        {navItems.map((item) => {
+          if (item.type === "dropdown") {
+            if (isMobileView) {
+              return (
+                <Accordion type="single" collapsible key={item.name} className="w-full">
+                  <AccordionItem value={item.name}>
+                    <AccordionTrigger className="text-clubDark-foreground hover:text-clubPrimary text-base font-medium py-2">
+                      {item.name}
+                    </AccordionTrigger>
+                    <AccordionContent className="pl-4 space-y-2 flex flex-col">
+                      {item.children?.map((child) => (
+                        <Link
+                          key={child.name}
+                          to={child.path || "#"}
+                          onClick={closeSheet}
+                          className={cn(
+                            "block text-sm font-normal transition-colors hover:text-clubPrimary",
+                            location.pathname === child.path ? "text-clubPrimary font-semibold" : "text-clubDark-foreground/80"
+                          )}
+                        >
+                          {child.name}
+                        </Link>
+                      ))}
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              );
+            } else { // Desktop dropdown
+              return (
+                <DropdownMenu key={item.name} open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
                       className={cn(
-                        "block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary",
-                        location.pathname === child.path ? "text-clubPrimary font-semibold" : ""
+                        "text-sm font-medium transition-colors hover:text-clubPrimary",
+                        item.children?.some(child => location.pathname === child.path) ? "text-clubPrimary" : "text-clubDark-foreground"
                       )}
+                      onMouseEnter={() => setIsDropdownOpen(true)}
+                      onMouseLeave={() => setIsDropdownOpen(false)}
                     >
-                      {child.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          );
-        } else if (item.type === "dropdown" && isMobileView) {
-          // For mobile, flatten dropdown items
-          return (
-            <React.Fragment key={item.name}>
-              {item.children?.map((child) => (
-                <Link
-                  key={child.name}
-                  to={child.path || "#"}
-                  onClick={closeSheet}
-                  className={cn(
-                    "text-sm font-medium transition-colors hover:text-clubPrimary",
-                    location.pathname === child.path ? "text-clubPrimary" : "text-clubDark-foreground"
-                  )}
-                >
-                  {child.name}
-                </Link>
-              ))}
-            </React.Fragment>
-          );
-        } else {
-          return (
-            <Link
-              key={item.name}
-              to={item.path || "#"}
-              onClick={closeSheet}
-              className={cn(
-                "text-sm font-medium transition-colors hover:text-clubPrimary",
-                location.pathname === item.path ? "text-clubPrimary" : "text-clubDark-foreground"
-              )}
-            >
-              {item.name}
-            </Link>
-          );
-        }
-      })}
-    </nav>
-  );
+                      {item.name}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    className="bg-clubLight text-clubLight-foreground border-border"
+                    onMouseEnter={() => setIsDropdownOpen(true)}
+                    onMouseLeave={() => setIsDropdownOpen(false)}
+                  >
+                    {item.children?.map((child) => (
+                      <DropdownMenuItem key={child.name} asChild>
+                        <Link
+                          to={child.path || "#"}
+                          onClick={() => {
+                            closeSheet?.();
+                            setIsDropdownOpen(false);
+                          }}
+                          className={cn(
+                            "block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary",
+                            location.pathname === child.path ? "text-clubPrimary font-semibold" : ""
+                          )}
+                        >
+                          {child.name}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              );
+            }
+          } else { // Regular link
+            return (
+              <Link
+                key={item.name}
+                to={item.path || "#"}
+                onClick={closeSheet}
+                className={cn(
+                  isMobileView ? "text-base" : "text-sm", // Ajuste la taille de police pour les liens mobiles
+                  "font-medium transition-colors hover:text-clubPrimary",
+                  location.pathname === item.path ? "text-clubPrimary" : "text-clubDark-foreground"
+                )}
+              >
+                {item.name}
+              </Link>
+            );
+          }
+        })}
+      </nav>
+    );
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full bg-clubDark text-clubDark-foreground shadow-sm">
