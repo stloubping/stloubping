@@ -52,7 +52,8 @@ const Navbar = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // État pour le menu déroulant desktop
+  const [isTournoiDropdownOpen, setIsTournoiDropdownOpen] = useState(false); // État spécifique pour le menu Tournoi
+  const [isVideosDropdownOpen, setIsVideosDropdownOpen] = useState(false); // État spécifique pour le menu Vidéos
 
   const NavLinks = ({ className, closeSheet, isMobileView = false }: { className?: string; closeSheet?: () => void; isMobileView?: boolean }) => {
     return (
@@ -85,8 +86,11 @@ const Navbar = () => {
                 </Accordion>
               );
             } else { // Desktop dropdown
+              const isCurrentDropdownOpen = item.name === "Tournoi" ? isTournoiDropdownOpen : isVideosDropdownOpen;
+              const setIsCurrentDropdownOpen = item.name === "Tournoi" ? setIsTournoiDropdownOpen : setIsVideosDropdownOpen;
+
               return (
-                <DropdownMenu key={item.name} open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+                <DropdownMenu key={item.name} open={isCurrentDropdownOpen} onOpenChange={setIsCurrentDropdownOpen}>
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
@@ -94,16 +98,16 @@ const Navbar = () => {
                         "text-sm font-medium transition-colors hover:text-clubPrimary",
                         item.children?.some(child => location.pathname === child.path) ? "text-clubPrimary" : "text-clubDark-foreground"
                       )}
-                      onMouseEnter={() => setIsDropdownOpen(true)}
-                      onMouseLeave={() => setIsDropdownOpen(false)}
+                      onMouseEnter={() => setIsCurrentDropdownOpen(true)}
+                      onMouseLeave={() => setIsCurrentDropdownOpen(false)}
                     >
                       {item.name}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     className="bg-clubLight text-clubLight-foreground border-border"
-                    onMouseEnter={() => setIsDropdownOpen(true)}
-                    onMouseLeave={() => setIsDropdownOpen(false)}
+                    onMouseEnter={() => setIsCurrentDropdownOpen(true)}
+                    onMouseLeave={() => setIsCurrentDropdownOpen(false)}
                   >
                     {item.children?.map((child) => (
                       <DropdownMenuItem key={child.name} asChild>
@@ -111,7 +115,7 @@ const Navbar = () => {
                           to={child.path || "#"}
                           onClick={() => {
                             closeSheet?.();
-                            setIsDropdownOpen(false);
+                            setIsCurrentDropdownOpen(false);
                           }}
                           className={cn(
                             "block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary",
