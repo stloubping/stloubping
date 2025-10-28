@@ -29,18 +29,18 @@ const recentMatchResults = [
     title: "Équipe 1 Régionale 2",
   },
   {
+    id: 2, // Mise à jour de l'Équipe 2
+    image: "/images/actualites/559716404_777489288456328_4293602483346407225_n.jpg",
+    alt: "Équipe St Loub Ping 2",
+    result: "Défaite 11-3 contre US CENON 5",
+    title: "Équipe 2 Pré-régionale",
+  },
+  {
     id: 1,
     image: "https://picsum.photos/400/300?random=match1",
     alt: "Équipe St Loub Ping 4",
     result: "Égalité 7-7 contre C STE HELENE 4",
     title: "Équipe 4 Départementale 2",
-  },
-  {
-    id: 2,
-    image: "https://picsum.photos/400/300?random=match2",
-    alt: "Équipe St Loub Ping 2",
-    result: "Défaite 11-3 contre US CENON 5",
-    title: "Équipe 2 Pré-régionale",
   },
   {
     id: 3,
