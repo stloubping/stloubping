@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"; // Import Accordion components
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface NavItem {
   name: string;
@@ -37,12 +37,12 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    name: "Vidéos", // Nouveau menu déroulant
+    name: "Vidéos",
     type: "dropdown",
     children: [
       { name: "WTT", path: "/videos/wtt", type: "link" },
-      { name: "Tutos", path: "#", type: "link" }, // Lien temporaire
-      { name: "Les Légendes", path: "/videos/les-legendes", type: "link" }, // Lien mis à jour
+      { name: "Tutos", path: "/videos/tutos", type: "link" }, // Lien mis à jour
+      { name: "Les Légendes", path: "/videos/les-legendes", type: "link" },
     ],
   },
   { name: "Contact", path: "/contact", type: "link" },
@@ -52,8 +52,8 @@ const Navbar = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [isTournoiDropdownOpen, setIsTournoiDropdownOpen] = useState(false); // État spécifique pour le menu Tournoi
-  const [isVideosDropdownOpen, setIsVideosDropdownOpen] = useState(false); // État spécifique pour le menu Vidéos
+  const [isTournoiDropdownOpen, setIsTournoiDropdownOpen] = useState(false);
+  const [isVideosDropdownOpen, setIsVideosDropdownOpen] = useState(false);
 
   const NavLinks = ({ className, closeSheet, isMobileView = false }: { className?: string; closeSheet?: () => void; isMobileView?: boolean }) => {
     return (
@@ -137,7 +137,7 @@ const Navbar = () => {
                 to={item.path || "#"}
                 onClick={closeSheet}
                 className={cn(
-                  isMobileView ? "text-base" : "text-sm", // Ajuste la taille de police pour les liens mobiles
+                  isMobileView ? "text-base" : "text-sm",
                   "font-medium transition-colors hover:text-clubPrimary",
                   location.pathname === item.path ? "text-clubPrimary" : "text-clubDark-foreground"
                 )}
