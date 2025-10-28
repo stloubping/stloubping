@@ -67,7 +67,7 @@ const Navbar = () => {
                       to={child.path || "#"}
                       onClick={closeSheet}
                       className={cn(
-                        "block px-4 py-2 text-sm text-clubDark-foreground hover:bg-clubSection hover:text-clubPrimary",
+                        "block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary", // Changed text-clubDark-foreground to text-clubLight-foreground
                         location.pathname === child.path ? "text-clubPrimary font-semibold" : ""
                       )}
                     >
