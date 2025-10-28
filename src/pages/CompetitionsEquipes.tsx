@@ -58,7 +58,7 @@ const recentMatchResults = [
   },
   {
     id: 4,
-    image: "https://picsum.photos/400/300?random=match4",
+    image: "/images/actualites/559457962_777489378456319_6114307706364752867_n.jpg", // Chemin mis à jour
     alt: "Équipe St Loub Ping 6",
     result: "Victoire 12-2 contre TT FARGUIAIS 4",
     title: "Équipe 6 Départementale 4",
