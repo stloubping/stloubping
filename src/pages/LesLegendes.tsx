@@ -23,7 +23,7 @@ const LesLegendes = () => {
               {/* Exemple de vidéos de légendes */}
               <div className="aspect-w-16 aspect-h-9 w-full">
                 <iframe
-                  src="https://www.youtube.com/embed/X_y_2111111" // Exemple: Ma Long
+                  src="https://www.youtube.com/embed/VzzvEG2rVi0" // Ma Long - The Dragon
                   title="Ma Long - The Dragon"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
