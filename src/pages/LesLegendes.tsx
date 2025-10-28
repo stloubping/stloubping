@@ -45,7 +45,7 @@ const LesLegendes = () => {
               </div>
               <div className="aspect-w-16 aspect-h-9 w-full">
                 <iframe
-                  src="https://www.youtube.com/embed/X_y_3333333" // Exemple: Ding Ning
+                  src="https://www.youtube.com/embed/WykRbfiwKEU" // Ding Ning
                   title="Ding Ning - The Grand Slam Champion"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
