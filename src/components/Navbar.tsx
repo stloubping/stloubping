@@ -42,13 +42,14 @@ const Navbar = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Nouvel état pour le menu déroulant
 
   const NavLinks = ({ className, closeSheet, isMobileView = false }: { className?: string; closeSheet?: () => void; isMobileView?: boolean }) => (
     <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)}>
       {navItems.map((item) => {
         if (item.type === "dropdown" && !isMobileView) {
           return (
-            <DropdownMenu key={item.name}>
+            <DropdownMenu key={item.name} open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
@@ -56,18 +57,27 @@ const Navbar = () => {
                     "text-sm font-medium transition-colors hover:text-clubPrimary",
                     item.children?.some(child => location.pathname === child.path) ? "text-clubPrimary" : "text-clubDark-foreground"
                   )}
+                  onMouseEnter={() => setIsDropdownOpen(true)} // Ouvre au survol
+                  onMouseLeave={() => setIsDropdownOpen(false)} // Ferme quand la souris quitte
                 >
                   {item.name}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-clubLight text-clubLight-foreground border-border">
+              <DropdownMenuContent
+                className="bg-clubLight text-clubLight-foreground border-border"
+                onMouseEnter={() => setIsDropdownOpen(true)} // Maintient ouvert si la souris est sur le contenu
+                onMouseLeave={() => setIsDropdownOpen(false)} // Ferme quand la souris quitte le contenu
+              >
                 {item.children?.map((child) => (
                   <DropdownMenuItem key={child.name} asChild>
                     <Link
                       to={child.path || "#"}
-                      onClick={closeSheet}
+                      onClick={() => {
+                        closeSheet?.();
+                        setIsDropdownOpen(false); // Ferme le dropdown après le clic
+                      }}
                       className={cn(
-                        "block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary", // Changed text-clubDark-foreground to text-clubLight-foreground
+                        "block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary",
                         location.pathname === child.path ? "text-clubPrimary font-semibold" : ""
                       )}
                     >
