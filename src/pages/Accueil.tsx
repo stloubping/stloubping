@@ -101,12 +101,7 @@ const Accueil = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {eventItems.map((event) => (
               <Card key={event.id} className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <img
-                  src={event.image}
-                  alt={event.title}
-                  className="w-full h-48 object-cover cursor-zoom-in"
-                  onClick={() => openLightbox(event.image)}
-                />
+                {/* L'image a été supprimée ici */}
                 <CardHeader>
                   <CardTitle className="text-2xl font-semibold text-clubPrimary">{event.title}</CardTitle>
                   <CardDescription className="flex items-center text-clubLight-foreground/80 mt-2">
