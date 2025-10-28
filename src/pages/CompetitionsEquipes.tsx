@@ -51,7 +51,7 @@ const recentMatchResults = [
   },
   {
     id: 3,
-    image: "https://picsum.photos/400/300?random=match3",
+    image: "/images/actualites/559465112_777489365122987_5984336681092815830_n.jpg", // Chemin mis à jour
     alt: "Équipe St Loub Ping 5",
     result: "Défaite 11-3 contre LE HAILLAN TT 7",
     title: "Équipe 5 Départementale 3",
