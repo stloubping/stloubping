@@ -67,7 +67,7 @@ const eventItems = [
     time: "19h00",
     location: "Club House",
     description: "Une soirée conviviale pour remercier tous les bénévoles qui œuvrent pour le club. Repas et animations au programme !",
-    image: "/images/actualites/559050727_7859211184279805_5144790509263314206_n.jpg",
+    image: "/images/actualites/559050727_785921184279805_5144790509263314206_n.jpg", // Chemin mis à jour
   },
 ];
 
@@ -92,7 +92,6 @@ const Accueil = () => {
               <NewsCard key={news.id} news={news} />
             ))}
           </div>
-          {/* Le bouton "Voir toutes les actualités" a été supprimé ici */}
         </section>
 
         {/* Événements à Venir Section */}
