@@ -40,9 +40,9 @@ const navItems: NavItem[] = [
     name: "Vidéos", // Nouveau menu déroulant
     type: "dropdown",
     children: [
-      { name: "WTT", path: "/videos/wtt", type: "link" }, // Lien mis à jour
+      { name: "WTT", path: "/videos/wtt", type: "link" },
       { name: "Tutos", path: "#", type: "link" }, // Lien temporaire
-      { name: "Les Légendes", path: "#", type: "link" }, // Lien temporaire
+      { name: "Les Légendes", path: "/videos/les-legendes", type: "link" }, // Lien mis à jour
     ],
   },
   { name: "Contact", path: "/contact", type: "link" },

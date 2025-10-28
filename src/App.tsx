@@ -14,7 +14,8 @@ import Contact from "./pages/Contact";
 import TournamentRegistration from "./pages/TournamentRegistration";
 import TournamentRegistrationsList from "./pages/TournamentRegistrationsList";
 import ClassementJoueurs from "./pages/ClassementJoueurs";
-import WTTVideos from "./pages/WTTVideos"; // Import the new WTTVideos component
+import WTTVideos from "./pages/WTTVideos";
+import LesLegendes from "./pages/LesLegendes"; // Import the new LesLegendes component
 import NotFound from "./pages/NotFound";
 import { LightboxProvider } from "./context/LightboxContext";
 import React from "react";
@@ -38,7 +39,8 @@ const App = () => (
                 <Route path="/partenaires" element={<Partenaires />} />
                 <Route path="/tournoi-inscription" element={<TournamentRegistration />} />
                 <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} />
-                <Route path="/videos/wtt" element={<WTTVideos />} /> {/* New route for WTT Videos */}
+                <Route path="/videos/wtt" element={<WTTVideos />} />
+                <Route path="/videos/les-legendes" element={<LesLegendes />} /> {/* New route for Les Légendes */}
                 <Route path="/contact" element={<Contact />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
