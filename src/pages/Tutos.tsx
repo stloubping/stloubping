@@ -37,7 +37,7 @@ const Tutos = () => {
               </div>
               <div className="aspect-w-16 aspect-h-9 w-full">
                 <iframe
-                  src="https://www.youtube.com/embed/dQw4w9WgXcQ" // Placeholder video 2 (Rick Astley)
+                  src="https://www.youtube.com/embed/2Te0542ZiaE" // Nouvelle vidéo : Le Topspin Coup Droit
                   title="Tuto: Le Topspin Coup Droit"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
