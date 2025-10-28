@@ -44,7 +44,7 @@ const recentMatchResults = [
   },
   {
     id: 1,
-    image: "https://picsum.photos/400/300?random=match1",
+    image: "/images/actualites/561606494_777489285122995_5427379147122871235_n.jpg", // Chemin mis à jour
     alt: "Équipe St Loub Ping 4",
     result: "Égalité 7-7 contre C STE HELENE 4",
     title: "Équipe 4 Départementale 2",
