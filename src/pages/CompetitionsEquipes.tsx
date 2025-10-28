@@ -22,18 +22,25 @@ const matchCalendar = [
 
 const recentMatchResults = [
   {
-    id: 5, // Équipe 1 déplacée en première position
+    id: 5,
     image: "/images/actualites/561695574_777489311789659_3783358259365139184_n.jpg",
     alt: "Équipe St Loub Ping 1",
     result: "Victoire 9-5 contre CA BEGLAIS 4",
     title: "Équipe 1 Régionale 2",
   },
   {
-    id: 2, // Mise à jour de l'Équipe 2
+    id: 2,
     image: "/images/actualites/559716404_777489288456328_4293602483346407225_n.jpg",
     alt: "Équipe St Loub Ping 2",
     result: "Défaite 11-3 contre US CENON 5",
     title: "Équipe 2 Pré-régionale",
+  },
+  {
+    id: 6, // Nouvelle entrée pour l'Équipe 3
+    image: "https://picsum.photos/400/300?random=match6", // Image de remplacement
+    alt: "Équipe St Loub Ping 3",
+    result: "Exempt",
+    title: "Équipe 3 Départementale 2",
   },
   {
     id: 1,
