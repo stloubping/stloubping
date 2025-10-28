@@ -36,6 +36,15 @@ const navItems: NavItem[] = [
       { name: "Liste des Inscriptions", path: "/tournoi-inscriptions-liste", type: "link" },
     ],
   },
+  {
+    name: "Vidéos", // Nouveau menu déroulant
+    type: "dropdown",
+    children: [
+      { name: "WTT", path: "#", type: "link" }, // Lien temporaire
+      { name: "Tutos", path: "#", type: "link" }, // Lien temporaire
+      { name: "Les Légendes", path: "#", type: "link" }, // Lien temporaire
+    ],
+  },
   { name: "Contact", path: "/contact", type: "link" },
 ];
 
