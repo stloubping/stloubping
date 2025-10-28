@@ -50,6 +50,7 @@ const eventItems = [
     location: "Gymnase de Saint-Loubès",
     description: "Préparez vos raquettes ! Notre tournoi régional annuel revient avec de nouvelles catégories et de nombreux lots à gagner. Inscriptions ouvertes prochainement.",
     image: "/images/actualites/Gemini_Generated_Image_mlgzatmlgzatmlgz.png",
+    link: "/tournoi-inscription", // Ajout du lien vers la page d'inscription au tournoi
   },
   {
     id: 201, // Nouvel ID unique pour le Tournoi de Noël
@@ -59,6 +60,7 @@ const eventItems = [
     location: "Salle du club",
     description: "Venez célébrer les fêtes de fin d'année avec un tournoi convivial ouvert à tous les membres du club. Ambiance garantie avec des lots de Noël à gagner !",
     image: "/images/events/481155043_605704212301504_4050174989924491844_n.jpg", // Nouvelle image
+    link: "#", // Lien par défaut pour cet événement
   },
   {
     id: 3,
@@ -68,6 +70,7 @@ const eventItems = [
     location: "Club House",
     description: "Une soirée conviviale pour remercier tous les bénévoles qui œuvrent pour le club. Repas et animations au programme !",
     image: "/images/actualites/559050727_785921184279805_5144790509263314206_n.jpg", // Chemin mis à jour
+    link: "#", // Lien par défaut pour cet événement
   },
 ];
 
@@ -120,7 +123,7 @@ const Accueil = () => {
                 </CardContent>
                 <CardFooter>
                   <Button asChild className="w-full bg-clubSecondary hover:bg-clubPrimary text-white">
-                    <Link to="#">En savoir plus</Link>
+                    <Link to={event.link}>En savoir plus</Link>
                   </Button>
                 </CardFooter>
               </Card>
