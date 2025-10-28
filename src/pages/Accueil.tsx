@@ -52,6 +52,15 @@ const eventItems = [
     image: "/images/actualites/Gemini_Generated_Image_mlgzatmlgzatmlgz.png",
   },
   {
+    id: 201, // Nouvel ID unique pour le Tournoi de Noël
+    title: "Tournoi de Noël",
+    date: "20 Décembre 2025",
+    time: "Dès 14h00",
+    location: "Salle du club",
+    description: "Venez célébrer les fêtes de fin d'année avec un tournoi convivial ouvert à tous les membres du club. Ambiance garantie avec des lots de Noël à gagner !",
+    image: "https://picsum.photos/400/300?random=xmas", // Image temporaire, à remplacer par une image réelle
+  },
+  {
     id: 3,
     title: "Soirée des Bénévoles",
     date: "10 Décembre 2025",
