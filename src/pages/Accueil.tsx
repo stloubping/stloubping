@@ -58,7 +58,7 @@ const eventItems = [
     time: "Dès 14h00",
     location: "Salle du club",
     description: "Venez célébrer les fêtes de fin d'année avec un tournoi convivial ouvert à tous les membres du club. Ambiance garantie avec des lots de Noël à gagner !",
-    image: "https://picsum.photos/400/300?random=xmas", // Image temporaire, à remplacer par une image réelle
+    image: "/images/events/481155043_605704212301504_4050174989924491844_n.jpg", // Mise à jour du chemin de l'image
   },
   {
     id: 3,
