@@ -309,33 +309,6 @@ const LeClub = () => {
             </CardContent>
           </Card>
         </section>
-
-        <section>
-          <Card className="bg-clubLight shadow-lg rounded-xl">
-            <CardHeader>
-              <CardTitle className="text-2xl text-clubDark">Labels FFTT</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-4 text-clubLight-foreground">
-                Le St Loub Ping est fier d'être reconnu par la Fédération Française de Tennis de Table (FFTT) à travers plusieurs labels. Ces distinctions attestent de la qualité de notre encadrement, de nos infrastructures et de notre engagement dans le développement du tennis de table sous toutes ses formes.
-              </p>
-              <ul className="list-disc list-inside space-y-2 mb-6 text-clubLight-foreground">
-                <li>**Label Club Formateur** : Reconnaît notre excellence dans la formation des jeunes joueurs.</li>
-                <li>**Label Club Féminin** : Souligne notre engagement pour la promotion et le développement du tennis de table féminin.</li>
-                <li>**Label Club Handisport** : Met en avant notre accessibilité et notre soutien à la pratique du handisport.</li>
-              </ul>
-              <p className="text-clubLight-foreground mb-6">
-                Ces labels sont le reflet de notre travail quotidien pour offrir un environnement propice à l'épanouissement sportif et personnel de tous nos adhérents.
-              </p>
-              <img
-                src="https://picsum.photos/300/100?random=108"
-                alt="Logos Labels FFTT"
-                className="mt-6 mx-auto cursor-zoom-in"
-                onClick={() => openLightbox("https://picsum.photos/300/100?random=108")} // Open lightbox on image click
-              />
-            </CardContent>
-          </Card>
-        </section>
       </div>
     </div>
   );
