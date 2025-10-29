@@ -1,7 +1,11 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import VideoCard from '@/components/VideoCard'; // Import VideoCard
+import { allVideos } from '@/data/videos'; // Import allVideos
 
 const LesLegendes = () => {
+  const legendsVideos = allVideos.filter(video => video.category === 'legends');
+
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Les Légendes du Tennis de Table en Vidéo</h1>
@@ -20,51 +24,9 @@ const LesLegendes = () => {
               Laissez-vous inspirer par la technique, la stratégie et la passion de ces athlètes hors pair !
             </p>
             <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Exemple de vidéos de légendes */}
-              <div className="aspect-w-16 aspect-h-9 w-full">
-                <iframe
-                  src="https://www.youtube.com/embed/VzzvEG2rVi0" // Ma Long - The Dragon
-                  title="Ma Long - The Dragon"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                  className="w-full h-full rounded-lg shadow-md"
-                ></iframe>
-              </div>
-              <div className="aspect-w-16 aspect-h-9 w-full">
-                <iframe
-                  src="https://www.youtube.com/embed/7KtWBNL9yEQ" // Jan-Ove Waldner - The Mozart of Table Tennis
-                  title="Jan-Ove Waldner - The Mozart of Table Tennis"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                  className="w-full h-full rounded-lg shadow-md"
-                ></iframe>
-              </div>
-              <div className="aspect-w-16 aspect-h-9 w-full">
-                <iframe
-                  src="https://www.youtube.com/embed/WykRbfiwKEU" // Ding Ning
-                  title="Ding Ning - The Grand Slam Champion"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                  className="w-full h-full rounded-lg shadow-md"
-                ></iframe>
-              </div>
-              <div className="aspect-w-16 aspect-h-9 w-full">
-                <iframe
-                  src="https://www.youtube.com/embed/sOX9IixjIbQ" // Timo Boll
-                  title="Timo Boll - European Legend"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                  className="w-full h-full rounded-lg shadow-md"
-                ></iframe>
-              </div>
+              {legendsVideos.map(video => (
+                <VideoCard key={video.id} video={video} />
+              ))}
             </div>
             <p className="mt-6 text-sm text-muted-foreground text-center">
               Les liens YouTube ci-dessus sont des exemples. Vous pouvez les remplacer par les vidéos spécifiques de légendes que vous souhaitez mettre en avant.

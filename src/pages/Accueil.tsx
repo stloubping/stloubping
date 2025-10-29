@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 import NewsCard from "@/components/NewsCard";
 import { useLightbox } from '@/context/LightboxContext';
 import HeroSection from "@/components/HeroSection";
+import VideoCard from '@/components/VideoCard'; // Import VideoCard
+import { allVideos } from '@/data/videos'; // Import allVideos
 
 const newsItems = [
   // Stage de Perfectionnement Jeunes, déplacé depuis les événements
@@ -77,6 +79,11 @@ const eventItems = [
 const Accueil = () => {
   const { openLightbox } = useLightbox();
 
+  // Get the 2 latest videos
+  const latestVideos = [...allVideos]
+    .sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime())
+    .slice(0, 2);
+
   return (
     <div className="bg-clubLight text-clubLight-foreground">
       <HeroSection
@@ -87,6 +94,16 @@ const Accueil = () => {
       />
 
       <div className="container mx-auto px-4 py-8">
+        {/* Dernières Vidéos Section */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Dernières Vidéos</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {latestVideos.map((video) => (
+              <VideoCard key={video.id} video={video} />
+            ))}
+          </div>
+        </section>
+
         {/* Actualités Section */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Dernières Actualités</h2>
