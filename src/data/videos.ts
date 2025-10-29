@@ -11,35 +11,35 @@ export const allVideos: VideoItem[] = [
   // Vidéos WTT
   {
     id: 'wtt-1',
-    title: "WTT Contender Doha 2024 - Highlights",
-    description: "Les meilleurs moments du WTT Contender Doha 2024.",
+    title: "WTT Contender Doha 2024 - Finale Hommes",
+    description: "Les moments forts de la finale simple messieurs entre Liang Jingkun et Lin Gaoyuan au WTT Contender Doha 2024.",
     youtubeId: "7pl_dmo24nM",
     category: 'wtt',
     dateAdded: "2024-01-15",
   },
   {
     id: 'wtt-2',
-    title: "WTT Star Contender Goa 2024 - Finals",
-    description: "Revivez les finales épiques du WTT Star Contender Goa 2024.",
+    title: "WTT Star Contender Goa 2024 - Finale Hommes",
+    description: "Revivez la finale simple messieurs entre Liang Jingkun et Lin Gaoyuan au WTT Star Contender Goa 2024.",
     youtubeId: "hBvyU6guwm8",
     category: 'wtt',
     dateAdded: "2024-02-01",
   },
   {
     id: 'wtt-3',
-    title: "WTT Champions Incheon 2024 - Highlights",
-    description: "Les moments forts du WTT Champions Incheon 2024, avec des échanges incroyables.",
+    title: "WTT Champions Incheon 2024 - Finale Hommes",
+    description: "Les échanges incroyables de la finale simple messieurs entre Liang Jingkun et Lin Gaoyuan au WTT Champions Incheon 2024.",
     youtubeId: "uZ2wVtstweQ",
     category: 'wtt',
-    dateAdded: "2024-07-28", // Date d'ajout mise à jour pour être plus récente
+    dateAdded: "2024-07-28",
   },
   {
     id: 'wtt-4',
-    title: "WTT Saudi Smash 2024 - Men's Singles Final Highlights",
-    description: "Les meilleurs moments de la finale masculine du WTT Saudi Smash 2024.",
+    title: "WTT Saudi Smash 2024 - Finale Hommes",
+    description: "Les meilleurs moments de la finale simple messieurs entre Liang Jingkun et Lin Gaoyuan au WTT Saudi Smash 2024.",
     youtubeId: "37tr9lUgn6Q",
     category: 'wtt',
-    dateAdded: "2024-07-29", // Date d'ajout mise à jour pour être la plus récente
+    dateAdded: "2024-07-29",
   },
   // Vidéos Tutos
   {
@@ -93,10 +93,10 @@ export const allVideos: VideoItem[] = [
   },
   {
     id: 'legend-5',
-    title: "Fan Zhendong - The Dominator",
-    description: "Les actions les plus spectaculaires de Fan Zhendong, le numéro 1 mondial.",
+    title: "Simon Gauzy - Les Meilleurs Points",
+    description: "Découvrez les actions les plus spectaculaires du joueur français Simon Gauzy.",
     youtubeId: "lxZiv-fiHkY",
     category: 'legends',
-    dateAdded: "2024-07-30", // Date d'ajout récente pour qu'elle puisse apparaître en page d'accueil
+    dateAdded: "2024-07-30",
   },
 ];
