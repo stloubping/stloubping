@@ -35,6 +35,49 @@ const Partenaires = () => {
         </Card>
       </section>
 
+      <section className="mb-12">
+        <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Nos Plans de Partenariat</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <Card className="bg-clubLight shadow-lg rounded-xl border-2 border-clubPrimary">
+            <CardHeader className="text-center">
+              <CardTitle className="text-3xl font-bold text-clubPrimary mb-2">Partenaire Bronze</CardTitle>
+              <p className="text-clubLight-foreground/80">Soutenez le club et gagnez en visibilité locale.</p>
+            </CardHeader>
+            <CardContent className="space-y-4 text-clubLight-foreground">
+              <ul className="list-disc list-inside space-y-2">
+                <li>Logo de votre entreprise sur notre site web (section Partenaires).</li>
+                <li>Mention de votre soutien lors des événements locaux du club.</li>
+                <li>Visibilité sur nos réseaux sociaux (1 publication par an).</li>
+                <li>Invitation à nos événements annuels.</li>
+              </ul>
+              <div className="text-center mt-6">
+                <p className="text-2xl font-bold text-clubDark">À partir de <span className="text-clubPrimary">200€</span> / an</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-clubLight shadow-lg rounded-xl border-2 border-clubPrimary">
+            <CardHeader className="text-center">
+              <CardTitle className="text-3xl font-bold text-clubPrimary mb-2">Partenaire Or</CardTitle>
+              <p className="text-clubLight-foreground/80">Un partenariat privilégié pour une visibilité maximale.</p>
+            </CardHeader>
+            <CardContent className="space-y-4 text-clubLight-foreground">
+              <ul className="list-disc list-inside space-y-2">
+                <li>Logo de votre entreprise en grand format sur notre site web et affiches du club.</li>
+                <li>Banderole publicitaire dans notre salle d'entraînement.</li>
+                <li>Mention de votre soutien lors de tous les événements du club (y compris tournois régionaux).</li>
+                <li>Visibilité accrue sur nos réseaux sociaux (4 publications par an).</li>
+                <li>Invitation VIP à tous nos événements.</li>
+                <li>Possibilité d'organiser un événement co-brandé avec le club.</li>
+              </ul>
+              <div className="text-center mt-6">
+                <p className="text-2xl font-bold text-clubDark">À partir de <span className="text-clubPrimary">800€</span> / an</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
       <section>
         <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Nos Sponsors</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
