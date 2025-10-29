@@ -31,7 +31,7 @@ export const allVideos: VideoItem[] = [
     description: "Les moments forts du WTT Champions Incheon 2024, avec des échanges incroyables.",
     youtubeId: "uZ2wVtstweQ",
     category: 'wtt',
-    dateAdded: "2024-03-31", // Date d'ajout récente
+    dateAdded: "2024-07-28", // Date d'ajout mise à jour pour être plus récente
   },
   {
     id: 'wtt-4',
@@ -39,7 +39,7 @@ export const allVideos: VideoItem[] = [
     description: "Les meilleurs moments de la finale masculine du WTT Saudi Smash 2024.",
     youtubeId: "37tr9lUgn6Q",
     category: 'wtt',
-    dateAdded: "2024-05-11", // Date d'ajout récente
+    dateAdded: "2024-07-29", // Date d'ajout mise à jour pour être la plus récente
   },
   // Vidéos Tutos
   {
