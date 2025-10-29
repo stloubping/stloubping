@@ -94,16 +94,6 @@ const Accueil = () => {
       />
 
       <div className="container mx-auto px-4 py-8">
-        {/* Dernières Vidéos Section */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Dernières Vidéos</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {latestVideos.map((video) => (
-              <VideoCard key={video.id} video={video} />
-            ))}
-          </div>
-        </section>
-
         {/* Actualités Section */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Dernières Actualités</h2>
@@ -144,6 +134,16 @@ const Accueil = () => {
                   </Button>
                 </CardFooter>
               </Card>
+            ))}
+          </div>
+        </section>
+
+        {/* Dernières Vidéos Section */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Dernières Vidéos</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {latestVideos.map((video) => (
+              <VideoCard key={video.id} video={video} />
             ))}
           </div>
         </section>
