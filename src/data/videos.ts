@@ -25,6 +25,14 @@ export const allVideos: VideoItem[] = [
     category: 'wtt',
     dateAdded: "2024-02-01",
   },
+  {
+    id: 'wtt-3',
+    title: "WTT Champions Incheon 2024 - Highlights",
+    description: "Les moments forts du WTT Champions Incheon 2024, avec des échanges incroyables.",
+    youtubeId: "uZ2wVtstweQ",
+    category: 'wtt',
+    dateAdded: "2024-03-31", // Date d'ajout récente
+  },
   // Vidéos Tutos
   {
     id: 'tuto-1',

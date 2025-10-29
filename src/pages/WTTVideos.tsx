@@ -27,12 +27,6 @@ const WTTVideos = () => {
               {wttVideos.map(video => (
                 <VideoCard key={video.id} video={video} />
               ))}
-              <div className="aspect-w-16 aspect-h-9 bg-clubSection rounded-lg flex items-center justify-center text-muted-foreground">
-                <p>Espace pour la vidéo 3</p>
-              </div>
-              <div className="aspect-w-16 aspect-h-9 bg-clubSection rounded-lg flex items-center justify-center text-muted-foreground">
-                <p>Espace pour la vidéo 4</p>
-              </div>
             </div>
           </CardContent>
         </Card>
