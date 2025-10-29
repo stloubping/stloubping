@@ -53,9 +53,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
         {/* Le titre de la vidéo a été supprimé ici */}
       </CardHeader>
       <CardContent>
-        <Button asChild className="w-full bg-clubSecondary hover:bg-clubPrimary text-white">
-          <Link to={videoPageLink}>Voir la catégorie</Link>
-        </Button>
+        {/* Le bouton "Voir la catégorie" a été supprimé ici */}
       </CardContent>
     </Card>
   );
