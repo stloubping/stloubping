@@ -91,4 +91,12 @@ export const allVideos: VideoItem[] = [
     category: 'legends',
     dateAdded: "2023-11-15",
   },
+  {
+    id: 'legend-5',
+    title: "Fan Zhendong - The Dominator",
+    description: "Les actions les plus spectaculaires de Fan Zhendong, le numéro 1 mondial.",
+    youtubeId: "lxZiv-fiHkY",
+    category: 'legends',
+    dateAdded: "2024-07-30", // Date d'ajout récente pour qu'elle puisse apparaître en page d'accueil
+  },
 ];
