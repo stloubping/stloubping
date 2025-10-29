@@ -33,6 +33,14 @@ export const allVideos: VideoItem[] = [
     category: 'wtt',
     dateAdded: "2024-03-31", // Date d'ajout récente
   },
+  {
+    id: 'wtt-4',
+    title: "WTT Saudi Smash 2024 - Men's Singles Final Highlights",
+    description: "Les meilleurs moments de la finale masculine du WTT Saudi Smash 2024.",
+    youtubeId: "37tr9lUgn6Q",
+    category: 'wtt',
+    dateAdded: "2024-05-11", // Date d'ajout récente
+  },
   // Vidéos Tutos
   {
     id: 'tuto-1',
