@@ -72,6 +72,29 @@ const CompetitionsEquipes = () => {
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Compétitions & Équipes</h1>
 
+      <section className="mb-12">
+        <Card className="bg-clubLight shadow-lg rounded-xl">
+          <CardHeader>
+            <CardTitle className="text-2xl text-clubDark">Nos Équipes</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {teams.map((team, index) => (
+                <Card key={index} className="bg-clubLight shadow-md rounded-lg">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-clubDark">{team.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-clubLight-foreground">
+                    <p>Division: <span className="font-semibold">{team.division}</span></p>
+                    <p>Capitaine: <span className="font-semibold">{team.captain}</span></p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
       {/* Calendrier des Compétitions Section (already has its own Dialog) */}
       <section className="mb-12">
         <Card className="bg-clubLight shadow-lg rounded-xl">
