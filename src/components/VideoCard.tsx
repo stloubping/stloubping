@@ -28,7 +28,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
 
   return (
     <Card className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <div className="relative w-full h-48 bg-black flex items-center justify-center">
+      <div className="relative w-full h-64 bg-black flex items-center justify-center"> {/* Hauteur augmentée à h-64 */}
         <img
           src={youtubeThumbnailUrl}
           alt={video.title}
@@ -51,9 +51,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
       </div>
       <CardHeader>
         <CardTitle className="text-xl font-semibold text-clubPrimary">{video.title}</CardTitle>
-        <CardDescription className="text-clubLight-foreground/80 mt-2">
-          {video.description}
-        </CardDescription>
+        {/* La description de la vidéo a été supprimée ici */}
       </CardHeader>
       <CardContent>
         <Button asChild className="w-full bg-clubSecondary hover:bg-clubPrimary text-white">
