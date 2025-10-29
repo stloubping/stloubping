@@ -10,8 +10,8 @@ const teams = [
   { name: "Équipe 2", division: "Pré-régionale", captain: "Vincent" },
   { name: "Équipe 3", division: "Départementale 2", captain: "Yanick" },
   { name: "Équipe 4", division: "Départementale 2", captain: "Patrice" },
-  { name: "Équipe 5", division: "Départementale 3", captain: "Olivier" }, {/* Pierre devient Olivier */}
-  { name: "Équipe 6", division: "Départementale 4", captain: "Pierre" }, {/* Olivier devient Pierre */}
+  { name: "Équipe 5", division: "Départementale 3", captain: "Pierre" },
+  { name: "Équipe 6", division: "Départementale 4", captain: "Olivier" },
 ];
 
 const matchCalendar = [
