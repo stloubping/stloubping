@@ -46,6 +46,7 @@ const Partenaires = () => {
             <CardContent className="space-y-4 text-clubLight-foreground">
               <ul className="list-disc list-inside space-y-2">
                 <li>Logo de votre entreprise sur notre site web (section Partenaires).</li>
+                <li>Logo de votre entreprise sur le maillot du club (petite taille).</li>
                 <li>Mention de votre soutien lors des événements locaux du club.</li>
                 <li>Visibilité sur nos réseaux sociaux (1 publication par an).</li>
                 <li>Invitation à nos événements annuels.</li>
@@ -64,6 +65,7 @@ const Partenaires = () => {
             <CardContent className="space-y-4 text-clubLight-foreground">
               <ul className="list-disc list-inside space-y-2">
                 <li>Logo de votre entreprise en grand format sur notre site web et affiches du club.</li>
+                <li>Logo de votre entreprise sur le maillot du club (taille standard).</li>
                 <li>Banderole publicitaire dans notre salle d'entraînement.</li>
                 <li>Mention de votre soutien lors de tous les événements du club (y compris tournois régionaux).</li>
                 <li>Visibilité accrue sur nos réseaux sociaux (4 publications par an).</li>
