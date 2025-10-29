@@ -84,10 +84,6 @@ const CompetitionsEquipes = () => {
                   <CardHeader>
                     <CardTitle className="text-xl text-clubDark">{team.name}</CardTitle>
                   </CardHeader>
-                  <CardContent className="text-clubLight-foreground">
-                    <p>Division: <span className="font-semibold">{team.division}</span></p>
-                    <p>Capitaine: <span className="font-semibold">{team.captain}</span></p>
-                  </CardContent>
                 </Card>
               ))}
             </div>
