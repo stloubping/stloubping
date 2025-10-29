@@ -29,12 +29,6 @@ const Tutos = () => {
               {tutosVideos.map(video => (
                 <VideoCard key={video.id} video={video} />
               ))}
-              <div className="aspect-w-16 aspect-h-9 bg-clubSection rounded-lg flex items-center justify-center text-muted-foreground">
-                <p>Plus de tutoriels à venir !</p>
-              </div>
-              <div className="aspect-w-16 aspect-h-9 bg-clubSection rounded-lg flex items-center justify-center text-muted-foreground">
-                <p>Suggérez vos sujets préférés !</p>
-              </div>
             </div>
             <p className="mt-6 text-sm text-muted-foreground text-center">
               Les vidéos ci-dessus sont des exemples. N'hésitez pas à me demander de les remplacer par des tutoriels spécifiques.
