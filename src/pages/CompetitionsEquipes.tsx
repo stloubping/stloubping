@@ -105,7 +105,7 @@ const CompetitionsEquipes = () => {
                 frameBorder="1"
                 name="pingpocket"
                 width="100%"
-                height="1500" {/* Hauteur augmentée */}
+                height="1500"
                 scrolling="auto"
                 src="https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes/classements"
                 title="Classements des équipes Pingpocket"
