@@ -97,13 +97,6 @@ const CompetitionsEquipes = () => {
             <p className="text-center text-sm text-muted-foreground mb-4">
               L'affichage direct des classements peut parfois rencontrer des problèmes. Si le contenu ci-dessous ne s'affiche pas correctement ou est dupliqué, veuillez consulter le site de Pingpocket directement.
             </p>
-            <div className="text-center mb-6">
-              <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-6 py-3 text-base rounded-md shadow-lg">
-                <a href="https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes/classements" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-                  Voir les classements sur Pingpocket <ExternalLink className="ml-2 h-4 w-4" />
-                </a>
-              </Button>
-            </div>
             {/* Conteneur pour l'iframe avec largeur limitée pour simuler un affichage mobile */}
             <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden">
               <small className="block text-right text-xs text-muted-foreground p-2">
