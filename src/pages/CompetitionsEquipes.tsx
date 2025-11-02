@@ -80,7 +80,7 @@ const CompetitionsEquipes = () => {
             <CardTitle className="text-2xl text-clubDark">Nos Équipes</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               {teams.map((team, index) => (
                 <Card key={index} className="bg-clubLight shadow-md rounded-lg">
                   <CardHeader>
@@ -93,7 +93,20 @@ const CompetitionsEquipes = () => {
                 </Card>
               ))}
             </div>
-            {/* Le bouton a été supprimé ici */}
+            <h2 className="text-2xl font-bold text-center mb-4 text-clubDark">Détails des équipes (via Pingpocket)</h2>
+            <p className="text-center text-sm text-muted-foreground mb-4">
+              Veuillez noter que l'affichage de ce contenu peut être bloqué par le site externe pour des raisons de sécurité. Si rien n'apparaît, vous devrez peut-être consulter le site directement.
+            </p>
+            <div className="w-full h-[800px] border rounded-lg overflow-hidden">
+              <iframe
+                src="https://www.pingpocket.fr/?page=app/fftt/clubs/10330022/equipes#page-1"
+                title="Liste des équipes Pingpocket"
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                className="w-full h-full"
+              ></iframe>
+            </div>
           </CardContent>
         </Card>
       </section>
