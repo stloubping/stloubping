@@ -8,7 +8,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="flex flex-col min-h-screen bg-clubLight text-clubLight-foreground">
+    <div className="flex flex-col min-h-screen text-clubLight-foreground"> {/* Removed bg-clubLight */}
       <Navbar />
       <main className="flex-grow">
         {children}
