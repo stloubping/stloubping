@@ -97,7 +97,7 @@ const CompetitionsEquipes = () => {
             <p className="text-center text-sm text-muted-foreground mb-4">
               Veuillez noter que l'affichage de ce contenu peut être bloqué par le site externe pour des raisons de sécurité. Si rien n'apparaît, vous devrez peut-être consulter le site directement.
             </p>
-            <div className="w-full border rounded-lg overflow-hidden max-w-[1600px] mx-auto"> {/* Ajout de max-w-[1600px] et mx-auto */}
+            <div className="w-full border rounded-lg overflow-hidden max-w-[1600px] mx-auto">
               <small className="block text-right text-xs text-muted-foreground p-2">
                 powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary">www.pingpocket.fr</a>
               </small>
@@ -105,7 +105,7 @@ const CompetitionsEquipes = () => {
                 frameBorder="1"
                 name="pingpocket"
                 width="100%"
-                height="2000" // Hauteur augmentée
+                height="4000" // Hauteur augmentée à 4000px
                 scrolling="auto"
                 src="https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes/classements"
                 title="Classements des équipes Pingpocket"
