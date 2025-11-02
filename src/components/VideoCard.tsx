@@ -16,7 +16,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
   const youtubeEmbedUrl = `https://www.youtube.com/embed/${video.youtubeId}`;
   const youtubeThumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`; // Standard YouTube thumbnail
 
-  // Determine the link based on category
+  // Determine the link based on category (though not used for the button here, kept for reference)
   let videoPageLink = "/";
   if (video.category === 'wtt') {
     videoPageLink = "/videos/wtt";
@@ -50,10 +50,13 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
         </div>
       </div>
       <CardHeader>
-        {/* Le titre de la vidéo a été supprimé ici */}
+        <CardTitle className="text-xl font-semibold text-clubPrimary">{video.title}</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">{video.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        {/* Le bouton "Voir la catégorie" a été supprimé ici */}
+        <Button onClick={() => openLightbox(youtubeEmbedUrl)} className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground">
+          Voir la vidéo
+        </Button>
       </CardContent>
     </Card>
   );
