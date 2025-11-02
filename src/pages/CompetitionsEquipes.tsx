@@ -4,6 +4,8 @@ import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"; // Import Dialog components
 import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
+import { Button } from "@/components/ui/button"; // Import Button for the new link
+import { ExternalLink } from 'lucide-react'; // Import ExternalLink icon
 
 const teams = [
   { name: "Équipe 1", division: "Régionale 2", captain: "Wesley" },
@@ -11,7 +13,7 @@ const teams = [
   { name: "Équipe 3", division: "Départementale 2", captain: "Yanick" },
   { name: "Équipe 4", division: "Départementale 2", captain: "Patrice" },
   { name: "Équipe 5", division: "Départementale 3", captain: "Olivier" },
-  { name: "Équipe 6", division: "Départementale 4", captain: "Pierre" }, {/* Mis à jour ici */}
+  { name: "Équipe 6", division: "Départementale 4", captain: "Pierre" },
 ];
 
 const matchCalendar = [
@@ -90,6 +92,13 @@ const CompetitionsEquipes = () => {
                   </CardContent>
                 </Card>
               ))}
+            </div>
+            <div className="mt-8 text-center">
+              <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
+                <a href="https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+                  Liste des équipes phase 1 <ExternalLink className="ml-2 h-5 w-5" />
+                </a>
+              </Button>
             </div>
           </CardContent>
         </Card>
