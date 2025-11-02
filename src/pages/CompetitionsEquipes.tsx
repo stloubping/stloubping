@@ -97,7 +97,9 @@ const CompetitionsEquipes = () => {
             <p className="text-center text-sm text-muted-foreground mb-4">
               Veuillez noter que l'affichage de ce contenu peut être bloqué par le site externe pour des raisons de sécurité. Si rien n'apparaît, vous devrez peut-être consulter le site directement.
             </p>
-            <div className="w-full border rounded-lg overflow-hidden max-w-[1600px] mx-auto"> {/* Retiré w-screen et ml-[calc(50%-50vw)] */}
+            {/* Début du conteneur de débogage pour l'iframe Pingpocket */}
+            <div className="w-full border-4 border-red-500 bg-red-50 p-2 rounded-lg overflow-hidden max-w-[1600px] mx-auto">
+              <p className="text-center text-red-700 font-bold mb-2">--- Début du contenu Pingpocket (zone de débogage) ---</p>
               <small className="block text-right text-xs text-muted-foreground p-2">
                 powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary">www.pingpocket.fr</a>
               </small>
@@ -112,7 +114,9 @@ const CompetitionsEquipes = () => {
               >
                 <p>iframe non supportée</p>
               </iframe>
+              <p className="text-center text-red-700 font-bold mt-2">--- Fin du contenu Pingpocket (zone de débogage) ---</p>
             </div>
+            {/* Fin du conteneur de débogage */}
           </CardContent>
         </Card>
       </section>
