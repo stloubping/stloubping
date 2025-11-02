@@ -93,13 +93,7 @@ const CompetitionsEquipes = () => {
                 </Card>
               ))}
             </div>
-            <div className="mt-8 text-center">
-              <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
-                <a href="https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-                  Liste des équipes phase 1 <ExternalLink className="ml-2 h-5 w-5" />
-                </a>
-              </Button>
-            </div>
+            {/* Le bouton a été supprimé ici */}
           </CardContent>
         </Card>
       </section>
