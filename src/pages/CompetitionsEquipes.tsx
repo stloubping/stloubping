@@ -93,19 +93,26 @@ const CompetitionsEquipes = () => {
                 </Card>
               ))}
             </div>
-            <h2 className="text-2xl font-bold text-center mb-4 text-clubDark">Détails des équipes (via Pingpocket)</h2>
+            <h2 className="text-2xl font-bold text-center mb-4 text-clubDark">Classements des équipes (via Pingpocket)</h2>
             <p className="text-center text-sm text-muted-foreground mb-4">
               Veuillez noter que l'affichage de ce contenu peut être bloqué par le site externe pour des raisons de sécurité. Si rien n'apparaît, vous devrez peut-être consulter le site directement.
             </p>
-            <div className="w-full h-[800px] border rounded-lg overflow-hidden">
+            <div className="w-full border rounded-lg overflow-hidden">
+              <small className="block text-right text-xs text-muted-foreground p-2">
+                powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary">www.pingpocket.fr</a>
+              </small>
               <iframe
-                src="https://www.pingpocket.fr/?page=app/fftt/clubs/10330022/equipes#page-1"
-                title="Liste des équipes Pingpocket"
+                frameBorder="1"
+                name="pingpocket"
                 width="100%"
-                height="100%"
-                frameBorder="0"
+                height="800"
+                scrolling="auto"
+                src="https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes/classements"
+                title="Classements des équipes Pingpocket"
                 className="w-full h-full"
-              ></iframe>
+              >
+                <p>iframe non supportée</p>
+              </iframe>
             </div>
           </CardContent>
         </Card>
