@@ -2,10 +2,10 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"; // Import Dialog components
-import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
-import { Button } from "@/components/ui/button"; // Import Button for the new link
-import { ExternalLink } from 'lucide-react'; // Import ExternalLink icon
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useLightbox } from '@/context/LightboxContext';
+import { Button } from "@/components/ui/button";
+import { ExternalLink } from 'lucide-react';
 
 const teams = [
   { name: "Équipe 1", division: "Régionale 2", captain: "Wesley" },
@@ -68,7 +68,7 @@ const recentMatchResults = [
 ];
 
 const CompetitionsEquipes = () => {
-  const { openLightbox } = useLightbox(); // Use the lightbox hook
+  const { openLightbox } = useLightbox();
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
@@ -95,11 +95,17 @@ const CompetitionsEquipes = () => {
             </div>
             <h2 className="text-2xl font-bold text-center mb-4 text-clubDark">Classements des équipes (via Pingpocket)</h2>
             <p className="text-center text-sm text-muted-foreground mb-4">
-              Veuillez noter que l'affichage de ce contenu peut être bloqué par le site externe pour des raisons de sécurité. Si rien n'apparaît, vous devrez peut-être consulter le site directement.
+              L'affichage direct des classements peut parfois rencontrer des problèmes. Si le contenu ci-dessous ne s'affiche pas correctement ou est dupliqué, veuillez consulter le site de Pingpocket directement.
             </p>
-            {/* Début du conteneur de débogage pour l'iframe Pingpocket */}
-            <div className="w-full border-4 border-red-500 bg-red-50 p-2 rounded-lg overflow-hidden max-w-[1600px] mx-auto">
-              <p className="text-center text-red-700 font-bold mb-2">--- Début du contenu Pingpocket (zone de débogage) ---</p>
+            <div className="text-center mb-6">
+              <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-6 py-3 text-base rounded-md shadow-lg">
+                <a href="https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes/classements" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+                  Voir les classements sur Pingpocket <ExternalLink className="ml-2 h-4 w-4" />
+                </a>
+              </Button>
+            </div>
+            {/* Conteneur pour l'iframe avec largeur limitée pour simuler un affichage mobile */}
+            <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden">
               <small className="block text-right text-xs text-muted-foreground p-2">
                 powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary">www.pingpocket.fr</a>
               </small>
@@ -114,9 +120,7 @@ const CompetitionsEquipes = () => {
               >
                 <p>iframe non supportée</p>
               </iframe>
-              <p className="text-center text-red-700 font-bold mt-2">--- Fin du contenu Pingpocket (zone de débogage) ---</p>
             </div>
-            {/* Fin du conteneur de débogage */}
           </CardContent>
         </Card>
       </section>
