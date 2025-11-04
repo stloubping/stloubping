@@ -67,7 +67,7 @@ const eventItems = [
   {
     id: 3,
     title: "Tournoi des Familles", // Titre mis à jour
-    date: "20 Octobre 2025", // Date mise à jour
+    date: "17 Octobre 2025", // Date mise à jour ici
     time: "Dès 14h00", // Heure mise à jour
     location: "Salle du club", // Lieu mis à jour
     description: "Un événement convivial pour toute la famille ! Venez partager un moment sportif et ludique autour du tennis de table. Ouvert à tous les âges et niveaux.", // Description mise à jour
