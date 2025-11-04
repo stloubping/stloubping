@@ -119,7 +119,7 @@ const LeClub = () => {
               <ul className="list-disc list-inside space-y-2 mb-6 text-clubLight-foreground">
                 <li>Une salle principale spacieuse équipée de <span className="font-semibold">10 tables</span> de compétition homologuées.</li>
                 <li>Un espace d'entraînement dédié équipé de robots lance-balles et de tables d'échauffement.</li>
-                <li>Des vestiaires modernes et des douches individuelles pour le confort de tous.</li>
+                <li>Des vestiaires modernes et des douches pour le confort de tous.</li>
                 <li>Un Club House convivial pour les moments de détente, les réunions et les événements du club.</li>
                 <li>Un parking facile d'accès et sécurisé.</li>
               </ul>
