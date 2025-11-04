@@ -47,7 +47,7 @@ const eventItems = [
   {
     id: 102, // Nouvel ID unique
     title: "Tournoi Régional Saint-Loub'Ping 2026",
-    date: "15 Février 2026",
+    date: "11 Avril 2026", // Date mise à jour ici
     time: "Dès 8h30", // Ajout de l'heure pour la carte d'événement
     location: "Gymnase de Saint-Loubès",
     description: "Préparez vos raquettes ! Notre tournoi régional annuel revient avec de nouvelles catégories et de nombreux lots à gagner. Inscriptions ouvertes prochainement.",
