@@ -74,7 +74,7 @@ const Adhesions = () => {
                 <h3 className="text-xl font-semibold mb-2 text-clubDark">Licence Compétition</h3>
                 <p className="mb-4 text-clubLight-foreground">
                   Pour les joueurs désireux de s'investir dans la compétition.
-                  Permet de participer aux championnats par équipes et aux tournois individuels
+                  Permet de participer aux championnats par équipes et aux tournois
                   organisés par la FFTT.
                 </p>
                 <ul className="list-disc list-inside mb-4 text-clubLight-foreground">
