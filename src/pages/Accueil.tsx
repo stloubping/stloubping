@@ -71,7 +71,7 @@ const eventItems = [
     time: "Dès 14h00", // Heure mise à jour
     location: "Salle du club", // Lieu mis à jour
     description: "Un événement convivial pour toute la famille ! Venez partager un moment sportif et ludique autour du tennis de table. Ouvert à tous les âges et niveaux.", // Description mise à jour
-    image: "https://picsum.photos/400/300?random=familytournament", // Image générique pour le tournoi des familles
+    image: "/images/actualites/559050727_785921184279805_5144790509263314206_n.jpg", // Image restaurée
     link: "#", // Lien par défaut pour cet événement
   },
 ];
