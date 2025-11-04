@@ -16,7 +16,7 @@ const newsItems = [
   {
     id: 101, // Nouvel ID unique
     title: "Stage de Perfectionnement Jeunes",
-    date: "20-24 Août 2025",
+    date: "20-25 Octobre 2025", // Date mise à jour ici
     location: "Salle du club",
     description: "Un stage intensif pour les jeunes compétiteurs souhaitant améliorer leur technique et leur stratégie. Encadrement par nos meilleurs entraîneurs.",
     link: "/actualites/stage-perfectionnement", // Ajout d'un lien pour la carte d'actualité
