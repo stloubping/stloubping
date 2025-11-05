@@ -62,11 +62,6 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
           </Button>
         )}
       </CardContent>
-      <CardFooter>
-        <Button asChild className="w-full bg-clubSecondary hover:bg-clubPrimary text-white">
-          <Link to={news.link}>Voir l'actualité</Link>
-        </Button>
-      </CardFooter>
     </Card>
   );
 };
