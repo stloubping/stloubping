@@ -12,7 +12,7 @@ import VideoCard from '@/components/VideoCard'; // Import VideoCard
 import { allVideos } from '@/data/videos'; // Import allVideos
 
 const newsItems = [
-  // Stage de Perfectionnement Jeunes, déplacé depuis les événements
+  // Stage de Perfectionnement Jeunes
   {
     id: 101, // Nouvel ID unique
     title: "Stage de Perfectionnement Jeunes",
@@ -22,14 +22,15 @@ const newsItems = [
     link: "/actualites/stage-perfectionnement", // Ajout d'un lien pour la carte d'actualité
     image: "/images/actualites/FB_IMG_1759672983725.jpg",
   },
+  // Tournoi des Familles (Déplacé ici)
   {
     id: 3,
-    title: "Assemblée Générale Annuelle du Club",
-    date: "25 Septembre 2025",
-    location: "Club House",
-    description: "Tous les membres sont invités à l'Assemblée Générale pour faire le bilan de la saison passée et discuter des projets futurs. Votre présence est essentielle !",
-    link: "/actualites/assemblee-generale",
-    image: "/images/actualites/FB_IMG_1759672948691.jpg",
+    title: "Tournoi des Familles",
+    date: "17 Octobre 2025",
+    location: "Salle du club",
+    description: "Un événement convivial pour toute la famille ! Venez partager un moment sportif et ludique autour du tennis de table. Ouvert à tous les âges et niveaux.",
+    link: "/actualites/tournoi-familles", // Lien mis à jour pour l'actualité
+    image: "/images/actualites/559050727_785921184279805_5144790509263314206_n.jpg",
   },
   {
     id: 4,
@@ -43,7 +44,7 @@ const newsItems = [
 ];
 
 const eventItems = [
-  // Tournoi Régional Saint-Loub'Ping 2026, déplacé depuis les actualités
+  // Tournoi Régional Saint-Loub'Ping 2026
   {
     id: 102, // Nouvel ID unique
     title: "Tournoi Régional Saint-Loub'Ping 2026",
@@ -54,6 +55,17 @@ const eventItems = [
     image: "/images/actualites/Gemini_Generated_Image_mlgzatmlgzatmlgz.png",
     link: "/tournoi-inscription", // Ajout du lien vers la page d'inscription au tournoi
   },
+  // Championnat par équipe - Journée 4 Phase 1 (Nouveau bloc)
+  {
+    id: 202,
+    title: "Championnat par équipe - Journée 4 Phase 1",
+    date: "20 Octobre 2024",
+    time: "Dès 14h00",
+    location: "Salle du club",
+    description: "Venez encourager nos équipes lors de la 4ème journée de championnat ! Ambiance garantie et matchs décisifs pour le classement.",
+    image: "/images/actualites/championnat-equipe-journee-4-phase-1.jpg",
+    link: "/competitions-equipes",
+  },
   {
     id: 201, // Nouvel ID unique pour le Tournoi de Noël
     title: "Tournoi de Noël",
@@ -62,16 +74,6 @@ const eventItems = [
     location: "Salle du club",
     description: "Venez célébrer les fêtes de fin d'année avec un tournoi convivial ouvert à tous les membres du club. Ambiance garantie avec des lots de Noël à gagner !",
     image: "/images/events/481155043_605704212301504_4050174989924491844_n.jpg", // Nouvelle image
-    link: "#", // Lien par défaut pour cet événement
-  },
-  {
-    id: 3,
-    title: "Tournoi des Familles", // Titre mis à jour
-    date: "17 Octobre 2025", // Date mise à jour ici
-    time: "Dès 14h00", // Heure mise à jour
-    location: "Salle du club", // Lieu mis à jour
-    description: "Un événement convivial pour toute la famille ! Venez partager un moment sportif et ludique autour du tennis de table. Ouvert à tous les âges et niveaux.", // Description mise à jour
-    image: "/images/actualites/559050727_785921184279805_5144790509263314206_n.jpg", // Image restaurée
     link: "#", // Lien par défaut pour cet événement
   },
 ];
