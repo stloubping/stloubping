@@ -69,7 +69,7 @@ const eventItems = [
   {
     id: 201, // Nouvel ID unique pour le Tournoi de Noël
     title: "Tournoi de Noël",
-    date: "15 Novembre 2025",
+    date: "15 Novembre", // Date mise à jour ici
     time: "Dès 14h00",
     location: "Salle du club",
     description: "Venez célébrer les fêtes de fin d'année avec un tournoi convivial ouvert à tous les membres du club. Ambiance garantie avec des lots de Noël à gagner !",
