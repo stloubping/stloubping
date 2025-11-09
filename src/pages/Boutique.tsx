@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
-import { Shirt, Ruler, DollarSign } from 'lucide-react';
+import { Shirt, Ruler, DollarSign, Mail, User, FileText } from 'lucide-react'; // Ajout d'icônes pour les méthodes de commande
 
 const Boutique = () => {
   const { openLightbox } = useLightbox(); // Use the lightbox hook
@@ -81,9 +81,24 @@ const Boutique = () => {
                 ))}
               </ul>
 
-              <Button className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground rounded-md shadow-md mt-4">
-                Commander (via boutique en ligne)
-              </Button>
+              {/* Instructions de commande mises à jour */}
+              <div className="mt-6 p-4 bg-clubSection rounded-md border border-clubPrimary/30">
+                <h4 className="text-lg font-semibold text-clubDark mb-3">Comment commander :</h4>
+                <ul className="space-y-2 text-clubLight-foreground">
+                  <li className="flex items-center">
+                    <Mail className="mr-2 h-4 w-4 text-clubPrimary" />
+                    Par retour de mail
+                  </li>
+                  <li className="flex items-center">
+                    <User className="mr-2 h-4 w-4 text-clubPrimary" />
+                    Auprès de Pierre-Louis
+                  </li>
+                  <li className="flex items-center">
+                    <FileText className="mr-2 h-4 w-4 text-clubPrimary" />
+                    Sur la feuille affichée dans la salle
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </Card>
