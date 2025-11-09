@@ -12,7 +12,17 @@ import VideoCard from '@/components/VideoCard'; // Import VideoCard
 import { allVideos } from '@/data/videos'; // Import allVideos
 
 const newsItems = [
-  // Stage de Perfectionnement Jeunes
+  // Nouvelle actualité : Maillot du Club (Position 1)
+  {
+    id: 4,
+    title: "Le Maillot Officiel est Arrivé !",
+    date: "Disponible maintenant",
+    location: "Boutique du Club",
+    description: "Représentez fièrement le St Loub Ping ! Le nouveau maillot officiel est disponible à la commande. Découvrez les tailles et les modalités d'achat sur notre page Boutique.",
+    link: "/boutique",
+    image: "/images/boutique/maillot-club-officiel.png", // Utilisation de l'image du maillot
+  },
+  // Stage de Perfectionnement Jeunes (Position 2)
   {
     id: 101, // Nouvel ID unique
     title: "Stage de Perfectionnement Jeunes",
@@ -22,7 +32,7 @@ const newsItems = [
     link: "/actualites/stage-perfectionnement", // Ajout d'un lien pour la carte d'actualité
     image: "/images/actualites/FB_IMG_1759672983725.jpg",
   },
-  // Tournoi des Familles (Déplacé ici)
+  // Tournoi des Familles (Position 3)
   {
     id: 3,
     title: "Tournoi des Familles",
@@ -31,16 +41,6 @@ const newsItems = [
     description: "Un événement convivial pour toute la famille ! Venez partager un moment sportif et ludique autour du tennis de table. Ouvert à tous les âges et niveaux.",
     link: "/actualites/tournoi-familles", // Lien mis à jour pour l'actualité
     image: "/images/actualites/559050727_785921184279805_5144790509263314206_n.jpg",
-  },
-  // Nouvelle actualité : Maillot du Club
-  {
-    id: 4,
-    title: "Le Maillot Officiel est Arrivé !",
-    date: "Disponible maintenant",
-    location: "Boutique du Club",
-    description: "Représentez fièrement le St Loub Ping ! Le nouveau maillot officiel est disponible à la commande. Découvrez les tailles et les modalités d'achat sur notre page Boutique.",
-    link: "/boutique",
-    image: "/images/boutique/maillot-club-officiel.png", // Utilisation de l'image du maillot
   },
 ];
 
