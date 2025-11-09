@@ -69,7 +69,7 @@ const eventItems = [
   {
     id: 201, // Nouvel ID unique pour le Tournoi de Noël
     title: "Tournoi de Noël",
-    date: "20 Decembre 2025", // Date mise à jour ici
+    date: "20 Decembre 2025",
     time: "Dès 14h00",
     location: "Salle du club",
     description: "Venez célébrer les fêtes de fin d'année avec un tournoi convivial ouvert à tous les membres du club. Ambiance garantie avec des lots de Noël à gagner !",
@@ -150,24 +150,8 @@ const Accueil = () => {
           </div>
         </section>
 
-        {/* Rejoignez-nous Section */}
-        <section className="text-center mb-12">
-          <Card className="bg-clubLight shadow-lg p-8 rounded-xl">
-            <CardTitle className="text-2xl text-clubDark mb-4">Prêt à nous rejoindre ?</CardTitle>
-            <CardContent>
-              <p className="mb-6 text-clubLight-foreground">
-                Que vous soyez débutant ou expert, jeune ou moins jeune, le St Loub Ping vous attend !
-                Découvrez nos différentes formules d'adhésion et trouvez celle qui vous convient.
-              </p>
-              <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
-                <Link to="/adhesions">Découvrir nos Adhésions</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </section>
-
         {/* Suivez-nous Section avec flux Facebook */}
-        <section className="text-center">
+        <section className="text-center mb-12">
           <Card className="bg-clubLight shadow-lg p-8 rounded-xl">
             <CardTitle className="text-2xl font-bold text-clubDark mb-4">Suivez-nous sur Facebook !</CardTitle>
             <CardContent>
@@ -187,6 +171,22 @@ const Accueil = () => {
                   title="Page Facebook Saint-LoubPing"
                 ></iframe>
               </div>
+            </CardContent>
+          </Card>
+        </section>
+        
+        {/* Rejoignez-nous Section (Déplacée en bas) */}
+        <section className="text-center">
+          <Card className="bg-clubLight shadow-lg p-8 rounded-xl">
+            <CardTitle className="text-2xl text-clubDark mb-4">Prêt à nous rejoindre ?</CardTitle>
+            <CardContent>
+              <p className="mb-6 text-clubLight-foreground">
+                Que vous soyez débutant ou expert, jeune ou moins jeune, le St Loub Ping vous attend !
+                Découvrez nos différentes formules d'adhésion et trouvez celle qui vous convient.
+              </p>
+              <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
+                <Link to="/adhesions">Découvrir nos Adhésions</Link>
+              </Button>
             </CardContent>
           </Card>
         </section>
