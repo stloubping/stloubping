@@ -34,12 +34,12 @@ const newsItems = [
   },
   {
     id: 4,
-    title: "Championnat par équipe - Journée 3 Phase 1",
-    date: "06 Octobre 2024",
+    title: "Championnat par équipe - Journée 5 Phase 1",
+    date: "20 Octobre 2024",
     location: "Salle du club",
-    description: "Retour sur la 3ème journée du championnat par équipe. Des matchs intenses et de belles performances de nos joueurs. Découvrez les résultats détaillés !",
-    link: "/actualites/championnat-journee-3",
-    image: "/images/actualites/championnat-equipe-journee-3-phase-1.png",
+    description: "Résultats de la 5ème journée de championnat par équipe. L'équipe 1 s'impose, l'équipe 2 assure le maintien. Tous les détails et les feuilles de match sont disponibles sur la page Compétitions.",
+    link: "/competitions-equipes",
+    image: "/images/actualites/championnat-equipe-journee-4-phase-1.jpg", // Utilisation d'une autre image disponible
   },
 ];
 
