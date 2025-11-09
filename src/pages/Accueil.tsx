@@ -32,14 +32,15 @@ const newsItems = [
     link: "/actualites/tournoi-familles", // Lien mis à jour pour l'actualité
     image: "/images/actualites/559050727_785921184279805_5144790509263314206_n.jpg",
   },
+  // Nouvelle actualité : Maillot du Club
   {
     id: 4,
-    title: "Championnat par équipe - Journée 5 Phase 1",
-    date: "20 Octobre 2024",
-    location: "Salle du club",
-    description: "Résultats de la 5ème journée de championnat par équipe. L'équipe 1 s'impose, l'équipe 2 assure le maintien. Tous les détails et les feuilles de match sont disponibles sur la page Compétitions.",
-    link: "/competitions-equipes",
-    image: "/images/actualites/championnat-equipe-journee-4-phase-1.jpg", // Utilisation d'une autre image disponible
+    title: "Le Maillot Officiel est Arrivé !",
+    date: "Disponible maintenant",
+    location: "Boutique du Club",
+    description: "Représentez fièrement le St Loub Ping ! Le nouveau maillot officiel est disponible à la commande. Découvrez les tailles et les modalités d'achat sur notre page Boutique.",
+    link: "/boutique",
+    image: "/images/boutique/maillot-club-officiel.png", // Utilisation de l'image du maillot
   },
 ];
 
