@@ -36,7 +36,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
       <img
         src={news.image}
         alt={news.title}
-        className="w-full h-48 object-cover cursor-zoom-in"
+        className="w-full h-36 object-cover cursor-zoom-in"
         onClick={() => openLightbox(news.image)} // Open lightbox on image click
       />
       <CardHeader>
