@@ -83,7 +83,7 @@ const Boutique = () => {
                   </li>
                   <li className="flex items-center">
                     <User className="mr-2 h-4 w-4 text-clubPrimary" />
-                    Auprès de Pierre-Louis
+                    Auprès des entraîneurs
                   </li>
                   <li className="flex items-center">
                     <FileText className="mr-2 h-4 w-4 text-clubPrimary" />
