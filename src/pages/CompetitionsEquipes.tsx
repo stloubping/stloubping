@@ -32,7 +32,7 @@ const recentMatchResults = [
   },
   {
     id: 2,
-    image: "/images/actualites/equipe-2-pre-regionale.png", // Chemin mis à jour
+    image: "/images/actualites/equipe-2-pre-regionale.png",
     alt: "Équipe St Loub Ping 2",
     result: "Défaite 11-3 contre US CENON 5",
     title: "Équipe 2 Pré-régionale",
@@ -60,7 +60,7 @@ const recentMatchResults = [
   },
   {
     id: 4,
-    image: "/images/actualites/559457962_777489378456319_6114307706364752867_n.jpg", // Chemin mis à jour
+    image: "/images/actualites/equipe-6-departementale-4.png", // NOUVELLE IMAGE POUR L'ÉQUIPE 6
     alt: "Équipe St Loub Ping 6",
     result: "Victoire 12-2 contre TT FARGUIAIS 4",
     title: "Équipe 6 Départementale 4",
