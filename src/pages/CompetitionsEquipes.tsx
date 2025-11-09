@@ -1,183 +1,200 @@
+"use client";
+
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { CalendarDays, MapPin, Users } from "lucide-react";
 import { useLightbox } from '@/context/LightboxContext';
-import { Button } from "@/components/ui/button";
-import { ExternalLink } from 'lucide-react';
 
-const teams = [
-  { name: "Équipe 1", division: "Régionale 2", captain: "Wesley" },
-  { name: "Équipe 2", division: "Pré-régionale", captain: "Vincent" },
-  { name: "Équipe 3", division: "Départementale 2", captain: "Yanick" },
-  { name: "Équipe 4", division: "Départementale 2", captain: "Patrice" },
-  { name: "Équipe 5", division: "Départementale 3", captain: "Olivier" },
-  { name: "Équipe 6", division: "Départementale 4", captain: "Pierre" },
+// Définition des types pour la clarté
+interface Match {
+  id: number;
+  team: string;
+  division: string;
+  opponent: string;
+  date: string;
+  time: string;
+  location: 'Domicile' | 'Extérieur';
+  result: 'Victoire' | 'Défaite' | 'Nul' | 'À venir';
+  score?: string;
+  image: string;
+  alt: string;
+  report?: string;
+}
+
+interface Phase {
+  name: string;
+  matches: Match[];
+}
+
+const phases: Phase[] = [
+  {
+    name: "Phase 1 - Saison 2025/2026",
+    matches: [
+      {
+        id: 1,
+        team: "Régionale 2 - Équipe 1",
+        division: "Régionale 2",
+        opponent: "TT Marmande 2",
+        date: "14 Septembre 2025",
+        time: "16h00",
+        location: 'Extérieur',
+        result: 'Victoire',
+        score: '10 - 4',
+        image: "/images/events/IMG-20251003-WA0001.jpg",
+        alt: "Équipe 1 après leur victoire",
+        report: "L'équipe 1 commence la saison avec une victoire convaincante à l'extérieur. Une performance solide de toute l'équipe.",
+      },
+      {
+        id: 2,
+        team: "Départementale 1 - Équipe 2",
+        division: "D1",
+        opponent: "ASPTT Bordeaux 3",
+        date: "14 Septembre 2025",
+        time: "16h00",
+        location: 'Domicile',
+        result: 'Défaite',
+        score: '6 - 8',
+        image: "/images/events/IMG-20251003-WA0002.jpg",
+        alt: "Équipe 2 en pleine action",
+        report: "Match serré pour l'équipe 2 qui s'incline de peu à domicile. De belles promesses pour les prochaines journées.",
+      },
+      {
+        id: 3,
+        team: "Départementale 3 - Équipe 3",
+        division: "D3",
+        opponent: "Cenon 4",
+        date: "14 Septembre 2025",
+        time: "16h00",
+        location: 'Extérieur',
+        result: 'Nul',
+        score: '7 - 7',
+        image: "/images/events/IMG-20251003-WA0003.jpg",
+        alt: "Équipe 3 célébrant un point",
+        report: "Un match nul mérité pour l'équipe 3 qui a su se battre jusqu'au bout pour arracher le point du match nul.",
+      },
+      {
+        id: 4,
+        team: "Régionale 2 - Équipe 1",
+        division: "Régionale 2",
+        opponent: "Pessac 1",
+        date: "15 Novembre 2025",
+        time: "16h00",
+        location: 'Domicile',
+        result: 'À venir',
+        image: "/images/events/Generated Image November 09, 2025 - 3_07PM.png", // NOUVELLE IMAGE
+        alt: "Équipe 1 prête pour la Journée 4",
+      },
+    ],
+  },
+  {
+    name: "Phase 2 - Saison 2025/2026",
+    matches: [
+      {
+        id: 5,
+        team: "Régionale 2 - Équipe 1",
+        division: "Régionale 2",
+        opponent: "Adversaire à déterminer",
+        date: "Février 2026",
+        time: "16h00",
+        location: 'Domicile',
+        result: 'À venir',
+        image: "/images/events/default-match.jpg",
+        alt: "Match à venir",
+      },
+    ],
+  },
 ];
 
-const matchCalendar = [
-  { date: "20/10/2024", opponent: "TT Villeurbanne", team: "Équipe A", location: "Extérieur", result: "À venir" },
-  { date: "27/10/2024", opponent: "ASPTT Lyon", team: "Équipe B", location: "Domicile", result: "À venir" },
-  { date: "03/11/2024", opponent: "MJC Rillieux", team: "Équipe C", location: "Extérieur", result: "À venir" },
-];
-
-const recentMatchResults = [
-  {
-    id: 5,
-    image: "/images/actualites/561695574_777489311789659_3783358259365139184_n.jpg",
-    alt: "Équipe St Loub Ping 1",
-    result: "Victoire 9-5 contre CA BEGLAIS 4",
-    title: "Équipe 1 Régionale 2",
-  },
-  {
-    id: 2,
-    image: "/images/actualites/559716404_777489288456328_4293602483346407225_n.jpg",
-    alt: "Équipe St Loub Ping 2",
-    result: "Défaite 11-3 contre US CENON 5",
-    title: "Équipe 2 Pré-régionale",
-  },
-  {
-    id: 6, // Nouvelle entrée pour l'Équipe 3
-    image: "https://picsum.photos/400/300?random=match6", // Image de remplacement
-    alt: "Équipe St Loub Ping 3",
-    result: "Exempt",
-    title: "Équipe 3 Départementale 2",
-  },
-  {
-    id: 1,
-    image: "/images/actualites/561606494_777489285122995_5427379147122871235_n.jpg", // Chemin mis à jour
-    alt: "Équipe St Loub Ping 4",
-    result: "Égalité 7-7 contre C STE HELENE 4",
-    title: "Équipe 4 Départementale 2",
-  },
-  {
-    id: 3,
-    image: "/images/actualites/559465112_777489365122987_5984336681092815830_n.jpg", // Chemin mis à jour
-    alt: "Équipe St Loub Ping 5",
-    result: "Défaite 11-3 contre LE HAILLAN TT 7",
-    title: "Équipe 5 Départementale 3",
-  },
-  {
-    id: 4,
-    image: "/images/actualites/559457962_777489378456319_6114307706364752867_n.jpg", // Chemin mis à jour
-    alt: "Équipe St Loub Ping 6",
-    result: "Victoire 12-2 contre TT FARGUIAIS 4",
-    title: "Équipe 6 Départementale 4",
-  },
-];
+const getResultClasses = (result: Match['result']) => {
+  switch (result) {
+    case 'Victoire':
+      return 'bg-green-500 text-white';
+    case 'Défaite':
+      return 'bg-red-500 text-white';
+    case 'Nul':
+      return 'bg-yellow-500 text-gray-900';
+    case 'À venir':
+    default:
+      return 'bg-gray-500 text-white';
+  }
+};
 
 const CompetitionsEquipes = () => {
   const { openLightbox } = useLightbox();
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
-      <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Compétitions & Équipes</h1>
+    <div className="bg-clubLight min-h-screen py-12">
+      <div className="container mx-auto px-4">
+        <h1 className="text-4xl font-extrabold text-clubDark text-center mb-4">Compétitions par Équipes</h1>
+        <p className="text-center text-lg text-clubLight-foreground mb-10">
+          Suivez les résultats et le calendrier de nos équipes engagées dans les championnats régionaux et départementaux.
+        </p>
 
-      <section className="mb-12">
-        <Card className="bg-clubLight shadow-lg rounded-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl text-clubDark">Nos Équipes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              {teams.map((team, index) => (
-                <Card key={index} className="bg-clubLight shadow-md rounded-lg">
-                  <CardHeader>
-                    <CardTitle className="text-xl text-clubDark">{team.name}</CardTitle>
+        {phases.map((phase, index) => (
+          <section key={index} className="mb-12">
+            <h2 className="text-3xl font-bold text-clubPrimary border-b-4 border-clubPrimary pb-2 mb-8">{phase.name}</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {phase.matches.map((match) => (
+                <Card key={match.id} className="bg-white shadow-xl rounded-lg overflow-hidden transition-transform duration-300 hover:scale-[1.02]">
+                  <CardHeader className="p-4 pb-2">
+                    <div className="flex justify-between items-start">
+                      <CardTitle className="text-xl font-bold text-clubDark">{match.team}</CardTitle>
+                      <span className={`px-3 py-1 text-sm font-semibold rounded-full ${getResultClasses(match.result)}`}>
+                        {match.result}
+                      </span>
+                    </div>
+                    <CardDescription className="text-clubLight-foreground/80 mt-1">{match.division}</CardDescription>
                   </CardHeader>
-                  <CardContent className="text-clubLight-foreground">
-                    <p>Division: <span className="font-semibold">{team.division}</span></p>
-                    <p>Capitaine: <span className="font-semibold">{team.captain}</span></p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            <h2 className="text-2xl font-bold text-center mb-4 text-clubDark">Classements des équipes (via Pingpocket)</h2>
-            <p className="text-center text-sm text-muted-foreground mb-4">
-              L'affichage direct des classements peut parfois rencontrer des problèmes. Si le contenu ci-dessous ne s'affiche pas correctement ou est dupliqué, veuillez consulter le site de Pingpocket directement.
-            </p>
-            {/* Conteneur pour l'iframe avec largeur limitée pour simuler un affichage mobile */}
-            <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden">
-              <small className="block text-right text-xs text-muted-foreground p-2">
-                powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary">www.pingpocket.fr</a>
-              </small>
-              <iframe
-                frameBorder="1"
-                name="pingpocket"
-                width="100%"
-                height="4000"
-                scrolling="auto"
-                src="https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes/classements"
-                title="Classements des équipes Pingpocket"
-              >
-                <p>iframe non supportée</p>
-              </iframe>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
+                  
+                  <CardContent className="p-4 pt-0">
+                    <div className="flex items-center text-clubDarker mb-2">
+                      <Users className="mr-2 h-4 w-4 text-clubSecondary" />
+                      <span className="font-medium">vs {match.opponent}</span>
+                    </div>
+                    <div className="flex items-center text-clubDarker mb-2">
+                      <CalendarDays className="mr-2 h-4 w-4 text-clubSecondary" />
+                      {match.date} à {match.time}
+                    </div>
+                    <div className="flex items-center text-clubDarker mb-4">
+                      <MapPin className="mr-2 h-4 w-4 text-clubSecondary" />
+                      {match.location === 'Domicile' ? (
+                        <span className="font-semibold text-clubPrimary">À Domicile (Salle du club)</span>
+                      ) : (
+                        <span>À l'Extérieur</span>
+                      )}
+                    </div>
 
-      {/* Calendrier des Compétitions Section (already has its own Dialog) */}
-      <section className="mb-12">
-        <Card className="bg-clubLight shadow-lg rounded-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl text-clubDark text-center">Calendrier des Compétitions 2025-2026</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Dialog>
-              <DialogTrigger asChild>
-                <img
-                  src="/images/schedule/match-calendar-2025-2026.jpg"
-                  alt="Calendrier des Compétitions 2025-2026"
-                  className="w-full h-auto object-contain rounded-lg shadow-md max-h-96 mx-auto cursor-zoom-in hover:opacity-80 transition-opacity duration-200"
-                />
-              </DialogTrigger>
-              <DialogContent className="max-w-6xl bg-background p-6 rounded-lg">
-                <img
-                  src="/images/schedule/match-calendar-2025-2026.jpg"
-                  alt="Calendrier des Compétitions 2025-2026"
-                  className="w-full h-auto max-w-[90vw] max-h-[90vh] object-scale-down"
-                />
-              </DialogContent>
-            </Dialog>
-            <p className="mt-4 text-sm text-muted-foreground text-center">
-              Retrouvez toutes les dates importantes des championnats et tournois de la saison. Cliquez sur l'image pour l'agrandir.
-            </p>
-          </CardContent>
-        </Card>
-      </section>
-
-      <section className="mb-12">
-        <Card className="bg-clubLight shadow-lg rounded-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl text-clubDark">Derniers Résultats des Matchs</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-              {recentMatchResults.map((match) => (
-                <Card key={match.id} className="bg-clubLight shadow-md rounded-lg text-center">
-                  <CardContent className="p-4">
-                    {match.title && (
-                      <h3 className="text-xl font-semibold text-clubPrimary mb-3">{match.title}</h3>
+                    {match.image && (
+                      <img
+                        src={match.image}
+                        alt={match.alt}
+                        className="w-full h-auto object-cover rounded-md mb-4 cursor-zoom-in"
+                        onClick={() => openLightbox(match.image)}
+                      />
                     )}
-                    <img
-                      src={match.image}
-                      alt={match.alt}
-                      className="w-full h-auto object-cover rounded-md mb-4 cursor-zoom-in"
-                      onClick={() => openLightbox(match.image)}
-                    />
-                    <p className="text-lg font-semibold text-clubDark">{match.result}</p>
+
+                    {match.score && (
+                      <div className="text-center mb-4">
+                        <p className="text-3xl font-extrabold text-clubDark">{match.score}</p>
+                      </div>
+                    )}
+
+                    {match.report && (
+                      <>
+                        <Separator className="my-3 bg-clubSecondary/50" />
+                        <h4 className="text-lg font-semibold text-clubDark mb-2">Résumé du match</h4>
+                        <p className="text-sm text-clubDarker italic">{match.report}</p>
+                      </>
+                    )}
                   </CardContent>
                 </Card>
               ))}
             </div>
-            <p className="mt-6 text-sm text-muted-foreground text-center">
-              Retrouvez les feuilles de matchs détaillées dans la section "Résultats et Feuilles de Rencontres".
-            </p>
-          </CardContent>
-        </Card>
-      </section>
+          </section>
+        ))}
+      </div>
     </div>
   );
 };
