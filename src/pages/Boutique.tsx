@@ -33,14 +33,6 @@ const Boutique = () => {
               Soutenez votre club en portant fièrement nos couleurs !
               Retrouvez une sélection de maillots, textiles et accessoires à l'effigie de notre club.
             </p>
-            <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
-              <a href="https://example.com/boutique" target="_blank" rel="noopener noreferrer">
-                Accéder à la Boutique en Ligne
-              </a>
-            </Button>
-            <p className="mt-4 text-sm text-muted-foreground">
-              (Vous serez redirigé vers notre plateforme de vente partenaire)
-            </p>
           </CardContent>
         </Card>
       </section>
