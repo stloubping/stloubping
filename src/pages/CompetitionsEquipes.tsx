@@ -32,7 +32,7 @@ const recentMatchResults = [
   },
   {
     id: 2,
-    image: "/images/actualites/559716404_777489288456328_4293602483346407225_n.jpg",
+    image: "/images/actualites/equipe-2-pre-regionale.png", // Chemin mis à jour
     alt: "Équipe St Loub Ping 2",
     result: "Défaite 11-3 contre US CENON 5",
     title: "Équipe 2 Pré-régionale",
