@@ -3,33 +3,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
-
-const jerseys = [
-  {
-    id: 1,
-    name: "Maillot Officiel du Club - Rouge",
-    description: "Le maillot officiel de notre club, idéal pour les matchs et les entraînements. Couleur rouge vif avec logo du club.",
-    price: "35€",
-    image: "https://picsum.photos/300/300?random=10",
-  },
-  {
-    id: 2,
-    name: "Maillot d'Entraînement - Noir",
-    description: "Un maillot confortable et respirant pour vos sessions d'entraînement. Couleur noire élégante avec un petit logo.",
-    price: "25€",
-    image: "https://picsum.photos/300/300?random=11",
-  },
-  {
-    id: 3,
-    name: "Maillot Rétro - Blanc & Rouge",
-    description: "Édition limitée inspirée des maillots historiques du club. Design vintage blanc avec des bandes rouges.",
-    price: "40€",
-    image: "https://picsum.photos/300/300?random=12",
-  },
-];
+import { Shirt, Ruler, DollarSign } from 'lucide-react';
 
 const Boutique = () => {
   const { openLightbox } = useLightbox(); // Use the lightbox hook
+
+  const jerseyDetails = {
+    name: "Maillot Officiel du Club",
+    image: "/images/boutique/maillot-club-officiel.png",
+    price: "35€",
+    description: "Le maillot officiel de notre club, arborant fièrement le logo du club et un design dynamique. Idéal pour représenter le St Loub Ping en compétition ou à l'entraînement.",
+    features: [
+      "100% polyester technique",
+      "Ne déteint pas en machine",
+      "Ne nécessite pas de repassage",
+      "Disponible du 2 ans au 10XL",
+    ]
+  };
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
@@ -56,27 +46,47 @@ const Boutique = () => {
       </section>
 
       <section>
-        <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Nos Maillots</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {jerseys.map((jersey) => (
-            <Card key={jersey.id} className="bg-clubLight shadow-md hover:shadow-lg transition-shadow duration-300 text-center rounded-xl">
-              <CardContent className="p-6">
-                <img
-                  src={jersey.image}
-                  alt={jersey.name}
-                  className="w-full h-48 object-cover rounded-md mb-4 cursor-zoom-in"
-                  onClick={() => openLightbox(jersey.image)} // Open lightbox on image click
-                />
-                <h3 className="text-xl font-semibold mb-2 text-clubDark">{jersey.name}</h3>
-                <p className="text-sm text-muted-foreground mb-4">{jersey.description}</p>
-                <p className="text-2xl font-bold text-clubPrimary mb-4">{jersey.price}</p>
-                <Button className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground rounded-md shadow-md">
-                  Voir le produit
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Le Maillot du Club</h2>
+        <Card className="max-w-4xl mx-auto bg-clubLight shadow-lg rounded-xl overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2">
+            {/* Image Section */}
+            <div className="p-4 flex items-center justify-center bg-clubSection/50">
+              <img
+                src={jerseyDetails.image}
+                alt={jerseyDetails.name}
+                className="w-full h-auto object-contain max-h-96 rounded-md cursor-zoom-in shadow-md"
+                onClick={() => openLightbox(jerseyDetails.image)}
+              />
+            </div>
+            
+            {/* Details Section */}
+            <div className="p-6 space-y-4">
+              <h3 className="text-3xl font-bold text-clubPrimary">{jerseyDetails.name}</h3>
+              <p className="text-clubLight-foreground">{jerseyDetails.description}</p>
+
+              <div className="space-y-2 pt-2">
+                <div className="flex items-center text-clubDark">
+                  <DollarSign className="mr-2 h-5 w-5 text-clubPrimary" />
+                  <span className="text-2xl font-bold">{jerseyDetails.price}</span>
+                </div>
+                <div className="flex items-start text-clubLight-foreground">
+                  <Ruler className="mr-2 h-5 w-5 text-clubPrimary flex-shrink-0 mt-1" />
+                  <p>Tailles disponibles : {jerseyDetails.features[3]}</p>
+                </div>
+              </div>
+
+              <ul className="list-disc list-inside space-y-1 text-sm text-clubLight-foreground pl-4">
+                {jerseyDetails.features.slice(0, 3).map((feature, index) => (
+                  <li key={index}>{feature}</li>
+                ))}
+              </ul>
+
+              <Button className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground rounded-md shadow-md mt-4">
+                Commander (via boutique en ligne)
+              </Button>
+            </div>
+          </div>
+        </Card>
       </section>
     </div>
   );
