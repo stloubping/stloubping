@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import NewsCard from "@/components/NewsCard";
 import { useLightbox } from '@/context/LightboxContext';
 import HeroSection from "@/components/HeroSection";
-import VideoCard from "@/components/VideoCard"; // Import VideoCard
+import VideoCard from '@/components/VideoCard'; // Import VideoCard
 import { allVideos } from '@/data/videos'; // Import allVideos
 
 const newsItems = [
@@ -161,10 +161,10 @@ const Accueil = () => {
               </p>
               <div className="mt-8 flex justify-center w-full">
                 <iframe 
-                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fp%2FSaint-LoubPing-100085857905183%2F&tabs=timeline&width=700&height=800&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
-                  width="100%"
-                  height="800"
-                  style={{ border: 'none', overflow: 'hidden', maxWidth: '700px' }}
+                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fp%2FSaint-LoubPing-100085857905183%2F&tabs=timeline&width=500&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
+                  width="500"
+                  height="600"
+                  style={{ border: 'none', overflow: 'hidden' }}
                   scrolling="no"
                   frameBorder="0"
                   allowFullScreen={true}
