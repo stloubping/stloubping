@@ -8,9 +8,10 @@ import { Link } from 'react-router-dom';
 import NewsCard from "@/components/NewsCard";
 import { useLightbox } from '@/context/LightboxContext';
 import HeroSection from "@/components/HeroSection";
-import VideoCard from "@/components/VideoCard"; // Import VideoCard
-import { allVideos } from '@/data/videos'; // Import allVideos
-import CompetitionCalendar from '@/components/CompetitionCalendar'; // Import CompetitionCalendar
+import VideoCard from "@/components/VideoCard";
+import { allVideos } from '@/data/videos';
+import CompetitionCalendar from '@/components/CompetitionCalendar';
+import BonzaiNewsCard from '@/components/BonzaiNewsCard'; // Import BonzaiNewsCard
 
 const newsItems = [
   // Nouvelle actualité : Maillot du Club (Position 1)
@@ -102,7 +103,9 @@ const Accueil = () => {
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Dernières Actualités</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {newsItems.map((news) => (
+            {/* Nouveau: Article Bonzai en première position */}
+            <BonzaiNewsCard /> 
+            {newsItems.slice(0, 2).map((news) => ( // Afficher seulement les 2 autres articles
               <NewsCard key={news.id} news={news} />
             ))}
           </div>
@@ -167,10 +170,10 @@ const Accueil = () => {
           </Card>
         </section>
         
-        {/* Calendrier des Compétitions (Maintenant avant les vidéos) */}
+        {/* Calendrier des Compétitions */}
         <CompetitionCalendar />
 
-        {/* Dernières Vidéos Section (Maintenant après le calendrier) */}
+        {/* Dernières Vidéos Section */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Dernières Vidéos</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
