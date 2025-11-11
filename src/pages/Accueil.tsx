@@ -10,6 +10,7 @@ import { useLightbox } from '@/context/LightboxContext';
 import HeroSection from "@/components/HeroSection";
 import VideoCard from '@/components/VideoCard'; // Import VideoCard
 import { allVideos } from '@/data/videos'; // Import allVideos
+import CompetitionCalendar from '@/components/CompetitionCalendar'; // Import CompetitionCalendar
 
 const newsItems = [
   // Nouvelle actualité : Maillot du Club (Position 1)
@@ -176,6 +177,9 @@ const Accueil = () => {
           </Card>
         </section>
         
+        {/* Calendrier des Compétitions (Déplacé ici) */}
+        <CompetitionCalendar />
+
         {/* Rejoignez-nous Section (Déplacée en bas) */}
         <section className="text-center">
           <Card className="bg-clubLight shadow-lg p-8 rounded-xl">

@@ -60,7 +60,7 @@ const recentMatchResults = [
   },
   {
     id: 4,
-    image: "/images/actualites/equipe-6-departementale-4.png", // NOUVELLE IMAGE POUR L'ÉQUIPE 6
+    image: "/images/actualites/equipe-6-departementale-4.png",
     alt: "Équipe St Loub Ping 6",
     result: "Victoire 12-2 contre TT FARGUIAIS 4",
     title: "Équipe 6 Départementale 4",
@@ -118,35 +118,7 @@ const CompetitionsEquipes = () => {
         </Card>
       </section>
 
-      {/* Calendrier des Compétitions Section (already has its own Dialog) */}
-      <section className="mb-12">
-        <Card className="bg-clubLight shadow-lg rounded-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl text-clubDark text-center">Calendrier des Compétitions 2025-2026</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Dialog>
-              <DialogTrigger asChild>
-                <img
-                  src="/images/schedule/match-calendar-2025-2026.jpg"
-                  alt="Calendrier des Compétitions 2025-2026"
-                  className="w-full h-auto object-contain rounded-lg shadow-md max-h-96 mx-auto cursor-zoom-in hover:opacity-80 transition-opacity duration-200"
-                />
-              </DialogTrigger>
-              <DialogContent className="max-w-6xl bg-background p-6 rounded-lg">
-                <img
-                  src="/images/schedule/match-calendar-2025-2026.jpg"
-                  alt="Calendrier des Compétitions 2025-2026"
-                  className="w-full h-auto max-w-[90vw] max-h-[90vh] object-scale-down"
-                />
-              </DialogContent>
-            </Dialog>
-            <p className="mt-4 text-sm text-muted-foreground text-center">
-              Retrouvez toutes les dates importantes des championnats et tournois de la saison. Cliquez sur l'image pour l'agrandir.
-            </p>
-          </CardContent>
-        </Card>
-      </section>
+      {/* La section Calendrier des Compétitions a été déplacée vers la page d'Accueil */}
 
       <section className="mb-12">
         <Card className="bg-clubLight shadow-lg rounded-xl">
