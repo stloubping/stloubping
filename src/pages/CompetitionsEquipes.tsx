@@ -46,7 +46,7 @@ const recentMatchResults = [
   },
   {
     id: 1,
-    image: "/images/actualites/equipe-4-departementale-2.png", // Chemin mis à jour
+    image: "/images/actualites/561606494_777489285122995_5427379147122871235_n.jpg", // Chemin mis à jour
     alt: "Équipe St Loub Ping 4",
     result: "Égalité 7-7 contre C STE HELENE 4",
     title: "Équipe 4 Départementale 2",
@@ -60,7 +60,7 @@ const recentMatchResults = [
   },
   {
     id: 4,
-    image: "/images/actualites/equipe-6-departementale-4.png", // Chemin mis à jour
+    image: "/images/actualites/equipe-6-departementale-4.png", // NOUVELLE IMAGE POUR L'ÉQUIPE 6
     alt: "Équipe St Loub Ping 6",
     result: "Victoire 12-2 contre TT FARGUIAIS 4",
     title: "Équipe 6 Départementale 4",
