@@ -164,7 +164,7 @@ const Accueil = () => {
                   src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fp%2FSaint-LoubPing-100085857905183%2F&tabs=timeline&width=700&height=800&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
                   width="100%"
                   height="800"
-                  style={{ border: 'none', overflow: 'hidden', maxWidth: '700px' }}
+                  style={{ border: 'none', overflow: 'hidden', maxWidth: '800px' }}
                   scrolling="no"
                   frameBorder="0"
                   allowFullScreen={true}
