@@ -159,7 +159,7 @@ const Accueil = () => {
               <p className="mb-6 text-clubLight-foreground">
                 Restez connecté avec le club et ne manquez aucune actualité, événement ou résultat directement depuis notre page Facebook.
               </p>
-              <div className="mt-8 max-w-[700px] mx-auto">
+              <div className="mt-8 flex justify-center w-full">
                 <iframe 
                   src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fp%2FSaint-LoubPing-100085857905183%2F&tabs=timeline&width=700&height=800&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
                   width="100%"
