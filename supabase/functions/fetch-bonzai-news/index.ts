@@ -27,26 +27,13 @@ serve(async (req) => {
       throw new Error(`Failed to fetch Bonzai data: ${response.statusText}`);
     }
 
-    // Since we don't know the exact API structure, we return the raw text content.
-    // In a real scenario, we would parse this (e.g., using DOM manipulation libraries in Deno)
-    // to extract the latest article title, image, and link.
-    const text = await response.text();
-
-    // For demonstration, we will return a placeholder structure based on the assumption
-    // that the front-end will need structured data.
-    // If the user provides the API endpoint and structure, this logic can be refined.
-    
-    // --- Placeholder Logic (assuming we can extract the first article) ---
-    
-    // Since Deno Edge Functions don't easily support complex HTML parsing (like JSDOM),
-    // we will return a mock structure for now, and inform the user that if the Bonzai
-    // page is pure HTML, we need a proper API endpoint or a more complex setup.
+    // --- Placeholder Logic (returning a relevant mock structure) ---
     
     const mockArticle = {
-        title: "Dernier Article Bonzai: Championnat par Équipe J4",
-        description: "L'équipe 1 s'impose 9-5 et prend la tête du classement ! Lisez l'article complet sur Bonzai.pro.",
+        title: "Dernier Article Bonzai : Résultats du Championnat",
+        description: "Retrouvez tous les résultats de nos équipes et les analyses de matchs détaillées sur notre page Bonzai.pro. Cliquez pour voir les dernières performances !",
         link: BONZAI_URL,
-        image: "https://picsum.photos/400/200?random=bonzai",
+        image: "/images/actualites/championnat-equipe-journee-4-phase-1.jpg", // Utilisation d'une image existante pour un meilleur rendu
         date: new Date().toISOString().split('T')[0]
     };
 
