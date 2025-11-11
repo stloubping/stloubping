@@ -1,7 +1,10 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts"
 
-const BONZAI_URL = "https://www.bonzai.pro/saint-loub-ping";
-// Note: If an API key is needed, it should be passed via a Supabase secret and accessed via Deno.env.get('YOUR_SECRET_NAME')
+// URL publique pour le lien final
+const BONZAI_PUBLIC_URL = "https://www.bonzai.pro/saint-loub-ping";
+
+// URL hypothétique de l'API (à remplacer si vous avez l'URL réelle)
+const BONZAI_API_ENDPOINT = "https://api.bonzai.pro/v1/latest-article"; 
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,32 +16,54 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders })
   }
   
+  const apiKey = Deno.env.get('BONZAI_API_KEY');
+
+  if (!apiKey) {
+    console.error("BONZAI_API_KEY secret is missing.");
+    // Fallback to static data if key is missing, but log error
+  }
+
   try {
-    // Fetch the content from the external URL
-    const response = await fetch(BONZAI_URL, {
+    // --- Simulation de l'appel API sécurisé ---
+    
+    // Dans un scénario réel, nous ferions ceci:
+    /*
+    const apiResponse = await fetch(BONZAI_API_ENDPOINT, {
       method: 'GET',
       headers: {
-        // Mimic a browser request
-        'User-Agent': 'Mozilla/5.0 (compatible; BonzaiFetcher/1.0)',
+        'Authorization': `Bearer ${apiKey}`, // Ou selon le format requis par Bonzai
+        'Content-Type': 'application/json',
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch Bonzai data: ${response.statusText}`);
+    if (!apiResponse.ok) {
+      throw new Error(`Failed to fetch Bonzai API: ${apiResponse.statusText}`);
     }
-
-    // --- Placeholder Logic (returning a relevant mock structure) ---
     
-    const mockArticle = {
+    const data = await apiResponse.json();
+    
+    // Assurez-vous que la structure correspond à BonzaiArticle
+    const latestArticle = {
+        title: data.title,
+        description: data.summary,
+        link: data.url,
+        image: data.imageUrl,
+        date: data.publishedAt
+    };
+    */
+
+    // --- Remplacement par des données statiques pertinentes en attendant l'URL API réelle ---
+    
+    const latestArticle = {
         title: "Dernier Article Bonzai : Résultats du Championnat",
         description: "Retrouvez tous les résultats de nos équipes et les analyses de matchs détaillées sur notre page Bonzai.pro. Cliquez pour voir les dernières performances !",
-        link: BONZAI_URL,
-        image: "/images/actualites/championnat-equipe-journee-4-phase-1.jpg", // Utilisation d'une image existante pour un meilleur rendu
+        link: BONZAI_PUBLIC_URL,
+        image: "/images/actualites/championnat-equipe-journee-4-phase-1.jpg",
         date: new Date().toISOString().split('T')[0]
     };
 
     return new Response(
-      JSON.stringify({ latestArticle: mockArticle }),
+      JSON.stringify({ latestArticle }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
