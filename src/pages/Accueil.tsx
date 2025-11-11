@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import NewsCard from "@/components/NewsCard";
 import { useLightbox } from '@/context/LightboxContext';
 import HeroSection from "@/components/HeroSection";
-import VideoCard from '@/components/VideoCard'; // Import VideoCard
+import VideoCard from "@/components/VideoCard"; // Import VideoCard
 import { allVideos } from '@/data/videos'; // Import allVideos
 import CompetitionCalendar from '@/components/CompetitionCalendar'; // Import CompetitionCalendar
 
@@ -142,16 +142,6 @@ const Accueil = () => {
           </div>
         </section>
 
-        {/* Dernières Vidéos Section */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Dernières Vidéos</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {latestVideos.map((video) => (
-              <VideoCard key={video.id} video={video} />
-            ))}
-          </div>
-        </section>
-
         {/* Suivez-nous Section avec flux Facebook */}
         <section className="text-center mb-12">
           <Card className="bg-clubLight shadow-lg p-8 rounded-xl">
@@ -177,10 +167,20 @@ const Accueil = () => {
           </Card>
         </section>
         
-        {/* Calendrier des Compétitions (Déplacé ici) */}
+        {/* Calendrier des Compétitions (Maintenant avant les vidéos) */}
         <CompetitionCalendar />
 
-        {/* Rejoignez-nous Section (Déplacée en bas) */}
+        {/* Dernières Vidéos Section (Maintenant après le calendrier) */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Dernières Vidéos</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {latestVideos.map((video) => (
+              <VideoCard key={video.id} video={video} />
+            ))}
+          </div>
+        </section>
+
+        {/* Rejoignez-nous Section (Reste en bas) */}
         <section className="text-center">
           <Card className="bg-clubLight shadow-lg p-8 rounded-xl">
             <CardTitle className="text-2xl text-clubDark mb-4">Prêt à nous rejoindre ?</CardTitle>
