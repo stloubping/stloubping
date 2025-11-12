@@ -41,6 +41,14 @@ export const allVideos: VideoItem[] = [
     category: 'wtt',
     dateAdded: "2024-07-29",
   },
+  {
+    id: 'wtt-5',
+    title: "WTT Champions Macao 2024 - Highlights",
+    description: "Les meilleurs moments du WTT Champions Macao 2024, avec des échanges incroyables et des performances de haut niveau.",
+    youtubeId: "RTFIqcKbDDI",
+    category: 'wtt',
+    dateAdded: "2024-08-01", // Date d'ajout arbitraire pour l'exemple
+  },
   // Vidéos Tutos
   {
     id: 'tuto-1',
