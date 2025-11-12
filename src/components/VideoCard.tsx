@@ -49,11 +49,8 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
           </Button>
         </div>
       </div>
-      <CardHeader>
-        <CardTitle className="text-xl font-semibold text-clubPrimary">{video.title}</CardTitle>
-        <CardDescription className="text-sm text-muted-foreground">{video.description}</CardDescription>
-      </CardHeader>
-      <CardContent>
+      {/* Suppression de CardHeader qui contenait le titre et la description */}
+      <CardContent className="p-4">
         <Button onClick={() => openLightbox(youtubeEmbedUrl)} className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground">
           Voir la vidéo
         </Button>
