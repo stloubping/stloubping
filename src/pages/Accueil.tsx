@@ -153,9 +153,8 @@ const Accueil = () => {
               <div className="mt-8 flex justify-center w-full">
                 <iframe 
                   src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fp%2FSaint-LoubPing-100085857905183%2F&tabs=timeline&width=500&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
-                  width="100%" // Prend 100% de la largeur du parent
                   height="600"
-                  style={{ border: 'none', overflow: 'hidden', maxWidth: '500px' }} // Ajout de maxWidth ici
+                  style={{ border: 'none', overflow: 'hidden', width: '100%', maxWidth: '500px' }}
                   scrolling="no"
                   frameBorder="0"
                   allowFullScreen={true}
