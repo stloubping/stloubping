@@ -150,10 +150,10 @@ const Accueil = () => {
               <p className="mb-6 text-clubLight-foreground">
                 Restez connecté avec le club et ne manquez aucune actualité, événement ou résultat directement depuis notre page Facebook.
               </p>
-              <div className="mt-8 flex justify-center w-full">
+              <div className="mt-8 flex justify-center w-full max-w-full overflow-hidden"> {/* Ajout de max-w-full et overflow-hidden */}
                 <iframe 
                   src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fp%2FSaint-LoubPing-100085857905183%2F&tabs=timeline&width=500&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
-                  width="100%" // Changé de 500 à 100%
+                  width="500" // Revert to original fixed width
                   height="600"
                   style={{ border: 'none', overflow: 'hidden' }}
                   scrolling="no"
