@@ -6,7 +6,8 @@ import { ExternalLink } from 'lucide-react';
 const ClassementJoueurs = () => {
   const ffttClubNumber = "10330022";
   const ffttRankingLink = "https://www.fftt.com/site/competition/classement/classement-departemental";
-  const pingpocketClubRankingLink = "https://www.pingpocket.fr/app/fftt/clubs/10330022/joueurs/classements"; // Nouveau lien pour l'iframe
+  // Nouveau lien pour l'iframe, affichant les licenciés par classement officiel
+  const pingpocketClubRankingLink = "https://www.pingpocket.fr/app/fftt/clubs/10330022/licencies?SORT=OFFICIAL_RANK"; 
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
