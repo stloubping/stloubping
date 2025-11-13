@@ -6,8 +6,8 @@ import { ExternalLink } from 'lucide-react';
 const ClassementJoueurs = () => {
   const ffttClubNumber = "10330022";
   const ffttRankingLink = "https://www.fftt.com/site/competition/classement/classement-departemental";
-  // Nouveau lien pour l'iframe, affichant les licenciés par classement officiel avec le thème 'redBrick'
-  const pingpocketClubRankingLink = "https://www.pingpocket.fr/app/fftt/clubs/10330022/licencies?SORT=OFFICIAL_RANK&themeId=redBrick"; 
+  // Nouveau lien pour l'iframe, affichant les licenciés par points mensuels avec le thème 'redBrick'
+  const pingpocketClubRankingLink = "https://www.pingpocket.fr/app/fftt/clubs/10330022/licencies?SORT=MONTHLY_POINTS&themeId=redBrick"; 
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
@@ -53,7 +53,7 @@ const ClassementJoueurs = () => {
                 frameBorder="1"
                 name="pingpocket-players"
                 width="100%"
-                height="4000" // Hauteur ajustable selon le contenu
+                height="800" // Hauteur ajustée à 800
                 scrolling="auto"
                 src={pingpocketClubRankingLink}
                 title="Classement des joueurs Pingpocket"
