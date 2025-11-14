@@ -23,15 +23,19 @@ export const getYouTubeVideoDetails = async (videoId: string): Promise<YouTubeVi
       },
     });
 
+    console.log(`YouTube API response for videoId ${videoId}:`, response.data); // Log the full API response
+
     if (response.data.items && response.data.items.length > 0) {
       const snippet = response.data.items[0].snippet;
+      console.log(`Fetched title for ${videoId}:`, snippet.title); // Log the extracted title
       return {
         title: snippet.title,
       };
     }
+    console.warn(`No items found in YouTube API response for videoId: ${videoId}`); // Log if no items are found
     return null;
   } catch (error) {
-    console.error("Erreur lors de la récupération des détails de la vidéo YouTube:", error);
+    console.error(`Erreur lors de la récupération des détails de la vidéo YouTube pour ${videoId}:`, error);
     return null;
   }
 };
