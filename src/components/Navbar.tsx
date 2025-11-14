@@ -25,12 +25,13 @@ const navItems: NavItem[] = [
   { name: "Le Club", path: "/le-club", type: "link" },
   { name: "Équipes", path: "/competitions-equipes", type: "link" },
   {
-    name: "Les Joueurs", // Changed to dropdown
+    name: "Les Joueurs",
     type: "dropdown",
     children: [
       { name: "Classement des Joueurs", path: "/classement-joueurs", type: "link" },
       { name: "Progression Mensuelle", path: "/classement-joueurs/progression-mensuelle", type: "link" },
-      { name: "Progression Annuelle", path: "/classement-joueurs/progression-annuelle", type: "link" }, // New link
+      { name: "Progression Annuelle", path: "/classement-joueurs/progression-annuelle", type: "link" },
+      { name: "Par Catégorie d'Âge", path: "/classement-joueurs/par-categorie-age", type: "link" }, // New link
     ],
   },
   { name: "Adhésions", path: "/adhesions", type: "link" },
@@ -62,7 +63,7 @@ const Navbar = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isTournoiDropdownOpen, setIsTournoiDropdownOpen] = useState(false);
   const [isVideosDropdownOpen, setIsVideosDropdownOpen] = useState(false);
-  const [isJoueursDropdownOpen, setIsJoueursDropdownOpen] = useState(false); // New state for Joueurs dropdown
+  const [isJoueursDropdownOpen, setIsJoueursDropdownOpen] = useState(false);
 
   const NavLinks = ({ className, closeSheet, isMobileView = false }: { className?: string; closeSheet?: () => void; isMobileView?: boolean }) => {
     return (
