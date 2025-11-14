@@ -13,6 +13,9 @@ export const getYouTubeVideoDetails = async (videoId: string): Promise<YouTubeVi
     console.error("VITE_YOUTUBE_API_KEY n'est pas défini dans les variables d'environnement.");
     return null;
   }
+  
+  // Log temporaire pour vérifier si la clé est chargée (ne pas afficher la clé complète)
+  console.log("YouTube API Key loaded:", !!YOUTUBE_API_KEY);
 
   try {
     const response = await axios.get(`${YOUTUBE_API_BASE_URL}/videos`, {
@@ -23,6 +26,9 @@ export const getYouTubeVideoDetails = async (videoId: string): Promise<YouTubeVi
       },
     });
 
+    // Log temporaire pour vérifier la réponse de l'API
+    console.log(`YouTube API response status for ${videoId}:`, response.status);
+    
     if (response.data.items && response.data.items.length > 0) {
       const snippet = response.data.items[0].snippet;
       return {
@@ -32,7 +38,12 @@ export const getYouTubeVideoDetails = async (videoId: string): Promise<YouTubeVi
     console.warn(`No items found in YouTube API response for videoId: ${videoId}`);
     return null;
   } catch (error) {
-    console.error(`Erreur lors de la récupération des détails de la vidéo YouTube pour ${videoId}:`, error);
+    // Log l'erreur complète de l'appel API
+    if (axios.isAxiosError(error) && error.response) {
+        console.error(`Erreur API YouTube pour ${videoId}:`, error.response.status, error.response.data);
+    } else {
+        console.error(`Erreur lors de la récupération des détails de la vidéo YouTube pour ${videoId}:`, error);
+    }
     return null;
   }
 };
