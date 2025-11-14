@@ -19,14 +19,18 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
   const youtubeThumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`; // Standard YouTube thumbnail
 
   useEffect(() => {
+    console.log(`Fetching details for YouTube ID: ${video.youtubeId}`); // Temporary log for debugging
     const fetchTitle = async () => {
       const details = await getYouTubeVideoDetails(video.youtubeId);
       if (details && details.title) {
         setVideoTitle(details.title);
+      } else {
+        // Fallback to original title if API fails or returns no title
+        setVideoTitle(video.title);
       }
     };
     fetchTitle();
-  }, [video.youtubeId]);
+  }, [video.youtubeId, video.title]); // Added video.title to dependency array
 
   return (
     <Card className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
