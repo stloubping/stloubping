@@ -71,6 +71,7 @@ const recentMatchResults = [
 const CompetitionsEquipes = () => {
   const { openLightbox } = useLightbox();
   const pingpocketTeamsLink = "https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes?themeId=redBrick";
+  const pingpocketTeamRankingsLink = "https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes/classements?themeId=redBrick"; // New link for rankings
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
@@ -97,9 +98,9 @@ const CompetitionsEquipes = () => {
             </div>
             <div className="text-center mt-8">
               <p className="text-center text-sm text-muted-foreground mb-4 p-4">
-                Le classement des équipes pour la phase en cours est intégré directement depuis Pingpocket. Si le contenu ne s'affiche pas correctement, veuillez consulter le site de Pingpocket directement.
+                La liste des équipes pour la phase en cours est intégrée directement depuis Pingpocket. Si le contenu ne s'affiche pas correctement, veuillez consulter le site de Pingpocket directement.
               </p>
-              <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden">
+              <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden mb-6">
                 <small className="block text-right text-xs text-muted-foreground p-2">
                   powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary text-clubPrimary">www.pingpocket.fr</a>
                 </small>
@@ -110,11 +111,18 @@ const CompetitionsEquipes = () => {
                   height="800"
                   scrolling="auto"
                   src={pingpocketTeamsLink}
-                  title="Classement des équipes Pingpocket"
+                  title="Liste des équipes Pingpocket"
                 >
                   <p>Votre navigateur ne supporte pas les iframes.</p>
                 </iframe>
               </div>
+              {/* Nouveau bouton pour les classements des équipes */}
+              <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-6 py-3 rounded-md text-lg font-medium transition-colors shadow-lg">
+                <a href={pingpocketTeamRankingsLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+                  <ExternalLink className="mr-2 h-5 w-5" />
+                  Classements des équipes (phase en cours)
+                </a>
+              </Button>
             </div>
           </CardContent>
         </Card>
