@@ -97,9 +97,7 @@ const CompetitionsEquipes = () => {
               ))}
             </div>
             <div className="text-center mt-8">
-              <p className="text-center text-sm text-muted-foreground mb-4 p-4">
-                La liste des équipes pour la phase en cours est intégrée directement depuis Pingpocket. Si le contenu ne s'affiche pas correctement, veuillez consulter le site de Pingpocket directement.
-              </p>
+              {/* Removed the descriptive text here */}
               <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden mb-6">
                 <small className="block text-right text-xs text-muted-foreground p-2">
                   powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary text-clubPrimary">www.pingpocket.fr</a>
@@ -118,9 +116,7 @@ const CompetitionsEquipes = () => {
               </div>
 
               <h2 className="text-3xl font-bold text-center mb-8 text-clubDark mt-12">Classements des Équipes (Phase en cours)</h2>
-              <p className="text-center text-sm text-muted-foreground mb-4 p-4">
-                Les classements des équipes pour la phase en cours sont intégrés directement depuis Pingpocket. Si le contenu ne s'affiche pas correctement, veuillez consulter le site de Pingpocket directement.
-              </p>
+              {/* Removed the descriptive text here */}
               <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden">
                 <small className="block text-right text-xs text-muted-foreground p-2">
                   powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary text-clubPrimary">www.pingpocket.fr</a>
