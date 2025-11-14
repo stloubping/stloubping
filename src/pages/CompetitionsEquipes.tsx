@@ -93,27 +93,7 @@ const CompetitionsEquipes = () => {
                 </Card>
               ))}
             </div>
-            <h2 className="text-2xl font-bold text-center mb-4 text-clubDark">Classements des équipes (via Pingpocket)</h2>
-            <p className="text-center text-sm text-muted-foreground mb-4">
-              L'affichage direct des classements peut parfois rencontrer des problèmes. Si le contenu ci-dessous ne s'affiche pas correctement ou est dupliqué, veuillez consulter le site de Pingpocket directement.
-            </p>
-            {/* Conteneur pour l'iframe avec largeur limitée pour simuler un affichage mobile */}
-            <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden">
-              <small className="block text-right text-xs text-muted-foreground p-2">
-                powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary">www.pingpocket.fr</a>
-              </small>
-              <iframe
-                frameBorder="1"
-                name="pingpocket"
-                width="100%"
-                height="4000"
-                scrolling="auto"
-                src="https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes/classements"
-                title="Classements des équipes Pingpocket"
-              >
-                <p>iframe non supportée</p>
-              </iframe>
-            </div>
+            {/* Le bloc "Classements des équipes (via Pingpocket)" a été supprimé ici */}
           </CardContent>
         </Card>
       </section>
