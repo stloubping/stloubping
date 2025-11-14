@@ -20,7 +20,7 @@ const ProgressionMensuelle = () => {
             </p>
             <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden">
               <small className="block text-right text-xs text-muted-foreground p-2">
-                powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary">www.pingpocket.fr</a>
+                powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary text-clubPrimary">www.pingpocket.fr</a>
               </small>
               <iframe
                 frameBorder="1"
