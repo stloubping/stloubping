@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useLightbox } from '@/context/LightboxContext';
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Import Link
 
 const teams = [
   { name: "Équipe 1", division: "Régionale 2", captain: "Wesley" },
@@ -93,7 +94,14 @@ const CompetitionsEquipes = () => {
                 </Card>
               ))}
             </div>
-            {/* Le bloc "Classements des équipes (via Pingpocket)" a été supprimé ici */}
+            <div className="text-center mt-8">
+              <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-6 py-3 rounded-md text-lg font-medium transition-colors shadow-lg">
+                <a href="https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+                  <ExternalLink className="mr-2 h-5 w-5" />
+                  Liste des équipes (phase en cours)
+                </a>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </section>
