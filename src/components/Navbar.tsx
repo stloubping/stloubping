@@ -29,7 +29,8 @@ const navItems: NavItem[] = [
     type: "dropdown",
     children: [
       { name: "Classement des Joueurs", path: "/classement-joueurs", type: "link" },
-      { name: "Progression Mensuelle", path: "/classement-joueurs/progression-mensuelle", type: "link" }, // New link
+      { name: "Progression Mensuelle", path: "/classement-joueurs/progression-mensuelle", type: "link" },
+      { name: "Progression Annuelle", path: "/classement-joueurs/progression-annuelle", type: "link" }, // New link
     ],
   },
   { name: "Adhésions", path: "/adhesions", type: "link" },

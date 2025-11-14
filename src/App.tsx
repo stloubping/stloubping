@@ -14,7 +14,8 @@ import Contact from "./pages/Contact";
 import TournamentRegistration from "./pages/TournamentRegistration";
 import TournamentRegistrationsList from "./pages/TournamentRegistrationsList";
 import ClassementJoueurs from "./pages/ClassementJoueurs";
-import ProgressionMensuelle from "./pages/ProgressionMensuelle"; // Import the new ProgressionMensuelle component
+import ProgressionMensuelle from "./pages/ProgressionMensuelle";
+import ProgressionAnnuelle from "./pages/ProgressionAnnuelle"; // Import the new ProgressionAnnuelle component
 import WTTVideos from "./pages/WTTVideos";
 import LesLegendes from "./pages/LesLegendes";
 import Tutos from "./pages/Tutos";
@@ -36,7 +37,8 @@ const App = () => (
                 <Route path="/le-club" element={<LeClub />} />
                 <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
                 <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
-                <Route path="/classement-joueurs/progression-mensuelle" element={<ProgressionMensuelle />} /> {/* New route */}
+                <Route path="/classement-joueurs/progression-mensuelle" element={<ProgressionMensuelle />} />
+                <Route path="/classement-joueurs/progression-annuelle" element={<ProgressionAnnuelle />} /> {/* New route */}
                 <Route path="/adhesions" element={<Adhesions />} />
                 <Route path="/boutique" element={<Boutique />} />
                 <Route path="/partenaires" element={<Partenaires />} />
