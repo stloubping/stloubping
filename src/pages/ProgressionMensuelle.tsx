@@ -2,7 +2,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const ProgressionMensuelle = () => {
-  const pingpocketMonthlyRankingLink = "https://www.pingpocket.fr/app/fftt/clubs/10330022/licencies?SORT=MONTHLY_INCREASE";
+  // Ajout du paramètre themeId=redBrick à l'URL de Pingpocket
+  const pingpocketMonthlyRankingLink = "https://www.pingpocket.fr/app/fftt/clubs/10330022/licencies?SORT=MONTHLY_INCREASE&themeId=redBrick";
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
