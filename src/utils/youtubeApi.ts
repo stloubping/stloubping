@@ -1,0 +1,37 @@
+import axios from 'axios';
+
+const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+const YOUTUBE_API_BASE_URL = "https://www.googleapis.com/youtube/v3";
+
+interface YouTubeVideoDetails {
+  title: string;
+  // Vous pouvez ajouter d'autres champs si nécessaire, comme la description, la durée, etc.
+}
+
+export const getYouTubeVideoDetails = async (videoId: string): Promise<YouTubeVideoDetails | null> => {
+  if (!YOUTUBE_API_KEY) {
+    console.error("VITE_YOUTUBE_API_KEY n'est pas défini dans les variables d'environnement.");
+    return null;
+  }
+
+  try {
+    const response = await axios.get(`${YOUTUBE_API_BASE_URL}/videos`, {
+      params: {
+        id: videoId,
+        key: YOUTUBE_API_KEY,
+        part: 'snippet', // Nous voulons le snippet pour le titre
+      },
+    });
+
+    if (response.data.items && response.data.items.length > 0) {
+      const snippet = response.data.items[0].snippet;
+      return {
+        title: snippet.title,
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des détails de la vidéo YouTube:", error);
+    return null;
+  }
+};

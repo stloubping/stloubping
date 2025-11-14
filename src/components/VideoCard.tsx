@@ -1,11 +1,12 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import { useLightbox } from '@/context/LightboxContext';
 import { VideoItem } from '@/data/videos'; // Import VideoItem interface
+import { getYouTubeVideoDetails } from '@/utils/youtubeApi'; // Import the new utility function
 
 interface VideoCardProps {
   video: VideoItem;
@@ -13,25 +14,26 @@ interface VideoCardProps {
 
 const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
   const { openLightbox } = useLightbox();
+  const [videoTitle, setVideoTitle] = useState(video.title); // Utilise le titre par défaut, puis le met à jour
   const youtubeEmbedUrl = `https://www.youtube.com/embed/${video.youtubeId}`;
   const youtubeThumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`; // Standard YouTube thumbnail
 
-  // Determine the link based on category (though not used for the button here, kept for reference)
-  let videoPageLink = "/";
-  if (video.category === 'wtt') {
-    videoPageLink = "/videos/wtt";
-  } else if (video.category === 'tutos') {
-    videoPageLink = "/videos/tutos";
-  } else if (video.category === 'legends') {
-    videoPageLink = "/videos/les-legendes";
-  }
+  useEffect(() => {
+    const fetchTitle = async () => {
+      const details = await getYouTubeVideoDetails(video.youtubeId);
+      if (details && details.title) {
+        setVideoTitle(details.title);
+      }
+    };
+    fetchTitle();
+  }, [video.youtubeId]);
 
   return (
     <Card className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
       <div className="relative w-full h-64 bg-black flex items-center justify-center">
         <img
           src={youtubeThumbnailUrl}
-          alt={video.title}
+          alt={videoTitle}
           className="w-full h-full object-cover cursor-zoom-in opacity-80 hover:opacity-100 transition-opacity duration-200"
           onClick={() => openLightbox(youtubeEmbedUrl)} // Open lightbox with embed URL
         />
@@ -49,8 +51,10 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
           </Button>
         </div>
       </div>
-      {/* Suppression de CardHeader qui contenait le titre et la description */}
-      <CardContent className="p-4">
+      <CardHeader className="p-4 pb-0">
+        <CardTitle className="text-xl font-semibold text-clubDark line-clamp-2">{videoTitle}</CardTitle>
+      </CardHeader>
+      <CardContent className="p-4 pt-2">
         <Button onClick={() => openLightbox(youtubeEmbedUrl)} className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground">
           Voir la vidéo
         </Button>
