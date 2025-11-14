@@ -24,7 +24,14 @@ const navItems: NavItem[] = [
   { name: "Accueil", path: "/", type: "link" },
   { name: "Le Club", path: "/le-club", type: "link" },
   { name: "Équipes", path: "/competitions-equipes", type: "link" },
-  { name: "Les Joueurs", path: "/classement-joueurs", type: "link" },
+  {
+    name: "Les Joueurs", // Changed to dropdown
+    type: "dropdown",
+    children: [
+      { name: "Classement des Joueurs", path: "/classement-joueurs", type: "link" },
+      { name: "Progression Mensuelle", path: "/classement-joueurs/progression-mensuelle", type: "link" }, // New link
+    ],
+  },
   { name: "Adhésions", path: "/adhesions", type: "link" },
   { name: "Boutique", path: "/boutique", type: "link" },
   { name: "Partenaires", path: "/partenaires", type: "link" },
@@ -41,7 +48,7 @@ const navItems: NavItem[] = [
     type: "dropdown",
     children: [
       { name: "WTT", path: "/videos/wtt", type: "link" },
-      { name: "Tutos", path: "/videos/tutos", type: "link" }, // Lien mis à jour
+      { name: "Tutos", path: "/videos/tutos", type: "link" },
       { name: "Les Légendes", path: "/videos/les-legendes", type: "link" },
     ],
   },
@@ -54,6 +61,7 @@ const Navbar = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isTournoiDropdownOpen, setIsTournoiDropdownOpen] = useState(false);
   const [isVideosDropdownOpen, setIsVideosDropdownOpen] = useState(false);
+  const [isJoueursDropdownOpen, setIsJoueursDropdownOpen] = useState(false); // New state for Joueurs dropdown
 
   const NavLinks = ({ className, closeSheet, isMobileView = false }: { className?: string; closeSheet?: () => void; isMobileView?: boolean }) => {
     return (
@@ -86,8 +94,8 @@ const Navbar = () => {
                 </Accordion>
               );
             } else { // Desktop dropdown
-              const isCurrentDropdownOpen = item.name === "Tournoi" ? isTournoiDropdownOpen : isVideosDropdownOpen;
-              const setIsCurrentDropdownOpen = item.name === "Tournoi" ? setIsTournoiDropdownOpen : setIsVideosDropdownOpen;
+              const isCurrentDropdownOpen = item.name === "Tournoi" ? isTournoiDropdownOpen : (item.name === "Vidéos" ? isVideosDropdownOpen : isJoueursDropdownOpen);
+              const setIsCurrentDropdownOpen = item.name === "Tournoi" ? setIsTournoiDropdownOpen : (item.name === "Vidéos" ? setIsVideosDropdownOpen : setIsJoueursDropdownOpen);
 
               return (
                 <DropdownMenu key={item.name} open={isCurrentDropdownOpen} onOpenChange={setIsCurrentDropdownOpen}>

@@ -14,9 +14,10 @@ import Contact from "./pages/Contact";
 import TournamentRegistration from "./pages/TournamentRegistration";
 import TournamentRegistrationsList from "./pages/TournamentRegistrationsList";
 import ClassementJoueurs from "./pages/ClassementJoueurs";
+import ProgressionMensuelle from "./pages/ProgressionMensuelle"; // Import the new ProgressionMensuelle component
 import WTTVideos from "./pages/WTTVideos";
 import LesLegendes from "./pages/LesLegendes";
-import Tutos from "./pages/Tutos"; // Import the new Tutos component
+import Tutos from "./pages/Tutos";
 import NotFound from "./pages/NotFound";
 import { LightboxProvider } from "./context/LightboxContext";
 import React from "react";
@@ -35,13 +36,14 @@ const App = () => (
                 <Route path="/le-club" element={<LeClub />} />
                 <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
                 <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
+                <Route path="/classement-joueurs/progression-mensuelle" element={<ProgressionMensuelle />} /> {/* New route */}
                 <Route path="/adhesions" element={<Adhesions />} />
                 <Route path="/boutique" element={<Boutique />} />
                 <Route path="/partenaires" element={<Partenaires />} />
                 <Route path="/tournoi-inscription" element={<TournamentRegistration />} />
                 <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} />
                 <Route path="/videos/wtt" element={<WTTVideos />} />
-                <Route path="/videos/tutos" element={<Tutos />} /> {/* New route for Tutos */}
+                <Route path="/videos/tutos" element={<Tutos />} />
                 <Route path="/videos/les-legendes" element={<LesLegendes />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="*" element={<NotFound />} />
