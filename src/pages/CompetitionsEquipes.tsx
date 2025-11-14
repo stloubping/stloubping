@@ -71,7 +71,7 @@ const recentMatchResults = [
 const CompetitionsEquipes = () => {
   const { openLightbox } = useLightbox();
   const pingpocketTeamsLink = "https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes?themeId=redBrick";
-  const pingpocketTeamRankingsLink = "https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes/classements?themeId=redBrick"; // New link for rankings
+  const pingpocketTeamRankingsLink = "https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes/classements?themeId=redBrick"; // Link for rankings
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
@@ -116,13 +116,27 @@ const CompetitionsEquipes = () => {
                   <p>Votre navigateur ne supporte pas les iframes.</p>
                 </iframe>
               </div>
-              {/* Nouveau bouton pour les classements des équipes */}
-              <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-6 py-3 rounded-md text-lg font-medium transition-colors shadow-lg">
-                <a href={pingpocketTeamRankingsLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-                  <ExternalLink className="mr-2 h-5 w-5" />
-                  Classements des équipes (phase en cours)
-                </a>
-              </Button>
+
+              <h2 className="text-3xl font-bold text-center mb-8 text-clubDark mt-12">Classements des Équipes (Phase en cours)</h2>
+              <p className="text-center text-sm text-muted-foreground mb-4 p-4">
+                Les classements des équipes pour la phase en cours sont intégrés directement depuis Pingpocket. Si le contenu ne s'affiche pas correctement, veuillez consulter le site de Pingpocket directement.
+              </p>
+              <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden">
+                <small className="block text-right text-xs text-muted-foreground p-2">
+                  powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary text-clubPrimary">www.pingpocket.fr</a>
+                </small>
+                <iframe
+                  frameBorder="1"
+                  name="pingpocket-team-rankings"
+                  width="100%"
+                  height="800"
+                  scrolling="auto"
+                  src={pingpocketTeamRankingsLink}
+                  title="Classements des équipes Pingpocket"
+                >
+                  <p>Votre navigateur ne supporte pas les iframes.</p>
+                </iframe>
+              </div>
             </div>
           </CardContent>
         </Card>
