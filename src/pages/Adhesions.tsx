@@ -68,12 +68,12 @@ const Adhesions = () => {
                   <li>Assurance FFTT incluse</li>
                   <br>
                   <li>Accès aux compétitions jeunes :</li>
-                  <li>- Tournois du Conseil Départemental</li>
-                  <li>- Championnat par équipe jeunes</li>
+                  <li>Tournois du Conseil Départemental</li>
+                  <li>Championnat par équipe jeunes</li>
                   <br>
                   <li>Accès aux compétitions adultes :</li>
-                  <li>- Rencontres interclubs de Gironde pour les adultes</li>
-                  <li>- Criterium de Gironde</li>
+                  <li>Rencontres interclubs de Gironde pour les adultes</li>
+                  <li>Criterium de Gironde</li>
                 </ul>
               </div>
               <div className="bg-clubSection p-6 rounded-lg shadow-md">
