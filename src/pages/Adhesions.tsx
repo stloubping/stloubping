@@ -65,7 +65,7 @@ const Adhesions = () => {
                 </p>
                 <ul className="list-disc list-inside mb-4 text-clubLight-foreground">
                   <li>Accès aux créneaux de jeu libre</li>
-                  <li>Participation aux entraînements loisir</li>
+                  <li>Participation aux entraînements dirigés loisirs</li>
                   <li>Assurance FFTT incluse</li>
                 </ul>
                 <p className="text-2xl font-bold text-clubPrimary">130€ / an</p>
