@@ -88,6 +88,7 @@ const Adhesions = () => {
                   <li>Accès aux entraînements dirigés compétition</li>
                   <li>Assurance FFTT incluse</li>
                   <li>Classement FFTT</li>
+                  <br/>
                   <p className="mb-4 text-clubLight-foreground">Accès aux compétitions jeunes :</p>
                   <li>Tournois du Conseil Départemental</li>
                   <li>Championnat par équipe jeunes</li>
@@ -96,6 +97,7 @@ const Adhesions = () => {
                   <li>Titres jeunes</li>
                   <li>Finales par classement</li>
                   <li>Top détection</li>
+                  <br/>
                   <p className="mb-4 text-clubLight-foreground">Accès aux compétitions adultes :</p>
                   <li>Championnat par équipe sénior</li>
                   <li>Criterium de Gironde</li>
