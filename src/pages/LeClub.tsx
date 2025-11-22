@@ -249,7 +249,7 @@ const LeClub = () => {
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Dominique</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Particulièrement investi dans la préparation du tournoi régional.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
