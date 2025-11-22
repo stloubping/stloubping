@@ -65,12 +65,15 @@ const Adhesions = () => {
                 <ul className="list-disc list-inside mb-4 text-clubLight-foreground">
                   <li>Accès aux créneaux de jeu libre</li>
                   <li>Participation aux entraînements dirigés loisirs</li>
+                  <li>Assurance FFTT incluse</li>
+                  <br>
                   <li>Accès aux compétitions jeunes :</li>
                   <li>- Tournois du Conseil Départemental</li>
-                  <li>Accès au championnat par équipe jeunes</li>
-                  <li>Accès aux rencontres interclubs de Gironde pour les adultes</li>
-                  <li>Accès au Criterium de Gironde pour les adultes</li>
-                  <li>Assurance FFTT incluse</li>
+                  <li>- Championnat par équipe jeunes</li>
+                  <br>
+                  <li>Accès aux compétitions adultes :</li>
+                  <li>- Rencontres interclubs de Gironde pour les adultes</li>
+                  <li>- Criterium de Gironde</li>
                 </ul>
               </div>
               <div className="bg-clubSection p-6 rounded-lg shadow-md">
