@@ -25,7 +25,7 @@ const LeClub = () => {
             </CardHeader>
             <CardContent>
               <p className="mb-4 text-clubLight-foreground">
-                Fondé en <span className="font-semibold">1976</span>, le St Loub Ping est bien plus qu'un simple club de tennis de table. C'est un lieu de rencontre, de partage et de dépassement de soi. Depuis nos débuts, nous nous engageons à promouvoir ce sport passionnant auprès de tous les publics, des plus jeunes aux vétérans, des débutants aux compétiteurs de haut niveau.
+                Fondé en <span className="font-semibold">1977</span>, le St Loub Ping est bien plus qu'un simple club de tennis de table. C'est un lieu de rencontre, de partage et de dépassement de soi. Depuis nos débuts, nous nous engageons à promouvoir ce sport passionnant auprès de tous les publics, des plus jeunes aux vétérans, des débutants aux compétiteurs de haut niveau.
               </p>
               <p className="mb-4 text-clubLight-foreground">
                 Nos valeurs fondamentales sont le respect, l'esprit sportif, la persévérance, la <span className="font-semibold">convivialité, la solidarité et l'esprit d'équipe</span>. Nous croyons fermement que le sport est un formidable vecteur de lien social et de développement personnel. Chaque membre est encouragé à donner le meilleur de lui-même tout en s'épanouissant dans une ambiance chaleureuse et solidaire.
