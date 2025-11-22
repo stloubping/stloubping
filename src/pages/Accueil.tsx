@@ -60,11 +60,11 @@ const eventItems = [
   // Championnat par équipe - Journée 4 Phase 1 (Nouveau bloc)
   {
     id: 202,
-    title: "Championnat par équipe - Journée 4 Phase 1",
-    date: "15 Novembre 2025",
-    time: "Dès 14h00",
+    title: "Championnat par équipe - Journée 5 Phase 1",
+    date: "29 Novembre 2025",
+    time: "Dès 15h00",
     location: "Salle du club",
-    description: "Venez encourager nos équipes lors de la 4ème journée de championnat ! Ambiance garantie et matchs décisifs pour le classement.",
+    description: "Venez encourager nos équipes de R2, PR et D2 lors de la 5ème journée de championnat ! Ambiance garantie et matchs décisifs pour le classement.",
     image: "/images/events/IMG-20251003-WA0001.jpg", // Chemin de l'image mis à jour
     link: "/competitions-equipes",
   },
