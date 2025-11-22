@@ -192,7 +192,7 @@ const LeClub = () => {
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
                     onClick={() => openLightbox("https://picsum.photos/150/150?random=103")}
                   />
-                  <h4 className="font-semibold text-lg text-clubDark">Yves Mounde</h4>
+                  <h4 className="font-semibold text-lg text-clubDark">Yves Mounede</h4>
                   <p className="text-sm text-muted-foreground">Vice-Président</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Soutient le président et participe à la gestion du club.</p>
                 </div>
@@ -225,9 +225,9 @@ const LeClub = () => {
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
                     onClick={() => openLightbox("https://picsum.photos/150/150?random=106")}
                   />
-                  <h4 className="font-semibold text-lg text-clubDark">Olivier Goux</h4>
+                  <h4 className="font-semibold text-lg text-clubDark">Olivier Goix</h4>
                   <p className="text-sm text-muted-foreground">Secrétaire</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Gère l'administration et la communication interne.</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Gère l'administratif et la communication interne.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
