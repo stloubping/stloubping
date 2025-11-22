@@ -122,7 +122,7 @@ const Adhesions = () => {
             </p>
             <p className="text-2xl font-bold text-clubPrimary">Tarif Jeunes: 130€ / an</p>
             <p className="text-2xl font-bold text-clubPrimary">Tarif Adultes: 150€ / an</p>
-            
+            <br/>
             <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
               <Link to="/contact">
                 S'inscrire en Ligne
