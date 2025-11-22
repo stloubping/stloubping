@@ -55,12 +55,12 @@ const LeClub = () => {
                   <h3 className="text-xl font-semibold text-clubDark">Équipes Adultes</h3>
                   <p className="text-3xl font-bold text-clubPrimary">6</p>
                   <p className="text-sm text-clubLight-foreground">en championnat</p>
+                   <p className="text-sm text-clubLight-foreground">3 en critérium Gironde</p>
                 </div>
                 <div className="p-4 bg-clubSection rounded-lg shadow-sm">
                   <h3 className="text-xl font-semibold text-clubDark">Équipes Jeunes</h3>
                   <p className="text-3xl font-bold text-clubPrimary">4</p>
                   <p className="text-sm text-clubLight-foreground">en championnat</p>
-                  <p className="text-sm text-clubLight-foreground">3 en critérium Gironde</p>
                 </div>
               </div>
             </CardContent>
