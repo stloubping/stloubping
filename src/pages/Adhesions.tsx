@@ -67,6 +67,7 @@ const Adhesions = () => {
                   <li>Accès aux créneaux de jeu libre</li>
                   <li>Participation aux entraînements dirigés loisirs</li>
                   <li>Accès aux tournois du Conseil Départemental pour les jeunes et féminines</li>
+                  
                   <li>Assurance FFTT incluse</li>
                 </ul>
                 <p className="text-2xl font-bold text-clubPrimary">130€ / an</p>
