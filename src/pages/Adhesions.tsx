@@ -84,12 +84,25 @@ const Adhesions = () => {
                   organisés par la FFTT.
                 </p>
                 <ul className="list-disc list-inside mb-4 text-clubLight-foreground">
-                  <li>Accès à tous les entraînements (loisir et compétition)</li>
-                  <li>Accès aux tournois du Conseil Départemental pour les jeunes et féminines</li>
-                  <li>Accès au championnat par équipe jeunes ou adultes</li>
-                  <li>Accès au Criterium de Gironde pour les adultes</li>
-                  <li>Participation aux tournois officiels</li>
+                  <li>Accès aux créneaux de jeu libre</li>
+                  <li>Accès aux entraînements dirigés compétition</li>
+                  <li>Assurance FFTT incluse</li>
                   <li>Classement FFTT</li>
+                  <p className="mb-4 text-clubLight-foreground">Accès aux compétitions jeunes :</p>
+                  <li>Tournois du Conseil Départemental</li>
+                  <li>Championnat par équipe jeunes</li>
+                  <li>Championnat par équipe sénior</li>
+                  <li>Criterium Fédéral</li>
+                  <li>Titres jeunes</li>
+                  <li>Finales par classement</li>
+                  <li>Top détection</li>
+                  <p className="mb-4 text-clubLight-foreground">Accès aux compétitions adultes :</p>
+                  <li>Championnat par équipe sénior</li>
+                  <li>Criterium de Gironde</li>
+                  <li>Criterium Fédéral</li>
+                  <li>Finales par classement</li>
+                  <li>Tournois officiels organisés par les clubs</li>
+                  
                 </ul>
               </div>
             </div>
