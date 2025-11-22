@@ -49,7 +49,7 @@ const LeClub = () => {
                   <p className="text-3xl font-bold text-clubPrimary">129</p>
                   <p className="text-sm text-clubLight-foreground">30% compétiteurs</p>
                   <p className="text-sm text-clubLight-foreground">60% jeunes</p>
-                  <p className="text-sm text-clubLight-foreground">9 féminines</p>
+                  <p className="text-sm text-clubLight-foreground">6 féminines</p>
                 </div>
                 <div className="p-4 bg-clubSection rounded-lg shadow-sm">
                   <h3 className="text-xl font-semibold text-clubDark">Équipes Adultes</h3>
