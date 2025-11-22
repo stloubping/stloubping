@@ -59,8 +59,7 @@ const Adhesions = () => {
               <div className="bg-clubSection p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-semibold mb-2 text-clubDark">Licence Loisir</h3>
                 <p className="mb-4 text-clubLight-foreground">
-                  Idéale pour ceux qui souhaitent pratiquer le tennis de table pour le plaisir,
-                  sans l'engagement des compétitions officielles. Accès aux entraînements libres
+                  Idéale pour ceux qui souhaitent pratiquer le tennis de table pour le plaisir, avec la possibilité de faire quelques petites compétitions dédiées aux joueurs loisirs. Accès aux entraînements libres
                   et aux sessions encadrées dédiées au loisir.
                 </p>
                 <ul className="list-disc list-inside mb-4 text-clubLight-foreground">
