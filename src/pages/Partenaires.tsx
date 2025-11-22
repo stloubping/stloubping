@@ -5,7 +5,7 @@ import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
 
 const sponsors = [
   { name: "Wack Sport", logo: "https://picsum.photos/150/80?random=13", description: "Fournisseur officiel d'équipements de tennis de table." },
-  { name: "Wack Sport", logo: "https://picsum.photos/150/80?random=13", description: "Fournisseur officiel d'équipements de tennis de table." },
+  { name: "Techni respir", logo: "https://picsum.photos/150/80?random=13", description: "Fournisseur officiel du maillot du club" },
   { name: "CMSO", logo: "https://picsum.photos/150/80?random=14", description: "Le Crédit Mutuel du Sud-Ouest, partenaire financier principal du club." },
   { name: "Restaurant Le Service", logo: "https://picsum.photos/150/80?random=15", description: "Offre des réductions à nos membres." },
   { name: "Mairie de St Loubès", logo: "https://picsum.photos/150/80?random=16", description: "Soutien institutionnel et mise à disposition des infrastructures." },
