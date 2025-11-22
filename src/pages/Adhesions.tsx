@@ -81,7 +81,10 @@ const Adhesions = () => {
                 </p>
                 <ul className="list-disc list-inside mb-4 text-clubLight-foreground">
                   <li>Accès à tous les entraînements (loisir et compétition)</li>
-                  <li>Participation aux championnats et tournois officiels</li>
+                  <li>Accès aux tournois du Conseil Départemental pour les jeunes et féminines</li>
+                  <li>Accès au championnat par équipe jeunes ou adultes</li>
+                  <li>Accès au Criterium de Gironde pour les adultes</li>
+                  <li>Participation aux tournois officiels</li>
                   <li>Classement FFTT</li>
                 </ul>
               </div>
