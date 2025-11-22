@@ -71,7 +71,6 @@ const Adhesions = () => {
                   <li>Accès au Criterium de Gironde pour les adultes</li>
                   <li>Assurance FFTT incluse</li>
                 </ul>
-                <p className="text-2xl font-bold text-clubPrimary">130€ / an</p>
               </div>
               <div className="bg-clubSection p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-semibold mb-2 text-clubDark">Licence Compétition</h3>
@@ -85,7 +84,6 @@ const Adhesions = () => {
                   <li>Participation aux championnats et tournois officiels</li>
                   <li>Classement FFTT</li>
                 </ul>
-                <p className="text-2xl font-bold text-clubPrimary">150€ / an</p>
               </div>
             </div>
           </CardContent>
