@@ -66,11 +66,11 @@ const Adhesions = () => {
                   <li>Accès aux créneaux de jeu libre</li>
                   <li>Participation aux entraînements dirigés loisirs</li>
                   <li>Assurance FFTT incluse</li>
-                  <br>
+                  
                   <li>Accès aux compétitions jeunes :</li>
                   <li>Tournois du Conseil Départemental</li>
                   <li>Championnat par équipe jeunes</li>
-                  <br>
+                  
                   <li>Accès aux compétitions adultes :</li>
                   <li>Rencontres interclubs de Gironde pour les adultes</li>
                   <li>Criterium de Gironde</li>
@@ -107,7 +107,7 @@ const Adhesions = () => {
             </p>
             <p className="text-2xl font-bold text-clubPrimary">Tarif Jeunes: 130€ / an</p>
             <p className="text-2xl font-bold text-clubPrimary">Tarif Adultes: 150€ / an</p>
-            <br>
+            
             <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
               <Link to="/contact">
                 S'inscrire en Ligne
