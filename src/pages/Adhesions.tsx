@@ -69,7 +69,7 @@ const Adhesions = () => {
                   <li>Accès aux tournois du Conseil Départemental pour les jeunes et féminines</li>
                   <li>Accès au championnat par équipe jeunes</li>
                   <li>Accès aux rencontres interclubs de Gironde pour les adultes</li>
-                  <li>Accès au Criterum de Gironde pour les adultes</li>
+                  <li>Accès au Criterium de Gironde pour les adultes</li>
                   <li>Assurance FFTT incluse</li>
                 </ul>
                 <p className="text-2xl font-bold text-clubPrimary">130€ / an</p>
