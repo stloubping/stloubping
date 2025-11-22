@@ -67,7 +67,7 @@ const Adhesions = () => {
                   <li>Participation aux entraînements dirigés loisirs</li>
                   <li>Assurance FFTT incluse</li>
                   <br/>
-                  <li>Accès aux compétitions jeunes :</li>
+                  <p className="mb-4 text-clubLight-foreground">Accès aux compétitions jeunes :</p>
                   <li>Tournois du Conseil Départemental</li>
                   <li>Championnat par équipe jeunes</li>
                   <br/>
