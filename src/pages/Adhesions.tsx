@@ -71,8 +71,8 @@ const Adhesions = () => {
                   <li>Tournois du Conseil Départemental</li>
                   <li>Championnat par équipe jeunes</li>
                   <br/>
-                  <li>Accès aux compétitions adultes :</li>
-                  <li>Rencontres interclubs de Gironde pour les adultes</li>
+                  <p className="mb-4 text-clubLight-foreground">Accès aux compétitions adultes :</p>
+                  <li>Rencontres interclubs de Gironde</li>
                   <li>Criterium de Gironde</li>
                 </ul>
               </div>
