@@ -65,7 +65,8 @@ const Adhesions = () => {
                 <ul className="list-disc list-inside mb-4 text-clubLight-foreground">
                   <li>Accès aux créneaux de jeu libre</li>
                   <li>Participation aux entraînements dirigés loisirs</li>
-                  <li>Accès aux tournois du Conseil Départemental pour les jeunes et féminines</li>
+                  <li>Accès aux compétitions jeunes :</li>
+                  <li>- Tournois du Conseil Départemental</li>
                   <li>Accès au championnat par équipe jeunes</li>
                   <li>Accès aux rencontres interclubs de Gironde pour les adultes</li>
                   <li>Accès au Criterium de Gironde pour les adultes</li>
