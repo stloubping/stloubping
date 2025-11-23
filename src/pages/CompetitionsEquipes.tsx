@@ -1,26 +1,19 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useLightbox } from '@/context/LightboxContext';
-import { Button } from "@/components/ui/button";
-import { ExternalLink } from 'lucide-react';
-import { Link } from 'react-router-dom'; // Import Link
+import TeamRankingIframe from '@/components/TeamRankingIframe'; // Import the new component
 
+// Définition des équipes avec les informations nécessaires pour Pingpocket
 const teams = [
-  { name: "Équipe 1", division: "Régionale 2", captain: "Wesley" },
-  { name: "Équipe 2", division: "Pré-régionale", captain: "Vincent" },
-  { name: "Équipe 3", division: "Départementale 2", captain: "Yanick" },
-  { name: "Équipe 4", division: "Départementale 2", captain: "Patrice" },
-  { name: "Équipe 5", division: "Départementale 3", captain: "Olivier" },
-  { name: "Équipe 6", division: "Départementale 4", captain: "Pierre" },
-];
-
-const matchCalendar = [
-  { date: "20/10/2024", opponent: "TT Villeurbanne", team: "Équipe A", location: "Extérieur", result: "À venir" },
-  { date: "27/10/2024", opponent: "ASPTT Lyon", team: "Équipe B", location: "Domicile", result: "À venir" },
-  { date: "03/11/2024", opponent: "MJC Rillieux", team: "Équipe C", location: "Extérieur", result: "À venir" },
+  { id: "equipe-1", name: "Équipe 1", division: "Régionale 2", captain: "Wesley", number: 1, championship: "masculin" as const },
+  { id: "equipe-2", name: "Équipe 2", division: "Pré-régionale", captain: "Vincent", number: 2, championship: "masculin" as const },
+  { id: "equipe-3", name: "Équipe 3", division: "Départementale 2", captain: "Yanick", number: 3, championship: "masculin" as const },
+  { id: "equipe-4", name: "Équipe 4", division: "Départementale 2", captain: "Patrice", number: 4, championship: "masculin" as const },
+  { id: "equipe-5", name: "Équipe 5", division: "Départementale 3", captain: "Olivier", number: 5, championship: "masculin" as const },
+  { id: "equipe-6", name: "Équipe 6", division: "Départementale 4", captain: "Pierre", number: 6, championship: "masculin" as const },
 ];
 
 const recentMatchResults = [
@@ -39,22 +32,22 @@ const recentMatchResults = [
     title: "Équipe 2 Pré-régionale",
   },
   {
-    id: 6, // Nouvelle entrée pour l'Équipe 3
-    image: "https://picsum.photos/400/300?random=match6", // Image de remplacement
+    id: 6,
+    image: "https://picsum.photos/400/300?random=match6",
     alt: "Équipe St Loub Ping 3",
     result: "Exempt",
     title: "Équipe 3 Départementale 2",
   },
   {
     id: 1,
-    image: "/images/actualites/561606494_777489285122995_5427379147122871235_n.jpg", // Chemin mis à jour
+    image: "/images/actualites/561606494_777489285122995_5427379147122871235_n.jpg",
     alt: "Équipe St Loub Ping 4",
     result: "Égalité 7-7 contre C STE HELENE 4",
     title: "Équipe 4 Départementale 2",
   },
   {
     id: 3,
-    image: "/images/actualites/559465112_777489365122987_5984336681092815830_n.jpg", // Chemin mis à jour
+    image: "/images/actualites/559465112_777489365122987_5984336681092815830_n.jpg",
     alt: "Équipe St Loub Ping 5",
     result: "Défaite 11-3 contre LE HAILLAN TT 7",
     title: "Équipe 5 Départementale 3",
@@ -70,8 +63,6 @@ const recentMatchResults = [
 
 const CompetitionsEquipes = () => {
   const { openLightbox } = useLightbox();
-  const pingpocketTeamsLink = "https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes?themeId=redBrick";
-  const pingpocketTeamRankingsLink = "https://www.pingpocket.fr/app/fftt/clubs/10330022/equipes/classements?themeId=redBrick"; // Link for rankings
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
@@ -80,70 +71,55 @@ const CompetitionsEquipes = () => {
       <section className="mb-12">
         <Card className="bg-clubLight shadow-lg rounded-xl">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubDark">Nos Équipes</CardTitle>
+            <CardTitle className="text-2xl text-clubDark">Nos Équipes et Leurs Divisions</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               {teams.map((team, index) => (
-                <Card key={index} className="bg-clubLight shadow-md rounded-lg">
-                  <CardHeader>
-                    <CardTitle className="text-xl text-clubDark">{team.name}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-clubLight-foreground">
-                    <p>Division: <span className="font-semibold">{team.division}</span></p>
-                    <p>Capitaine: <span className="font-semibold">{team.captain}</span></p>
+                <Card key={index} className="bg-clubLight shadow-md rounded-lg border-l-4 border-clubPrimary">
+                  <CardContent className="p-4">
+                    <h3 className="text-xl font-semibold text-clubDark">{team.name}</h3>
+                    <p className="text-clubLight-foreground">Division: <span className="font-semibold">{team.division}</span></p>
+                    <p className="text-clubLight-foreground">Capitaine: <span className="font-semibold">{team.captain}</span></p>
                   </CardContent>
                 </Card>
               ))}
-            </div>
-            <div className="text-center mt-8">
-              {/* Removed the descriptive text here */}
-              <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden mb-6">
-                <small className="block text-right text-xs text-muted-foreground p-2">
-                  powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary text-clubPrimary">www.pingpocket.fr</a>
-                </small>
-                <iframe
-                  frameBorder="1"
-                  name="pingpocket-teams"
-                  width="100%"
-                  height="800"
-                  scrolling="auto"
-                  src={pingpocketTeamsLink}
-                  title="Liste des équipes Pingpocket"
-                >
-                  <p>Votre navigateur ne supporte pas les iframes.</p>
-                </iframe>
-              </div>
-
-              <h2 className="text-3xl font-bold text-center mb-8 text-clubDark mt-12">Classements des Équipes (Phase en cours)</h2>
-              {/* Removed the descriptive text here */}
-              <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden">
-                <small className="block text-right text-xs text-muted-foreground p-2">
-                  powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary text-clubPrimary">www.pingpocket.fr</a>
-                </small>
-                <iframe
-                  frameBorder="1"
-                  name="pingpocket-team-rankings"
-                  width="100%"
-                  height="800"
-                  scrolling="auto"
-                  src={pingpocketTeamRankingsLink}
-                  title="Classements des équipes Pingpocket"
-                >
-                  <p>Votre navigateur ne supporte pas les iframes.</p>
-                </iframe>
-              </div>
             </div>
           </CardContent>
         </Card>
       </section>
 
-      {/* La section Calendrier des Compétitions a été déplacée vers la page d'Accueil */}
+      <section className="mb-12">
+        <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Résultats et Classements Détaillés</h2>
+        <Tabs defaultValue={teams[0].id} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 h-auto bg-clubSection/50">
+            {teams.map((team) => (
+              <TabsTrigger 
+                key={team.id} 
+                value={team.id} 
+                className="data-[state=active]:bg-clubPrimary data-[state=active]:text-clubPrimary-foreground text-clubDark font-semibold text-xs sm:text-sm p-2"
+              >
+                {team.name}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          
+          {teams.map((team) => (
+            <TabsContent key={team.id} value={team.id} className="mt-6">
+              <TeamRankingIframe 
+                teamNumber={team.number} 
+                championshipType={team.championship} 
+                teamName={team.name} 
+              />
+            </TabsContent>
+          ))}
+        </Tabs>
+      </section>
 
       <section className="mb-12">
         <Card className="bg-clubLight shadow-lg rounded-xl">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubDark">Derniers Résultats des Matchs</CardTitle>
+            <CardTitle className="text-2xl text-clubDark">Derniers Résultats des Matchs (Photos)</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
