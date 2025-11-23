@@ -118,10 +118,10 @@ const TournamentRegistration = () => {
         </CardHeader>
         <CardContent>
           <img
-            src="/images/actualites/Gemini_Generated_Image_mlgzatmlgzatmlgz.png"
+            src="/images/actualites/tournoi-regional-2026-affiche.png" // NOUVELLE IMAGE
             alt="Affiche du Tournoi Régional Saint-Loub'Ping 2026"
             className="w-full h-auto object-cover rounded-lg mb-8 shadow-md cursor-zoom-in"
-            onClick={() => openLightbox("/images/actualites/Gemini_Generated_Image_mlgzatmlgzatmlgz.png")} // Open lightbox on image click
+            onClick={() => openLightbox("/images/actualites/tournoi-regional-2026-affiche.png")} // Open lightbox on image click
           />
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
