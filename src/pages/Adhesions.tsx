@@ -59,16 +59,22 @@ const Adhesions = () => {
               <div className="bg-clubSection p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-semibold mb-2 text-clubDark">Licence Loisir</h3>
                 <p className="mb-4 text-clubLight-foreground">
-                  Idéale pour ceux qui souhaitent pratiquer le tennis de table pour le plaisir,
-                  sans l'engagement des compétitions officielles. Accès aux entraînements libres
+                  Idéale pour ceux qui souhaitent pratiquer le tennis de table pour le plaisir, avec la possibilité de faire quelques petites compétitions dédiées aux joueurs loisirs. Accès aux entraînements libres
                   et aux sessions encadrées dédiées au loisir.
                 </p>
                 <ul className="list-disc list-inside mb-4 text-clubLight-foreground">
                   <li>Accès aux créneaux de jeu libre</li>
-                  <li>Participation aux entraînements loisir</li>
+                  <li>Participation aux entraînements dirigés loisirs</li>
                   <li>Assurance FFTT incluse</li>
+                  <br/>
+                  <p className="mb-4 text-clubLight-foreground">Accès aux compétitions jeunes :</p>
+                  <li>Tournois du Conseil Départemental</li>
+                  <li>Championnat par équipe jeunes</li>
+                  <br/>
+                  <p className="mb-4 text-clubLight-foreground">Accès aux compétitions adultes :</p>
+                  <li>Rencontres interclubs de Gironde</li>
+                  <li>Criterium de Gironde</li>
                 </ul>
-                <p className="text-2xl font-bold text-clubPrimary">130€ / an</p>
               </div>
               <div className="bg-clubSection p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-semibold mb-2 text-clubDark">Licence Compétition</h3>
@@ -78,11 +84,28 @@ const Adhesions = () => {
                   organisés par la FFTT.
                 </p>
                 <ul className="list-disc list-inside mb-4 text-clubLight-foreground">
-                  <li>Accès à tous les entraînements (loisir et compétition)</li>
-                  <li>Participation aux championnats et tournois officiels</li>
+                  <li>Accès aux créneaux de jeu libre</li>
+                  <li>Accès aux entraînements dirigés compétition</li>
+                  <li>Assurance FFTT incluse</li>
                   <li>Classement FFTT</li>
+                  <br/>
+                  <p className="mb-4 text-clubLight-foreground">Accès aux compétitions jeunes :</p>
+                  <li>Tournois du Conseil Départemental</li>
+                  <li>Championnat par équipe jeunes</li>
+                  <li>Championnat par équipe sénior</li>
+                  <li>Criterium Fédéral</li>
+                  <li>Titres jeunes</li>
+                  <li>Finales par classement</li>
+                  <li>Top détection</li>
+                  <br/>
+                  <p className="mb-4 text-clubLight-foreground">Accès aux compétitions adultes :</p>
+                  <li>Championnat par équipe sénior</li>
+                  <li>Criterium de Gironde</li>
+                  <li>Criterium Fédéral</li>
+                  <li>Finales par classement</li>
+                  <li>Tournois officiels organisés par les clubs</li>
+                  
                 </ul>
-                <p className="text-2xl font-bold text-clubPrimary">150€ / an</p>
               </div>
             </div>
           </CardContent>
@@ -97,6 +120,9 @@ const Adhesions = () => {
               Prêt à nous rejoindre ? L'inscription est simple et rapide !
               Cliquez sur le bouton ci-dessous pour accéder à notre formulaire d'adhésion en ligne.
             </p>
+            <p className="text-2xl font-bold text-clubPrimary">Tarif Jeunes: 130€ / an</p>
+            <p className="text-2xl font-bold text-clubPrimary">Tarif Adultes: 150€ / an</p>
+            <br/>
             <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
               <Link to="/contact">
                 S'inscrire en Ligne
