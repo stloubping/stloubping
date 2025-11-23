@@ -23,7 +23,14 @@ interface NavItem {
 const navItems: NavItem[] = [
   { name: "Accueil", path: "/", type: "link" },
   { name: "Le Club", path: "/le-club", type: "link" },
-  { name: "Équipes", path: "/competitions-equipes", type: "link" },
+  {
+    name: "Équipes",
+    type: "dropdown",
+    children: [
+      { name: "Championnat par Équipe", path: "/competitions-equipes", type: "link" },
+      { name: "Critérium de Gironde", path: "/competitions-equipes/criterium-gironde", type: "link" }, // New link
+    ],
+  },
   {
     name: "Les Joueurs",
     type: "dropdown",
@@ -31,7 +38,7 @@ const navItems: NavItem[] = [
       { name: "Classement des Joueurs", path: "/classement-joueurs", type: "link" },
       { name: "Progression Mensuelle", path: "/classement-joueurs/progression-mensuelle", type: "link" },
       { name: "Progression Annuelle", path: "/classement-joueurs/progression-annuelle", type: "link" },
-      { name: "Par Catégorie d'Âge", path: "/classement-joueurs/par-categorie-age", type: "link" }, // New link
+      { name: "Par Catégorie d'Âge", path: "/classement-joueurs/par-categorie-age", type: "link" },
     ],
   },
   { name: "Adhésions", path: "/adhesions", type: "link" },
@@ -64,12 +71,33 @@ const Navbar = () => {
   const [isTournoiDropdownOpen, setIsTournoiDropdownOpen] = useState(false);
   const [isVideosDropdownOpen, setIsVideosDropdownOpen] = useState(false);
   const [isJoueursDropdownOpen, setIsJoueursDropdownOpen] = useState(false);
+  const [isEquipesDropdownOpen, setIsEquipesDropdownOpen] = useState(false); // New state for Equipes dropdown
 
   const NavLinks = ({ className, closeSheet, isMobileView = false }: { className?: string; closeSheet?: () => void; isMobileView?: boolean }) => {
     return (
       <nav className={cn("flex", isMobileView ? "flex-col space-x-0 space-y-4 p-0" : "items-center space-x-4 lg:space-x-6", className)}>
         {navItems.map((item) => {
           if (item.type === "dropdown") {
+            // Determine which state setter to use based on item name
+            let isCurrentDropdownOpen;
+            let setIsCurrentDropdownOpen;
+
+            if (item.name === "Tournoi") {
+              isCurrentDropdownOpen = isTournoiDropdownOpen;
+              setIsCurrentDropdownOpen = setIsTournoiDropdownOpen;
+            } else if (item.name === "Vidéos") {
+              isCurrentDropdownOpen = isVideosDropdownOpen;
+              setIsCurrentDropdownOpen = setIsVideosDropdownOpen;
+            } else if (item.name === "Les Joueurs") {
+              isCurrentDropdownOpen = isJoueursDropdownOpen;
+              setIsCurrentDropdownOpen = setIsJoueursDropdownOpen;
+            } else if (item.name === "Équipes") { // Handle new Equipes dropdown
+              isCurrentDropdownOpen = isEquipesDropdownOpen;
+              setIsCurrentDropdownOpen = setIsEquipesDropdownOpen;
+            } else {
+              return null; // Should not happen
+            }
+
             if (isMobileView) {
               return (
                 <Accordion type="single" collapsible key={item.name} className="w-full">
@@ -96,9 +124,6 @@ const Navbar = () => {
                 </Accordion>
               );
             } else { // Desktop dropdown
-              const isCurrentDropdownOpen = item.name === "Tournoi" ? isTournoiDropdownOpen : (item.name === "Vidéos" ? isVideosDropdownOpen : isJoueursDropdownOpen);
-              const setIsCurrentDropdownOpen = item.name === "Tournoi" ? setIsTournoiDropdownOpen : (item.name === "Vidéos" ? setIsVideosDropdownOpen : setIsJoueursDropdownOpen);
-
               return (
                 <DropdownMenu key={item.name} open={isCurrentDropdownOpen} onOpenChange={setIsCurrentDropdownOpen}>
                   <DropdownMenuTrigger asChild>
