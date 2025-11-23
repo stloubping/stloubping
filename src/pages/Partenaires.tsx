@@ -32,7 +32,7 @@ const sponsors = [
     name: "Crédit Mutuel", 
     logo: "/images/partenaires/credit-mutuel.jpg", 
     subtext: "du Sud Ouest",
-    link: "https://www.cmso.com"
+    link: "https://www.cmso.com" // Confirmation du lien
   },
 ];
 
