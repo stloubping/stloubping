@@ -44,14 +44,14 @@ const navItems: NavItem[] = [
   { name: "Adhésions", path: "/adhesions", type: "link" },
   { name: "Boutique", path: "/boutique", type: "link" },
   { name: "Partenaires", path: "/partenaires", type: "link" },
-  {
-    name: "Tournoi",
-    type: "dropdown",
-    children: [
-      { name: "Inscription au Tournoi", path: "/tournoi-inscription", type: "link" },
-      { name: "Liste des Inscriptions", path: "/tournoi-inscriptions-liste", type: "link" },
-    ],
-  },
+  // {
+  //   name: "Tournoi",
+  //   type: "dropdown",
+  //   children: [
+  //     { name: "Inscription au Tournoi", path: "/tournoi-inscription", type: "link" },
+  //     { name: "Liste des Inscriptions", path: "/tournoi-inscriptions-liste", type: "link" },
+  //   ],
+  // },
   {
     name: "Vidéos",
     type: "dropdown",
@@ -68,7 +68,6 @@ const Navbar = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [isTournoiDropdownOpen, setIsTournoiDropdownOpen] = useState(false);
   const [isVideosDropdownOpen, setIsVideosDropdownOpen] = useState(false);
   const [isJoueursDropdownOpen, setIsJoueursDropdownOpen] = useState(false);
   const [isEquipesDropdownOpen, setIsEquipesDropdownOpen] = useState(false); // New state for Equipes dropdown
@@ -82,10 +81,7 @@ const Navbar = () => {
             let isCurrentDropdownOpen;
             let setIsCurrentDropdownOpen;
 
-            if (item.name === "Tournoi") {
-              isCurrentDropdownOpen = isTournoiDropdownOpen;
-              setIsCurrentDropdownOpen = setIsTournoiDropdownOpen;
-            } else if (item.name === "Vidéos") {
+            if (item.name === "Vidéos") {
               isCurrentDropdownOpen = isVideosDropdownOpen;
               setIsCurrentDropdownOpen = setIsVideosDropdownOpen;
             } else if (item.name === "Les Joueurs") {

@@ -46,8 +46,9 @@ const App = () => (
                 <Route path="/adhesions" element={<Adhesions />} />
                 <Route path="/boutique" element={<Boutique />} />
                 <Route path="/partenaires" element={<Partenaires />} />
-                <Route path="/tournoi-inscription" element={<TournamentRegistration />} />
-                <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} />
+                {/* Tournament routes temporarily hidden */}
+                {/* <Route path="/tournoi-inscription" element={<TournamentRegistration />} /> */}
+                {/* <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} /> */}
                 <Route path="/videos/wtt" element={<WTTVideos />} />
                 <Route path="/videos/tutos" element={<Tutos />} />
                 <Route path="/videos/les-legendes" element={<LesLegendes />} />
