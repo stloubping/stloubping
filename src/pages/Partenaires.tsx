@@ -6,28 +6,33 @@ import { Handshake } from 'lucide-react';
 const sponsors = [
   { 
     name: "Ville de Saint-Loubès", 
-    logo: "https://pplx-res.cloudinary.com/image/upload/v1763900676/search_images/2b2c01cd6fe83a557fddba4c985808ebc211969d.jpg", 
-    subtext: "33450" 
+    logo: "/images/partenaires/ville-saint-loubes.jpg", 
+    subtext: "33450",
+    link: "https://www.saint-loubes.fr"
   },
   { 
     name: "Wacksport", 
-    logo: "https://pplx-res.cloudinary.com/image/upload/v1763900676/search_images/190d44855682564aab8a598c0648f771646a8d7e.jpg", 
-    subtext: "" 
+    logo: "/images/partenaires/wacksport.jpg", 
+    subtext: "Les pros du ping",
+    link: "https://www.wsport.com"
   },
   { 
     name: "CDTT33", 
-    logo: "https://pplx-res.cloudinary.com/image/upload/v1763900676/search_images/73f9a631e55c8654c7f1e272b0d8b0414d45a05a.jpg", 
-    subtext: "Comité départemental" 
+    logo: "/images/partenaires/cdtt33.jpg", 
+    subtext: "Comité départemental",
+    link: "https://www.cd33tt.fr"
   },
   { 
     name: "Ligue Nouvelle-Aquitaine", 
-    logo: "https://pplx-res.cloudinary.com/image/upload/v1763900676/search_images/f396d4343a4f6692d956ea2cb2db3cfdbe4af8c8.jpg", 
-    subtext: "Tennis de Table" 
+    logo: "/images/partenaires/ligue-nouvelle-aquitaine.jpg", 
+    subtext: "Tennis de Table",
+    link: "https://lnatt.fr"
   },
   { 
     name: "Crédit Mutuel", 
-    logo: "https://pplx-res.cloudinary.com/image/upload/v1763900676/search_images/f85b18370d3507fe45bcebb4d887c0ad138cde20.jpg", 
-    subtext: "du Sud Ouest" 
+    logo: "/images/partenaires/credit-mutuel.jpg", 
+    subtext: "du Sud Ouest",
+    link: "https://www.cmso.com"
   },
 ];
 
@@ -47,26 +52,36 @@ const Partenaires = () => {
 
         <div className="flex flex-wrap justify-center gap-6">
           {sponsors.map((sponsor, index) => (
-            <Card 
+            <a 
               key={index} 
-              className="bg-clubLight shadow-lg rounded-xl border border-border w-full max-w-[220px] min-h-[220px] flex flex-col items-center justify-between p-4 
-                         hover:shadow-xl hover:border-clubPrimary transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02]"
+              href={sponsor.link} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="block w-full max-w-[220px] min-h-[220px] transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02]"
             >
-              <CardContent className="p-0 flex flex-col items-center justify-center flex-grow">
-                <div className="w-full h-20 flex items-center justify-center bg-clubSection/50 rounded-md mb-4 p-2">
-                  <img
-                    src={sponsor.logo}
-                    alt={sponsor.name}
-                    className="max-w-full max-h-full object-contain cursor-zoom-in"
-                    onClick={() => openLightbox(sponsor.logo)}
-                  />
-                </div>
-                <h3 className="text-lg font-semibold text-clubDark text-center mt-2">{sponsor.name}</h3>
-                {sponsor.subtext && (
-                  <p className="text-sm text-muted-foreground text-center">{sponsor.subtext}</p>
-                )}
-              </CardContent>
-            </Card>
+              <Card 
+                className="bg-clubLight shadow-lg rounded-xl border border-border h-full flex flex-col items-center justify-between p-4 
+                           hover:shadow-xl hover:border-clubPrimary"
+              >
+                <CardContent className="p-0 flex flex-col items-center justify-center flex-grow">
+                  <div className="w-full h-20 flex items-center justify-center bg-clubSection/50 rounded-md mb-4 p-2">
+                    <img
+                      src={sponsor.logo}
+                      alt={sponsor.name}
+                      className="max-w-full max-h-full object-contain cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent link navigation when clicking image for lightbox
+                        openLightbox(sponsor.logo);
+                      }}
+                    />
+                  </div>
+                  <h3 className="text-lg font-semibold text-clubDark text-center mt-2">{sponsor.name}</h3>
+                  {sponsor.subtext && (
+                    <p className="text-sm text-muted-foreground text-center">{sponsor.subtext}</p>
+                  )}
+                </CardContent>
+              </Card>
+            </a>
           ))}
         </div>
       </section>
