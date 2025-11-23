@@ -25,7 +25,7 @@ const LeClub = () => {
             </CardHeader>
             <CardContent>
               <p className="mb-4 text-clubLight-foreground">
-                Fondé en <span className="font-semibold">1976</span>, le St Loub Ping est bien plus qu'un simple club de tennis de table. C'est un lieu de rencontre, de partage et de dépassement de soi. Depuis nos débuts, nous nous engageons à promouvoir ce sport passionnant auprès de tous les publics, des plus jeunes aux vétérans, des débutants aux compétiteurs de haut niveau.
+                Fondé en <span className="font-semibold">1977</span>, le St Loub Ping est bien plus qu'un simple club de tennis de table. C'est un lieu de rencontre, de partage et de dépassement de soi. Depuis nos débuts, nous nous engageons à promouvoir ce sport passionnant auprès de tous les publics, des plus jeunes aux vétérans, des débutants aux compétiteurs de haut niveau.
               </p>
               <p className="mb-4 text-clubLight-foreground">
                 Nos valeurs fondamentales sont le respect, l'esprit sportif, la persévérance, la <span className="font-semibold">convivialité, la solidarité et l'esprit d'équipe</span>. Nous croyons fermement que le sport est un formidable vecteur de lien social et de développement personnel. Chaque membre est encouragé à donner le meilleur de lui-même tout en s'épanouissant dans une ambiance chaleureuse et solidaire.
@@ -46,21 +46,22 @@ const LeClub = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                 <div className="p-4 bg-clubSection rounded-lg shadow-sm">
                   <h3 className="text-xl font-semibold text-clubDark">Licenciés</h3>
-                  <p className="text-3xl font-bold text-clubPrimary">157</p>
-                  <p className="text-sm text-clubLight-foreground">30% compétiteurs</p>
-                  <p className="text-sm text-clubLight-foreground">60% jeunes</p>
-                  <p className="text-sm text-clubLight-foreground">9 féminines</p>
+                  <p className="text-3xl font-bold text-clubPrimary">129</p>
+                  <p className="text-sm text-clubLight-foreground">35% compétiteurs</p>
+                  <p className="text-sm text-clubLight-foreground">50% jeunes</p>
+                  <p className="text-sm text-clubLight-foreground">6 féminines</p>
                 </div>
                 <div className="p-4 bg-clubSection rounded-lg shadow-sm">
                   <h3 className="text-xl font-semibold text-clubDark">Équipes Adultes</h3>
                   <p className="text-3xl font-bold text-clubPrimary">6</p>
                   <p className="text-sm text-clubLight-foreground">en championnat</p>
+                  <p className="text-3xl font-bold text-clubPrimary">3</p>
+                   <p className="text-sm text-clubLight-foreground">en critérium Gironde</p>
                 </div>
                 <div className="p-4 bg-clubSection rounded-lg shadow-sm">
                   <h3 className="text-xl font-semibold text-clubDark">Équipes Jeunes</h3>
                   <p className="text-3xl font-bold text-clubPrimary">4</p>
                   <p className="text-sm text-clubLight-foreground">en championnat</p>
-                  <p className="text-sm text-clubLight-foreground">3 en critérium Gironde</p>
                 </div>
               </div>
             </CardContent>
@@ -191,7 +192,7 @@ const LeClub = () => {
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
                     onClick={() => openLightbox("https://picsum.photos/150/150?random=103")}
                   />
-                  <h4 className="font-semibold text-lg text-clubDark">Yves Mounde</h4>
+                  <h4 className="font-semibold text-lg text-clubDark">Yves Mounede</h4>
                   <p className="text-sm text-muted-foreground">Vice-Président</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Soutient le président et participe à la gestion du club.</p>
                 </div>
@@ -224,9 +225,9 @@ const LeClub = () => {
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
                     onClick={() => openLightbox("https://picsum.photos/150/150?random=106")}
                   />
-                  <h4 className="font-semibold text-lg text-clubDark">Olivier Goux</h4>
+                  <h4 className="font-semibold text-lg text-clubDark">Olivier Goix</h4>
                   <p className="text-sm text-muted-foreground">Secrétaire</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Gère l'administration et la communication interne.</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Gère l'administratif, l'informatique et la communication du club.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
@@ -248,7 +249,7 @@ const LeClub = () => {
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Dominique</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Gère de main de maître les repas du criterium de Gironde ainsi que l'approvisionnement du tournoi régional.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
@@ -257,7 +258,7 @@ const LeClub = () => {
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
                     onClick={() => openLightbox("https://picsum.photos/150/150?random=109")}
                   />
-                  <h4 className="font-semibold text-lg text-clubDark">Wesley</h4>
+                  <h4 className="font-semibold text-lg text-clubDark">Pierre</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
                 </div>
@@ -281,7 +282,7 @@ const LeClub = () => {
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Michel</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Ancien trésorier et président du club, gère la logistique des événements internes et du Club House.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
@@ -303,7 +304,7 @@ const LeClub = () => {
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Antoine</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Entraineur de la séance du samedi matin et en charge du site internet du club.</p>
                 </div>
                 {/* Nouveaux membres ajoutés ici */}
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
@@ -317,17 +318,7 @@ const LeClub = () => {
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
                 </div>
-                <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img
-                    src="https://picsum.photos/150/150?random=115"
-                    alt="Membre du bureau"
-                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
-                    onClick={() => openLightbox("https://picsum.photos/150/150?random=115")}
-                  />
-                  <h4 className="font-semibold text-lg text-clubDark">Pierre</h4>
-                  <p className="text-sm text-muted-foreground">Membre du bureau</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
-                </div>
+                
               </div>
             </CardContent>
           </Card>
