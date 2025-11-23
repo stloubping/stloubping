@@ -249,7 +249,7 @@ const LeClub = () => {
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Dominique</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Particulièrement investi dans la préparation du tournoi régional.</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Gère de main de maître les repas du criterium de Gironde ainsi que l'approvisionnement du tournoi régional.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
