@@ -16,50 +16,7 @@ const teams = [
   { id: "equipe-6", name: "Équipe 6", division: "Départementale 4", captain: "Pierre", number: 6, championship: "masculin" as const },
 ];
 
-const recentMatchResults = [
-  {
-    id: 5,
-    image: "/images/actualites/561695574_777489311789659_3783358259365139184_n.jpg",
-    alt: "Équipe St Loub Ping 1",
-    result: "Victoire 9-5 contre CA BEGLAIS 4",
-    title: "Équipe 1 Régionale 2",
-  },
-  {
-    id: 2,
-    image: "/images/actualites/equipe-2-pre-regionale.png",
-    alt: "Équipe St Loub Ping 2",
-    result: "Défaite 11-3 contre US CENON 5",
-    title: "Équipe 2 Pré-régionale",
-  },
-  {
-    id: 6,
-    image: "https://picsum.photos/400/300?random=match6",
-    alt: "Équipe St Loub Ping 3",
-    result: "Exempt",
-    title: "Équipe 3 Départementale 2",
-  },
-  {
-    id: 1,
-    image: "/images/actualites/561606494_777489285122995_5427379147122871235_n.jpg",
-    alt: "Équipe St Loub Ping 4",
-    result: "Égalité 7-7 contre C STE HELENE 4",
-    title: "Équipe 4 Départementale 2",
-  },
-  {
-    id: 3,
-    image: "/images/actualites/559465112_777489365122987_5984336681092815830_n.jpg",
-    alt: "Équipe St Loub Ping 5",
-    result: "Défaite 11-3 contre LE HAILLAN TT 7",
-    title: "Équipe 5 Départementale 3",
-  },
-  {
-    id: 4,
-    image: "/images/actualites/equipe-6-departementale-4.png",
-    alt: "Équipe St Loub Ping 6",
-    result: "Victoire 12-2 contre TT FARGUIAIS 4",
-    title: "Équipe 6 Départementale 4",
-  },
-];
+// Suppression de la liste `recentMatchResults` car elle n'est plus utilisée.
 
 const CompetitionsEquipes = () => {
   const { openLightbox } = useLightbox();
@@ -68,7 +25,6 @@ const CompetitionsEquipes = () => {
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Compétitions & Équipes</h1>
 
-      {/* Section des classements détaillés (maintenue) */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Résultats et Classements Détaillés</h2>
         <Tabs defaultValue={teams[0].id} className="w-full">
@@ -94,37 +50,6 @@ const CompetitionsEquipes = () => {
             </TabsContent>
           ))}
         </Tabs>
-      </section>
-
-      <section className="mb-12">
-        <Card className="bg-clubLight shadow-lg rounded-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl text-clubDark">Derniers Résultats des Matchs (Photos)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-              {recentMatchResults.map((match) => (
-                <Card key={match.id} className="bg-clubLight shadow-md rounded-lg text-center">
-                  <CardContent className="p-4">
-                    {match.title && (
-                      <h3 className="text-xl font-semibold text-clubPrimary mb-3">{match.title}</h3>
-                    )}
-                    <img
-                      src={match.image}
-                      alt={match.alt}
-                      className="w-full h-auto object-cover rounded-md mb-4 cursor-zoom-in"
-                      onClick={() => openLightbox(match.image)}
-                    />
-                    <p className="text-lg font-semibold text-clubDark">{match.result}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            <p className="mt-6 text-sm text-muted-foreground text-center">
-              Retrouvez les feuilles de matchs détaillées dans la section "Résultats et Feuilles de Rencontres".
-            </p>
-          </CardContent>
-        </Card>
       </section>
     </div>
   );
