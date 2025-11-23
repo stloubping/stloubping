@@ -14,10 +14,6 @@ const ProgressionParCategorieAge = () => {
             <CardTitle className="text-2xl text-clubDark text-center">Classement par Catégorie d'Âge</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <p className="text-center text-sm text-muted-foreground mb-4 p-4">
-              Découvrez la répartition de nos licenciés par catégorie d'âge, directement depuis Pingpocket.
-              Si le contenu ne s'affiche pas correctement, veuillez consulter le site de Pingpocket directement.
-            </p>
             <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden">
               <small className="block text-right text-xs text-muted-foreground p-2">
                 powered by <a target="_blank" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary text-clubPrimary">www.pingpocket.fr</a>
