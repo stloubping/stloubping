@@ -68,27 +68,7 @@ const CompetitionsEquipes = () => {
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
       <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Compétitions & Équipes</h1>
 
-      <section className="mb-12">
-        <Card className="bg-clubLight shadow-lg rounded-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl text-clubDark">Nos Équipes et Leurs Divisions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              {teams.map((team, index) => (
-                <Card key={index} className="bg-clubLight shadow-md rounded-lg border-l-4 border-clubPrimary">
-                  <CardContent className="p-4">
-                    <h3 className="text-xl font-semibold text-clubDark">{team.name}</h3>
-                    <p className="text-clubLight-foreground">Division: <span className="font-semibold">{team.division}</span></p>
-                    <p className="text-clubLight-foreground">Capitaine: <span className="font-semibold">{team.captain}</span></p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-
+      {/* Section des classements détaillés (maintenue) */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Résultats et Classements Détaillés</h2>
         <Tabs defaultValue={teams[0].id} className="w-full">
