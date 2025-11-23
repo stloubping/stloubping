@@ -1,99 +1,70 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from 'react-router-dom';
-import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
+import { useLightbox } from '@/context/LightboxContext';
+import { Handshake } from 'lucide-react';
 
 const sponsors = [
-  { name: "Sport & Raquettes", logo: "https://picsum.photos/150/80?random=13", description: "Fournisseur officiel d'équipements de tennis de table." },
-  { name: "Banque Locale", logo: "https://picsum.photos/150/80?random=14", description: "Partenaire financier principal du club." },
-  { name: "Restaurant Le Service", logo: "https://picsum.photos/150/80?random=15", description: "Offre des réductions à nos membres." },
-  { name: "Mairie de [Ville]", logo: "https://picsum.photos/150/80?random=16", description: "Soutien institutionnel et mise à disposition des infrastructures." },
+  { 
+    name: "Ville de Saint-Loubès", 
+    logo: "https://pplx-res.cloudinary.com/image/upload/v1763900676/search_images/2b2c01cd6fe83a557fddba4c985808ebc211969d.jpg", 
+    subtext: "33450" 
+  },
+  { 
+    name: "Wacksport", 
+    logo: "https://pplx-res.cloudinary.com/image/upload/v1763900676/search_images/190d44855682564aab8a598c0648f771646a8d7e.jpg", 
+    subtext: "" 
+  },
+  { 
+    name: "CDTT33", 
+    logo: "https://pplx-res.cloudinary.com/image/upload/v1763900676/search_images/73f9a631e55c8654c7f1e272b0d8b0414d45a05a.jpg", 
+    subtext: "Comité départemental" 
+  },
+  { 
+    name: "Ligue Nouvelle-Aquitaine", 
+    logo: "https://pplx-res.cloudinary.com/image/upload/v1763900676/search_images/f396d4343a4f6692d956ea2cb2db3cfdbe4af8c8.jpg", 
+    subtext: "Tennis de Table" 
+  },
+  { 
+    name: "Crédit Mutuel", 
+    logo: "https://pplx-res.cloudinary.com/image/upload/v1763900676/search_images/f85b18370d3507fe45bcebb4d887c0ad138cde20.jpg", 
+    subtext: "du Sud Ouest" 
+  },
 ];
 
 const Partenaires = () => {
-  const { openLightbox } = useLightbox(); // Use the lightbox hook
+  const { openLightbox } = useLightbox();
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
-      <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Nos Partenaires</h1>
+      <h1 className="text-4xl font-bold text-center mb-4 text-clubDark flex items-center justify-center">
+        <Handshake className="mr-3 h-8 w-8 text-clubPrimary" /> Merci à nos partenaires
+      </h1>
 
       <section className="mb-12">
-        <Card className="bg-clubLight shadow-lg rounded-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl text-clubDark">Merci à Nos Précieux Partenaires !</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="mb-4 text-clubLight-foreground">
-              Le succès et le développement de notre club ne seraient pas possibles sans le soutien indéfectible
-              de nos partenaires et mécènes. Leur engagement nous permet de continuer à offrir des infrastructures
-              de qualité, un encadrement professionnel et de promouvoir le tennis de table auprès de tous les publics.
-            </p>
-            <p className="text-clubLight-foreground">
-              Nous tenons à les remercier chaleureusement pour leur confiance et leur contribution essentielle.
-            </p>
-          </CardContent>
-        </Card>
-      </section>
+        <p className="text-center text-xl text-clubLight-foreground/90 mb-10">
+          Un immense merci à tous nos partenaires pour leur soutien essentiel à la vie du club !
+        </p>
 
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Nos Plans de Partenariat</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Card className="bg-clubLight shadow-lg rounded-xl border-2 border-clubPrimary">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-bold text-clubPrimary mb-2">Partenaire Bronze</CardTitle>
-              <p className="text-clubLight-foreground/80">Soutenez le club et gagnez en visibilité locale.</p>
-            </CardHeader>
-            <CardContent className="space-y-4 text-clubLight-foreground">
-              <ul className="list-disc list-inside space-y-2">
-                <li>Logo de votre entreprise sur notre site web (section Partenaires).</li>
-                <li>Logo de votre entreprise sur le maillot du club (petite taille).</li>
-                <li>Mention de votre soutien lors des événements locaux du club.</li>
-                <li>Visibilité sur nos réseaux sociaux (1 publication par an).</li>
-                <li>Invitation à nos événements annuels.</li>
-              </ul>
-              <div className="text-center mt-6">
-                <p className="text-2xl font-bold text-clubDark">À partir de <span className="text-clubPrimary">200€</span> / an</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-clubLight shadow-lg rounded-xl border-2 border-clubPrimary">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-bold text-clubPrimary mb-2">Partenaire Or</CardTitle>
-              <p className="text-clubLight-foreground/80">Un partenariat privilégié pour une visibilité maximale.</p>
-            </CardHeader>
-            <CardContent className="space-y-4 text-clubLight-foreground">
-              <ul className="list-disc list-inside space-y-2">
-                <li>Logo de votre entreprise en grand format sur notre site web et affiches du club.</li>
-                <li>Logo de votre entreprise sur le maillot du club (taille standard).</li>
-                <li>Banderole publicitaire dans notre salle d'entraînement.</li>
-                <li>Mention de votre soutien lors de tous les événements du club (y compris tournois régionaux).</li>
-                <li>Visibilité accrue sur nos réseaux sociaux (4 publications par an).</li>
-                <li>Invitation VIP à tous nos événements.</li>
-                <li>Possibilité d'organiser un événement co-brandé avec le club.</li>
-              </ul>
-              <div className="text-center mt-6">
-                <p className="text-2xl font-bold text-clubDark">À partir de <span className="text-clubPrimary">800€</span> / an</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      <section>
-        <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Nos Sponsors</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="flex flex-wrap justify-center gap-6">
           {sponsors.map((sponsor, index) => (
-            <Card key={index} className="bg-clubLight shadow-md hover:shadow-lg transition-shadow duration-300 text-center rounded-xl">
-              <CardContent className="p-6 flex flex-col items-center justify-center h-full">
-                <img
-                  src={sponsor.logo}
-                  alt={sponsor.name}
-                  className="mb-4 max-h-20 object-contain cursor-zoom-in"
-                  onClick={() => openLightbox(sponsor.logo)} // Open lightbox on image click
-                />
-                <h3 className="text-xl font-semibold mb-2 text-clubDark">{sponsor.name}</h3>
-                <p className="text-sm text-muted-foreground">{sponsor.description}</p>
+            <Card 
+              key={index} 
+              className="bg-clubLight shadow-lg rounded-xl border border-border w-full max-w-[220px] min-h-[220px] flex flex-col items-center justify-between p-4 
+                         hover:shadow-xl hover:border-clubPrimary transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02]"
+            >
+              <CardContent className="p-0 flex flex-col items-center justify-center flex-grow">
+                <div className="w-full h-20 flex items-center justify-center bg-clubSection/50 rounded-md mb-4 p-2">
+                  <img
+                    src={sponsor.logo}
+                    alt={sponsor.name}
+                    className="max-w-full max-h-full object-contain cursor-zoom-in"
+                    onClick={() => openLightbox(sponsor.logo)}
+                  />
+                </div>
+                <h3 className="text-lg font-semibold text-clubDark text-center mt-2">{sponsor.name}</h3>
+                {sponsor.subtext && (
+                  <p className="text-sm text-muted-foreground text-center">{sponsor.subtext}</p>
+                )}
               </CardContent>
             </Card>
           ))}
@@ -101,21 +72,12 @@ const Partenaires = () => {
       </section>
 
       <section className="mt-12 text-center">
-        <Card className="bg-clubLight shadow-lg p-8 rounded-xl">
-          <CardTitle className="text-2xl text-clubDark mb-4">Devenez Partenaire du Club</CardTitle>
-          <CardContent>
-            <p className="mb-6 text-clubLight-foreground">
-              Vous souhaitez associer l'image de votre entreprise à un club dynamique et en pleine croissance ?
-              Nous proposons différentes formules de partenariat adaptées à vos objectifs.
-            </p>
-            <p className="text-clubLight-foreground">
-              Contactez-nous pour discuter des opportunités de collaboration et des avantages que vous pourriez en tirer.
-            </p>
-            <Link to="/contact" className="inline-block mt-6 bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-3 rounded-md text-lg font-medium transition-colors shadow-lg">
-              Nous Contacter
-            </Link>
-          </CardContent>
-        </Card>
+        <p className="text-2xl font-bold text-clubPrimary tracking-wider uppercase">
+          Merci de faire vivre le club !
+        </p>
+        <p className="text-lg font-semibold text-clubDark mt-2">
+          #SaintLoubesTT &nbsp; #AllezSaintLoubès
+        </p>
       </section>
     </div>
   );
