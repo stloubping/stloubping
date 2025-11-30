@@ -54,7 +54,7 @@ const eventItems = [
     time: "Dès 8h30", // Ajout de l'heure pour la carte d'événement
     location: "Gymnase de Saint-Loubès",
     description: "Préparez vos raquettes ! Notre tournoi régional annuel revient avec de nouvelles catégories et de nombreux lots à gagner. Inscriptions ouvertes prochainement.",
-    image: "/images/actualites/tournoi-regional-2026-affiche.png", // NOUVELLE IMAGE
+    image: "/images/actualites/tournoi-regional-2026-affiche.png", // Utilisation de la nouvelle image
     link: "/tournoi-inscription", // Ajout du lien vers la page d'inscription au tournoi
   },
   // Championnat par équipe - Journée 4 Phase 1 (Nouveau bloc)
