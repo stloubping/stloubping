@@ -19,6 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
+import { Loader2 } from "lucide-react"; // Import Loader2 icon
 
 const tableauxOptions = [
   { id: "t1", label: "Tableau 1 : 8h30 (500-799)" },
@@ -30,6 +31,14 @@ const tableauxOptions = [
   { id: "d1", label: "Tableau 7 : 16h00 (Doubles <2800)", price: 3 }, // Prix spécifique pour les doubles
 ];
 
+const MAX_INDIVIDUAL_TABLEAUX = 3;
+const MAX_REGISTRATIONS_PER_TABLEAU = 48;
+
+interface TableauCount {
+  tableau_id: string;
+  current_registrations: number;
+}
+
 const formSchema = z.object({
   first_name: z.string().min(2, { message: "Le prénom doit contenir au moins 2 caractères." }),
   last_name: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères." }),
@@ -37,7 +46,14 @@ const formSchema = z.object({
   phone: z.string().regex(/^(\+33|0)[1-9](\d{2}){4}$/, { message: "Veuillez entrer un numéro de téléphone français valide." }),
   licence_number: z.string().min(7, { message: "Le numéro de licence doit contenir au moins 7 caractères." }),
   club: z.string().min(2, { message: "Le nom du club doit contenir au moins 2 caractères." }),
-  selected_tableaux: z.array(z.string()).min(1, { message: "Veuillez sélectionner au moins un tableau." }),
+  selected_tableaux: z.array(z.string()).min(1, { message: "Veuillez sélectionner au moins un tableau." })
+    .refine((tableaux) => {
+      const individualTableaux = tableaux.filter(id => id !== "d1");
+      return individualTableaux.length <= MAX_INDIVIDUAL_TABLEAUX;
+    }, {
+      message: `Vous ne pouvez pas sélectionner plus de ${MAX_INDIVIDUAL_TABLEAUX} tableaux individuels.`,
+      path: ["selected_tableaux"],
+    }),
   doubles_partner: z.string().optional(),
   consent: z.boolean().refine(val => val === true, { message: "Vous devez accepter les conditions pour vous inscrire." }),
 });
@@ -59,28 +75,51 @@ const TournamentRegistration = () => {
   });
 
   const [totalPrice, setTotalPrice] = useState(0);
+  const [tableauCounts, setTableauCounts] = useState<Map<string, number>>(new Map());
+  const [loadingCounts, setLoadingCounts] = useState(true);
   const selectedTableaux = form.watch("selected_tableaux");
-  const { openLightbox } = useLightbox(); // Use the lightbox hook
+  const { openLightbox } = useLightbox();
+
+  const fetchTableauCounts = async () => {
+    setLoadingCounts(true);
+    const { data, error } = await supabase
+      .from('tableau_counts')
+      .select('*');
+
+    if (error) {
+      console.error("Error fetching tableau counts:", error);
+      toast.error("Erreur lors du chargement des places disponibles.");
+    } else {
+      const countsMap = new Map<string, number>();
+      data.forEach((item: TableauCount) => {
+        countsMap.set(item.tableau_id, item.current_registrations);
+      });
+      setTableauCounts(countsMap);
+    }
+    setLoadingCounts(false);
+  };
+
+  useEffect(() => {
+    fetchTableauCounts();
+  }, []);
 
   useEffect(() => {
     let currentTotal = 0;
     const individualTableaux = selectedTableaux.filter(id => id !== "d1");
     const numIndividualTableaux = individualTableaux.length;
 
-    // Logique de prix dégressifs pour les tableaux individuels
     if (numIndividualTableaux === 1) {
       currentTotal += 8;
     } else if (numIndividualTableaux === 2) {
       currentTotal += 15;
     } else if (numIndividualTableaux >= 3) {
-      currentTotal += 20; // 20€ pour 3 tableaux ou plus
+      currentTotal += 20;
     }
 
-    // Ajout du prix pour le tableau de doubles si sélectionné
     if (selectedTableaux.includes("d1")) {
       const doublesOption = tableauxOptions.find(opt => opt.id === "d1");
       if (doublesOption) {
-        currentTotal += doublesOption.price;
+        currentTotal += doublesOption.price || 0;
       }
     }
 
@@ -94,11 +133,13 @@ const TournamentRegistration = () => {
         .insert([values]);
 
       if (error) {
+        // Supabase will return an error if the trigger raises an exception
         throw error;
       }
 
       toast.success("Inscription enregistrée avec succès !");
       form.reset();
+      fetchTableauCounts(); // Re-fetch counts after successful registration
     } catch (error: any) {
       console.error("Erreur lors de l'inscription:", error.message);
       toast.error("Erreur lors de l'inscription: " + error.message);
@@ -106,6 +147,8 @@ const TournamentRegistration = () => {
   };
 
   const showDoublesPartner = selectedTableaux.includes("d1");
+  const currentIndividualTableaux = selectedTableaux.filter(id => id !== "d1");
+  const canSelectMoreIndividual = currentIndividualTableaux.length < MAX_INDIVIDUAL_TABLEAUX;
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -118,10 +161,10 @@ const TournamentRegistration = () => {
         </CardHeader>
         <CardContent>
           <img
-            src="/images/actualites/tournoi-regional-2026-affiche.png" // NOUVELLE IMAGE
+            src="/images/actualites/tournoi-regional-2026-affiche.png"
             alt="Affiche du Tournoi Régional Saint-Loub'Ping 2026"
             className="w-full h-auto object-cover rounded-lg mb-8 shadow-md cursor-zoom-in"
-            onClick={() => openLightbox("/images/actualites/tournoi-regional-2026-affiche.png")} // Open lightbox on image click
+            onClick={() => openLightbox("/images/actualites/tournoi-regional-2026-affiche.png")}
           />
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -133,7 +176,7 @@ const TournamentRegistration = () => {
                     <FormItem>
                       <FormLabel>Prénom</FormLabel>
                       <FormControl>
-                        <Input placeholder="Votre prénom" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
+                        <Input placeholder="Votre prénom" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -146,7 +189,7 @@ const TournamentRegistration = () => {
                     <FormItem>
                       <FormLabel>Nom</FormLabel>
                       <FormControl>
-                        <Input placeholder="Votre nom" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
+                        <Input placeholder="Votre nom" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -160,7 +203,7 @@ const TournamentRegistration = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="Votre email" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
+                      <Input type="email" placeholder="Votre email" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -173,7 +216,7 @@ const TournamentRegistration = () => {
                   <FormItem>
                     <FormLabel>Téléphone</FormLabel>
                     <FormControl>
-                      <Input type="tel" placeholder="Votre numéro de téléphone" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
+                      <Input type="tel" placeholder="Votre numéro de téléphone" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -186,7 +229,7 @@ const TournamentRegistration = () => {
                   <FormItem>
                     <FormLabel>Numéro de licence FFTT</FormLabel>
                     <FormControl>
-                      <Input placeholder="Votre numéro de licence" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
+                      <Input placeholder="Votre numéro de licence" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
                     </FormControl>
                     <FormDescription className="text-clubLight-foreground/70">
                       Ex: 1234567A (7 caractères minimum)
@@ -202,7 +245,7 @@ const TournamentRegistration = () => {
                   <FormItem>
                     <FormLabel>Club</FormLabel>
                     <FormControl>
-                      <Input placeholder="Votre club" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
+                      <Input placeholder="Votre club" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -211,47 +254,57 @@ const TournamentRegistration = () => {
               <FormField
                 control={form.control}
                 name="selected_tableaux"
-                render={() => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Tableaux sélectionnés</FormLabel>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {tableauxOptions.map((item) => (
-                        <FormField
-                          key={item.id}
-                          control={form.control}
-                          name="selected_tableaux"
-                          render={({ field }) => {
-                            return (
-                              <FormItem
-                                key={item.id}
-                                className="flex flex-row items-start space-x-3 space-y-0"
-                              >
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value?.includes(item.id)}
-                                    onCheckedChange={(checked) => {
-                                      return checked
-                                        ? field.onChange([...field.value, item.id])
-                                        : field.onChange(
-                                            field.value?.filter(
-                                              (value) => value !== item.id
-                                            )
-                                          );
-                                    }}
-                                    className="border-clubPrimary data-[state=checked]:bg-clubPrimary data-[state=checked]:text-clubDark-foreground"
-                                  />
-                                </FormControl>
-                                <FormLabel className="font-normal text-clubLight-foreground">
-                                  {item.label} {item.id === "d1" && <span className="font-semibold">({item.price}€)</span>}
-                                </FormLabel>
-                              </FormItem>
-                            );
-                          }}
-                        />
-                      ))}
-                    </div>
+                    {loadingCounts ? (
+                      <div className="flex items-center text-clubDark">
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Chargement des places...
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {tableauxOptions.map((item) => {
+                          const currentRegistrations = tableauCounts.get(item.id) || 0;
+                          const placesLeft = MAX_REGISTRATIONS_PER_TABLEAU - currentRegistrations;
+                          const isFull = placesLeft <= 0;
+                          const isIndividualTableau = item.id !== "d1";
+                          const isAlreadySelected = field.value?.includes(item.id);
+                          const isDisabled = isFull || (isIndividualTableau && !canSelectMoreIndividual && !isAlreadySelected);
+
+                          return (
+                            <FormItem
+                              key={item.id}
+                              className="flex flex-row items-start space-x-3 space-y-0"
+                            >
+                              <FormControl>
+                                <Checkbox
+                                  checked={isAlreadySelected}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([...field.value, item.id])
+                                      : field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== item.id
+                                          )
+                                        );
+                                  }}
+                                  disabled={isDisabled}
+                                  className="border-clubPrimary data-[state=checked]:bg-clubPrimary data-[state=checked]:text-clubDark-foreground"
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal text-clubLight-foreground">
+                                {item.label} {item.id === "d1" && <span className="font-semibold">({item.price}€)</span>}
+                                <span className="ml-2 text-xs text-muted-foreground">
+                                  ({isFull ? "Complet" : `${placesLeft} places`})
+                                </span>
+                              </FormLabel>
+                            </FormItem>
+                          );
+                        })}
+                      </div>
+                    )}
                     <FormDescription className="text-clubLight-foreground/70">
-                      Tarifs : 1 tableau = 8€, 2 tableaux = 15€, 3 tableaux et plus = 20€. Doubles = 3€ en supplément.
+                      Tarifs : 1 tableau = 8€, 2 tableaux = 15€, 3 tableaux = 20€. Doubles = 3€ en supplément.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -265,7 +318,7 @@ const TournamentRegistration = () => {
                     <FormItem>
                       <FormLabel>Nom et Prénom du partenaire de double</FormLabel>
                       <FormControl>
-                        <Input placeholder="Nom et Prénom du partenaire" {...field} className="bg-clubDark text-clubDark-foreground border-clubPrimary" />
+                        <Input placeholder="Nom et Prénom du partenaire" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
                       </FormControl>
                       <FormDescription className="text-clubLight-foreground/70">
                         Uniquement si vous participez au tableau de doubles.
@@ -300,7 +353,6 @@ const TournamentRegistration = () => {
                 )}
               />
 
-              {/* Affichage du prix total */}
               <div className="mt-8 p-4 bg-clubSection rounded-md text-center">
                 <p className="text-lg font-semibold text-clubDark">
                   Coût total de votre inscription : <span className="text-clubPrimary">{totalPrice}€</span>
