@@ -28,7 +28,7 @@ const navItems: NavItem[] = [
     type: "dropdown",
     children: [
       { name: "Championnat par Équipe", path: "/competitions-equipes", type: "link" },
-      { name: "Critérium de Gironde", path: "/competitions-equipes/criterium-gironde", type: "link" }, // New link
+      { name: "Critérium de Gironde", path: "/competitions-equipes/criterium-gironde", type: "link" },
     ],
   },
   {
@@ -44,14 +44,14 @@ const navItems: NavItem[] = [
   { name: "Adhésions", path: "/adhesions", type: "link" },
   { name: "Boutique", path: "/boutique", type: "link" },
   { name: "Partenaires", path: "/partenaires", type: "link" },
-  // {
-  //   name: "Tournoi",
-  //   type: "dropdown",
-  //   children: [
-  //     { name: "Inscription au Tournoi", path: "/tournoi-inscription", type: "link" },
-  //     { name: "Liste des Inscriptions", path: "/tournoi-inscriptions-liste", type: "link" },
-  //   ],
-  // },
+  {
+    name: "Tournoi",
+    type: "dropdown",
+    children: [
+      { name: "Inscription au Tournoi", path: "/tournoi-inscription", type: "link" },
+      { name: "Liste des Inscriptions", path: "/tournoi-inscriptions-liste", type: "link" },
+    ],
+  },
   {
     name: "Vidéos",
     type: "dropdown",
@@ -71,6 +71,7 @@ const Navbar = () => {
   const [isVideosDropdownOpen, setIsVideosDropdownOpen] = useState(false);
   const [isJoueursDropdownOpen, setIsJoueursDropdownOpen] = useState(false);
   const [isEquipesDropdownOpen, setIsEquipesDropdownOpen] = useState(false); // New state for Equipes dropdown
+  const [isTournoiDropdownOpen, setIsTournoiDropdownOpen] = useState(false); // New state for Tournoi dropdown
 
   const NavLinks = ({ className, closeSheet, isMobileView = false }: { className?: string; closeSheet?: () => void; isMobileView?: boolean }) => {
     return (
@@ -87,9 +88,12 @@ const Navbar = () => {
             } else if (item.name === "Les Joueurs") {
               isCurrentDropdownOpen = isJoueursDropdownOpen;
               setIsCurrentDropdownOpen = setIsJoueursDropdownOpen;
-            } else if (item.name === "Équipes") { // Handle new Equipes dropdown
+            } else if (item.name === "Équipes") {
               isCurrentDropdownOpen = isEquipesDropdownOpen;
               setIsCurrentDropdownOpen = setIsEquipesDropdownOpen;
+            } else if (item.name === "Tournoi") { // Handle Tournoi dropdown
+              isCurrentDropdownOpen = isTournoiDropdownOpen;
+              setIsCurrentDropdownOpen = setIsTournoiDropdownOpen;
             } else {
               return null; // Should not happen
             }
