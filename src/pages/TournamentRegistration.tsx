@@ -44,7 +44,7 @@ const formSchema = z.object({
   last_name: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères." }),
   email: z.string().email({ message: "Veuillez entrer une adresse email valide." }),
   phone: z.string().regex(/^(\+33|0)[1-9](\d{2}){4}$/, { message: "Veuillez entrer un numéro de téléphone français valide." }),
-  licence_number: z.string().min(7, { message: "Le numéro de licence doit contenir au moins 7 caractères." }),
+  licence_number: z.string(), // Removed .min(7) constraint
   club: z.string().min(2, { message: "Le nom du club doit contenir au moins 2 caractères." }),
   selected_tableaux: z.array(z.string()).min(1, { message: "Veuillez sélectionner au moins un tableau." })
     .refine((tableaux) => {
@@ -232,7 +232,7 @@ const TournamentRegistration = () => {
                       <Input placeholder="Votre numéro de licence" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
                     </FormControl>
                     <FormDescription className="text-clubLight-foreground/70">
-                      Ex: 1234567A (7 caractères minimum)
+                      Ex: 1234567A (le nombre de caractères est libre)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
