@@ -17,12 +17,17 @@ import ClassementJoueurs from "./pages/ClassementJoueurs";
 import ProgressionMensuelle from "./pages/ProgressionMensuelle";
 import ProgressionAnnuelle from "./pages/ProgressionAnnuelle";
 import ProgressionParCategorieAge from "./pages/ProgressionParCategorieAge";
-import CriteriumGironde from "./pages/CriteriumGironde"; // Import the new page
+import CriteriumGironde from "./pages/CriteriumGironde";
 import WTTVideos from "./pages/WTTVideos";
 import LesLegendes from "./pages/LesLegendes";
 import Tutos from "./pages/Tutos";
 import NotFound from "./pages/NotFound";
+import MentionsLegales from "./pages/MentionsLegales"; // Import new page
+import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite"; // Import new page
+import PolitiqueCookies from "./pages/PolitiqueCookies"; // Import new page
+import DemandeDonnees from "./pages/DemandeDonnees"; // Import new page
 import { LightboxProvider } from "./context/LightboxContext";
+import CookieConsentBanner from "./components/CookieConsentBanner"; // Import new component
 import React from "react";
 
 const queryClient = new QueryClient();
@@ -38,7 +43,7 @@ const App = () => (
                 <Route path="/" element={<Accueil />} />
                 <Route path="/le-club" element={<LeClub />} />
                 <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
-                <Route path="/competitions-equipes/criterium-gironde" element={<CriteriumGironde />} /> {/* New route */}
+                <Route path="/competitions-equipes/criterium-gironde" element={<CriteriumGironde />} />
                 <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
                 <Route path="/classement-joueurs/progression-mensuelle" element={<ProgressionMensuelle />} />
                 <Route path="/classement-joueurs/progression-annuelle" element={<ProgressionAnnuelle />} />
@@ -46,16 +51,20 @@ const App = () => (
                 <Route path="/adhesions" element={<Adhesions />} />
                 <Route path="/boutique" element={<Boutique />} />
                 <Route path="/partenaires" element={<Partenaires />} />
-                {/* Tournament routes are active for development but hidden from navigation */}
                 <Route path="/tournoi-inscription" element={<TournamentRegistration />} />
                 <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} />
                 <Route path="/videos/wtt" element={<WTTVideos />} />
                 <Route path="/videos/tutos" element={<Tutos />} />
                 <Route path="/videos/les-legendes" element={<LesLegendes />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/mentions-legales" element={<MentionsLegales />} /> {/* New route */}
+                <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} /> {/* New route */}
+                <Route path="/politique-cookies" element={<PolitiqueCookies />} /> {/* New route */}
+                <Route path="/demande-donnees" element={<DemandeDonnees />} /> {/* New route */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>
+            <CookieConsentBanner /> {/* Add the cookie consent banner */}
           </LightboxProvider>
         </BrowserRouter>
       </TooltipProvider>

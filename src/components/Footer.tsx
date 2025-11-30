@@ -1,7 +1,7 @@
 import React from 'react';
 import { MadeWithDyad } from './made-with-dyad';
 import { Link } from 'react-router-dom';
-import { Facebook, Mail, Phone, MapPin } from 'lucide-react'; // Suppression de Instagram et Youtube
+import { Facebook, Mail, Phone, MapPin } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -19,7 +19,6 @@ const Footer = () => {
             </p>
             <div className="flex justify-center md:justify-start space-x-4">
               <a href="https://www.facebook.com/people/Saint-LoubPing/100085857905183/" target="_blank" rel="noopener noreferrer" className="text-clubDark-foreground hover:text-clubPrimary transition-colors"><Facebook size={20} /></a>
-              {/* Instagram et YouTube ont été supprimés */}
             </div>
           </div>
 
@@ -41,7 +40,10 @@ const Footer = () => {
               <li><Link to="/boutique" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Boutique</Link></li>
               <li><Link to="/partenaires" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Partenaires</Link></li>
               <li><Link to="/contact" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Contact</Link></li>
-              <li><Link to="#" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Mentions légales</Link></li>
+              <li><Link to="/mentions-legales" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Mentions légales</Link></li>
+              <li><Link to="/politique-confidentialite" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Politique de confidentialité</Link></li>
+              <li><Link to="/politique-cookies" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Politique de cookies</Link></li>
+              <li><Link to="/demande-donnees" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Demande de données</Link></li>
             </ul>
           </div>
 
