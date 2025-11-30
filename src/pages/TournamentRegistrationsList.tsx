@@ -88,7 +88,7 @@ const TournamentRegistrationsList = () => {
           formattedDate,
           reg.first_name,
           reg.last_name,
-          reg.email,
+          reg.email, // Keep email in CSV for full data export
           reg.phone,
           reg.licence_number,
           reg.club,
@@ -152,7 +152,7 @@ const TournamentRegistrationsList = () => {
                   <TableRow className="bg-clubDark text-clubDark-foreground hover:bg-clubDark">
                     <TableHead className="text-clubDark-foreground">Date</TableHead>
                     <TableHead className="text-clubDark-foreground">Nom Complet</TableHead>
-                    <TableHead className="text-clubDark-foreground">Email</TableHead>
+                    {/* <TableHead className="text-clubDark-foreground">Email</TableHead> */} {/* Email column removed from display */}
                     <TableHead className="text-clubDark-foreground">Club</TableHead>
                     <TableHead className="text-clubDark-foreground">Licence</TableHead>
                     <TableHead className="text-clubDark-foreground">Tableaux</TableHead>
@@ -164,7 +164,7 @@ const TournamentRegistrationsList = () => {
                     <TableRow key={reg.id} className="even:bg-clubSection/20 odd:bg-clubLight hover:bg-clubSection/40 transition-colors duration-200 border-b border-border">
                       <TableCell className="text-sm text-clubDark">{new Date(reg.created_at).toLocaleDateString()}</TableCell>
                       <TableCell className="font-medium text-clubDark">{reg.first_name} {reg.last_name}</TableCell>
-                      <TableCell className="text-sm text-clubLight-foreground">{reg.email}</TableCell>
+                      {/* <TableCell className="text-sm text-clubLight-foreground">{reg.email}</TableCell> */} {/* Email cell removed from display */}
                       <TableCell className="text-sm text-clubLight-foreground">{reg.club}</TableCell>
                       <TableCell className="text-sm text-clubLight-foreground">{reg.licence_number}</TableCell>
                       <TableCell className="text-sm text-clubLight-foreground">{formatTableaux(reg.selected_tableaux)}</TableCell>
