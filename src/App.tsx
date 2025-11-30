@@ -57,21 +57,21 @@ const App = () => (
                 <Route path="/videos/tutos" element={<Tutos />} />
                 <Route path="/videos/les-legendes" element={<LesLegendes />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/mentions-legales" element={<MentionsLegales />} /> {/* New route */}
-                <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} /> {/* New route */}
-                <Route path="/politique-cookies" element={<PolitiqueCookies />} /> {/* New route */}
-                <Route path="/demande-donnees" element={<DemandeDonnees />} /> {/* New route */}
+                <Route path="/mentions-legales" element={<MentionsLegales />} />
+                <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
+                <Route path="/politique-cookies" element={<PolitiqueCookies />} />
+                <Route path="/demande-donnees" element={<DemandeDonnees />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>
-            <CookieConsentBanner /> {/* Add the cookie consent banner */}
+            <CookieConsentBanner />
           </LightboxProvider>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
     {/* CustomToaster et Sonner restent désactivés pour le moment */}
     {/* <CustomToaster /> */}
-    {/* <Sonner /> */}
+    <Sonner /> {/* J'ai réactivé le composant Sonner ici */}
   </div>
 );
 
