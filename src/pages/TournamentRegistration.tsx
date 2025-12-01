@@ -44,7 +44,27 @@ const formSchema = z.object({
   last_name: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères." }),
   email: z.string().email({ message: "Veuillez entrer une adresse email valide." }),
   phone: z.string().regex(/^(\+33|0)[1-9](\d{2}){4}$/, { message: "Veuillez entrer un numéro de téléphone français valide." }),
-  licence_number: z.string(), // Removed .min(7) constraint
+  licence_number: z.string()
+    .min(1, { message: "Le numéro de licence est requis." })
+    .regex(/^\d+$/, { message: "Le numéro de licence doit contenir uniquement des chiffres." })
+    .refine(async (licence_number) => {
+      if (!licence_number) return true; // Already handled by .min(1)
+      const { data, error } = await supabase
+        .from('tournament_registrations')
+        .select('licence_number')
+        .eq('licence_number', licence_number);
+
+      if (error) {
+        console.error("Error checking licence number uniqueness:", error);
+        // En cas d'erreur de base de données, on considère que ce n'est pas unique pour éviter les doublons
+        // ou on pourrait retourner true et gérer l'erreur différemment si l'on veut permettre la soumission.
+        // Pour l'instant, on renvoie false pour bloquer l'inscription en cas de problème de vérification.
+        return false;
+      }
+      return data.length === 0; // True si aucune inscription existante trouvée avec ce numéro
+    }, {
+      message: "Ce numéro de licence est déjà enregistré.",
+    }),
   club: z.string().min(2, { message: "Le nom du club doit contenir au moins 2 caractères." }),
   selected_tableaux: z.array(z.string()).min(1, { message: "Veuillez sélectionner au moins un tableau." })
     .refine((tableaux) => {
@@ -72,6 +92,7 @@ const TournamentRegistration = () => {
       doubles_partner: "",
       consent: false,
     },
+    mode: "onBlur", // Valide au blur pour les validations asynchrones
   });
 
   const [totalPrice, setTotalPrice] = useState(0);
@@ -232,7 +253,7 @@ const TournamentRegistration = () => {
                       <Input placeholder="Votre numéro de licence" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
                     </FormControl>
                     <FormDescription className="text-clubLight-foreground/70">
-                      Ex: 1234567A (le nombre de caractères est libre)
+                      Le numéro de licence doit contenir uniquement des chiffres.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
