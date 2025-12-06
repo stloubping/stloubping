@@ -32,7 +32,7 @@ const tableauxOptions = [
 ];
 
 const MAX_INDIVIDUAL_TABLEAUX = 3;
-const MAX_REGISTRATIONS_PER_TABLEAU = 10;
+const MAX_REGISTRATIONS_PER_TABLEAU = 48;
 
 interface TableauCount {
   tableau_id: string;
