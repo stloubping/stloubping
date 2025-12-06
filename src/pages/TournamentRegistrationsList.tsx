@@ -3,10 +3,23 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button"; // Import Button
+import { Button } from "@/components/ui/button";
 import { supabase } from '@/integrations/supabase/client';
-import { showError, showSuccess } from '@/utils/toast'; // Import showSuccess
-import { Loader2, Download } from 'lucide-react'; // Import Download icon
+import { showError, showSuccess } from '@/utils/toast';
+import { Loader2, Download } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+const PASSWORD = "stloubping33"; // Le mot de passe pour l'exportation
 
 interface Registration {
   id: string;
@@ -26,6 +39,9 @@ const TournamentRegistrationsList = () => {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchRegistrations = async () => {
@@ -77,7 +93,7 @@ const TournamentRegistrationsList = () => {
     ];
 
     const csvRows = [
-      headers.join(';'), // CSV headers
+      headers.join(';'),
       ...registrations.map(reg => {
         const formattedDate = new Date(reg.created_at).toLocaleDateString('fr-FR');
         const formattedTableaux = formatTableaux(reg.selected_tableaux);
@@ -88,12 +104,12 @@ const TournamentRegistrationsList = () => {
           formattedDate,
           reg.first_name,
           reg.last_name,
-          reg.email, // Keep email in CSV for full data export
+          reg.email,
           reg.phone,
           reg.licence_number,
           reg.club,
-          `"${formattedTableaux}"`, // Enclose in quotes to handle commas
-          `"${doublesPartner}"`, // Enclose in quotes
+          `"${formattedTableaux}"`,
+          `"${doublesPartner}"`,
           consent
         ].join(';');
       })
@@ -108,6 +124,17 @@ const TournamentRegistrationsList = () => {
     link.click();
     document.body.removeChild(link);
     showSuccess("Les inscriptions ont été exportées en CSV.");
+  };
+
+  const handlePasswordSubmit = () => {
+    if (passwordInput === PASSWORD) {
+      exportToCsv();
+      setIsPasswordDialogOpen(false);
+      setPasswordInput("");
+      setPasswordError(null);
+    } else {
+      setPasswordError("Mot de passe incorrect.");
+    }
   };
 
   if (loading) {
@@ -137,9 +164,51 @@ const TournamentRegistrationsList = () => {
             Retrouvez ici toutes les inscriptions soumises pour le tournoi.
           </CardDescription>
           <div className="mt-4">
-            <Button onClick={exportToCsv} className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground">
-              <Download className="mr-2 h-4 w-4" /> Exporter en CSV
-            </Button>
+            <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground">
+                  <Download className="mr-2 h-4 w-4" /> Exporter en CSV
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px] bg-clubLight text-clubLight-foreground border-clubPrimary">
+                <DialogHeader>
+                  <DialogTitle className="text-clubDark">Accès sécurisé</DialogTitle>
+                  <DialogDescription className="text-clubLight-foreground/80">
+                    Veuillez entrer le mot de passe pour exporter les données.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="password" className="text-right text-clubDark">
+                      Mot de passe
+                    </Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={passwordInput}
+                      onChange={(e) => {
+                        setPasswordInput(e.target.value);
+                        setPasswordError(null); // Clear error on input change
+                      }}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          handlePasswordSubmit();
+                        }
+                      }}
+                      className="col-span-3 bg-input text-clubLight-foreground border-clubPrimary"
+                    />
+                  </div>
+                  {passwordError && (
+                    <p className="text-destructive text-sm text-center">{passwordError}</p>
+                  )}
+                </div>
+                <DialogFooter>
+                  <Button type="button" onClick={handlePasswordSubmit} className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground">
+                    Valider
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </CardHeader>
         <CardContent>
@@ -152,7 +221,6 @@ const TournamentRegistrationsList = () => {
                   <TableRow className="bg-clubDark text-clubDark-foreground hover:bg-clubDark">
                     <TableHead className="text-clubDark-foreground">Date</TableHead>
                     <TableHead className="text-clubDark-foreground">Nom Complet</TableHead>
-                    {/* <TableHead className="text-clubDark-foreground">Email</TableHead> */} {/* Email column removed from display */}
                     <TableHead className="text-clubDark-foreground">Club</TableHead>
                     <TableHead className="text-clubDark-foreground">Licence</TableHead>
                     <TableHead className="text-clubDark-foreground">Tableaux</TableHead>
@@ -164,7 +232,6 @@ const TournamentRegistrationsList = () => {
                     <TableRow key={reg.id} className="even:bg-clubSection/20 odd:bg-clubLight hover:bg-clubSection/40 transition-colors duration-200 border-b border-border">
                       <TableCell className="text-sm text-clubDark">{new Date(reg.created_at).toLocaleDateString()}</TableCell>
                       <TableCell className="font-medium text-clubDark">{reg.first_name} {reg.last_name}</TableCell>
-                      {/* <TableCell className="text-sm text-clubLight-foreground">{reg.email}</TableCell> */} {/* Email cell removed from display */}
                       <TableCell className="text-sm text-clubLight-foreground">{reg.club}</TableCell>
                       <TableCell className="text-sm text-clubLight-foreground">{reg.licence_number}</TableCell>
                       <TableCell className="text-sm text-clubLight-foreground">{formatTableaux(reg.selected_tableaux)}</TableCell>
