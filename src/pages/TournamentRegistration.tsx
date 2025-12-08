@@ -43,7 +43,7 @@ const formSchema = z.object({
   first_name: z.string().min(2, { message: "Le prénom doit contenir au moins 2 caractères." }),
   last_name: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères." }),
   email: z.string().email({ message: "Veuillez entrer une adresse email valide." }),
-  phone: z.string().regex(/^(\+33|0)[1-9](\d{2}){4}$/, { message: "Veuillez entrer un numéro de téléphone français valide." }),
+  phone: z.string().optional(), // Rendu facultatif
   licence_number: z.string()
     .min(1, { message: "Le numéro de licence est requis." })
     .regex(/^\d+$/, { message: "Le numéro de licence doit contenir uniquement des chiffres." })
@@ -85,7 +85,7 @@ const TournamentRegistration = () => {
       first_name: "",
       last_name: "",
       email: "",
-      phone: "",
+      phone: "", // Laisser vide pour un champ optionnel
       licence_number: "",
       club: "",
       selected_tableaux: [],
@@ -235,7 +235,7 @@ const TournamentRegistration = () => {
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Téléphone</FormLabel>
+                    <FormLabel>Téléphone (facultatif)</FormLabel>
                     <FormControl>
                       <Input type="tel" placeholder="Votre numéro de téléphone" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
                     </FormControl>
