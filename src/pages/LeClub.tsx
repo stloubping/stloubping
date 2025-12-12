@@ -253,10 +253,10 @@ const LeClub = () => {
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
-                    src="https://picsum.photos/150/150?random=109"
+                    src="/images/team/pierre.jpg"
                     alt="Membre du bureau"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
-                    onClick={() => openLightbox("https://picsum.photos/150/150?random=109")}
+                    onClick={() => openLightbox("/images/team/pierre.jpg")}
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Pierre</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
@@ -264,10 +264,10 @@ const LeClub = () => {
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
-                    src="https://picsum.photos/150/150?random=110"
+                    src="/images/team/vincent.jpg"
                     alt="Membre du bureau"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
-                    onClick={() => openLightbox("https://picsum.photos/150/150?random=110")}
+                    onClick={() => openLightbox("/images/team/vincent.jpg")}
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Vincent</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
@@ -275,10 +275,10 @@ const LeClub = () => {
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
-                    src="https://picsum.photos/150/150?random=111"
+                    src="/images/team/michel.jpg"
                     alt="Membre du bureau"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
-                    onClick={() => openLightbox("https://picsum.photos/150/150?random=111")}
+                    onClick={() => openLightbox("/images/team/michel.jpg")}
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Michel</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
@@ -286,10 +286,10 @@ const LeClub = () => {
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
-                    src="https://picsum.photos/150/150?random=112"
+                    src="/images/team/yann.jpg"
                     alt="Membre du bureau"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
-                    onClick={() => openLightbox("https://picsum.photos/150/150?random=112")}
+                    onClick={() => openLightbox("/images/team/yann.jpg")}
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Yann</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
@@ -297,10 +297,10 @@ const LeClub = () => {
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
-                    src="https://picsum.photos/150/150?random=113"
+                    src="/images/team/antoine.jpg"
                     alt="Membre du bureau"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
-                    onClick={() => openLightbox("https://picsum.photos/150/150?random=113")}
+                    onClick={() => openLightbox("/images/team/antoine.jpg")}
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Antoine</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
