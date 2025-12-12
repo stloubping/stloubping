@@ -209,10 +209,10 @@ const LeClub = () => {
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
-                    src="https://picsum.photos/150/150?random=105"
+                    src="/images/team/sandra-thuault.jpg"
                     alt="Trésorier adjoint"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
-                    onClick={() => openLightbox("https://picsum.photos/150/150?random=105")}
+                    onClick={() => openLightbox("/images/team/sandra-thuault.jpg")}
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Sandra Thuault</h4>
                   <p className="text-sm text-muted-foreground">Trésorier adjoint</p>
