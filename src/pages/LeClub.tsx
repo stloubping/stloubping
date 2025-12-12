@@ -176,10 +176,10 @@ const LeClub = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
-                    src="https://picsum.photos/150/150?random=102"
+                    src="/images/team/philippe-roux.jpg"
                     alt="Président"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
-                    onClick={() => openLightbox("https://picsum.photos/150/150?random=102")}
+                    onClick={() => openLightbox("/images/team/philippe-roux.jpg")}
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Philippe Roux</h4>
                   <p className="text-sm text-muted-foreground">Président</p>
@@ -306,7 +306,6 @@ const LeClub = () => {
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Entraineur de la séance du samedi matin et en charge du site internet du club.</p>
                 </div>
-                {/* Le membre Wesley a été supprimé ici */}
               </div>
             </CardContent>
           </Card>
