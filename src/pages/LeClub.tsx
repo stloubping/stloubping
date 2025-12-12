@@ -231,10 +231,10 @@ const LeClub = () => {
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
-                    src="https://picsum.photos/150/150?random=107"
+                    src="/images/team/jeremie-monteignies.jpg"
                     alt="Secrétaire adjoint"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
-                    onClick={() => openLightbox("https://picsum.photos/150/150?random=107")}
+                    onClick={() => openLightbox("/images/team/jeremie-monteignies.jpg")}
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Jérémie Monteignies</h4>
                   <p className="text-sm text-muted-foreground">Secrétaire adjoint</p>
@@ -242,10 +242,10 @@ const LeClub = () => {
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img
-                    src="https://picsum.photos/150/150?random=108"
+                    src="/images/team/dominique.jpg"
                     alt="Membre du bureau"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
-                    onClick={() => openLightbox("https://picsum.photos/150/150?random=108")}
+                    onClick={() => openLightbox("/images/team/dominique.jpg")}
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Dominique</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
