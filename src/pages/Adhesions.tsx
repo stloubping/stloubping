@@ -30,7 +30,7 @@ const Adhesions = () => {
               Rejoignez une communauté passionnée et bénéficiez d'un encadrement de qualité et d'infrastructures adaptées.
             </p>
             <p className="text-clubLight-foreground">
-              L'adhésion à notre club inclut la licence FFTT, l'accès aux entraînements encadrés,
+              L'adhésion à notre club inclus la licence FFTT, l'accès aux entraînements encadrés,
               et la participation aux événements du club.
             </p>
           </CardContent>
@@ -158,12 +158,12 @@ const Adhesions = () => {
                   </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <a href="/documents/adhesions/Droit à l_image adulte.docx" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
+                  <a href="/documents/adhesions/Droit à l_image adulte.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
                     Droit à l'image (Adulte)
                   </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <a href="/documents/adhesions/Droit à l_image enfant.docx" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
+                  <a href="/documents/adhesions/Droit à l_image enfant.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
                     Droit à l'image (Enfant)
                   </a>
                 </DropdownMenuItem>
