@@ -4,6 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Link } from 'react-router-dom';
 import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from 'lucide-react';
 
 const Adhesions = () => {
   const { openLightbox } = useLightbox(); // Use the lightbox hook
@@ -114,20 +121,54 @@ const Adhesions = () => {
 
       <section className="text-center">
         <Card className="bg-clubLight shadow-lg p-8 rounded-xl">
-          <CardTitle className="text-2xl text-clubDark mb-4">Processus d'Inscription en Ligne</CardTitle>
+          <CardTitle className="text-2xl text-clubDark mb-4">Documents d'Inscription</CardTitle>
           <CardContent>
             <p className="mb-6 text-clubLight-foreground">
-              Prêt à nous rejoindre ? L'inscription est simple et rapide !
-              Cliquez sur le bouton ci-dessous pour accéder à notre formulaire d'adhésion en ligne.
+              Pour vous inscrire, veuillez télécharger et remplir les documents nécessaires ci-dessous.
+              Une fois complétés, vous pourrez les remettre à un membre du bureau ou à un entraîneur.
             </p>
             <p className="text-2xl font-bold text-clubPrimary">Tarif Jeunes: 130€ / an</p>
             <p className="text-2xl font-bold text-clubPrimary">Tarif Adultes: 150€ / an</p>
             <br/>
-            <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
-              <Link to="/contact">
-                S'inscrire en Ligne
-              </Link>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
+                  Télécharger les documents <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-72 bg-clubLight text-clubLight-foreground border-clubPrimary">
+                <DropdownMenuItem asChild>
+                  <a href="/documents/adhesions/25-2-licence.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
+                    Formulaire de licence FFTT
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="/documents/adhesions/25-9-certificat.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
+                    Certificat médical
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="/documents/adhesions/25-10-1-autoquestionnaire-medical-majeur.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
+                    Autoquestionnaire médical (Majeur)
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="/documents/adhesions/25-10-2-autoquestionnaire-medical-mineur.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
+                    Autoquestionnaire médical (Mineur)
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="/documents/adhesions/Droit à l_image adulte.docx" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
+                    Droit à l'image (Adulte)
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="/documents/adhesions/Droit à l_image enfant.docx" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
+                    Droit à l'image (Enfant)
+                  </a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <p className="mt-4 text-sm text-muted-foreground">
               Pour toute question, n'hésitez pas à nous contacter via la page Contact.
             </p>
