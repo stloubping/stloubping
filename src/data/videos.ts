@@ -28,7 +28,7 @@ export const allVideos: VideoItem[] = [
   {
     id: 'wtt-3',
     title: "WTT Champions Incheon 2024 - Finale Hommes",
-    description: "Découvrez les points spectaculaires de la finale hommes du WTT Champions Incheon 2024.",
+    description: "Découvrez les points spectaculaires du final homme du WTT Champions Incheon 2024.",
     youtubeId: "uZ2wVtstweQ",
     category: 'wtt',
     dateAdded: "2024-07-28",
@@ -43,11 +43,20 @@ export const allVideos: VideoItem[] = [
   },
   {
     id: 'wtt-5',
-    title: "WTT Champions Macao 2024 - Highlights",
-    description: "Les meilleurs moments du WTT Champions Macao 2024, avec des échanges incroyables et des performances de haut niveau.",
+    title: "WTT Champions Macao 2024  Highlights",
+    description: "Les meilleurs moments du WTT Champions Macao 2024, avec leurs performances incroyables et des points incroyables.",
     youtubeId: "RTFIqcKbDDI",
     category: 'wtt',
-    dateAdded: "2024-08-01", // Date d'ajout arbitraire pour l'exemple
+    dateAdded: "2024-08-01",
+  },
+  // New WTT video added by user
+  {
+    id: 'wtt-6',
+    title: "Nouvelle Vidéo WTT (exemple)",
+    description: "Vidéo supplémentaire ajoutée par l'utilisateur pour la section WTT.",
+    youtubeId: "l6KaholgHis",
+    category: 'wtt',
+    dateAdded: "2024-12-01",
   },
   // Vidéos Tutos
   {
@@ -94,7 +103,7 @@ export const allVideos: VideoItem[] = [
   {
     id: 'legend-4',
     title: "Timo Boll - European Legend",
-    description: "Les plus beaux points et la carrière exceptionnelle de Timo Boll, légende européenne du tennis de table.",
+    description: "Les plus beaux points et la carrière exceptionnelle du joueur Timo Boll.",
     youtubeId: "sOX9IixjIbQ",
     category: 'legends',
     dateAdded: "2023-11-15",
@@ -102,7 +111,7 @@ export const allVideos: VideoItem[] = [
   {
     id: 'legend-5',
     title: "Simon Gauzy - Les Meilleurs Points",
-    description: "Découvrez les meilleurs points et les coups incroyables du joueur français Simon Gauzy.",
+    description: "Découvrez les meilleurs points et coups incroyables de Simon Gauzy.",
     youtubeId: "lxZiv-fiHkY",
     category: 'legends',
     dateAdded: "2024-07-30",
