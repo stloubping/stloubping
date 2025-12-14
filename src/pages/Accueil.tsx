@@ -1,5 +1,4 @@
 "use client";
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -71,7 +70,7 @@ const eventItems = [
   {
     id: 201, // Nouvel ID unique pour le Tournoi de Noël
     title: "Tournoi de Noël",
-    date: "20 Decembre 2025",
+    date: "13 Décembre 2025", // Date modifiée ici
     time: "Dès 09h00",
     location: "Salle du club",
     description: "Venez célébrer les fêtes de fin d'année avec un tournoi convivial ouvert à tous les membres du club. Ambiance garantie avec des lots de Noël à gagner !",
@@ -82,7 +81,7 @@ const eventItems = [
 
 const Accueil = () => {
   const { openLightbox } = useLightbox();
-
+  
   // Get the 2 latest videos
   const latestVideos = [...allVideos]
     .sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime())
@@ -90,13 +89,12 @@ const Accueil = () => {
 
   return (
     <div className="bg-clubLight text-clubLight-foreground">
-      <HeroSection
-        title="Bienvenue au St Loub Ping"
-        description="Votre club de tennis de table à Saint-Loubès. Passion, convivialité et compétition pour tous les âges et tous les niveaux."
-        imageUrl="/images/hero/club-training.jpg"
-        imageAlt="Joueurs de tennis de table en plein entraînement"
+      <HeroSection 
+        title="Bienvenue au St Loub Ping" 
+        description="Votre club de tennis de table à Saint-Loubès. Passion, convivialité et compétition pour tous les âges et tous les niveaux." 
+        imageUrl="/images/hero/club-training.jpg" 
+        imageAlt="Joueurs de tennis de table en plein entraînement" 
       />
-
       <div className="container mx-auto px-4 py-8">
         {/* Actualités Section */}
         <section className="mb-12">
@@ -114,19 +112,21 @@ const Accueil = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {eventItems.map((event) => (
               <Card key={event.id} className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <img
-                  src={event.image}
-                  alt={event.title}
+                <img 
+                  src={event.image} 
+                  alt={event.title} 
                   className="w-full h-48 object-cover cursor-zoom-in"
                   onClick={() => openLightbox(event.image)}
                 />
                 <CardHeader>
-                  <CardTitle className="text-2xl font-semibold text-clubPrimary">{event.title}</CardTitle>
+                  <CardTitle className="text-xl font-semibold text-clubPrimary">{event.title}</CardTitle> {/* Font size changed from 2xl to xl */}
                   <CardDescription className="flex items-center text-clubLight-foreground/80 mt-2">
-                    <CalendarDays className="mr-2 h-4 w-4" /> {event.date} - {event.time}
+                    <CalendarDays className="mr-2 h-4 w-4" />
+                    {event.date} - {event.time}
                   </CardDescription>
                   <CardDescription className="flex items-center text-clubLight-foreground/80">
-                    <MapPin className="mr-2 h-4 w-4" /> {event.location}
+                    <MapPin className="mr-2 h-4 w-4" />
+                    {event.location}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -152,13 +152,13 @@ const Accueil = () => {
               </p>
               <div className="mt-8 flex justify-center w-full max-w-[320px] mx-auto"> {/* Conteneur avec max-w plus petit */}
                 <iframe 
-                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fp%2FSaint-LoubPing-100085857905183%2F&tabs=timeline&width=500&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
+                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fp%2FSaint-LoubPing-100085857905183%2F&tabs=timeline&width=500&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" 
                   width="100%" // L'iframe prend 100% de la largeur de son parent contraint
-                  height="600"
-                  style={{ border: 'none', overflow: 'hidden' }}
-                  scrolling="no"
-                  frameBorder="0"
-                  allowFullScreen={true}
+                  height="600" 
+                  style={{ border: 'none', overflow: 'hidden' }} 
+                  scrolling="no" 
+                  frameBorder="0" 
+                  allowFullScreen={true} 
                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                   title="Page Facebook Saint-LoubPing"
                 ></iframe>
@@ -166,7 +166,7 @@ const Accueil = () => {
             </CardContent>
           </Card>
         </section>
-        
+
         {/* Calendrier des Compétitions */}
         <CompetitionCalendar />
 
@@ -186,8 +186,7 @@ const Accueil = () => {
             <CardTitle className="text-2xl text-clubDark mb-4">Prêt à nous rejoindre ?</CardTitle>
             <CardContent>
               <p className="mb-6 text-clubLight-foreground">
-                Que vous soyez débutant ou expert, jeune ou moins jeune, le St Loub Ping vous attend !
-                Découvrez nos différentes formules d'adhésion et trouvez celle qui vous convient.
+                Que vous soyez débutant ou expert, jeune ou moins jeune, le St Loub Ping vous attend ! Découvrez nos différentes formules d'adhésion et trouvez celle qui vous convient.
               </p>
               <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
                 <Link to="/adhesions">Découvrir nos Adhésions</Link>
