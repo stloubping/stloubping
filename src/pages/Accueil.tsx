@@ -59,8 +59,8 @@ const eventItems = [
   // Championnat par équipe - Journée 4 Phase 1 (Nouveau bloc)
   {
     id: 202,
-    title: "Championnat par équipe - Journée 5 Phase 1",
-    date: "29 Novembre 2025",
+    title: "Championnat par équipe - Journée 6 Phase 1",
+    date: "13 decembre 2025",
     time: "Dès 15h00",
     location: "Salle du club",
     description: "Venez encourager nos équipes de R2, PR et D2 lors de la 5ème journée de championnat ! Ambiance garantie et matchs décisifs pour le classement.",
@@ -70,7 +70,7 @@ const eventItems = [
   {
     id: 201, // Nouvel ID unique pour le Tournoi de Noël
     title: "Tournoi de Noël",
-    date: "13 Décembre 2025", // Date modifiée ici
+    date: "20 Décembre 2025", // Date modifiée ici
     time: "Dès 09h00",
     location: "Salle du club",
     description: "Venez célébrer les fêtes de fin d'année avec un tournoi convivial ouvert à tous les membres du club. Ambiance garantie avec des lots de Noël à gagner !",
