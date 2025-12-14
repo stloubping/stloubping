@@ -1,12 +1,3 @@
-export interface VideoItem {
-  id: string;
-  title: string;
-  description: string;
-  youtubeId: string; // L'ID de la vidéo YouTube (ex: "dQw4w9WgXcQ")
-  category: 'wtt' | 'tutos' | 'legends';
-  dateAdded: string; // Format YYYY-MM-DD pour un tri facile
-}
-
 export const allVideos: VideoItem[] = [
   // Vidéos WTT
   {
@@ -74,6 +65,14 @@ export const allVideos: VideoItem[] = [
     youtubeId: "2Te0542ZiaE",
     category: 'tutos',
     dateAdded: "2024-07-26",
+  },
+  {
+    id: 'tuto-3',
+    title: "Comment bien tenir sa raquette ?",
+    description: "Apprenez à bien tenir votre raquette pour améliorer votre jeu.",
+    youtubeId: "VoQyUaGQqZc",
+    category: 'tutos',
+    dateAdded: "2024-12-01",
   },
   // Vidéos Les Légendes
   {
