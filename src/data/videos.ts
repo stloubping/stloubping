@@ -66,14 +66,7 @@ export const allVideos: VideoItem[] = [
     category: 'tutos',
     dateAdded: "2024-07-26",
   },
-  {
-    id: 'tuto-3',
-    title: "Comment bien tenir sa raquette ?",
-    description: "Apprenez à bien tenir votre raquette pour améliorer votre jeu.",
-    youtubeId: "VoQyUaGQqZc",
-    category: 'tutos',
-    dateAdded: "2024-12-01",
-  },
+  // La vidéo avec l'ID YouTube 'VoQyUaGQqZc' a été supprimée.
   // Vidéos Les Légendes
   {
     id: 'legend-1',
