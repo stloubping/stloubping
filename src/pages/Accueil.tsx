@@ -59,7 +59,7 @@ const eventItems = [
   // Championnat par équipe - Journée 4 Phase 1 (Nouveau bloc)
   {
     id: 202,
-    title: "Championnat par équipe - Journée 6 Phase 1",
+    title: "Championnat par équipe - Journée 7 Phase 1",
     date: "13 decembre 2025",
     time: "Dès 15h00",
     location: "Salle du club",
