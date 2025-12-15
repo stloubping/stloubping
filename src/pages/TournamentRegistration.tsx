@@ -20,6 +20,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
 import { Loader2 } from "lucide-react"; // Import Loader2 icon
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const tableauxOptions = [
   { id: "t1", label: "Tableau 1 : 8h30 (500-799)" },
@@ -100,6 +101,7 @@ const TournamentRegistration = () => {
   const [loadingCounts, setLoadingCounts] = useState(true);
   const selectedTableaux = form.watch("selected_tableaux");
   const { openLightbox } = useLightbox();
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const fetchTableauCounts = async () => {
     setLoadingCounts(true);
@@ -161,6 +163,7 @@ const TournamentRegistration = () => {
       toast.success("Inscription enregistrée avec succès !");
       form.reset();
       fetchTableauCounts(); // Re-fetch counts after successful registration
+      navigate('/tournoi-inscriptions-liste'); // Redirect to the list page
     } catch (error: any) {
       console.error("Erreur lors de l'inscription:", error.message);
       toast.error("Erreur lors de l'inscription: " + error.message);
