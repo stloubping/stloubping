@@ -60,7 +60,7 @@ const eventItems = [
   {
     id: 202,
     title: "Championnat par équipe - Journée 7 Phase 1",
-    date: "13 decembre 2025",
+    date: "10 janvier 2026",
     time: "Dès 15h00",
     location: "Salle du club",
     description: "Venez encourager nos équipes de R2, PR et D2 lors de la 5ème journée de championnat ! Ambiance garantie et matchs décisifs pour le classement.",
