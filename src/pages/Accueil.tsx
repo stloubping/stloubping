@@ -32,15 +32,15 @@ const newsItems = [
     link: "/actualites/stage-perfectionnement", // Ajout d'un lien pour la carte d'actualité
     image: "/images/actualites/FB_IMG_1759672983725.jpg",
   },
-  // Tournoi des Familles (Position 3)
+  // Tournoi de Noël (remplace Tournoi des Familles)
   {
-    id: 3,
-    title: "Tournoi des Familles",
-    date: "17 Octobre 2025",
+    id: 201, // ID réutilisé de l'événement de Noël
+    title: "Tournoi de Noël",
+    date: "20 Décembre 2025", // Date modifiée ici
     location: "Salle du club",
-    description: "Un événement convivial pour toute la famille ! Venez partager un moment sportif et ludique autour du tennis de table. Ouvert à tous les âges et niveaux.",
-    link: "/actualites/tournoi-familles", // Lien mis à jour pour l'actualité
-    image: "/images/actualites/559050727_785921184279805_5144790509263314206_n.jpg",
+    description: "Venez célébrer les fêtes de fin d'année avec un tournoi convivial ouvert à tous les membres du club. Ambiance garantie avec des lots de Noël à gagner !",
+    link: "#", // Lien par défaut pour cet événement
+    image: "/images/events/481155043_605704212301504_4050174989924491844_n.jpg", // Nouvelle image
   },
 ];
 
@@ -66,16 +66,6 @@ const eventItems = [
     description: "Venez encourager nos équipes de R2, PR et D2 lors de la 7ème journée de championnat ! Ambiance garantie et matchs décisifs pour le classement.",
     image: "/images/events/IMG-20251003-WA0001.jpg", // Chemin de l'image mis à jour
     link: "/competitions-equipes",
-  },
-  {
-    id: 201, // Nouvel ID unique pour le Tournoi de Noël
-    title: "Tournoi de Noël",
-    date: "20 Décembre 2025", // Date modifiée ici
-    time: "Dès 09h00",
-    location: "Salle du club",
-    description: "Venez célébrer les fêtes de fin d'année avec un tournoi convivial ouvert à tous les membres du club. Ambiance garantie avec des lots de Noël à gagner !",
-    image: "/images/events/481155043_605704212301504_4050174989924491844_n.jpg", // Nouvelle image
-    link: "#", // Lien par défaut pour cet événement
   },
 ];
 
