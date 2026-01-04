@@ -66,7 +66,6 @@ export const allVideos: VideoItem[] = [
     category: 'tutos',
     dateAdded: "2024-07-26",
   },
-  // La vidéo avec l'ID YouTube 'VoQyUaGQqZc' a été supprimée.
   // Vidéos Les Légendes
   {
     id: 'legend-1',
@@ -107,5 +106,13 @@ export const allVideos: VideoItem[] = [
     youtubeId: "lxZiv-fiHkY",
     category: 'legends',
     dateAdded: "2024-07-30",
+  },
+  {
+    id: 'legend-6',
+    title: "Fan Zhendong - Highlights",
+    description: "Les meilleurs moments de Fan Zhendong, l'un des joueurs les plus dominants de sa génération.",
+    youtubeId: "sWCjWVqIosQ",
+    category: 'legends',
+    dateAdded: new Date().toISOString().split('T')[0], // Date d'ajout actuelle
   },
 ];
