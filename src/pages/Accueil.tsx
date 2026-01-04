@@ -38,7 +38,7 @@ const newsItems = [
     title: "Tournoi de Noël",
     date: "20 Décembre 2025", // Date modifiée ici
     location: "Salle du club",
-    description: "Venez célébrer les fêtes de fin d'année avec un tournoi convivial ouvert à tous les membres du club. Ambiance garantie avec des lots de Noël à gagner !",
+    description: "Samedi 20 décembre, le club de tennis de table loubésien, le Saint Loub’ping qui compte 132 licenciés, a organisé le tournoi de Noël des jeunes. Comme chaque année, au premier jour des vacances, cette compétition...",
     link: "#", // Lien par défaut pour cet événement
     image: "/images/events/481155043_605704212301504_4050174989924491844_n.jpg", // Nouvelle image
   },
