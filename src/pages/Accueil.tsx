@@ -40,7 +40,7 @@ const newsItems = [
     location: "Salle du club",
     description: "Samedi 20 décembre, le club de tennis de table loubésien, le Saint Loub’ping qui compte 132 licenciés, a organisé le tournoi de Noël des jeunes. Comme chaque année, au premier jour des vacances, cette compétition...",
     link: "#", // Lien par défaut pour cet événement
-    image: "/images/events/481155043_605704212301504_4050174989924491844_n.jpg", // Nouvelle image
+    image: "/images/events/bordeauxrivedroite-5abc395193ac4b90ab4842d2eea90891-104939-ph0.avif", // Nouvelle image
   },
 ];
 
