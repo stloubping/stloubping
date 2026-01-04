@@ -22,15 +22,15 @@ const newsItems = [
     link: "/boutique",
     image: "/images/boutique/maillot-club-officiel.png", // Utilisation de l'image du maillot
   },
-  // Stage de Perfectionnement Jeunes (Position 2)
+  // Stage de Noël (Position 2)
   {
     id: 101, // Nouvel ID unique
-    title: "Stage de Perfectionnement Jeunes",
-    date: "20-25 Octobre 2025", // Date mise à jour ici
+    title: "Stage de Noël",
+    date: "22, 23 et 24 Décembre", // Date mise à jour ici
     location: "Salle du club",
     description: "Un stage intensif pour les jeunes compétiteurs souhaitant améliorer leur technique et leur stratégie. Encadrement par nos meilleurs entraîneurs.",
-    link: "/actualites/stage-perfectionnement", // Ajout d'un lien pour la carte d'actualité
-    image: "/images/actualites/FB_IMG_1759672983725.jpg",
+    link: "/actualites/stage-de-noel", // Ajout d'un lien pour la carte d'actualité
+    image: "/images/actualites/stage-de-noel.jpg", // Nouvelle image
   },
   // Tournoi de Noël (remplace Tournoi des Familles)
   {
