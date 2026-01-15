@@ -117,8 +117,7 @@ const Accueil = () => {
                   <CardDescription className="flex items-center text-clubLight-foreground/80">
                     <MapPin className="mr-2 h-4 w-4" />
                     {event.location}
-                  </CardDescription>
-                </CardHeader>
+                  </CardHeader>
                 <CardContent>
                   <p className="text-clubDarker">{event.description}</p>
                 </CardContent>
