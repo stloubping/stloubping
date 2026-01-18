@@ -23,13 +23,13 @@ import { Loader2 } from "lucide-react"; // Import Loader2 icon
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const tableauxOptions = [
-  { id: "t1", label: "Tableau 1 : 8h30 (500-799)" },
-  { id: "t2", label: "Tableau 2 : 9h30 (500-1399)" },
-  { id: "t3", label: "Tableau 3 : 10h30 (500-999)" },
-  { id: "t4", label: "Tableau 4 : 11h30 (500-1599)" },
-  { id: "t5", label: "Tableau 5 : 13h30 (500-1199)" },
-  { id: "t6", label: "Tableau 6 : 14h30 (500-Non Num FR)" },
-  { id: "d1", label: "Tableau 7 : 16h00 (Doubles <2800)", price: 3 }, // Prix spécifique pour les doubles
+  { id: "t1", label: "Tableau 1 : 500-799 (Début 8h30)" },
+  { id: "t2", label: "Tableau 2 : 500-1399 (Début 9h30)" },
+  { id: "t3", label: "Tableau 3 : 500-999 (Début 10h30)" },
+  { id: "t4", label: "Tableau 4 : 500-1599 (Début 11h30)" },
+  { id: "t5", label: "Tableau 5 : 500-1199 (Début 13h30)" },
+  { id: "t6", label: "Tableau 6 : 500-Non Num FR (Début 14h30)" },
+  { id: "d1", label: "Tableau 7 : Doubles <2800 Pts (Début 16h00)", price: 3 }, // Prix spécifique pour les doubles
 ];
 
 const MAX_INDIVIDUAL_TABLEAUX = 3;
@@ -132,7 +132,7 @@ const TournamentRegistration = () => {
     const numIndividualTableaux = individualTableaux.length;
 
     if (numIndividualTableaux === 1) {
-      currentTotal += 8;
+      currentTotal += 9; // Updated price
     } else if (numIndividualTableaux === 2) {
       currentTotal += 15;
     } else if (numIndividualTableaux >= 3) {
@@ -328,7 +328,7 @@ const TournamentRegistration = () => {
                       </div>
                     )}
                     <FormDescription className="text-clubLight-foreground/70">
-                      Tarifs : 1 tableau = 8€, 2 tableaux = 15€, 3 tableaux = 20€. Doubles = 3€ en supplément.
+                      Tarifs : 1 tableau = 9€, 2 tableaux = 15€, 3 tableaux = 20€. Doubles = 3€ en supplément.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

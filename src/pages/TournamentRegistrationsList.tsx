@@ -69,13 +69,13 @@ const TournamentRegistrationsList = () => {
     if (!tableaux || tableaux.length === 0) return "Aucun";
     return tableaux.map(t => {
       switch (t) {
-        case 't1': return '8h30 (500-799)';
-        case 't2': return '9h30 (500-1399)';
-        case 't3': return '10h30 (500-999)';
-        case 't4': return '11h30 (500-1599)';
-        case 't5': return '13h30 (500-1199)';
-        case 't6': return '14h30 (500-Non Num FR)';
-        case 'd1': return '16h00 (Doubles <2800)';
+        case 't1': return '500-799 (8h30)';
+        case 't2': return '500-1399 (9h30)';
+        case 't3': return '500-999 (10h30)';
+        case 't4': return '500-1599 (11h30)';
+        case 't5': return '500-1199 (13h30)';
+        case 't6': return '500-Non Num FR (14h30)';
+        case 'd1': return 'Doubles <2800 Pts (16h00)';
         default: return t;
       }
     }).join(', ');
