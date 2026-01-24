@@ -33,12 +33,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
 
   return (
     <Card className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <img
-        src={news.image}
-        alt={news.title}
-        className="w-full h-36 object-cover cursor-zoom-in"
-        onClick={() => openLightbox(news.image)} // Open lightbox on image click
-      />
+      {/* L'image a été supprimée ici */}
       <CardHeader>
         <CardTitle className="text-2xl font-semibold text-clubPrimary">{news.title}</CardTitle>
         <CardDescription className="flex items-center text-clubLight-foreground/80 mt-2">
