@@ -20,7 +20,7 @@ const newsItems = [
     location: "Salle du club",
     description: "Lors de la dernière publication je vous évoquais la soirée de criterium de Gironde de vendredi dernier.... mais il est probable que ce qui a le plus marqué la soirée, est le repas partagé ensuite avec nos adversaires du jour ! Dominique, notre spécialiste de la paella n'étant pas disponible, le flambeau a été repris par Patrice, aidé de Sandra, pour nous faire une paella d'anthologie ! Un moment ultra convivial qui fait le succès de cette compétition et de ses après-matchs !",
     link: "#", // Pas de lien spécifique pour l'instant
-    image: "/images/news/618356170_854903017381621_829078142067363181_n.jpg",
+    image: "/images/actualites/618356170_854903017381621_829078142067363181_n.jpg",
   },
   // Nouvelle actualité : Maillot du Club (Position 2)
   {
@@ -50,7 +50,7 @@ const newsItems = [
     location: "Salle du club",
     description: "Samedi 20 décembre, le club de tennis de table loubésien, le Saint Loub’ping qui compte 132 licenciés, a organisé le tournoi de Noël des jeunes. Comme chaque année, au premier jour des vacances, cette compétition...",
     link: "#", // Lien par défaut pour cet événement
-    image: "/images/events/bordeauxrivedroite-5abc395193ac4b90ab4842d2eea90891-104939-ph0.avif", // Nouvelle image
+    image: "/images/actualites/bordeauxrivedroite-5abc395193ac4b90ab4842d2eea90891-104939-ph0.avif", // Nouvelle image
   },
 ];
 
