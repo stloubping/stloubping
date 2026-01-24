@@ -4,7 +4,10 @@ import VideoCard from '@/components/VideoCard'; // Import VideoCard
 import { allVideos } from '@/data/videos'; // Import allVideos
 
 const WTTVideos = () => {
-  const wttVideos = allVideos.filter(video => video.category === 'wtt');
+  // Filtrer les vidéos WTT et les trier par date d'ajout (les plus récentes en premier)
+  const wttVideos = allVideos
+    .filter(video => video.category === 'wtt')
+    .sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime());
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
