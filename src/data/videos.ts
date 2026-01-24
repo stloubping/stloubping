@@ -49,6 +49,15 @@ export const allVideos: VideoItem[] = [
     category: 'wtt',
     dateAdded: "2024-12-01",
   },
+  // Nouvelle vidéo WTT ajoutée
+  {
+    id: 'wtt-7',
+    title: "WTT Contender Tunis 2024 - Highlights",
+    description: "Les meilleurs moments du WTT Contender Tunis 2024.",
+    youtubeId: "8WmChQ5_eDo",
+    category: 'wtt',
+    dateAdded: new Date().toISOString().split('T')[0],
+  },
   // Vidéos Tutos
   {
     id: 'tuto-1',
