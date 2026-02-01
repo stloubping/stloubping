@@ -10,8 +10,10 @@ interface TeamRankingIframeProps {
 const TeamRankingIframe: React.FC<TeamRankingIframeProps> = ({ teamNumber, championshipType, teamName }) => {
   const clubNumber = "10330022";
   
-  // Construction de l'URL Pingpocket
-  const iframeSrc = `https://www.pingpocket.fr/app/fftt/clubs/${clubNumber}/equipes/${teamNumber}/championnats/${championshipType}?themeId=redBrick`;
+  // Construction de l'URL Pingpocket pour afficher le calendrier général de toutes les équipes
+  // L'analyse indique que les URLs par équipe individuelle ne fonctionnent plus comme attendu.
+  // Cette URL affichera le calendrier de toutes les équipes du club.
+  const iframeSrc = `https://www.pingpocket.fr/app/fftt/clubs/${clubNumber}/equipes/calendriers?phase=1&themeId=redBrick`;
 
   return (
     <Card className="bg-clubLight shadow-lg rounded-xl border border-border">
@@ -22,12 +24,12 @@ const TeamRankingIframe: React.FC<TeamRankingIframeProps> = ({ teamNumber, champ
           </small>
           <iframe
             frameBorder="1"
-            name={`pingpocket-team-${teamNumber}`}
+            name={`pingpocket-team-calendar`}
             width="100%"
             height="800"
             scrolling="auto"
             src={iframeSrc}
-            title={`Championnat ${teamName}`}
+            title={`Calendrier général des équipes du club`}
             className="w-full"
           >
             <p>Votre navigateur ne supporte pas les iframes.</p>
@@ -35,7 +37,7 @@ const TeamRankingIframe: React.FC<TeamRankingIframeProps> = ({ teamNumber, champ
         </div>
         <div className="p-4 text-center">
           <a href={iframeSrc} target="_blank" rel="noopener noreferrer" className="text-clubPrimary hover:underline font-medium">
-            Voir le détail de l'équipe {teamNumber} sur Pingpocket <span className="text-xs">({championshipType})</span>
+            Voir le calendrier complet sur Pingpocket
           </a>
         </div>
       </CardContent>
