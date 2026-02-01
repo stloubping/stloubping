@@ -10,10 +10,9 @@ interface TeamRankingIframeProps {
 const TeamRankingIframe: React.FC<TeamRankingIframeProps> = ({ teamNumber, championshipType, teamName }) => {
   const clubNumber = "10330022";
   
-  // Construction de l'URL Pingpocket pour afficher le calendrier général de toutes les équipes
-  // L'analyse indique que les URLs par équipe individuelle ne fonctionnent plus comme attendu.
-  // Cette URL affichera le calendrier de toutes les équipes du club.
-  const iframeSrc = `https://www.pingpocket.fr/app/fftt/clubs/${clubNumber}/equipes/calendriers?phase=1&themeId=redBrick`;
+  // Simplification de l'URL Pingpocket pour tenter de résoudre le problème d'affichage du profil.
+  // Nous retirons les paramètres 'phase' et 'themeId' pour voir si une URL plus générique fonctionne.
+  const iframeSrc = `https://www.pingpocket.fr/app/fftt/clubs/${clubNumber}/equipes/calendriers`;
 
   return (
     <Card className="bg-clubLight shadow-lg rounded-xl border border-border">
