@@ -88,19 +88,20 @@ const TournamentRegistrationsList = () => {
     }
 
     const headers = [
-      "Date d'inscription", "Prénom", "Nom", "Email", "Téléphone",
+      "N°", "Date d'inscription", "Prénom", "Nom", "Email", "Téléphone",
       "Numéro de licence", "Club", "Tableaux sélectionnés", "Partenaire de double", "Consentement"
     ];
 
     const csvRows = [
       headers.join(';'),
-      ...registrations.map(reg => {
+      ...registrations.map((reg, index) => {
         const formattedDate = new Date(reg.created_at).toLocaleDateString('fr-FR');
         const formattedTableaux = formatTableaux(reg.selected_tableaux);
         const doublesPartner = reg.doubles_partner || '';
         const consent = reg.consent ? 'Oui' : 'Non';
 
         return [
+          index + 1,
           formattedDate,
           reg.first_name,
           reg.last_name,
@@ -219,6 +220,7 @@ const TournamentRegistrationsList = () => {
               <Table className="min-w-full divide-y divide-border">
                 <TableHeader>
                   <TableRow className="bg-clubDark text-clubDark-foreground hover:bg-clubDark">
+                    <TableHead className="text-clubDark-foreground w-[50px]">N°</TableHead>
                     <TableHead className="text-clubDark-foreground">Date</TableHead>
                     <TableHead className="text-clubDark-foreground">Nom Complet</TableHead>
                     <TableHead className="text-clubDark-foreground">Club</TableHead>
@@ -228,8 +230,9 @@ const TournamentRegistrationsList = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {registrations.map((reg) => (
+                  {registrations.map((reg, index) => (
                     <TableRow key={reg.id} className="even:bg-clubSection/20 odd:bg-clubLight hover:bg-clubSection/40 transition-colors duration-200 border-b border-border">
+                      <TableCell className="text-sm font-bold text-clubPrimary">{index + 1}</TableCell>
                       <TableCell className="text-sm text-clubDark">{new Date(reg.created_at).toLocaleDateString()}</TableCell>
                       <TableCell className="font-medium text-clubDark">{reg.first_name} {reg.last_name}</TableCell>
                       <TableCell className="text-sm text-clubLight-foreground">{reg.club}</TableCell>
