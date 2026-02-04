@@ -99,9 +99,11 @@ const TournamentRegistrationsList = () => {
         const formattedTableaux = formatTableaux(reg.selected_tableaux);
         const doublesPartner = reg.doubles_partner || '';
         const consent = reg.consent ? 'Oui' : 'Non';
+        // Numérotation inverse pour le CSV également
+        const registrationNumber = registrations.length - index;
 
         return [
-          index + 1,
+          registrationNumber,
           formattedDate,
           reg.first_name,
           reg.last_name,
@@ -232,7 +234,9 @@ const TournamentRegistrationsList = () => {
                 <TableBody>
                   {registrations.map((reg, index) => (
                     <TableRow key={reg.id} className="even:bg-clubSection/20 odd:bg-clubLight hover:bg-clubSection/40 transition-colors duration-200 border-b border-border">
-                      <TableCell className="text-sm font-bold text-clubPrimary">{index + 1}</TableCell>
+                      <TableCell className="text-sm font-bold text-clubPrimary">
+                        {registrations.length - index}
+                      </TableCell>
                       <TableCell className="text-sm text-clubDark">{new Date(reg.created_at).toLocaleDateString()}</TableCell>
                       <TableCell className="font-medium text-clubDark">{reg.first_name} {reg.last_name}</TableCell>
                       <TableCell className="text-sm text-clubLight-foreground">{reg.club}</TableCell>
