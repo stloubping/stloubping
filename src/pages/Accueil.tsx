@@ -66,15 +66,15 @@ const eventItems = [
     image: "/images/actualites/tournoi-regional-2026-affiche.png", // Utilisation de la nouvelle image
     link: "/tournoi-inscription", // Ajout du lien vers la page d'inscription au tournoi
   },
-  // Championnat par équipe - Journée 4 Phase 1 (Nouveau bloc)
+  // Reprise Phase 2 (Mis à jour)
   {
     id: 202,
-    title: "Championnat par équipe - Journée 7 Phase 1",
-    date: "10 janvier 2026",
+    title: "Reprise phase 2 du championnat",
+    date: "28 février 2026",
     time: "Dès 15h00",
     location: "Salle du club",
-    description: "Venez encourager nos équipes de R2, PR et D2 lors de la 7ème journée de championnat ! Ambiance garantie et matchs décisifs pour le classement.",
-    image: "/images/events/IMG-20251003-WA0001.jpg", // Chemin de l'image mis à jour
+    description: "C'est reparti pour la seconde phase du championnat ! Venez nombreux encourager nos équipes pour cette reprise tant attendue à domicile.",
+    image: "/images/events/IMG-20251003-WA0001.jpg", // Chemin de l'image conservé
     link: "/competitions-equipes",
   },
 ];
@@ -91,7 +91,7 @@ const Accueil = () => {
     <div className="bg-clubLight text-clubLight-foreground">
       <HeroSection 
         title="Bienvenue au St Loub Ping" 
-        description="Votre club de tennis de table à Saint-Loubès. Passion, convivialité et compétition pour tous les âges et tous les niveaux." 
+        description="Votre club de tennis de table à Saint-Loubès. Passion, convivialité et compétition pour tous les ages et tous les niveaux." 
         imageUrl="/images/hero/club-training.jpg" 
         imageAlt="Joueurs de tennis de table en plein entraînement" 
       />
