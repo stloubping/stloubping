@@ -17,9 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Loader2, Search, Info, ExternalLink, AlertCircle } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const tableauxOptions = [
   { id: "t1", label: "Tableau 1 : 500-799 (Début 8h30)" },
@@ -56,7 +55,6 @@ const TournamentRegistration = () => {
 
   const [totalPrice, setTotalPrice] = useState(0);
   const [isFetching, setIsFetching] = useState(false);
-  const [fetchError, setFetchError] = useState(false);
   
   const selectedTableaux = form.watch("selected_tableaux");
   const licenceNumber = form.watch("licence_number");
@@ -79,11 +77,10 @@ const TournamentRegistration = () => {
     }
 
     setIsFetching(true);
-    setFetchError(false);
     
     try {
       const functionUrl = "https://svwsqioytvvpqbxpekwm.supabase.co/functions/v1/get-player-points";
-      const anonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2d3NxaW95dHZ2cHFieHBla3dtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMTk2MzEsImV4cCI6MjA3Njg5NTYzMX0.JTl37y_D_tr3bnPlCQyPZxOZqVzJHC79rFYYxT3ZXHg";
+      const anonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2d3NxaW95dHZ2cHFieHBel3dtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMTk2MzEsImV4cCI6MjA3Njg5NTYzMX0.JTl37y_D_tr3bnPlCQyPZxOZqVzJHC79rFYYxT3ZXHg";
 
       const response = await fetch(functionUrl, {
         method: 'POST',
@@ -96,11 +93,7 @@ const TournamentRegistration = () => {
       });
 
       if (!response.ok) {
-        if (response.status === 404) {
-          setFetchError(true);
-          throw new Error("Service de recherche indisponible");
-        }
-        throw new Error("Erreur lors de la recherche");
+        throw new Error("Service de recherche indisponible");
       }
 
       const data = await response.json();
@@ -119,7 +112,7 @@ const TournamentRegistration = () => {
       }
     } catch (err) {
       console.warn("Recherche auto échouée, mode manuel activé.");
-      setFetchError(true);
+      toast.info("Veuillez saisir vos informations manuellement.");
     } finally {
       setIsFetching(false);
     }
@@ -143,19 +136,6 @@ const TournamentRegistration = () => {
           <CardDescription>Remplissez le formulaire pour valider votre participation.</CardDescription>
         </CardHeader>
         <CardContent>
-          {fetchError && (
-            <Alert variant="destructive" className="mb-6">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Recherche automatique indisponible</AlertTitle>
-              <AlertDescription>
-                Le service de recherche est en cours de déploiement. Veuillez remplir vos informations manuellement ou 
-                <a href="https://www.pingpocket.fr/app/fftt/joueurs" target="_blank" rel="noopener noreferrer" className="ml-1 underline font-bold">
-                  consulter Pingpocket ici
-                </a>.
-              </AlertDescription>
-            </Alert>
-          )}
-
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
