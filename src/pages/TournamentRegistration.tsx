@@ -19,7 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLightbox } from '@/context/LightboxContext';
-import { Loader2 } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const tableauxOptions = [
@@ -82,7 +82,9 @@ const TournamentRegistration = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [tableauCounts, setTableauCounts] = useState<Map<string, number>>(new Map());
   const [loadingCounts, setLoadingCounts] = useState(true);
+  const [isFetchingPoints, setIsFetchingPoints] = useState(false);
   const selectedTableaux = form.watch("selected_tableaux");
+  const licenceNumber = form.watch("licence_number");
   const { openLightbox } = useLightbox();
   const navigate = useNavigate();
 
@@ -130,6 +132,35 @@ const TournamentRegistration = () => {
 
     setTotalPrice(currentTotal);
   }, [selectedTableaux]);
+
+  const fetchPlayerInfo = async () => {
+    if (!licenceNumber || licenceNumber.length < 5) {
+      toast.error("Veuillez entrer un numéro de licence valide.");
+      return;
+    }
+
+    setIsFetchingPoints(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('get-player-points', {
+        body: { licence: licenceNumber }
+      });
+
+      if (error) throw error;
+
+      if (data.points) {
+        form.setValue("points", data.points.toString());
+        if (data.club) form.setValue("club", data.club);
+        toast.success(`Données récupérées pour ${data.name}`);
+      } else {
+        toast.warning("Licence trouvée mais points non disponibles.");
+      }
+    } catch (err: any) {
+      console.error("Erreur récupération points:", err);
+      toast.error("Impossible de récupérer les points automatiquement.");
+    } finally {
+      setIsFetchingPoints(false);
+    }
+  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -233,9 +264,20 @@ const TournamentRegistration = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Numéro de licence FFTT</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Votre numéro de licence" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
-                      </FormControl>
+                      <div className="flex gap-2">
+                        <FormControl>
+                          <Input placeholder="Votre numéro de licence" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
+                        </FormControl>
+                        <Button 
+                          type="button" 
+                          variant="outline" 
+                          className="border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white"
+                          onClick={fetchPlayerInfo}
+                          disabled={isFetchingPoints}
+                        >
+                          {isFetchingPoints ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+                        </Button>
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
