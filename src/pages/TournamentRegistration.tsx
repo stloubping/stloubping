@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Loader2, Search, Info } from "lucide-react";
+import { Loader2, Search, Info, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -83,9 +83,8 @@ const TournamentRegistration = () => {
       });
 
       if (error) {
-        // Si erreur 404 ou autre, on informe l'utilisateur qu'il peut saisir manuellement
         console.warn("Fonction indisponible, passage en mode manuel");
-        toast.info("Service de recherche indisponible. Veuillez remplir les champs manuellement.");
+        toast.info("Recherche automatique indisponible. Veuillez remplir les champs manuellement.");
         return;
       }
 
@@ -104,7 +103,7 @@ const TournamentRegistration = () => {
         toast.warning("Joueur non trouvé. Saisie manuelle nécessaire.");
       }
     } catch (err) {
-      toast.info("Recherche automatique indisponible. Saisie manuelle activée.");
+      toast.info("Saisie manuelle activée.");
     } finally {
       setIsFetching(false);
     }
@@ -131,8 +130,13 @@ const TournamentRegistration = () => {
         <CardContent>
           <Alert className="mb-6 bg-blue-50 border-blue-200 text-blue-800">
             <Info className="h-4 w-4" />
-            <AlertDescription>
-              Si la recherche par licence ne fonctionne pas, vous pouvez remplir tous les champs manuellement.
+            <AlertDescription className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <span>Besoin d'aide pour trouver votre licence ou vos points ?</span>
+              <Button variant="link" asChild className="p-0 h-auto text-blue-700 font-bold">
+                <a href="https://www.pingpocket.fr/app/fftt/joueurs" target="_blank" rel="noopener noreferrer">
+                  Chercher sur Pingpocket <ExternalLink className="ml-1 h-3 w-3" />
+                </a>
+              </Button>
             </AlertDescription>
           </Alert>
 
