@@ -79,7 +79,6 @@ const TournamentRegistration = () => {
     setIsFetching(true);
     
     try {
-      // Utilisation de la méthode officielle invoke() au lieu de fetch()
       const { data, error } = await supabase.functions.invoke('get-player-points', {
         body: { licence: licenceNumber },
       });
@@ -92,11 +91,11 @@ const TournamentRegistration = () => {
         if (data.first_name) form.setValue("first_name", data.first_name);
         if (data.last_name) form.setValue("last_name", data.last_name);
         
-        toast.success(`Fiche récupérée : ${data.first_name} ${data.last_name}`);
+        toast.success(`Fiche FFTT récupérée : ${data.first_name} ${data.last_name}`);
       }
     } catch (err) {
       console.error("Erreur recherche:", err);
-      toast.error("Joueur non trouvé. Veuillez remplir manuellement.");
+      toast.error("Joueur non trouvé sur les serveurs FFTT. Veuillez remplir manuellement.");
     } finally {
       setIsFetching(false);
     }
@@ -117,7 +116,7 @@ const TournamentRegistration = () => {
       <Card className="max-w-3xl mx-auto bg-clubLight shadow-lg border-clubPrimary/20">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold text-clubPrimary">Inscription au Tournoi</CardTitle>
-          <CardDescription>Saisissez votre licence pour pré-remplir votre fiche.</CardDescription>
+          <CardDescription>Saisissez votre licence pour pré-remplir votre fiche via l'API FFTT.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
