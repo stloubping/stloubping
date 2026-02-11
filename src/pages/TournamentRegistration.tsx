@@ -17,9 +17,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Loader2, Search, Info, ExternalLink } from "lucide-react";
+import { Loader2, Search, Info, ExternalLink, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const tableauxOptions = [
   { id: "t1", label: "Tableau 1 : 500-799 (Début 8h30)" },
@@ -56,6 +56,8 @@ const TournamentRegistration = () => {
 
   const [totalPrice, setTotalPrice] = useState(0);
   const [isFetching, setIsFetching] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
+  
   const selectedTableaux = form.watch("selected_tableaux");
   const licenceNumber = form.watch("licence_number");
   const navigate = useNavigate();
@@ -77,8 +79,9 @@ const TournamentRegistration = () => {
     }
 
     setIsFetching(true);
+    setFetchError(false);
+    
     try {
-      // Utilisation de l'URL directe comme recommandé
       const functionUrl = "https://svwsqioytvvpqbxpekwm.supabase.co/functions/v1/get-player-points";
       const anonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2d3NxaW95dHZ2cHFieHBla3dtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMTk2MzEsImV4cCI6MjA3Njg5NTYzMX0.JTl37y_D_tr3bnPlCQyPZxOZqVzJHC79rFYYxT3ZXHg";
 
@@ -93,7 +96,11 @@ const TournamentRegistration = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
+        if (response.status === 404) {
+          setFetchError(true);
+          throw new Error("Service de recherche indisponible");
+        }
+        throw new Error("Erreur lors de la recherche");
       }
 
       const data = await response.json();
@@ -109,12 +116,10 @@ const TournamentRegistration = () => {
           }
         }
         toast.success(`Joueur trouvé : ${data.points} pts`);
-      } else {
-        toast.warning("Joueur non trouvé. Saisie manuelle nécessaire.");
       }
     } catch (err) {
-      console.error("Erreur lors de la recherche:", err);
-      toast.info("Recherche automatique indisponible. Saisie manuelle activée.");
+      console.warn("Recherche auto échouée, mode manuel activé.");
+      setFetchError(true);
     } finally {
       setIsFetching(false);
     }
@@ -123,8 +128,7 @@ const TournamentRegistration = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { error } = await supabase.from("tournament_registrations").insert([values]);
     if (error) {
-      console.error("Erreur insertion:", error);
-      toast.error("Erreur lors de l'inscription. Vérifiez vos informations.");
+      toast.error("Erreur lors de l'inscription.");
     } else {
       toast.success("Inscription réussie !");
       navigate('/tournoi/inscrits-live');
@@ -139,17 +143,18 @@ const TournamentRegistration = () => {
           <CardDescription>Remplissez le formulaire pour valider votre participation.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Alert className="mb-6 bg-blue-50 border-blue-200 text-blue-800">
-            <Info className="h-4 w-4" />
-            <AlertDescription className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <span>Besoin d'aide pour trouver votre licence ou vos points ?</span>
-              <Button variant="link" asChild className="p-0 h-auto text-blue-700 font-bold">
-                <a href="https://www.pingpocket.fr/app/fftt/joueurs" target="_blank" rel="noopener noreferrer">
-                  Chercher sur Pingpocket <ExternalLink className="ml-1 h-3 w-3" />
-                </a>
-              </Button>
-            </AlertDescription>
-          </Alert>
+          {fetchError && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Recherche automatique indisponible</AlertTitle>
+              <AlertDescription>
+                Le service de recherche est en cours de déploiement. Veuillez remplir vos informations manuellement ou 
+                <a href="https://www.pingpocket.fr/app/fftt/joueurs" target="_blank" rel="noopener noreferrer" className="ml-1 underline font-bold">
+                  consulter Pingpocket ici
+                </a>.
+              </AlertDescription>
+            </Alert>
+          )}
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
