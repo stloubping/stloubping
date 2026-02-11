@@ -65,7 +65,7 @@ const TournamentLiveRegistrations = () => {
             <CardTitle className="text-3xl font-bold text-clubDark">Les Inscrits LIVE</CardTitle>
           </div>
           <CardDescription className="text-clubLight-foreground text-lg">
-            Consultez la liste des joueurs inscrits en temps réel.
+            Liste des joueurs inscrits via le formulaire en ligne.
           </CardDescription>
           
           <div className="mt-8 max-w-xs mx-auto">
@@ -89,7 +89,7 @@ const TournamentLiveRegistrations = () => {
           {loading ? (
             <div className="flex justify-center items-center py-20">
               <Loader2 className="h-10 w-10 animate-spin text-clubPrimary" />
-              <span className="ml-3 text-clubDark font-medium">Chargement des inscrits...</span>
+              <span className="ml-3 text-clubDark font-medium">Mise à jour de la liste...</span>
             </div>
           ) : filteredRegistrations.length === 0 ? (
             <div className="text-center py-20 text-muted-foreground italic">
