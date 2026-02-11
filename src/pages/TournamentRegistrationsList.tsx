@@ -29,6 +29,7 @@ interface Registration {
   email: string;
   phone: string;
   licence_number: string;
+  points: string; // Ajout des points dans l'interface
   club: string;
   selected_tableaux: string[];
   doubles_partner: string | null;
@@ -89,7 +90,7 @@ const TournamentRegistrationsList = () => {
 
     const headers = [
       "N°", "Date d'inscription", "Prénom", "Nom", "Email", "Téléphone",
-      "Numéro de licence", "Club", "Tableaux sélectionnés", "Partenaire de double", "Consentement"
+      "Numéro de licence", "Points", "Club", "Tableaux sélectionnés", "Partenaire de double", "Consentement"
     ];
 
     const csvRows = [
@@ -99,7 +100,6 @@ const TournamentRegistrationsList = () => {
         const formattedTableaux = formatTableaux(reg.selected_tableaux);
         const doublesPartner = reg.doubles_partner || '';
         const consent = reg.consent ? 'Oui' : 'Non';
-        // Numérotation inverse pour le CSV également
         const registrationNumber = registrations.length - index;
 
         return [
@@ -110,6 +110,7 @@ const TournamentRegistrationsList = () => {
           reg.email,
           reg.phone,
           reg.licence_number,
+          reg.points, // Ajout des points dans le CSV
           reg.club,
           `"${formattedTableaux}"`,
           `"${doublesPartner}"`,
@@ -191,7 +192,7 @@ const TournamentRegistrationsList = () => {
                       value={passwordInput}
                       onChange={(e) => {
                         setPasswordInput(e.target.value);
-                        setPasswordError(null); // Clear error on input change
+                        setPasswordError(null);
                       }}
                       onKeyPress={(e) => {
                         if (e.key === 'Enter') {
@@ -225,6 +226,7 @@ const TournamentRegistrationsList = () => {
                     <TableHead className="text-clubDark-foreground w-[50px]">N°</TableHead>
                     <TableHead className="text-clubDark-foreground">Date</TableHead>
                     <TableHead className="text-clubDark-foreground">Nom Complet</TableHead>
+                    <TableHead className="text-clubDark-foreground">Points</TableHead>
                     <TableHead className="text-clubDark-foreground">Club</TableHead>
                     <TableHead className="text-clubDark-foreground">Licence</TableHead>
                     <TableHead className="text-clubDark-foreground">Tableaux</TableHead>
@@ -239,6 +241,7 @@ const TournamentRegistrationsList = () => {
                       </TableCell>
                       <TableCell className="text-sm text-clubDark">{new Date(reg.created_at).toLocaleDateString()}</TableCell>
                       <TableCell className="font-medium text-clubDark">{reg.first_name} {reg.last_name}</TableCell>
+                      <TableCell className="text-sm font-bold text-clubPrimary">{reg.points}</TableCell>
                       <TableCell className="text-sm text-clubLight-foreground">{reg.club}</TableCell>
                       <TableCell className="text-sm text-clubLight-foreground">{reg.licence_number}</TableCell>
                       <TableCell className="text-sm text-clubLight-foreground">{formatTableaux(reg.selected_tableaux)}</TableCell>
