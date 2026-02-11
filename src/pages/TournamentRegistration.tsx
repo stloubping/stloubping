@@ -78,15 +78,25 @@ const TournamentRegistration = () => {
 
     setIsFetching(true);
     try {
-      const { data, error } = await supabase.functions.invoke('get-player-points', {
-        body: { licence: licenceNumber }
+      // Utilisation de l'URL directe comme recommandé
+      const functionUrl = "https://svwsqioytvvpqbxpekwm.supabase.co/functions/v1/get-player-points";
+      const anonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2d3NxaW95dHZ2cHFieHBla3dtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMTk2MzEsImV4cCI6MjA3Njg5NTYzMX0.JTl37y_D_tr3bnPlCQyPZxOZqVzJHC79rFYYxT3ZXHg";
+
+      const response = await fetch(functionUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${anonKey}`,
+          'apikey': anonKey
+        },
+        body: JSON.stringify({ licence: licenceNumber })
       });
 
-      if (error) {
-        console.warn("Fonction indisponible, passage en mode manuel");
-        toast.info("Recherche automatique indisponible. Veuillez remplir les champs manuellement.");
-        return;
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP: ${response.status}`);
       }
+
+      const data = await response.json();
 
       if (data && data.points) {
         form.setValue("points", data.points.toString());
@@ -103,7 +113,8 @@ const TournamentRegistration = () => {
         toast.warning("Joueur non trouvé. Saisie manuelle nécessaire.");
       }
     } catch (err) {
-      toast.info("Saisie manuelle activée.");
+      console.error("Erreur lors de la recherche:", err);
+      toast.info("Recherche automatique indisponible. Saisie manuelle activée.");
     } finally {
       setIsFetching(false);
     }
