@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, MapPin } from "lucide-react";
+import { CalendarDays, MapPin, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
+import { useLightbox } from '@/context/LightboxContext';
 
 interface NewsItem {
   id: number;
@@ -24,44 +24,70 @@ interface NewsCardProps {
 
 const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
-  const truncateLength = 200; // Nombre de caractères pour l'aperçu
-  const { openLightbox } = useLightbox(); // Use the lightbox hook
+  const truncateLength = 150; 
+  const { openLightbox } = useLightbox();
 
   const truncatedDescription = news.description.length > truncateLength
     ? news.description.substring(0, truncateLength) + "..."
     : news.description;
 
+  // Déterminer le texte du bouton en fonction du lien
+  const getButtonText = (link: string) => {
+    if (link.includes('inscription')) return "S'inscrire au tournoi";
+    if (link.includes('live')) return "Voir les inscrits";
+    if (link.includes('boutique')) return "Voir la boutique";
+    if (link.includes('adhesions')) return "Voir les infos";
+    return "En savoir plus";
+  };
+
+  const hasLink = news.link && news.link !== "#";
+
   return (
-    <Card className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <img
-        src={news.image}
-        alt={news.title}
-        className="w-full h-36 object-cover cursor-zoom-in"
-        onClick={() => openLightbox(news.image)} // Open lightbox on image click
-      />
-      <CardHeader>
-        <CardTitle className="text-2xl font-semibold text-clubPrimary">{news.title}</CardTitle>
-        <CardDescription className="flex items-center text-clubLight-foreground/80 mt-2">
-          <CalendarDays className="mr-2 h-4 w-4" /> {news.date}
-        </CardDescription>
-        <CardDescription className="flex items-center text-clubLight-foreground/80">
-          <MapPin className="mr-2 h-4 w-4" /> {news.location}
-        </CardDescription>
+    <Card className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full">
+      <div className="relative h-48 overflow-hidden">
+        <img
+          src={news.image}
+          alt={news.title}
+          className="w-full h-full object-cover cursor-zoom-in hover:scale-105 transition-transform duration-500"
+          onClick={() => openLightbox(news.image)}
+        />
+      </div>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-xl font-bold text-clubPrimary line-clamp-2 h-14">{news.title}</CardTitle>
+        <div className="space-y-1 mt-2">
+          <CardDescription className="flex items-center text-clubLight-foreground/70 text-xs">
+            <CalendarDays className="mr-2 h-3 w-3 text-clubPrimary" /> {news.date}
+          </CardDescription>
+          <CardDescription className="flex items-center text-clubLight-foreground/70 text-xs">
+            <MapPin className="mr-2 h-3 w-3 text-clubPrimary" /> {news.location}
+          </CardDescription>
+        </div>
       </CardHeader>
-      <CardContent>
-        <p className={cn("text-clubDarker", { "whitespace-pre-line": showFullDescription })}>
+      <CardContent className="flex-grow">
+        <p className={cn("text-sm text-clubLight-foreground/90", { "whitespace-pre-line": showFullDescription })}>
           {showFullDescription ? news.description : truncatedDescription}
         </p>
         {news.description.length > truncateLength && (
-          <Button
-            variant="link"
+          <button
             onClick={() => setShowFullDescription(!showFullDescription)}
-            className="p-0 h-auto text-clubPrimary hover:text-clubPrimary/80 mt-2"
+            className="text-xs font-semibold text-clubPrimary hover:underline mt-2"
           >
             {showFullDescription ? "Réduire" : "Lire la suite"}
-          </Button>
+          </button>
         )}
       </CardContent>
+      <CardFooter className="pt-0 pb-6 px-6">
+        {hasLink ? (
+          <Button asChild className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-white shadow-md group">
+            <Link to={news.link}>
+              {getButtonText(news.link)}
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </Button>
+        ) : (
+          <div className="h-10 w-full" /> // Spacer if no link
+        )}
+      </CardFooter>
     </Card>
   );
 };
