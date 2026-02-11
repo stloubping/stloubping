@@ -24,19 +24,18 @@ interface NewsCardProps {
 
 const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
-  const truncateLength = 150; 
+  const truncateLength = 120; 
   const { openLightbox } = useLightbox();
 
   const truncatedDescription = news.description.length > truncateLength
     ? news.description.substring(0, truncateLength) + "..."
     : news.description;
 
-  // Déterminer le texte du bouton en fonction du lien
   const getButtonText = (link: string) => {
-    if (link.includes('inscription')) return "S'inscrire au tournoi";
+    if (link.includes('inscription')) return "S'inscrire";
     if (link.includes('live')) return "Voir les inscrits";
-    if (link.includes('boutique')) return "Voir la boutique";
-    if (link.includes('adhesions')) return "Voir les infos";
+    if (link.includes('boutique')) return "Boutique";
+    if (link.includes('adhesions')) return "Infos";
     return "En savoir plus";
   };
 
@@ -44,7 +43,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
 
   return (
     <Card className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full">
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative h-40 md:h-48 overflow-hidden">
         <img
           src={news.image}
           alt={news.title}
@@ -52,40 +51,40 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
           onClick={() => openLightbox(news.image)}
         />
       </div>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-xl font-bold text-clubPrimary line-clamp-2 h-14">{news.title}</CardTitle>
-        <div className="space-y-1 mt-2">
-          <CardDescription className="flex items-center text-clubLight-foreground/70 text-xs">
-            <CalendarDays className="mr-2 h-3 w-3 text-clubPrimary" /> {news.date}
+      <CardHeader className="pb-2 px-4">
+        <CardTitle className="text-lg md:text-xl font-bold text-clubPrimary line-clamp-2 h-12 md:h-14">{news.title}</CardTitle>
+        <div className="space-y-1 mt-1">
+          <CardDescription className="flex items-center text-clubLight-foreground/70 text-[10px] md:text-xs">
+            <CalendarDays className="mr-1 h-3 w-3 text-clubPrimary" /> {news.date}
           </CardDescription>
-          <CardDescription className="flex items-center text-clubLight-foreground/70 text-xs">
-            <MapPin className="mr-2 h-3 w-3 text-clubPrimary" /> {news.location}
+          <CardDescription className="flex items-center text-clubLight-foreground/70 text-[10px] md:text-xs">
+            <MapPin className="mr-1 h-3 w-3 text-clubPrimary" /> {news.location}
           </CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="flex-grow">
-        <p className={cn("text-sm text-clubLight-foreground/90", { "whitespace-pre-line": showFullDescription })}>
+      <CardContent className="flex-grow px-4">
+        <p className={cn("text-xs md:text-sm text-clubLight-foreground/90", { "whitespace-pre-line": showFullDescription })}>
           {showFullDescription ? news.description : truncatedDescription}
         </p>
         {news.description.length > truncateLength && (
           <button
             onClick={() => setShowFullDescription(!showFullDescription)}
-            className="text-xs font-semibold text-clubPrimary hover:underline mt-2"
+            className="text-[10px] md:text-xs font-semibold text-clubPrimary hover:underline mt-1"
           >
             {showFullDescription ? "Réduire" : "Lire la suite"}
           </button>
         )}
       </CardContent>
-      <CardFooter className="pt-0 pb-6 px-6">
+      <CardFooter className="pt-0 pb-4 px-4">
         {hasLink ? (
-          <Button asChild className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-white shadow-md group">
+          <Button asChild className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-white shadow-md group h-9 md:h-10 text-xs md:text-sm">
             <Link to={news.link}>
               {getButtonText(news.link)}
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-1 h-3 w-3 md:h-4 md:w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </Button>
         ) : (
-          <div className="h-10 w-full" /> // Spacer if no link
+          <div className="h-9 md:h-10 w-full" />
         )}
       </CardFooter>
     </Card>

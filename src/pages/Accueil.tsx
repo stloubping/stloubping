@@ -11,7 +11,6 @@ import { allVideos } from '@/data/videos';
 import CompetitionCalendar from '@/components/CompetitionCalendar';
 
 const allNewsItems = [
-  // 1. Tournoi Régional (Première position)
   {
     id: 102,
     title: "Tournoi Régional Saint-Loub'Ping 2026",
@@ -21,7 +20,6 @@ const allNewsItems = [
     link: "/tournoi-inscription",
     image: "/images/actualites/tournoi-regional-2026-affiche.png",
   },
-  // 2. Les Inscrits LIVE (Nouveau)
   {
     id: 601,
     title: "Suivez les Inscriptions en Temps Réel !",
@@ -29,9 +27,8 @@ const allNewsItems = [
     location: "En ligne",
     description: "Découvrez qui participe au prochain tournoi ! Notre nouvelle page 'Les Inscrits LIVE' vous permet de consulter la liste des joueurs inscrits, triée par points, pour chaque tableau. Restez informé de la concurrence et suivez l'évolution des tableaux en un clic.",
     link: "/tournoi/inscrits-live",
-    image: "/images/actualites/tournoi-regional-2026-affiche.png", // Photo changée par l'affiche du club
+    image: "/images/actualites/tournoi-regional-2026-affiche.png",
   },
-  // 3. Soirée Paella
   {
     id: 501,
     title: "Soirée Paella mémorable après le Critérium !",
@@ -41,7 +38,6 @@ const allNewsItems = [
     link: "#",
     image: "/images/actualites/616230059_854903077381615_8680231693854484940_n.jpg",
   },
-  // 4. Maillot du Club
   {
     id: 4,
     title: "Le Maillot Officiel est Arrivé !",
@@ -51,7 +47,6 @@ const allNewsItems = [
     link: "/boutique",
     image: "/images/boutique/maillot-club-officiel.png",
   },
-  // 5. Stage de Noël
   {
     id: 101,
     title: "Stage de Noël pour les Jeunes",
@@ -61,7 +56,6 @@ const allNewsItems = [
     link: "/adhesions",
     image: "/images/actualites/stage-de-noel.jpg",
   },
-  // 6. Tournoi de Noël
   {
     id: 201,
     title: "Tournoi de Noël des Jeunes",
@@ -71,7 +65,6 @@ const allNewsItems = [
     link: "#",
     image: "/images/actualites/bordeauxrivedroite-5abc395193ac4b90ab4842d2eea90891-104939-ph0.avif",
   },
-  // 7. Reprise Phase 2
   {
     id: 202,
     title: "Reprise phase 2 du championnat",
@@ -98,30 +91,28 @@ const Accueil = () => {
         imageUrl="/images/hero/club-training.jpg" 
         imageAlt="Joueurs de tennis de table en plein entraînement" 
       />
-      <div className="container mx-auto px-4 py-8">
-        {/* Actualités Section (Regroupée) */}
+      <div className="container mx-auto px-4 py-4 md:py-8">
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Dernières Actualités</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-clubDark">Dernières Actualités</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             {allNewsItems.map((news) => (
               <NewsCard key={news.id} news={news} />
             ))}
           </div>
         </section>
 
-        {/* Suivez-nous Section avec flux Facebook */}
         <section className="text-center mb-12">
-          <Card className="bg-clubLight shadow-lg p-8 rounded-xl">
-            <CardTitle className="text-2xl font-bold text-clubDark mb-4">Suivez-nous sur Facebook !</CardTitle>
-            <CardContent>
-              <p className="mb-6 text-clubLight-foreground">
-                Restez connecté avec le club et ne manquez aucune actualité, événement ou résultat directement depuis notre page Facebook.
+          <Card className="bg-clubLight shadow-lg p-4 md:p-8 rounded-xl">
+            <CardTitle className="text-xl md:text-2xl font-bold text-clubDark mb-4">Suivez-nous sur Facebook !</CardTitle>
+            <CardContent className="px-0">
+              <p className="mb-6 text-sm md:text-base text-clubLight-foreground">
+                Restez connecté avec le club et ne manquez aucune actualité directement depuis notre page Facebook.
               </p>
-              <div className="mt-8 flex justify-center w-full max-w-[320px] mx-auto">
+              <div className="mt-4 flex justify-center w-full max-w-[320px] mx-auto overflow-hidden rounded-lg border">
                 <iframe 
-                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fp%2FSaint-LoubPing-100085857905183%2F&tabs=timeline&width=500&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" 
-                  width="100%" 
-                  height="600" 
+                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fp%2FSaint-LoubPing-100085857905183%2F&tabs=timeline&width=320&height=500&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" 
+                  width="320" 
+                  height="500" 
                   style={{ border: 'none', overflow: 'hidden' }} 
                   scrolling="no" 
                   frameBorder="0" 
@@ -134,28 +125,25 @@ const Accueil = () => {
           </Card>
         </section>
 
-        {/* Calendrier des Compétitions */}
         <CompetitionCalendar />
 
-        {/* Dernières Vidéos Section */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Dernières Vidéos</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-clubDark">Dernières Vidéos</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8">
             {latestVideos.map((video) => (
               <VideoCard key={video.id} video={video} />
             ))}
           </div>
         </section>
 
-        {/* Rejoignez-nous Section */}
         <section className="text-center">
-          <Card className="bg-clubLight shadow-lg p-8 rounded-xl">
-            <CardTitle className="text-2xl text-clubDark mb-4">Prêt à nous rejoindre ?</CardTitle>
+          <Card className="bg-clubLight shadow-lg p-6 md:p-8 rounded-xl">
+            <CardTitle className="text-xl md:text-2xl text-clubDark mb-4">Prêt à nous rejoindre ?</CardTitle>
             <CardContent>
-              <p className="mb-6 text-clubLight-foreground">
-                Que vous soyez débutant ou expert, jeune ou moins jeune, le St Loub Ping vous attend ! Découvrez nos différentes formules d'adhésion et trouvez celle qui vous convient.
+              <p className="mb-6 text-sm md:text-base text-clubLight-foreground">
+                Que vous soyez débutant ou expert, le St Loub Ping vous attend !
               </p>
-              <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
+              <Button asChild className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-6 md:px-8 py-4 md:py-4 text-base md:text-lg rounded-md shadow-lg">
                 <Link to="/adhesions">Découvrir nos Adhésions</Link>
               </Button>
             </CardContent>
