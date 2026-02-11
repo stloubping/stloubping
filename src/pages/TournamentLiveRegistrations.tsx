@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Users } from 'lucide-react';
+import { Loader2, Users, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const tableauxOptions = [
   { id: "all", label: "Tous les tableaux" },
@@ -23,7 +24,7 @@ interface Registration {
   first_name: string;
   last_name: string;
   club: string;
-  points: string;
+  points?: string; // Optionnel au cas où la colonne n'existe pas encore
   selected_tableaux: string[];
   doubles_partner: string | null;
 }
@@ -31,18 +32,23 @@ interface Registration {
 const TournamentLiveRegistrations = () => {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     const fetchRegistrations = async () => {
       setLoading(true);
-      const { data, error } = await supabase
+      setError(null);
+      
+      // On sélectionne tout (*) pour éviter les erreurs si une colonne spécifique manque
+      const { data, error: supabaseError } = await supabase
         .from('tournament_registrations')
-        .select('id, first_name, last_name, club, points, selected_tableaux, doubles_partner')
+        .select('*')
         .order('last_name', { ascending: true });
 
-      if (error) {
-        console.error("Error fetching registrations:", error);
+      if (supabaseError) {
+        console.error("Erreur Supabase:", supabaseError);
+        setError(supabaseError.message);
       } else {
         setRegistrations(data || []);
       }
@@ -54,7 +60,7 @@ const TournamentLiveRegistrations = () => {
 
   const filteredRegistrations = filter === "all"
     ? registrations
-    : registrations.filter(reg => reg.selected_tableaux.includes(filter));
+    : registrations.filter(reg => reg.selected_tableaux?.includes(filter));
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
@@ -86,6 +92,17 @@ const TournamentLiveRegistrations = () => {
         </CardHeader>
 
         <CardContent>
+          {error && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Erreur de chargement</AlertTitle>
+              <AlertDescription>
+                Impossible de récupérer les inscrits : {error}. 
+                Vérifiez que la table 'tournament_registrations' est bien configurée.
+              </AlertDescription>
+            </Alert>
+          )}
+
           {loading ? (
             <div className="flex justify-center items-center py-20">
               <Loader2 className="h-10 w-10 animate-spin text-clubPrimary" />
@@ -93,7 +110,7 @@ const TournamentLiveRegistrations = () => {
             </div>
           ) : filteredRegistrations.length === 0 ? (
             <div className="text-center py-20 text-muted-foreground italic">
-              Aucun inscrit trouvé pour ce tableau.
+              {error ? "Erreur lors de la récupération" : "Aucun inscrit trouvé pour ce tableau."}
             </div>
           ) : (
             <div className="overflow-x-auto rounded-lg border border-border">
@@ -124,9 +141,11 @@ const TournamentLiveRegistrations = () => {
             </div>
           )}
           
-          <div className="mt-6 text-center text-sm text-muted-foreground">
-            Total : {filteredRegistrations.length} inscrit(s) {filter !== "all" ? `dans ce tableau` : `au total`}
-          </div>
+          {!loading && (
+            <div className="mt-6 text-center text-sm text-muted-foreground">
+              Total : {filteredRegistrations.length} inscrit(s) {filter !== "all" ? `dans ce tableau` : `au total`}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
