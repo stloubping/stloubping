@@ -6,41 +6,50 @@ const corsHeaders = {
 }
 
 serve(async (req) => {
-  // Gestion du CORS
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
   }
 
   try {
     const { licence } = await req.json()
-    console.log(`[get-player-points] Recherche pour la licence: ${licence}`);
+    console.log(`[get-player-points] Requête reçue pour la licence: ${licence}`);
 
     if (!licence) {
-      return new Response(JSON.stringify({ error: 'Numéro de licence requis' }), {
+      return new Response(JSON.stringify({ error: 'Numéro de licence manquant' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
 
-    // Utilisation de l'API publique de pongiste.fr (très utilisée par la communauté)
-    const response = await fetch(`https://www.pongiste.fr/api/joueur/${licence}`);
+    // Appel à l'API pongiste.fr
+    const apiUrl = `https://www.pongiste.fr/api/joueur/${licence}`;
+    console.log(`[get-player-points] Appel de l'API externe: ${apiUrl}`);
+    
+    const response = await fetch(apiUrl, {
+      headers: { 'Accept': 'application/json' }
+    });
     
     if (!response.ok) {
-      throw new Error('Joueur non trouvé ou service indisponible');
+      console.error(`[get-player-points] Erreur API externe: ${response.status}`);
+      throw new Error('Joueur non trouvé sur pongiste.fr');
     }
 
     const data = await response.json();
-    console.log(`[get-player-points] Données reçues:`, data);
+    console.log(`[get-player-points] Données reçues avec succès pour ${data.nom}`);
 
-    // Extraction des points (le champ varie selon l'API, souvent 'points' ou 'points_mensuels')
-    const points = data.points || data.points_mensuels || data.points_officiels;
+    // On essaie de récupérer les points dans différents champs possibles
+    const points = data.points || data.points_mensuels || data.points_officiels || data.classement;
 
-    return new Response(JSON.stringify({ points, name: `${data.prenom} ${data.nom}`, club: data.club }), {
+    return new Response(JSON.stringify({ 
+      points: points, 
+      name: `${data.prenom || ''} ${data.nom || ''}`.trim(), 
+      club: data.club 
+    }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
 
   } catch (error) {
-    console.error(`[get-player-points] Erreur:`, error.message);
+    console.error(`[get-player-points] Erreur critique:`, error.message);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
