@@ -29,7 +29,7 @@ const allNewsItems = [
     location: "En ligne",
     description: "Découvrez qui participe au prochain tournoi ! Notre nouvelle page 'Les Inscrits LIVE' vous permet de consulter la liste des joueurs inscrits, triée par points, pour chaque tableau. Restez informé de la concurrence et suivez l'évolution des tableaux en un clic.",
     link: "/tournoi/inscrits-live",
-    image: "/images/actualites/618356170_854903077381621_829078142067363181_n.jpg",
+    image: "/images/actualites/561695574_777489311789659_3783358259365139184_n.jpg", // Photo changée ici
   },
   // 3. Soirée Paella
   {
