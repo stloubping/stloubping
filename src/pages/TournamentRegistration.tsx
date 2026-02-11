@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Loader2, Search } from "lucide-react";
+import { Loader2, Search, UserCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const tableauxOptions = [
@@ -71,8 +71,8 @@ const TournamentRegistration = () => {
   }, [selectedTableaux]);
 
   const fetchPlayerInfo = async () => {
-    if (!licenceNumber || licenceNumber.length < 5) {
-      toast.error("Numéro de licence trop court.");
+    if (!licenceNumber || licenceNumber.length < 4) {
+      toast.error("Veuillez saisir un numéro de licence valide.");
       return;
     }
 
@@ -80,7 +80,8 @@ const TournamentRegistration = () => {
     
     try {
       const functionUrl = "https://svwsqioytvvpqbxpekwm.supabase.co/functions/v1/get-player-points";
-      const anonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2d3NxaW95dHZ2cHFieHBel3dtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMTk2MzEsImV4cCI6MjA3Njg5NTYzMX0.JTl37y_D_tr3bnPlCQyPZxOZqVzJHC79rFYYxT3ZXHg";
+      // Correction de la clé (pekwm à la fin)
+      const anonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2d3NxaW95dHZ2cHFieHBla3dtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMTk2MzEsImV4cCI6MjA3Njg5NTYzMX0.JTl37y_D_tr3bnPlCQyPZxOZqVzJHC79rFYYxT3ZXHg";
 
       const response = await fetch(functionUrl, {
         method: 'POST',
@@ -93,26 +94,22 @@ const TournamentRegistration = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Service de recherche indisponible");
+        throw new Error("Joueur non trouvé ou service indisponible");
       }
 
       const data = await response.json();
 
-      if (data && data.points) {
-        form.setValue("points", data.points.toString());
+      if (data) {
+        if (data.points) form.setValue("points", data.points.toString());
         if (data.club) form.setValue("club", data.club);
-        if (data.name) {
-          const names = data.name.split(' ');
-          if (names.length >= 2) {
-            form.setValue("first_name", names[0]);
-            form.setValue("last_name", names.slice(1).join(' '));
-          }
-        }
-        toast.success(`Joueur trouvé : ${data.points} pts`);
+        if (data.first_name) form.setValue("first_name", data.first_name);
+        if (data.last_name) form.setValue("last_name", data.last_name);
+        
+        toast.success(`Fiche récupérée : ${data.first_name} ${data.last_name} (${data.points} pts)`);
       }
     } catch (err) {
-      console.warn("Recherche auto échouée, mode manuel activé.");
-      toast.info("Veuillez saisir vos informations manuellement.");
+      console.error("Erreur lors de la recherche:", err);
+      toast.error("Impossible de récupérer la fiche. Veuillez remplir manuellement.");
     } finally {
       setIsFetching(false);
     }
@@ -130,59 +127,90 @@ const TournamentRegistration = () => {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <Card className="max-w-3xl mx-auto bg-clubLight shadow-lg">
+      <Card className="max-w-3xl mx-auto bg-clubLight shadow-lg border-clubPrimary/20">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold text-clubPrimary">Inscription au Tournoi</CardTitle>
-          <CardDescription>Remplissez le formulaire pour valider votre participation.</CardDescription>
+          <CardDescription>Saisissez votre licence pour pré-remplir votre fiche.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-clubSection/30 p-4 rounded-lg border border-clubPrimary/10 mb-6">
                 <FormField control={form.control} name="licence_number" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Numéro de licence</FormLabel>
+                    <FormLabel className="text-clubDark font-bold">Numéro de licence FFTT</FormLabel>
                     <div className="flex gap-2">
-                      <FormControl><Input placeholder="Ex: 3312345" {...field} className="bg-input border-clubPrimary" /></FormControl>
-                      <Button type="button" variant="outline" onClick={fetchPlayerInfo} disabled={isFetching} className="border-clubPrimary text-clubPrimary">
-                        {isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+                      <FormControl>
+                        <Input 
+                          placeholder="Ex: 3312345" 
+                          {...field} 
+                          className="bg-white border-clubPrimary focus-visible:ring-clubPrimary" 
+                        />
+                      </FormControl>
+                      <Button 
+                        type="button" 
+                        onClick={fetchPlayerInfo} 
+                        disabled={isFetching} 
+                        className="bg-clubPrimary hover:bg-clubPrimary/90 text-white min-w-[120px]"
+                      >
+                        {isFetching ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Search className="h-4 w-4 mr-2" />}
+                        Rechercher
                       </Button>
                     </div>
+                    <FormDescription>Cliquez sur Rechercher pour remplir automatiquement vos points et votre club.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )} />
-                <FormField control={form.control} name="points" render={({ field }) => (
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField control={form.control} name="last_name" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Points</FormLabel>
-                    <FormControl><Input placeholder="Ex: 1245" {...field} className="bg-input border-clubPrimary" /></FormControl>
+                    <FormLabel>Nom</FormLabel>
+                    <FormControl><Input {...field} className="bg-input border-clubPrimary" /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="first_name" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Prénom</FormLabel>
+                    <FormControl><Input {...field} className="bg-input border-clubPrimary" /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField control={form.control} name="first_name" render={({ field }) => (
-                  <FormItem><FormLabel>Prénom</FormLabel><FormControl><Input {...field} className="bg-input border-clubPrimary" /></FormControl><FormMessage /></FormItem>
+                <FormField control={form.control} name="points" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Points mensuels</FormLabel>
+                    <FormControl><Input placeholder="Ex: 1245" {...field} className="bg-input border-clubPrimary" /></FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
-                <FormField control={form.control} name="last_name" render={({ field }) => (
-                  <FormItem><FormLabel>Nom</FormLabel><FormControl><Input {...field} className="bg-input border-clubPrimary" /></FormControl><FormMessage /></FormItem>
+                <FormField control={form.control} name="club" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Club</FormLabel>
+                    <FormControl><Input {...field} className="bg-input border-clubPrimary" /></FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
               </div>
 
-              <FormField control={form.control} name="club" render={({ field }) => (
-                <FormItem><FormLabel>Club</FormLabel><FormControl><Input {...field} className="bg-input border-clubPrimary" /></FormControl><FormMessage /></FormItem>
-              )} />
-
               <FormField control={form.control} name="email" render={({ field }) => (
-                <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" {...field} className="bg-input border-clubPrimary" /></FormControl><FormMessage /></FormItem>
+                <FormItem>
+                  <FormLabel>Email (pour confirmation)</FormLabel>
+                  <FormControl><Input type="email" placeholder="votre@email.com" {...field} className="bg-input border-clubPrimary" /></FormControl>
+                  <FormMessage />
+                </FormItem>
               )} />
 
               <FormField control={form.control} name="selected_tableaux" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tableaux (Max 3 individuels)</FormLabel>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <FormLabel className="text-lg font-bold text-clubDark">Choix des Tableaux (Max 3 individuels)</FormLabel>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
                     {tableauxOptions.map((item) => (
-                      <FormItem key={item.id} className="flex flex-row items-start space-x-3 space-y-0">
+                      <FormItem key={item.id} className="flex flex-row items-start space-x-3 space-y-0 p-2 rounded-md hover:bg-clubSection/50 transition-colors">
                         <FormControl>
                           <Checkbox
                             checked={field.value?.includes(item.id)}
@@ -194,10 +222,10 @@ const TournamentRegistration = () => {
                                 field.onChange(current.filter((v) => v !== item.id));
                               }
                             }}
-                            className="border-clubPrimary"
+                            className="border-clubPrimary data-[state=checked]:bg-clubPrimary"
                           />
                         </FormControl>
-                        <FormLabel className="font-normal">{item.label}</FormLabel>
+                        <FormLabel className="font-normal cursor-pointer">{item.label}</FormLabel>
                       </FormItem>
                     ))}
                   </div>
@@ -205,18 +233,38 @@ const TournamentRegistration = () => {
                 </FormItem>
               )} />
 
+              {selectedTableaux.includes("d1") && (
+                <FormField control={form.control} name="doubles_partner" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nom du partenaire de double</FormLabel>
+                    <FormControl><Input placeholder="Nom et Prénom du partenaire" {...field} className="bg-input border-clubPrimary" /></FormControl>
+                    <FormDescription>Laissez vide si vous n'avez pas encore de partenaire.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              )}
+
               <FormField control={form.control} name="consent" render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-4 bg-clubSection/20 rounded-lg">
                   <FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} className="border-clubPrimary" /></FormControl>
-                  <FormLabel className="text-sm">J'accepte le règlement du tournoi et l'utilisation de mes données pour l'organisation.</FormLabel>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className="text-sm font-medium">
+                      J'accepte le règlement du tournoi et l'utilisation de mes données pour l'organisation.
+                    </FormLabel>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )} />
 
-              <div className="p-4 bg-clubSection rounded-md text-center font-bold text-xl text-clubPrimary">
-                Total à régler sur place : {totalPrice}€
+              <div className="p-6 bg-clubDark text-white rounded-xl text-center shadow-inner">
+                <p className="text-sm opacity-80 mb-1">Montant total estimé</p>
+                <p className="text-4xl font-black text-clubPrimary">{totalPrice}€</p>
+                <p className="text-xs mt-2 opacity-60">Règlement à effectuer sur place le jour du tournoi.</p>
               </div>
-              <Button type="submit" className="w-full bg-clubPrimary text-white py-6 text-lg">Valider mon inscription</Button>
+
+              <Button type="submit" className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-white py-8 text-xl font-bold shadow-lg transform transition-transform active:scale-95">
+                Valider mon inscription
+              </Button>
             </form>
           </Form>
         </CardContent>
