@@ -31,9 +31,6 @@ const tableauxOptions = [
   { id: "d1", label: "Tableau 7 : Doubles <2800 Pts (Début 16h00)", price: 3 },
 ];
 
-const MAX_INDIVIDUAL_TABLEAUX = 3;
-const MAX_REGISTRATIONS_PER_TABLEAU = 48;
-
 const formSchema = z.object({
   first_name: z.string().min(2, { message: "Le prénom est requis." }),
   last_name: z.string().min(2, { message: "Le nom est requis." }),
@@ -61,7 +58,6 @@ const TournamentRegistration = () => {
   const [isFetching, setIsFetching] = useState(false);
   const selectedTableaux = form.watch("selected_tableaux");
   const licenceNumber = form.watch("licence_number");
-  const { openLightbox } = useLightbox();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -82,25 +78,30 @@ const TournamentRegistration = () => {
 
     setIsFetching(true);
     try {
-      // Utilisation de l'URL complète comme requis
-      const response = await fetch('https://svwsqioytvvpqbxpekwm.supabase.co/functions/v1/get-player-points', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ licence: licenceNumber })
+      // Utilisation de la méthode officielle invoke
+      const { data, error } = await supabase.functions.invoke('get-player-points', {
+        body: { licence: licenceNumber }
       });
 
-      if (!response.ok) throw new Error('Erreur lors de la récupération');
+      if (error) throw error;
 
-      const data = await response.json();
-      if (data.points) {
+      if (data && data.points) {
         form.setValue("points", data.points.toString());
         if (data.club) form.setValue("club", data.club);
-        toast.success(`Points récupérés : ${data.points}`);
+        if (data.name) {
+          const names = data.name.split(' ');
+          if (names.length >= 2) {
+            form.setValue("first_name", names[0]);
+            form.setValue("last_name", names.slice(1).join(' '));
+          }
+        }
+        toast.success(`Joueur trouvé : ${data.points} pts`);
       } else {
-        toast.warning("Joueur trouvé mais points non disponibles.");
+        toast.warning("Joueur non trouvé. Saisie manuelle nécessaire.");
       }
     } catch (err) {
-      toast.error("Impossible de récupérer les points. Saisie manuelle nécessaire.");
+      console.error("Erreur lors de l'appel à la fonction:", err);
+      toast.error("Impossible de récupérer les points automatiquement.");
     } finally {
       setIsFetching(false);
     }
@@ -109,7 +110,7 @@ const TournamentRegistration = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { error } = await supabase.from("tournament_registrations").insert([values]);
     if (error) {
-      toast.error("Erreur lors de l'inscription. Vérifiez que tous les champs sont remplis.");
+      toast.error("Erreur lors de l'inscription. Vérifiez vos informations.");
     } else {
       toast.success("Inscription réussie !");
       navigate('/tournoi/inscrits-live');
@@ -121,6 +122,7 @@ const TournamentRegistration = () => {
       <Card className="max-w-3xl mx-auto bg-clubLight shadow-lg">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold text-clubPrimary">Inscription au Tournoi</CardTitle>
+          <CardDescription>Remplissez le formulaire pour valider votre participation.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -130,8 +132,8 @@ const TournamentRegistration = () => {
                   <FormItem>
                     <FormLabel>Numéro de licence</FormLabel>
                     <div className="flex gap-2">
-                      <FormControl><Input placeholder="Licence" {...field} className="bg-input border-clubPrimary" /></FormControl>
-                      <Button type="button" variant="outline" onClick={fetchPlayerInfo} disabled={isFetching}>
+                      <FormControl><Input placeholder="Ex: 3312345" {...field} className="bg-input border-clubPrimary" /></FormControl>
+                      <Button type="button" variant="outline" onClick={fetchPlayerInfo} disabled={isFetching} className="border-clubPrimary text-clubPrimary">
                         {isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
                       </Button>
                     </div>
@@ -166,14 +168,21 @@ const TournamentRegistration = () => {
 
               <FormField control={form.control} name="selected_tableaux" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tableaux</FormLabel>
+                  <FormLabel>Tableaux (Max 3 individuels)</FormLabel>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {tableauxOptions.map((item) => (
                       <FormItem key={item.id} className="flex flex-row items-start space-x-3 space-y-0">
                         <FormControl>
                           <Checkbox
                             checked={field.value?.includes(item.id)}
-                            onCheckedChange={(checked) => checked ? field.onChange([...field.value, item.id]) : field.onChange(field.value?.filter((v) => v !== item.id))}
+                            onCheckedChange={(checked) => {
+                              const current = field.value || [];
+                              if (checked) {
+                                field.onChange([...current, item.id]);
+                              } else {
+                                field.onChange(current.filter((v) => v !== item.id));
+                              }
+                            }}
                             className="border-clubPrimary"
                           />
                         </FormControl>
@@ -188,13 +197,15 @@ const TournamentRegistration = () => {
               <FormField control={form.control} name="consent" render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                   <FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} className="border-clubPrimary" /></FormControl>
-                  <FormLabel>J'accepte les conditions de participation.</FormLabel>
+                  <FormLabel className="text-sm">J'accepte le règlement du tournoi et l'utilisation de mes données pour l'organisation.</FormLabel>
                   <FormMessage />
                 </FormItem>
               )} />
 
-              <div className="p-4 bg-clubSection rounded-md text-center font-bold">Total : {totalPrice}€</div>
-              <Button type="submit" className="w-full bg-clubPrimary text-white">S'inscrire</Button>
+              <div className="p-4 bg-clubSection rounded-md text-center font-bold text-xl text-clubPrimary">
+                Total à régler sur place : {totalPrice}€
+              </div>
+              <Button type="submit" className="w-full bg-clubPrimary text-white py-6 text-lg">Valider mon inscription</Button>
             </form>
           </Form>
         </CardContent>
