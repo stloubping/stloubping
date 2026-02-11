@@ -17,9 +17,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { useLightbox } from '@/context/LightboxContext';
-import { Loader2, Search } from "lucide-react";
+import { Loader2, Search, Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const tableauxOptions = [
   { id: "t1", label: "Tableau 1 : 500-799 (Début 8h30)" },
@@ -78,12 +78,16 @@ const TournamentRegistration = () => {
 
     setIsFetching(true);
     try {
-      // Utilisation de la méthode officielle invoke
       const { data, error } = await supabase.functions.invoke('get-player-points', {
         body: { licence: licenceNumber }
       });
 
-      if (error) throw error;
+      if (error) {
+        // Si erreur 404 ou autre, on informe l'utilisateur qu'il peut saisir manuellement
+        console.warn("Fonction indisponible, passage en mode manuel");
+        toast.info("Service de recherche indisponible. Veuillez remplir les champs manuellement.");
+        return;
+      }
 
       if (data && data.points) {
         form.setValue("points", data.points.toString());
@@ -100,8 +104,7 @@ const TournamentRegistration = () => {
         toast.warning("Joueur non trouvé. Saisie manuelle nécessaire.");
       }
     } catch (err) {
-      console.error("Erreur lors de l'appel à la fonction:", err);
-      toast.error("Impossible de récupérer les points automatiquement.");
+      toast.info("Recherche automatique indisponible. Saisie manuelle activée.");
     } finally {
       setIsFetching(false);
     }
@@ -110,6 +113,7 @@ const TournamentRegistration = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { error } = await supabase.from("tournament_registrations").insert([values]);
     if (error) {
+      console.error("Erreur insertion:", error);
       toast.error("Erreur lors de l'inscription. Vérifiez vos informations.");
     } else {
       toast.success("Inscription réussie !");
@@ -125,6 +129,13 @@ const TournamentRegistration = () => {
           <CardDescription>Remplissez le formulaire pour valider votre participation.</CardDescription>
         </CardHeader>
         <CardContent>
+          <Alert className="mb-6 bg-blue-50 border-blue-200 text-blue-800">
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              Si la recherche par licence ne fonctionne pas, vous pouvez remplir tous les champs manuellement.
+            </AlertDescription>
+          </Alert>
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
