@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Loader2, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const tableauxOptions = [
@@ -54,10 +53,7 @@ const TournamentRegistration = () => {
   });
 
   const [totalPrice, setTotalPrice] = useState(0);
-  const [isFetching, setIsFetching] = useState(false);
-  
   const selectedTableaux = form.watch("selected_tableaux");
-  const licenceNumber = form.watch("licence_number");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,37 +65,6 @@ const TournamentRegistration = () => {
     if (selectedTableaux.includes("d1")) currentTotal += 3;
     setTotalPrice(currentTotal);
   }, [selectedTableaux]);
-
-  const fetchPlayerInfo = async () => {
-    if (!licenceNumber || licenceNumber.length < 4) {
-      toast.error("Veuillez saisir un numéro de licence valide.");
-      return;
-    }
-
-    setIsFetching(true);
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('get-player-points', {
-        body: { licence: licenceNumber },
-      });
-
-      if (error) throw error;
-
-      if (data) {
-        if (data.points) form.setValue("points", data.points.toString());
-        if (data.club) form.setValue("club", data.club);
-        if (data.first_name) form.setValue("first_name", data.first_name);
-        if (data.last_name) form.setValue("last_name", data.last_name);
-        
-        toast.success(`Fiche FFTT récupérée : ${data.first_name} ${data.last_name}`);
-      }
-    } catch (err) {
-      console.error("Erreur recherche:", err);
-      toast.error("Joueur non trouvé sur les serveurs FFTT. Veuillez remplir manuellement.");
-    } finally {
-      setIsFetching(false);
-    }
-  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { error } = await supabase.from("tournament_registrations").insert([values]);
@@ -116,38 +81,11 @@ const TournamentRegistration = () => {
       <Card className="max-w-3xl mx-auto bg-clubLight shadow-lg border-clubPrimary/20">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold text-clubPrimary">Inscription au Tournoi</CardTitle>
-          <CardDescription>Saisissez votre licence pour pré-remplir votre fiche via l'API FFTT.</CardDescription>
+          <CardDescription>Veuillez remplir le formulaire ci-dessous pour valider votre inscription.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="bg-clubSection/30 p-4 rounded-lg border border-clubPrimary/10 mb-6">
-                <FormField control={form.control} name="licence_number" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-clubDark font-bold">Numéro de licence FFTT</FormLabel>
-                    <div className="flex gap-2">
-                      <FormControl>
-                        <Input 
-                          placeholder="Ex: 3312345" 
-                          {...field} 
-                          className="bg-white border-clubPrimary focus-visible:ring-clubPrimary" 
-                        />
-                      </FormControl>
-                      <Button 
-                        type="button" 
-                        onClick={fetchPlayerInfo} 
-                        disabled={isFetching} 
-                        className="bg-clubPrimary hover:bg-clubPrimary/90 text-white min-w-[120px]"
-                      >
-                        {isFetching ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Search className="h-4 w-4 mr-2" />}
-                        Rechercher
-                      </Button>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-              </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField control={form.control} name="last_name" render={({ field }) => (
                   <FormItem>
@@ -164,15 +102,25 @@ const TournamentRegistration = () => {
                   </FormItem>
                 )} />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField control={form.control} name="licence_number" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Numéro de licence FFTT</FormLabel>
+                    <FormControl><Input placeholder="Ex: 3312345" {...field} className="bg-input border-clubPrimary" /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
                 <FormField control={form.control} name="points" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Points mensuels</FormLabel>
+                    <FormLabel>Points officiels</FormLabel>
                     <FormControl><Input placeholder="Ex: 1245" {...field} className="bg-input border-clubPrimary" /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField control={form.control} name="club" render={({ field }) => (
                   <FormItem>
                     <FormLabel>Club</FormLabel>
@@ -180,15 +128,14 @@ const TournamentRegistration = () => {
                     <FormMessage />
                   </FormItem>
                 )} />
+                <FormField control={form.control} name="email" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email (pour confirmation)</FormLabel>
+                    <FormControl><Input type="email" placeholder="votre@email.com" {...field} className="bg-input border-clubPrimary" /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
               </div>
-
-              <FormField control={form.control} name="email" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email (pour confirmation)</FormLabel>
-                  <FormControl><Input type="email" placeholder="votre@email.com" {...field} className="bg-input border-clubPrimary" /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
 
               <FormField control={form.control} name="selected_tableaux" render={({ field }) => (
                 <FormItem>
