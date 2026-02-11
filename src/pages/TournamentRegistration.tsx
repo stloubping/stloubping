@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Loader2, Search, UserCheck } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const tableauxOptions = [
@@ -79,25 +79,12 @@ const TournamentRegistration = () => {
     setIsFetching(true);
     
     try {
-      const functionUrl = "https://svwsqioytvvpqbxpekwm.supabase.co/functions/v1/get-player-points";
-      // Correction de la clé (pekwm à la fin)
-      const anonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2d3NxaW95dHZ2cHFieHBla3dtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMTk2MzEsImV4cCI6MjA3Njg5NTYzMX0.JTl37y_D_tr3bnPlCQyPZxOZqVzJHC79rFYYxT3ZXHg";
-
-      const response = await fetch(functionUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${anonKey}`,
-          'apikey': anonKey
-        },
-        body: JSON.stringify({ licence: licenceNumber })
+      // Utilisation de la méthode officielle invoke() au lieu de fetch()
+      const { data, error } = await supabase.functions.invoke('get-player-points', {
+        body: { licence: licenceNumber },
       });
 
-      if (!response.ok) {
-        throw new Error("Joueur non trouvé ou service indisponible");
-      }
-
-      const data = await response.json();
+      if (error) throw error;
 
       if (data) {
         if (data.points) form.setValue("points", data.points.toString());
@@ -105,11 +92,11 @@ const TournamentRegistration = () => {
         if (data.first_name) form.setValue("first_name", data.first_name);
         if (data.last_name) form.setValue("last_name", data.last_name);
         
-        toast.success(`Fiche récupérée : ${data.first_name} ${data.last_name} (${data.points} pts)`);
+        toast.success(`Fiche récupérée : ${data.first_name} ${data.last_name}`);
       }
     } catch (err) {
-      console.error("Erreur lors de la recherche:", err);
-      toast.error("Impossible de récupérer la fiche. Veuillez remplir manuellement.");
+      console.error("Erreur recherche:", err);
+      toast.error("Joueur non trouvé. Veuillez remplir manuellement.");
     } finally {
       setIsFetching(false);
     }
@@ -157,7 +144,6 @@ const TournamentRegistration = () => {
                         Rechercher
                       </Button>
                     </div>
-                    <FormDescription>Cliquez sur Rechercher pour remplir automatiquement vos points et votre club.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -238,7 +224,6 @@ const TournamentRegistration = () => {
                   <FormItem>
                     <FormLabel>Nom du partenaire de double</FormLabel>
                     <FormControl><Input placeholder="Nom et Prénom du partenaire" {...field} className="bg-input border-clubPrimary" /></FormControl>
-                    <FormDescription>Laissez vide si vous n'avez pas encore de partenaire.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -259,10 +244,9 @@ const TournamentRegistration = () => {
               <div className="p-6 bg-clubDark text-white rounded-xl text-center shadow-inner">
                 <p className="text-sm opacity-80 mb-1">Montant total estimé</p>
                 <p className="text-4xl font-black text-clubPrimary">{totalPrice}€</p>
-                <p className="text-xs mt-2 opacity-60">Règlement à effectuer sur place le jour du tournoi.</p>
               </div>
 
-              <Button type="submit" className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-white py-8 text-xl font-bold shadow-lg transform transition-transform active:scale-95">
+              <Button type="submit" className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-white py-8 text-xl font-bold shadow-lg">
                 Valider mon inscription
               </Button>
             </form>
