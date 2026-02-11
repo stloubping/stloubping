@@ -49,6 +49,7 @@ const navItems: NavItem[] = [
     type: "dropdown",
     children: [
       { name: "Inscription au Tournoi", path: "/tournoi-inscription", type: "link" },
+      { name: "Les Inscrits LIVE", path: "/tournoi/inscrits-live", type: "link" }, // New link
       { name: "Liste des Inscriptions", path: "/tournoi-inscriptions-liste", type: "link" },
     ],
   },
@@ -70,15 +71,14 @@ const Navbar = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isVideosDropdownOpen, setIsVideosDropdownOpen] = useState(false);
   const [isJoueursDropdownOpen, setIsJoueursDropdownOpen] = useState(false);
-  const [isEquipesDropdownOpen, setIsEquipesDropdownOpen] = useState(false); // New state for Equipes dropdown
-  const [isTournoiDropdownOpen, setIsTournoiDropdownOpen] = useState(false); // New state for Tournoi dropdown
+  const [isEquipesDropdownOpen, setIsEquipesDropdownOpen] = useState(false);
+  const [isTournoiDropdownOpen, setIsTournoiDropdownOpen] = useState(false);
 
   const NavLinks = ({ className, closeSheet, isMobileView = false }: { className?: string; closeSheet?: () => void; isMobileView?: boolean }) => {
     return (
       <nav className={cn("flex", isMobileView ? "flex-col space-x-0 space-y-4 p-0" : "items-center space-x-4 lg:space-x-6", className)}>
         {navItems.map((item) => {
           if (item.type === "dropdown") {
-            // Determine which state setter to use based on item name
             let isCurrentDropdownOpen;
             let setIsCurrentDropdownOpen;
 
@@ -91,11 +91,11 @@ const Navbar = () => {
             } else if (item.name === "Équipes") {
               isCurrentDropdownOpen = isEquipesDropdownOpen;
               setIsCurrentDropdownOpen = setIsEquipesDropdownOpen;
-            } else if (item.name === "Tournoi") { // Handle Tournoi dropdown
+            } else if (item.name === "Tournoi") {
               isCurrentDropdownOpen = isTournoiDropdownOpen;
               setIsCurrentDropdownOpen = setIsTournoiDropdownOpen;
             } else {
-              return null; // Should not happen
+              return null;
             }
 
             if (isMobileView) {
@@ -123,7 +123,7 @@ const Navbar = () => {
                   </AccordionItem>
                 </Accordion>
               );
-            } else { // Desktop dropdown
+            } else {
               return (
                 <DropdownMenu key={item.name} open={isCurrentDropdownOpen} onOpenChange={setIsCurrentDropdownOpen}>
                   <DropdownMenuTrigger asChild>
@@ -165,7 +165,7 @@ const Navbar = () => {
                 </DropdownMenu>
               );
             }
-          } else { // Regular link
+          } else {
             return (
               <Link
                 key={item.name}

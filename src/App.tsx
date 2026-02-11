@@ -13,6 +13,7 @@ import Partenaires from "./pages/Partenaires";
 import Contact from "./pages/Contact";
 import TournamentRegistration from "./pages/TournamentRegistration";
 import TournamentRegistrationsList from "./pages/TournamentRegistrationsList";
+import TournamentLiveRegistrations from "./pages/TournamentLiveRegistrations"; // Import new page
 import ClassementJoueurs from "./pages/ClassementJoueurs";
 import ProgressionMensuelle from "./pages/ProgressionMensuelle";
 import ProgressionAnnuelle from "./pages/ProgressionAnnuelle";
@@ -22,12 +23,12 @@ import WTTVideos from "./pages/WTTVideos";
 import LesLegendes from "./pages/LesLegendes";
 import Tutos from "./pages/Tutos";
 import NotFound from "./pages/NotFound";
-import MentionsLegales from "./pages/MentionsLegales"; // Import new page
-import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite"; // Import new page
-import PolitiqueCookies from "./pages/PolitiqueCookies"; // Import new page
-import DemandeDonnees from "./pages/DemandeDonnees"; // Import new page
+import MentionsLegales from "./pages/MentionsLegales";
+import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
+import PolitiqueCookies from "./pages/PolitiqueCookies";
+import DemandeDonnees from "./pages/DemandeDonnees";
 import { LightboxProvider } from "./context/LightboxContext";
-import CookieConsentBanner from "./components/CookieConsentBanner"; // Import new component
+import CookieConsentBanner from "./components/CookieConsentBanner";
 import React from "react";
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ const App = () => (
                 <Route path="/boutique" element={<Boutique />} />
                 <Route path="/partenaires" element={<Partenaires />} />
                 <Route path="/tournoi-inscription" element={<TournamentRegistration />} />
+                <Route path="/tournoi/inscrits-live" element={<TournamentLiveRegistrations />} /> {/* New route */}
                 <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} />
                 <Route path="/videos/wtt" element={<WTTVideos />} />
                 <Route path="/videos/tutos" element={<Tutos />} />
@@ -69,9 +71,7 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
-    {/* CustomToaster et Sonner restent désactivés pour le moment */}
-    {/* <CustomToaster /> */}
-    <Sonner /> {/* J'ai réactivé le composant Sonner ici */}
+    <Sonner />
   </div>
 );
 

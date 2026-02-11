@@ -18,9 +18,9 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
-import { Loader2 } from "lucide-react"; // Import Loader2 icon
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useLightbox } from '@/context/LightboxContext';
+import { Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const tableauxOptions = [
   { id: "t1", label: "Tableau 1 : 500-799 (Début 8h30)" },
@@ -29,7 +29,7 @@ const tableauxOptions = [
   { id: "t4", label: "Tableau 4 : 500-1599 (Début 11h30)" },
   { id: "t5", label: "Tableau 5 : 500-1199 (Début 13h30)" },
   { id: "t6", label: "Tableau 6 : 500-Non Num FR (Début 14h30)" },
-  { id: "d1", label: "Tableau 7 : Doubles <2800 Pts (Début 16h00)", price: 3 }, // Prix spécifique pour les doubles
+  { id: "d1", label: "Tableau 7 : Doubles <2800 Pts (Début 16h00)", price: 3 },
 ];
 
 const MAX_INDIVIDUAL_TABLEAUX = 3;
@@ -44,28 +44,11 @@ const formSchema = z.object({
   first_name: z.string().min(2, { message: "Le prénom doit contenir au moins 2 caractères." }),
   last_name: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères." }),
   email: z.string().email({ message: "Veuillez entrer une adresse email valide." }),
-  phone: z.string().optional(), // Rendu facultatif
+  phone: z.string().optional(),
   licence_number: z.string()
     .min(1, { message: "Le numéro de licence est requis." })
-    .regex(/^\d+$/, { message: "Le numéro de licence doit contenir uniquement des chiffres." })
-    .refine(async (licence_number) => {
-      if (!licence_number) return true; // Already handled by .min(1)
-      const { data, error } = await supabase
-        .from('tournament_registrations')
-        .select('licence_number')
-        .eq('licence_number', licence_number);
-
-      if (error) {
-        console.error("Error checking licence number uniqueness:", error);
-        // En cas d'erreur de base de données, on considère que ce n'est pas unique pour éviter les doublons
-        // ou on pourrait retourner true et gérer l'erreur différemment si l'on veut permettre la soumission.
-        // Pour l'instant, on renvoie false pour bloquer l'inscription en cas de problème de vérification.
-        return false;
-      }
-      return data.length === 0; // True si aucune inscription existante trouvée avec ce numéro
-    }, {
-      message: "Ce numéro de licence est déjà enregistré.",
-    }),
+    .regex(/^\d+$/, { message: "Le numéro de licence doit contenir uniquement des chiffres." }),
+  points: z.string().min(1, { message: "Veuillez indiquer vos points (classement)." }),
   club: z.string().min(2, { message: "Le nom du club doit contenir au moins 2 caractères." }),
   selected_tableaux: z.array(z.string()).min(1, { message: "Veuillez sélectionner au moins un tableau." })
     .refine((tableaux) => {
@@ -86,14 +69,14 @@ const TournamentRegistration = () => {
       first_name: "",
       last_name: "",
       email: "",
-      phone: "", // Laisser vide pour un champ optionnel
+      phone: "",
       licence_number: "",
+      points: "",
       club: "",
       selected_tableaux: [],
       doubles_partner: "",
       consent: false,
     },
-    mode: "onBlur", // Valide au blur pour les validations asynchrones
   });
 
   const [totalPrice, setTotalPrice] = useState(0);
@@ -101,7 +84,7 @@ const TournamentRegistration = () => {
   const [loadingCounts, setLoadingCounts] = useState(true);
   const selectedTableaux = form.watch("selected_tableaux");
   const { openLightbox } = useLightbox();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const fetchTableauCounts = async () => {
     setLoadingCounts(true);
@@ -111,7 +94,6 @@ const TournamentRegistration = () => {
 
     if (error) {
       console.error("Error fetching tableau counts:", error);
-      toast.error("Erreur lors du chargement des places disponibles.");
     } else {
       const countsMap = new Map<string, number>();
       data.forEach((item: TableauCount) => {
@@ -132,7 +114,7 @@ const TournamentRegistration = () => {
     const numIndividualTableaux = individualTableaux.length;
 
     if (numIndividualTableaux === 1) {
-      currentTotal += 9; // Updated price
+      currentTotal += 9;
     } else if (numIndividualTableaux === 2) {
       currentTotal += 15;
     } else if (numIndividualTableaux >= 3) {
@@ -151,22 +133,18 @@ const TournamentRegistration = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("tournament_registrations")
         .insert([values]);
 
-      if (error) {
-        // Supabase will return an error if the trigger raises an exception
-        throw error;
-      }
+      if (error) throw error;
 
       toast.success("Inscription enregistrée avec succès !");
       form.reset();
-      fetchTableauCounts(); // Re-fetch counts after successful registration
-      navigate('/tournoi-inscriptions-liste'); // Redirect to the list page
+      navigate('/tournoi/inscrits-live');
     } catch (error: any) {
       console.error("Erreur lors de l'inscription:", error.message);
-      toast.error("Erreur lors de l'inscription: " + error.message);
+      toast.error("Erreur lors de l'inscription. Veuillez vérifier vos informations.");
     }
   };
 
@@ -186,7 +164,7 @@ const TournamentRegistration = () => {
         <CardContent>
           <img
             src="/images/actualites/tournoi-regional-2026-affiche.png"
-            alt="Affiche du Tournoi Régional Saint-Loub'Ping 2026"
+            alt="Affiche du Tournoi"
             className="w-full h-auto object-cover rounded-lg mb-8 shadow-md cursor-zoom-in"
             onClick={() => openLightbox("/images/actualites/tournoi-regional-2026-affiche.png")}
           />
@@ -220,48 +198,62 @@ const TournamentRegistration = () => {
                   )}
                 />
               </div>
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="Votre email" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Téléphone (facultatif)</FormLabel>
-                    <FormControl>
-                      <Input type="tel" placeholder="Votre numéro de téléphone" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="licence_number"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Numéro de licence FFTT</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Votre numéro de licence" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
-                    </FormControl>
-                    <FormDescription className="text-clubLight-foreground/70">
-                      Le numéro de licence doit contenir uniquement des chiffres.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="Votre email" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Téléphone (facultatif)</FormLabel>
+                      <FormControl>
+                        <Input type="tel" placeholder="Votre numéro" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="licence_number"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Numéro de licence FFTT</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Votre numéro de licence" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="points"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Points (Classement)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ex: 1245" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
                 name="club"
@@ -296,28 +288,21 @@ const TournamentRegistration = () => {
                           const isDisabled = isFull || (isIndividualTableau && !canSelectMoreIndividual && !isAlreadySelected);
 
                           return (
-                            <FormItem
-                              key={item.id}
-                              className="flex flex-row items-start space-x-3 space-y-0"
-                            >
+                            <FormItem key={item.id} className="flex flex-row items-start space-x-3 space-y-0">
                               <FormControl>
                                 <Checkbox
                                   checked={isAlreadySelected}
                                   onCheckedChange={(checked) => {
                                     return checked
                                       ? field.onChange([...field.value, item.id])
-                                      : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== item.id
-                                          )
-                                        );
+                                      : field.onChange(field.value?.filter((value) => value !== item.id));
                                   }}
                                   disabled={isDisabled}
                                   className="border-clubPrimary data-[state=checked]:bg-clubPrimary data-[state=checked]:text-clubDark-foreground"
                                 />
                               </FormControl>
                               <FormLabel className="font-normal text-clubLight-foreground">
-                                {item.label} {item.id === "d1" && <span className="font-semibold">({item.price}€)</span>}
+                                {item.label}
                                 <span className="ml-2 text-xs text-muted-foreground">
                                   ({isFull ? "Complet" : `${placesLeft} places`})
                                 </span>
@@ -327,9 +312,6 @@ const TournamentRegistration = () => {
                         })}
                       </div>
                     )}
-                    <FormDescription className="text-clubLight-foreground/70">
-                      Tarifs : 1 tableau = 9€, 2 tableaux = 15€, 3 tableaux = 20€. Doubles = 3€ en supplément.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -344,9 +326,6 @@ const TournamentRegistration = () => {
                       <FormControl>
                         <Input placeholder="Nom et Prénom du partenaire" {...field} className="bg-input text-clubLight-foreground border-clubPrimary" />
                       </FormControl>
-                      <FormDescription className="text-clubLight-foreground/70">
-                        Uniquement si vous participez au tableau de doubles.
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -366,11 +345,8 @@ const TournamentRegistration = () => {
                     </FormControl>
                     <div className="space-y-1 leading-none">
                       <FormLabel className="text-clubLight-foreground">
-                        J'accepte les conditions de participation et le règlement du tournoi.
+                        J'accepte les conditions de participation.
                       </FormLabel>
-                      <FormDescription className="text-clubLight-foreground/70">
-                        (Les conditions sont affichées sur l'affiche ci-dessus)
-                      </FormDescription>
                     </div>
                     <FormMessage />
                   </FormItem>
@@ -379,10 +355,7 @@ const TournamentRegistration = () => {
 
               <div className="mt-8 p-4 bg-clubSection rounded-md text-center">
                 <p className="text-lg font-semibold text-clubDark">
-                  Coût total de votre inscription : <span className="text-clubPrimary">{totalPrice}€</span>
-                </p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Le paiement sera effectué sur place le jour du tournoi.
+                  Coût total : <span className="text-clubPrimary">{totalPrice}€</span>
                 </p>
               </div>
 
