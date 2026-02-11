@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Users, AlertCircle } from 'lucide-react';
+import { Loader2, Users, AlertCircle, TrendingDown } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const tableauxOptions = [
@@ -24,7 +24,7 @@ interface Registration {
   first_name: string;
   last_name: string;
   club: string;
-  points?: string; // Optionnel au cas où la colonne n'existe pas encore
+  points?: string;
   selected_tableaux: string[];
   doubles_partner: string | null;
 }
@@ -40,17 +40,27 @@ const TournamentLiveRegistrations = () => {
       setLoading(true);
       setError(null);
       
-      // On sélectionne tout (*) pour éviter les erreurs si une colonne spécifique manque
       const { data, error: supabaseError } = await supabase
         .from('tournament_registrations')
-        .select('*')
-        .order('last_name', { ascending: true });
+        .select('*');
 
       if (supabaseError) {
         console.error("Erreur Supabase:", supabaseError);
         setError(supabaseError.message);
       } else {
-        setRegistrations(data || []);
+        // Tri par points décroissants (numérique)
+        const sortedData = (data || []).sort((a, b) => {
+          const pointsA = parseInt(a.points || "0", 10);
+          const pointsB = parseInt(b.points || "0", 10);
+          
+          if (pointsB !== pointsA) {
+            return pointsB - pointsA;
+          }
+          // Si points égaux, tri par nom
+          return (a.last_name || "").localeCompare(b.last_name || "");
+        });
+        
+        setRegistrations(sortedData);
       }
       setLoading(false);
     };
@@ -70,8 +80,9 @@ const TournamentLiveRegistrations = () => {
             <Users className="h-10 w-10 text-clubPrimary mr-3" />
             <CardTitle className="text-3xl font-bold text-clubDark">Les Inscrits LIVE</CardTitle>
           </div>
-          <CardDescription className="text-clubLight-foreground text-lg">
-            Liste des joueurs inscrits via le formulaire en ligne.
+          <CardDescription className="text-clubLight-foreground text-lg flex items-center justify-center gap-2">
+            <TrendingDown className="h-5 w-5 text-clubPrimary" />
+            Liste triée par points (du plus fort au plus faible)
           </CardDescription>
           
           <div className="mt-8 max-w-xs mx-auto">
@@ -97,8 +108,7 @@ const TournamentLiveRegistrations = () => {
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Erreur de chargement</AlertTitle>
               <AlertDescription>
-                Impossible de récupérer les inscrits : {error}. 
-                Vérifiez que la table 'tournament_registrations' est bien configurée.
+                Impossible de récupérer les inscrits : {error}.
               </AlertDescription>
             </Alert>
           )}
@@ -110,7 +120,7 @@ const TournamentLiveRegistrations = () => {
             </div>
           ) : filteredRegistrations.length === 0 ? (
             <div className="text-center py-20 text-muted-foreground italic">
-              {error ? "Erreur lors de la récupération" : "Aucun inscrit trouvé pour ce tableau."}
+              Aucun inscrit trouvé pour ce tableau.
             </div>
           ) : (
             <div className="overflow-x-auto rounded-lg border border-border">
@@ -131,7 +141,9 @@ const TournamentLiveRegistrations = () => {
                       <TableCell className="font-semibold text-clubDark uppercase">
                         {reg.last_name} <span className="capitalize font-normal">{reg.first_name}</span>
                       </TableCell>
-                      <TableCell className="text-center font-medium text-clubDark">{reg.points || '-'}</TableCell>
+                      <TableCell className="text-center font-bold text-clubPrimary bg-clubPrimary/5">
+                        {reg.points || '500'}
+                      </TableCell>
                       <TableCell className="text-clubLight-foreground">{reg.club}</TableCell>
                       {filter === "d1" && <TableCell className="text-clubLight-foreground italic">{reg.doubles_partner || 'À définir'}</TableCell>}
                     </TableRow>
