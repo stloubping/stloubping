@@ -18,15 +18,18 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
+
+const MAX_REGISTRATIONS = 48;
 
 const tableauxOptions = [
-  { id: "t1", label: "Tableau 1 : 500-799 (Début 8h30)" },
-  { id: "t2", label: "Tableau 2 : 500-1399 (Début 9h30)" },
-  { id: "t3", label: "Tableau 3 : 500-999 (Début 10h30)" },
-  { id: "t4", label: "Tableau 4 : 500-1599 (Début 11h30)" },
-  { id: "t5", label: "Tableau 5 : 500-1199 (Début 13h30)" },
-  { id: "t6", label: "Tableau 6 : 500-Non Num FR (Début 14h30)" },
-  { id: "d1", label: "Tableau 7 : Doubles <2800 Pts (Début 16h00)", price: 3 },
+  { id: "t1", label: "Tableau 1 : 500-799 (8h30)" },
+  { id: "t2", label: "Tableau 2 : 500-1399 (9h30)" },
+  { id: "t3", label: "Tableau 3 : 500-999 (10h30)" },
+  { id: "t4", label: "Tableau 4 : 500-1599 (11h30)" },
+  { id: "t5", label: "Tableau 5 : 500-1199 (13h30)" },
+  { id: "t6", label: "Tableau 6 : 500-Non Num FR (14h30)" },
+  { id: "d1", label: "Tableau 7 : Doubles <2800 Pts (16h00)" },
 ];
 
 const formSchema = z.object({
@@ -43,6 +46,11 @@ const formSchema = z.object({
 });
 
 const TournamentRegistration = () => {
+  const [counts, setCounts] = useState<Record<string, number>>({});
+  const [loadingCounts, setLoadingCounts] = useState(true);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,9 +60,22 @@ const TournamentRegistration = () => {
     },
   });
 
-  const [totalPrice, setTotalPrice] = useState(0);
   const selectedTableaux = form.watch("selected_tableaux");
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      const { data, error } = await supabase.from('tableau_counts').select('*');
+      if (!error && data) {
+        const countsMap = data.reduce((acc: any, curr: any) => {
+          acc[curr.tableau_id] = curr.current_registrations;
+          return acc;
+        }, {});
+        setCounts(countsMap);
+      }
+      setLoadingCounts(false);
+    };
+    fetchCounts();
+  }, []);
 
   useEffect(() => {
     let currentTotal = 0;
@@ -69,7 +90,7 @@ const TournamentRegistration = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { error } = await supabase.from("tournament_registrations").insert([values]);
     if (error) {
-      toast.error("Erreur lors de l'inscription.");
+      toast.error(error.message || "Erreur lors de l'inscription.");
     } else {
       toast.success("Inscription réussie !");
       navigate('/tournoi/inscrits-live');
@@ -141,25 +162,39 @@ const TournamentRegistration = () => {
                 <FormItem>
                   <FormLabel className="text-lg font-bold text-clubDark">Choix des Tableaux (Max 3 individuels)</FormLabel>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
-                    {tableauxOptions.map((item) => (
-                      <FormItem key={item.id} className="flex flex-row items-start space-x-3 space-y-0 p-2 rounded-md hover:bg-clubSection/50 transition-colors">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(item.id)}
-                            onCheckedChange={(checked) => {
-                              const current = field.value || [];
-                              if (checked) {
-                                field.onChange([...current, item.id]);
-                              } else {
-                                field.onChange(current.filter((v) => v !== item.id));
-                              }
-                            }}
-                            className="border-clubPrimary data-[state=checked]:bg-clubPrimary"
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal cursor-pointer">{item.label}</FormLabel>
-                      </FormItem>
-                    ))}
+                    {tableauxOptions.map((item) => {
+                      const currentCount = counts[item.id] || 0;
+                      const remaining = MAX_REGISTRATIONS - currentCount;
+                      const isFull = remaining <= 0;
+
+                      return (
+                        <FormItem key={item.id} className={`flex flex-row items-start space-x-3 space-y-0 p-2 rounded-md transition-colors ${isFull ? 'opacity-50 bg-gray-100' : 'hover:bg-clubSection/50'}`}>
+                          <FormControl>
+                            <Checkbox
+                              disabled={isFull}
+                              checked={field.value?.includes(item.id)}
+                              onCheckedChange={(checked) => {
+                                const current = field.value || [];
+                                if (checked) {
+                                  field.onChange([...current, item.id]);
+                                } else {
+                                  field.onChange(current.filter((v) => v !== item.id));
+                                }
+                              }}
+                              className="border-clubPrimary data-[state=checked]:bg-clubPrimary"
+                            />
+                          </FormControl>
+                          <div className="flex flex-col">
+                            <FormLabel className={`font-normal ${isFull ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                              {item.label}
+                            </FormLabel>
+                            <span className={`text-[10px] font-bold ${remaining <= 5 ? 'text-red-500' : 'text-green-600'}`}>
+                              {isFull ? "COMPLET" : `${remaining} places restantes`}
+                            </span>
+                          </div>
+                        </FormItem>
+                      );
+                    })}
                   </div>
                   <FormMessage />
                 </FormItem>
