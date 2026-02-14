@@ -23,15 +23,22 @@ serve(async (req) => {
       throw new Error("Identifiants Gmail non configurés dans les secrets Supabase.");
     }
 
+    // Utilisation d'une approche plus robuste pour la connexion SMTP
     const client = new SmtpClient()
     
-    console.log("[send-registration-email] Connexion au serveur SMTP...");
-    await client.connectTLS({
-      hostname: "smtp.gmail.com",
-      port: 465,
-      username: GMAIL_USER,
-      password: GMAIL_APP_PASSWORD,
-    })
+    console.log("[send-registration-email] Connexion au serveur SMTP de Google...");
+    
+    try {
+      await client.connectTLS({
+        hostname: "smtp.gmail.com",
+        port: 465,
+        username: GMAIL_USER,
+        password: GMAIL_APP_PASSWORD,
+      })
+    } catch (connError) {
+      console.error("[send-registration-email] Erreur de connexion SMTP:", connError.message);
+      throw new Error("Impossible de se connecter au serveur SMTP de Gmail. Vérifiez le mot de passe d'application.");
+    }
 
     const tableauxLabels = registration.selected_tableaux.map((t: string) => {
       switch (t) {
@@ -47,22 +54,29 @@ serve(async (req) => {
     }).join(', ');
 
     console.log("[send-registration-email] Envoi du message...");
+    
     await client.send({
       from: GMAIL_USER,
       to: registration.email,
       subject: "Confirmation d'inscription - Tournoi Saint-Loub'Ping",
       content: `Bonjour ${registration.first_name},\n\nNous avons bien reçu votre inscription pour le tournoi du 11 Avril 2026.\n\nRécapitulatif :\n- Joueur : ${registration.first_name} ${registration.last_name}\n- Club : ${registration.club}\n- Tableaux : ${tableauxLabels}\n\nÀ bientôt !`,
       html: `
-        <div style="font-family: sans-serif; color: #333;">
-          <h1 style="color: #e11d48;">Confirmation d'inscription</h1>
-          <p>Bonjour <strong>${registration.first_name}</strong>,</p>
-          <p>Nous avons bien reçu votre inscription pour le tournoi régional du 11 Avril 2026.</p>
-          <div style="background-color: #f4f4f5; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <p><strong>Tableaux :</strong> ${tableauxLabels}</p>
-            <p><strong>Club :</strong> ${registration.club}</p>
+        <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="color: #e11d48; margin: 0;">St Loub'Ping</h1>
+            <p style="color: #666; font-style: italic;">Confirmation d'inscription</p>
           </div>
-          <p>Le règlement s'effectuera sur place le jour du tournoi.</p>
-          <p>À très bientôt !</p>
+          <p>Bonjour <strong>${registration.first_name}</strong>,</p>
+          <p>Nous avons bien reçu votre inscription pour le tournoi régional du <strong>11 Avril 2026</strong>.</p>
+          <div style="background-color: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #e11d48;">
+            <p style="margin: 5px 0;"><strong>Tableaux :</strong> ${tableauxLabels}</p>
+            <p style="margin: 5px 0;"><strong>Club :</strong> ${registration.club}</p>
+            <p style="margin: 5px 0;"><strong>Points :</strong> ${registration.points || '500'}</p>
+          </div>
+          <p style="font-size: 0.9em; color: #666;">Le règlement de votre inscription s'effectuera sur place le jour du tournoi.</p>
+          <p>À très bientôt dans notre salle !</p>
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+          <p style="font-size: 0.8em; color: #999; text-align: center;">Ceci est un message automatique, merci de ne pas y répondre.</p>
         </div>
       `,
     })
