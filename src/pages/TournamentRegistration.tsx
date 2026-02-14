@@ -96,18 +96,7 @@ const TournamentRegistration = () => {
       toast.error(error.message || "Erreur lors de l'inscription.");
       setIsSubmitting(false);
     } else {
-      // Tentative d'envoi de l'email de confirmation via l'Edge Function
-      try {
-        await supabase.functions.invoke("send-registration-email", {
-          body: values,
-        });
-        toast.success("Inscription réussie ! Un email de confirmation vous a été envoyé.");
-      } catch (emailError) {
-        console.error("Erreur lors de l'envoi de l'email:", emailError);
-        // On affiche quand même un succès pour l'inscription car elle est bien en base
-        toast.success("Inscription réussie ! (L'envoi de l'email a échoué, mais votre place est réservée)");
-      }
-      
+      toast.success("Inscription réussie !");
       navigate('/tournoi/inscrits-live');
     }
   };
@@ -166,7 +155,7 @@ const TournamentRegistration = () => {
                 )} />
                 <FormField control={form.control} name="email" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email (pour confirmation)</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl><Input type="email" placeholder="votre@email.com" {...field} className="bg-input border-clubPrimary" /></FormControl>
                     <FormMessage />
                   </FormItem>
