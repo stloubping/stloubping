@@ -97,8 +97,8 @@ const TournamentRegistration = () => {
       setIsSubmitting(false);
     } else {
       try {
-        // Appel de la fonction d'envoi d'email avec l'URL complète
-        const { error: funcError } = await supabase.functions.invoke("https://svwsqioytvvpqbxpekwm.supabase.co/functions/v1/send-registration-email", {
+        // Appel de la fonction par son NOM uniquement
+        const { error: funcError } = await supabase.functions.invoke("registration-email", {
           body: values,
         });
         

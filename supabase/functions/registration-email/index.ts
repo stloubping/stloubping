@@ -6,6 +6,7 @@ const corsHeaders = {
 }
 
 serve(async (req) => {
+  // Gestion du pre-flight CORS
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
   }
@@ -15,11 +16,11 @@ serve(async (req) => {
     const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 
     if (!RESEND_API_KEY) {
-      console.error("[send-registration-email] Erreur: Secret RESEND_API_KEY manquant.");
+      console.error("[registration-email] Erreur: Secret RESEND_API_KEY manquant.");
       throw new Error("Clé API Resend non configurée.");
     }
 
-    console.log("[send-registration-email] Envoi de l'email via Resend pour:", registration.email);
+    console.log("[registration-email] Envoi de l'email via Resend pour:", registration.email);
 
     const tableauxLabels = registration.selected_tableaux.map((t: string) => {
       switch (t) {
@@ -41,7 +42,7 @@ serve(async (req) => {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "St Loub'Ping <onboarding@resend.dev>", // Note: Utilisez votre domaine vérifié si vous en avez un
+        from: "St Loub'Ping <onboarding@resend.dev>",
         to: [registration.email],
         subject: "Confirmation d'inscription - Tournoi Saint-Loub'Ping",
         html: `
@@ -69,18 +70,18 @@ serve(async (req) => {
     const data = await res.json()
 
     if (!res.ok) {
-      console.error("[send-registration-email] Erreur API Resend:", data);
+      console.error("[registration-email] Erreur API Resend:", data);
       throw new Error(data.message || "Erreur lors de l'envoi via Resend");
     }
 
-    console.log("[send-registration-email] Email envoyé avec succès via Resend ID:", data.id);
+    console.log("[registration-email] Email envoyé avec succès via Resend ID:", data.id);
 
     return new Response(JSON.stringify({ success: true, id: data.id }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
 
   } catch (error) {
-    console.error(`[send-registration-email] Erreur critique : ${error.message}`);
+    console.error(`[registration-email] Erreur critique : ${error.message}`);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
