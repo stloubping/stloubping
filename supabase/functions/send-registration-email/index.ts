@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts"
-import { SmtpClient } from "https://deno.land/x/smtp@v0.7.0/mod.ts"
+import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -23,22 +23,18 @@ serve(async (req) => {
       throw new Error("Identifiants Gmail non configurés dans les secrets Supabase.");
     }
 
-    // Utilisation d'une approche plus robuste pour la connexion SMTP
-    const client = new SmtpClient()
-    
-    console.log("[send-registration-email] Connexion au serveur SMTP de Google...");
-    
-    try {
-      await client.connectTLS({
+    // Configuration du client Denomailer (plus moderne et compatible)
+    const client = new SMTPClient({
+      connection: {
         hostname: "smtp.gmail.com",
         port: 465,
-        username: GMAIL_USER,
-        password: GMAIL_APP_PASSWORD,
-      })
-    } catch (connError) {
-      console.error("[send-registration-email] Erreur de connexion SMTP:", connError.message);
-      throw new Error("Impossible de se connecter au serveur SMTP de Gmail. Vérifiez le mot de passe d'application.");
-    }
+        tls: true,
+        auth: {
+          username: GMAIL_USER,
+          password: GMAIL_APP_PASSWORD,
+        },
+      },
+    });
 
     const tableauxLabels = registration.selected_tableaux.map((t: string) => {
       switch (t) {
@@ -53,7 +49,7 @@ serve(async (req) => {
       }
     }).join(', ');
 
-    console.log("[send-registration-email] Envoi du message...");
+    console.log("[send-registration-email] Envoi du message via Denomailer...");
     
     await client.send({
       from: GMAIL_USER,
@@ -79,9 +75,9 @@ serve(async (req) => {
           <p style="font-size: 0.8em; color: #999; text-align: center;">Ceci est un message automatique, merci de ne pas y répondre.</p>
         </div>
       `,
-    })
+    });
 
-    await client.close()
+    await client.close();
     console.log("[send-registration-email] Email envoyé avec succès.");
 
     return new Response(JSON.stringify({ success: true }), {
