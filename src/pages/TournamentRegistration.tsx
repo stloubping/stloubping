@@ -96,7 +96,16 @@ const TournamentRegistration = () => {
       toast.error(error.message || "Erreur lors de l'inscription.");
       setIsSubmitting(false);
     } else {
-      toast.success("Inscription réussie !");
+      try {
+        // Appel de la fonction d'envoi d'email
+        await supabase.functions.invoke("send-registration-email", {
+          body: values,
+        });
+        toast.success("Inscription réussie ! Un email de confirmation a été envoyé.");
+      } catch (emailError) {
+        console.error("Erreur email:", emailError);
+        toast.success("Inscription réussie ! (L'email n'a pas pu être envoyé, vérifiez vos secrets Supabase)");
+      }
       navigate('/tournoi/inscrits-live');
     }
   };
