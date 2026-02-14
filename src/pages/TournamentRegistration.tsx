@@ -49,6 +49,7 @@ const TournamentRegistration = () => {
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [loadingCounts, setLoadingCounts] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -88,11 +89,25 @@ const TournamentRegistration = () => {
   }, [selectedTableaux]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsSubmitting(true);
     const { error } = await supabase.from("tournament_registrations").insert([values]);
+    
     if (error) {
       toast.error(error.message || "Erreur lors de l'inscription.");
+      setIsSubmitting(false);
     } else {
-      toast.success("Inscription réussie !");
+      // Tentative d'envoi de l'email de confirmation via l'Edge Function
+      try {
+        await supabase.functions.invoke("send-registration-email", {
+          body: values,
+        });
+        toast.success("Inscription réussie ! Un email de confirmation vous a été envoyé.");
+      } catch (emailError) {
+        console.error("Erreur lors de l'envoi de l'email:", emailError);
+        // On affiche quand même un succès pour l'inscription car elle est bien en base
+        toast.success("Inscription réussie ! (L'envoi de l'email a échoué, mais votre place est réservée)");
+      }
+      
       navigate('/tournoi/inscrits-live');
     }
   };
@@ -227,8 +242,19 @@ const TournamentRegistration = () => {
                 <p className="text-4xl font-black text-clubPrimary">{totalPrice}€</p>
               </div>
 
-              <Button type="submit" className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-white py-8 text-xl font-bold shadow-lg">
-                Valider mon inscription
+              <Button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-white py-8 text-xl font-bold shadow-lg"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                    Inscription en cours...
+                  </>
+                ) : (
+                  "Valider mon inscription"
+                )}
               </Button>
             </form>
           </Form>
