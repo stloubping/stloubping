@@ -13,16 +13,19 @@ serve(async (req) => {
 
   try {
     const registration = await req.json()
+    console.log("[send-registration-email] Tentative d'envoi pour:", registration.email);
+
     const GMAIL_USER = Deno.env.get('GMAIL_USER')
     const GMAIL_APP_PASSWORD = Deno.env.get('GMAIL_APP_PASSWORD')
 
     if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
-      throw new Error("Identifiants Gmail non configurés dans les secrets Supabase.")
+      console.error("[send-registration-email] Erreur: Secrets GMAIL_USER ou GMAIL_APP_PASSWORD manquants.");
+      throw new Error("Identifiants Gmail non configurés dans les secrets Supabase.");
     }
 
     const client = new SmtpClient()
     
-    // Connexion au serveur SMTP de Google
+    console.log("[send-registration-email] Connexion au serveur SMTP...");
     await client.connectTLS({
       hostname: "smtp.gmail.com",
       port: 465,
@@ -43,6 +46,7 @@ serve(async (req) => {
       }
     }).join(', ');
 
+    console.log("[send-registration-email] Envoi du message...");
     await client.send({
       from: GMAIL_USER,
       to: registration.email,
@@ -64,13 +68,14 @@ serve(async (req) => {
     })
 
     await client.close()
+    console.log("[send-registration-email] Email envoyé avec succès.");
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
 
   } catch (error) {
-    console.error(`[send-registration-email] Erreur : ${error.message}`);
+    console.error(`[send-registration-email] Erreur critique : ${error.message}`);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

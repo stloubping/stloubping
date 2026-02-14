@@ -97,14 +97,17 @@ const TournamentRegistration = () => {
       setIsSubmitting(false);
     } else {
       try {
-        // Appel de la fonction d'envoi d'email
-        await supabase.functions.invoke("send-registration-email", {
+        // Appel de la fonction d'envoi d'email avec l'URL complète
+        const { error: funcError } = await supabase.functions.invoke("https://svwsqioytvvpqbxpekwm.supabase.co/functions/v1/send-registration-email", {
           body: values,
         });
+        
+        if (funcError) throw funcError;
+        
         toast.success("Inscription réussie ! Un email de confirmation a été envoyé.");
       } catch (emailError) {
         console.error("Erreur email:", emailError);
-        toast.success("Inscription réussie ! (L'email n'a pas pu être envoyé, vérifiez vos secrets Supabase)");
+        toast.success("Inscription réussie ! (L'email n'a pas pu être envoyé, vérifiez les logs dans Supabase)");
       }
       navigate('/tournoi/inscrits-live');
     }
