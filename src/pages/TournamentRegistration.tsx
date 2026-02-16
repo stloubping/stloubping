@@ -19,6 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
+import { useLightbox } from "@/context/LightboxContext";
 
 const MAX_REGISTRATIONS = 48;
 
@@ -51,6 +52,7 @@ const TournamentRegistration = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const { openLightbox } = useLightbox();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -97,7 +99,6 @@ const TournamentRegistration = () => {
       setIsSubmitting(false);
     } else {
       try {
-        // Appel de la fonction par son NOM uniquement
         const { error: funcError } = await supabase.functions.invoke("registration-email", {
           body: values,
         });
@@ -107,15 +108,29 @@ const TournamentRegistration = () => {
         toast.success("Inscription réussie ! Un email de confirmation a été envoyé.");
       } catch (emailError) {
         console.error("Erreur email:", emailError);
-        toast.success("Inscription réussie ! (L'email n'a pas pu être envoyé, vérifiez les logs dans Supabase)");
+        toast.success("Inscription réussie ! (L'email n'a pas pu être envoyé)");
       }
       navigate('/tournoi/inscrits-live');
     }
   };
 
+  const posterUrl = "/images/actualites/tournoi-regional-2026-affiche.png";
+
   return (
     <div className="container mx-auto py-8 px-4">
-      <Card className="max-w-3xl mx-auto bg-clubLight shadow-lg border-clubPrimary/20">
+      <Card className="max-w-3xl mx-auto bg-clubLight shadow-lg border-clubPrimary/20 overflow-hidden">
+        <div className="relative w-full h-64 md:h-80 bg-clubSection/50 flex items-center justify-center overflow-hidden">
+          <img 
+            src={posterUrl} 
+            alt="Affiche du Tournoi Régional 2026" 
+            className="w-full h-full object-contain cursor-zoom-in hover:scale-105 transition-transform duration-300"
+            onClick={() => openLightbox(posterUrl)}
+          />
+          <div className="absolute bottom-2 right-2 bg-black/50 text-white text-[10px] px-2 py-1 rounded">
+            Cliquez pour agrandir
+          </div>
+        </div>
+        
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold text-clubPrimary">Inscription au Tournoi</CardTitle>
           <CardDescription>Veuillez remplir le formulaire ci-dessous pour valider votre inscription.</CardDescription>
