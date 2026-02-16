@@ -41,7 +41,17 @@ const formSchema = z.object({
   licence_number: z.string().min(1, { message: "Licence requise." }),
   points: z.string().min(1, { message: "Points requis." }),
   club: z.string().min(2, { message: "Club requis." }),
-  selected_tableaux: z.array(z.string()).min(1, { message: "Sélectionnez au moins un tableau." }),
+  selected_tableaux: z.array(z.string())
+    .min(1, { message: "Sélectionnez au moins un tableau." })
+    .superRefine((val, ctx) => {
+      const individualCount = val.filter(id => id !== "d1").length;
+      if (individualCount > 3) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Maximum 3 tableaux individuels autorisés (+ le double).",
+        });
+      }
+    }),
   doubles_partner: z.string().optional(),
   consent: z.boolean().refine(val => val === true, { message: "Obligatoire." }),
 });
@@ -189,47 +199,59 @@ const TournamentRegistration = () => {
                 )} />
               </div>
 
-              <FormField control={form.control} name="selected_tableaux" render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-lg font-bold text-clubDark">Choix des Tableaux (Max 3 individuels)</FormLabel>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
-                    {tableauxOptions.map((item) => {
-                      const currentCount = counts[item.id] || 0;
-                      const remaining = MAX_REGISTRATIONS - currentCount;
-                      const isFull = remaining <= 0;
+              <FormField control={form.control} name="selected_tableaux" render={({ field }) => {
+                const individualSelected = field.value.filter(id => id !== "d1");
+                const individualLimitReached = individualSelected.length >= 3;
 
-                      return (
-                        <FormItem key={item.id} className={`flex flex-row items-start space-x-3 space-y-0 p-2 rounded-md transition-colors ${isFull ? 'opacity-50 bg-gray-100' : 'hover:bg-clubSection/50'}`}>
-                          <FormControl>
-                            <Checkbox
-                              disabled={isFull}
-                              checked={field.value?.includes(item.id)}
-                              onCheckedChange={(checked) => {
-                                const current = field.value || [];
-                                if (checked) {
-                                  field.onChange([...current, item.id]);
-                                } else {
-                                  field.onChange(current.filter((v) => v !== item.id));
-                                }
-                              }}
-                              className="border-clubPrimary data-[state=checked]:bg-clubPrimary"
-                            />
-                          </FormControl>
-                          <div className="flex flex-col">
-                            <FormLabel className={`font-normal ${isFull ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
-                              {item.label}
-                            </FormLabel>
-                            <span className={`text-[10px] font-bold ${remaining <= 5 ? 'text-red-500' : 'text-green-600'}`}>
-                              {isFull ? "COMPLET" : `${remaining} places restantes`}
-                            </span>
-                          </div>
-                        </FormItem>
-                      );
-                    })}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )} />
+                return (
+                  <FormItem>
+                    <FormLabel className="text-lg font-bold text-clubDark">Choix des Tableaux (Max 3 individuels + Double)</FormLabel>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                      {tableauxOptions.map((item) => {
+                        const currentCount = counts[item.id] || 0;
+                        const remaining = MAX_REGISTRATIONS - currentCount;
+                        const isFull = remaining <= 0;
+                        const isIndividual = item.id !== "d1";
+                        const isAlreadySelected = field.value.includes(item.id);
+                        
+                        // On désactive si :
+                        // 1. Le tableau est complet
+                        // 2. C'est un tableau individuel, la limite est atteinte, et il n'est pas déjà sélectionné
+                        const isDisabled = isFull || (isIndividual && individualLimitReached && !isAlreadySelected);
+
+                        return (
+                          <FormItem key={item.id} className={`flex flex-row items-start space-x-3 space-y-0 p-2 rounded-md transition-colors ${isDisabled ? 'opacity-50 bg-gray-100' : 'hover:bg-clubSection/50'}`}>
+                            <FormControl>
+                              <Checkbox
+                                disabled={isDisabled}
+                                checked={isAlreadySelected}
+                                onCheckedChange={(checked) => {
+                                  const current = field.value || [];
+                                  if (checked) {
+                                    field.onChange([...current, item.id]);
+                                  } else {
+                                    field.onChange(current.filter((v) => v !== item.id));
+                                  }
+                                }}
+                                className="border-clubPrimary data-[state=checked]:bg-clubPrimary"
+                              />
+                            </FormControl>
+                            <div className="flex flex-col">
+                              <FormLabel className={`font-normal ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                                {item.label}
+                              </FormLabel>
+                              <span className={`text-[10px] font-bold ${remaining <= 5 ? 'text-red-500' : 'text-green-600'}`}>
+                                {isFull ? "COMPLET" : `${remaining} places restantes`}
+                              </span>
+                            </div>
+                          </FormItem>
+                        );
+                      })}
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }} />
 
               {selectedTableaux.includes("d1") && (
                 <FormField control={form.control} name="doubles_partner" render={({ field }) => (
