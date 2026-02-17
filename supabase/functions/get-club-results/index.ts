@@ -64,30 +64,35 @@ serve(async (req) => {
     const processedTeams = allTeams
       .filter(t => (t.libepr || "").toLowerCase().includes("championnat"))
       .map(team => {
-        const lib = (team.libepr || "").toLowerCase();
-        const div = (team.libdivision || "").toLowerCase();
-        const fullText = `${div} ${lib}`;
+        const lib = (team.libepr || "").toUpperCase();
+        const div = (team.libdivision || "").toUpperCase();
         
-        let phase = "2"; // Par défaut Phase 2
+        // Par défaut, on considère que c'est la phase actuelle (Phase 2)
+        let phase = "2"; 
 
-        // LOGIQUE DE DÉTECTION STRICTE
-        // On cherche d'abord la Phase 2 car c'est la phase actuelle. 
-        // Si "Phase 2" est présent, on ignore "Phase 1" (cas des libellés mixtes).
-        if (fullText.includes("phase 2") || fullText.includes("ph 2") || fullText.includes("2ème phase") || fullText.includes("2eme phase") || fullText.includes("2025")) {
-          phase = "2";
-        } 
-        else if (fullText.includes("phase 1") || fullText.includes("ph 1") || fullText.includes("1ère phase") || fullText.includes("1ere phase") || (fullText.includes("2024") && !fullText.includes("2025"))) {
+        // Détection de la Phase 1
+        // On cherche "PHASE 1" ou "PH 1" ou "2024" (sans 2025)
+        const isP1 = /PHASE\s*1|PH\s*1|1ERE\s*PHASE|1ÈRE\s*PHASE/.test(lib) || 
+                     /PHASE\s*1|PH\s*1|1ERE\s*PHASE|1ÈRE\s*PHASE/.test(div) ||
+                     (lib.includes("2024") && !lib.includes("2025"));
+
+        // Détection de la Phase 2
+        const isP2 = /PHASE\s*2|PH\s*2|2EME\s*PHASE|2ÈME\s*PHASE/.test(lib) || 
+                     /PHASE\s*2|PH\s*2|2EME\s*PHASE|2ÈME\s*PHASE/.test(div) ||
+                     lib.includes("2025");
+
+        if (isP1 && !isP2) {
           phase = "1";
+        } else if (isP2) {
+          phase = "2";
         }
 
         return { ...team, phase };
       });
 
-    // Utilisation du liendivision comme clé unique pour ne rien perdre
+    // On garde chaque équipe unique par son lien de division pour éviter les fusions
     const uniqueTeams = processedTeams.filter((team, index, self) =>
-      index === self.findIndex((t) => (
-        t.liendivision === team.liendivision
-      ))
+      index === self.findIndex((t) => t.liendivision === team.liendivision)
     );
 
     const enrichedTeams = await Promise.all(uniqueTeams.map(async (team) => {
