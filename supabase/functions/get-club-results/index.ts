@@ -32,7 +32,6 @@ function parseXmlList(xml: string, tagName: string) {
     const tagRegex = /<([\w]+)>([\s\S]*?)<\/\1>/g;
     let tagMatch;
     while ((tagMatch = tagRegex.exec(content)) !== null) {
-      // Décodage plus complet des entités XML/HTML courantes
       let val = tagMatch[2].trim()
         .replace(/&/g, '&')
         .replace(/&nbsp;/g, ' ')
@@ -54,39 +53,24 @@ serve(async (req) => {
     const tmc = generateSmartpingHash(tm);
     const serie = "STLB" + Math.random().toString(36).substring(2, 13).toUpperCase().padEnd(11, 'X');
 
-    // 1. Initialisation
     await fetch(`${API_BASE_URL}/xml_initialisation.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}`);
 
-    // 2. Récupérer les équipes
     const teamsUrl = `${API_BASE_URL}/xml_equipe.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}&numclu=${CLUB_NUMBER}&type=A`;
     const teamsRes = await fetch(teamsUrl);
     const teamsXml = await teamsRes.text();
     const allTeams = parseXmlList(teamsXml, 'equipe');
 
-    // FILTRE HYBRIDE
-    const phase2Teams = allTeams.filter(team => {
-      const lib = (team.libepr || "").toLowerCase();
-      const div = (team.libdivision || "").toLowerCase();
-      const fullText = `${lib} ${div}`;
-      
-      // Détection large de la Phase 2 (accepte "Phase 2", "Ph 2", "2ème Phase", etc.)
-      const isExplicitP2 = /phase.*2|ph.*2|2.*phase|2.*eme|2.*ème/.test(fullText);
-      
-      // Détection large de la Phase 1 pour l'exclure
-      const isExplicitP1 = /phase.*1|ph.*1|1.*phase|1.*ere|1.*ère/.test(fullText);
-      
-      if (isExplicitP2) return true;
-      if (isExplicitP1) return false;
-      
-      // Si aucune phase n'est mentionnée (cas de certaines départementales), 
-      // on garde si c'est un championnat et qu'on n'a pas détecté de Phase 1.
-      return fullText.includes("championnat");
+    // On garde tous les championnats et on détecte la phase
+    const processedTeams = allTeams.filter(t => (t.libepr || "").toLowerCase().includes("championnat")).map(team => {
+      const fullText = `${team.libepr} ${team.libdivision}`.toLowerCase();
+      let phase = "1"; // Par défaut
+      if (/phase.*2|ph.*2|2.*phase|2.*eme|2.*ème/.test(fullText)) {
+        phase = "2";
+      }
+      return { ...team, phase };
     });
 
-    console.log(`[get-club-results] ${phase2Teams.length} équipes retenues.`);
-
-    // 3. Enrichir avec les classements
-    const enrichedTeams = await Promise.all(phase2Teams.map(async (team) => {
+    const enrichedTeams = await Promise.all(processedTeams.map(async (team) => {
       const rawLink = team.liendivision || "";
       const d1Match = rawLink.match(/[Dd]1=([^&]+)/);
       const pouleMatch = rawLink.match(/cx_poule=([^&]+)/);
@@ -107,7 +91,6 @@ serve(async (req) => {
           const altRanking = parseXmlList(altXml, 'classement');
           return { ...team, ranking: altRanking };
         }
-
         return { ...team, ranking };
       }
       return team;
