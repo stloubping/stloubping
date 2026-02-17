@@ -9,7 +9,7 @@ const corsHeaders = {
 const APP_ID = "SX046";
 const APP_PASSWORD = "NQC2rNs85g";
 const CLUB_NUMBER = "10330022";
-const API_BASE_URL = "https://www.fftt.com/mobile/pxml"; // Passage en HTTPS
+const API_BASE_URL = "http://www.fftt.com/mobile/pxml"; // Retour au HTTP selon la doc
 
 function getTimestamp() {
   const now = new Date();
@@ -31,7 +31,8 @@ function parseXmlList(xml: string, tagName: string) {
   while ((match = regex.exec(xml)) !== null) {
     const content = match[1];
     const obj: any = {};
-    const tagRegex = /<([^>]+)>([^<]*)<\/\1>/g;
+    // Regex plus robuste pour capturer les balises même avec des espaces ou des retours à la ligne
+    const tagRegex = /<([\w]+)>([\s\S]*?)<\/\1>/g;
     let tagMatch;
     while ((tagMatch = tagRegex.exec(content)) !== null) {
       obj[tagMatch[1]] = tagMatch[2].trim();
@@ -47,37 +48,32 @@ serve(async (req) => {
   try {
     const tm = getTimestamp();
     const tmc = generateSmartpingHash(tm);
+    // Génération d'une série de 15 caractères exacts
     const serie = "STLB" + Math.random().toString(36).substring(2, 13).toUpperCase();
 
-    console.log(`[get-club-results] Initialisation avec série: ${serie}`);
+    console.log(`[get-club-results] Appel API pour le club ${CLUB_NUMBER} avec série ${serie}`);
 
-    // 1. Initialisation (Recommandé par la doc)
+    // 1. Initialisation
     const initUrl = `${API_BASE_URL}/xml_initialisation.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}`;
     await fetch(initUrl);
 
-    // 2. Récupérer la liste des équipes
-    const teamsUrl = `${API_BASE_URL}/xml_equipe.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}&numclu=${CLUB_NUMBER}`;
-    console.log(`[get-club-results] Fetching teams: ${teamsUrl}`);
-    
+    // 2. Récupérer la liste des équipes (ajout de type=A pour forcer la récupération)
+    const teamsUrl = `${API_BASE_URL}/xml_equipe.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}&numclu=${CLUB_NUMBER}&type=A`;
     const teamsRes = await fetch(teamsUrl);
     const teamsXml = await teamsRes.text();
     
-    if (teamsXml.includes("<erreur>")) {
-      console.error("[get-club-results] Erreur API FFTT:", teamsXml);
-      throw new Error("L'API FFTT a renvoyé une erreur.");
-    }
+    console.log(`[get-club-results] Réponse XML reçue (longueur: ${teamsXml.length})`);
 
     const teams = parseXmlList(teamsXml, 'equipe');
-    console.log(`[get-club-results] ${teams.length} équipes trouvées.`);
+    console.log(`[get-club-results] ${teams.length} équipes détectées après parsing.`);
 
     // 3. Enrichir avec les classements
     const enrichedTeams = await Promise.all(teams.map(async (team) => {
-      // Nettoyage du lien pour extraire les paramètres
-      const queryString = team.liendivision.includes('?') 
-        ? team.liendivision.split('?')[1] 
-        : team.liendivision;
+      // On nettoie le lien qui peut contenir des entités HTML
+      const cleanLink = team.liendivision.replace(/&/g, '&');
+      const queryString = cleanLink.includes('?') ? cleanLink.split('?')[1] : cleanLink;
+      const params = new URLSearchParams(queryString);
       
-      const params = new URLSearchParams(queryString.replace(/&/g, '&'));
       const d1 = params.get('D1');
       const cx_poule = params.get('cx_poule');
 
@@ -96,7 +92,7 @@ serve(async (req) => {
     });
 
   } catch (error) {
-    console.error(`[get-club-results] Erreur critique: ${error.message}`);
+    console.error(`[get-club-results] Erreur: ${error.message}`);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
