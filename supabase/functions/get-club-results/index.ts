@@ -60,7 +60,7 @@ serve(async (req) => {
     const teamsXml = await teamsRes.text();
     const allTeams = parseXmlList(teamsXml, 'equipe');
 
-    // Filtrage et détection de phase ultra-robuste
+    // Filtrage et détection de phase
     const processedTeams = allTeams
       .filter(t => (t.libepr || "").toLowerCase().includes("championnat"))
       .map(team => {
@@ -68,40 +68,25 @@ serve(async (req) => {
         const div = (team.libdivision || "").toLowerCase();
         const fullText = `${div} ${lib}`;
         
-        let phase = "2"; // Par défaut Phase 2 (actuelle)
+        let phase = "2"; // Par défaut Phase 2
 
-        // LOGIQUE DE DÉTECTION PHASE 1
-        const isPhase1 = 
-          fullText.includes("phase 1") || 
-          fullText.includes("ph 1") || 
-          fullText.includes("1ere phase") || 
-          fullText.includes("1ère phase") ||
-          (fullText.includes("2024") && !fullText.includes("2025")); // Si 2024 est présent mais pas 2025
-
-        if (isPhase1) {
+        // LOGIQUE DE DÉTECTION STRICTE
+        // On cherche d'abord la Phase 2 car c'est la phase actuelle. 
+        // Si "Phase 2" est présent, on ignore "Phase 1" (cas des libellés mixtes).
+        if (fullText.includes("phase 2") || fullText.includes("ph 2") || fullText.includes("2ème phase") || fullText.includes("2eme phase") || fullText.includes("2025")) {
+          phase = "2";
+        } 
+        else if (fullText.includes("phase 1") || fullText.includes("ph 1") || fullText.includes("1ère phase") || fullText.includes("1ere phase") || (fullText.includes("2024") && !fullText.includes("2025"))) {
           phase = "1";
-        } else {
-          // LOGIQUE DE DÉTECTION PHASE 2 (pour confirmer le défaut)
-          const isPhase2 = 
-            fullText.includes("phase 2") || 
-            fullText.includes("ph 2") || 
-            fullText.includes("2eme phase") || 
-            fullText.includes("2ème phase") ||
-            fullText.includes("2025");
-
-          if (isPhase2) {
-            phase = "2";
-          }
         }
 
         return { ...team, phase };
       });
 
-    // Nettoyage des doublons : on garde l'équipe si elle a une division et une phase unique
+    // Utilisation du liendivision comme clé unique pour ne rien perdre
     const uniqueTeams = processedTeams.filter((team, index, self) =>
       index === self.findIndex((t) => (
-        t.libequipe === team.libequipe && 
-        t.phase === team.phase
+        t.liendivision === team.liendivision
       ))
     );
 
