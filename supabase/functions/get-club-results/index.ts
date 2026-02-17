@@ -60,17 +60,42 @@ serve(async (req) => {
     const teamsXml = await teamsRes.text();
     const allTeams = parseXmlList(teamsXml, 'equipe');
 
-    // On garde tous les championnats et on détecte la phase
-    const processedTeams = allTeams.filter(t => (t.libepr || "").toLowerCase().includes("championnat")).map(team => {
-      const fullText = `${team.libepr} ${team.libdivision}`.toLowerCase();
-      let phase = "1"; // Par défaut
-      if (/phase.*2|ph.*2|2.*phase|2.*eme|2.*ème/.test(fullText)) {
-        phase = "2";
-      }
-      return { ...team, phase };
-    });
+    // Filtrage et détection de phase ultra-précise
+    const processedTeams = allTeams
+      .filter(t => (t.libepr || "").toLowerCase().includes("championnat"))
+      .map(team => {
+        const lib = (team.libepr || "").toLowerCase();
+        const div = (team.libdivision || "").toLowerCase();
+        const fullText = `${lib} ${div}`;
+        
+        let phase = "2"; // Par défaut on assume la phase actuelle (2)
+        
+        // Si on trouve explicitement "Phase 1" ou "Ph 1", c'est la phase 1
+        if (/phase.*1|ph.*1|1.*phase|1.*ere|1.*ère/.test(fullText)) {
+          phase = "1";
+        } 
+        // Si on trouve explicitement "Phase 2" ou "Ph 2", c'est la phase 2 (prioritaire sur le défaut)
+        else if (/phase.*2|ph.*2|2.*phase|2.*eme|2.*ème/.test(fullText)) {
+          phase = "2";
+        }
+        // Cas particulier : si le libellé contient "2024" sans mention de phase 2, c'est souvent la phase 1
+        else if (fullText.includes("2024") && !fullText.includes("2025")) {
+          phase = "1";
+        }
 
-    const enrichedTeams = await Promise.all(processedTeams.map(async (team) => {
+        return { ...team, phase };
+      });
+
+    // Suppression des doublons potentiels (même équipe, même division, même phase)
+    const uniqueTeams = processedTeams.filter((team, index, self) =>
+      index === self.findIndex((t) => (
+        t.libequipe === team.libequipe && 
+        t.libdivision === team.libdivision && 
+        t.phase === team.phase
+      ))
+    );
+
+    const enrichedTeams = await Promise.all(uniqueTeams.map(async (team) => {
       const rawLink = team.liendivision || "";
       const d1Match = rawLink.match(/[Dd]1=([^&]+)/);
       const pouleMatch = rawLink.match(/cx_poule=([^&]+)/);
