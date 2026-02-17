@@ -56,19 +56,20 @@ serve(async (req) => {
     const teamsXml = await teamsRes.text();
     const allTeams = parseXmlList(teamsXml, 'equipe');
 
-    // FILTRE PLUS SOUPLE : On exclut la Phase 1 et on cherche tout ce qui ressemble à la Phase 2
+    // FILTRE STRICT : On ne garde que ce qui contient explicitement "Phase 2" ou équivalent
     const phase2Teams = allTeams.filter(team => {
       const lib = (team.libepr || "").toLowerCase();
       const div = (team.libdivision || "").toLowerCase();
       
-      const isPhase1 = lib.includes("phase 1") || div.includes("phase 1");
-      const isPhase2 = lib.includes("phase 2") || div.includes("phase 2") || lib.includes("ph2") || div.includes("ph2") || lib.includes("2ème phase");
-      
-      // On garde si c'est explicitement Phase 2 OU si ce n'est pas Phase 1 (pour les nouveaux championnats)
-      return isPhase2 || (!isPhase1 && lib.includes("championnat"));
+      return lib.includes("phase 2") || 
+             div.includes("phase 2") || 
+             lib.includes("ph2") || 
+             div.includes("ph2") || 
+             lib.includes("2ème phase") ||
+             lib.includes("2eme phase");
     });
 
-    console.log(`[get-club-results] ${phase2Teams.length} équipes filtrées sur ${allTeams.length} au total.`);
+    console.log(`[get-club-results] ${phase2Teams.length} équipes Phase 2 strictement filtrées.`);
 
     // 3. Enrichir avec les classements
     const enrichedTeams = await Promise.all(phase2Teams.map(async (team) => {
