@@ -9,7 +9,7 @@ const corsHeaders = {
 const APP_ID = "SX046";
 const APP_PASSWORD = "NQC2rNs85g";
 const CLUB_NUMBER = "10330022";
-const API_BASE_URL = "https://www.fftt.com/mobile/pxml"; // Passage en HTTPS
+const API_BASE_URL = "https://www.fftt.com/mobile/pxml";
 
 function getTimestamp() {
   const now = new Date();
@@ -47,8 +47,6 @@ serve(async (req) => {
     const tmc = generateSmartpingHash(tm);
     const serie = "STLB" + Math.random().toString(36).substring(2, 13).toUpperCase().padEnd(11, 'X');
 
-    console.log(`[get-club-results] Init HTTPS avec série: ${serie}`);
-
     // 1. Initialisation
     await fetch(`${API_BASE_URL}/xml_initialisation.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}`);
 
@@ -56,12 +54,20 @@ serve(async (req) => {
     const teamsUrl = `${API_BASE_URL}/xml_equipe.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}&numclu=${CLUB_NUMBER}&type=A`;
     const teamsRes = await fetch(teamsUrl);
     const teamsXml = await teamsRes.text();
-    const teams = parseXmlList(teamsXml, 'equipe');
+    const allTeams = parseXmlList(teamsXml, 'equipe');
+
+    // FILTRE : On ne garde que la Phase 2
+    const phase2Teams = allTeams.filter(team => {
+      const lib = (team.libepr || "").toLowerCase();
+      const div = (team.libdivision || "").toLowerCase();
+      return lib.includes("phase 2") || div.includes("phase 2");
+    });
+
+    console.log(`[get-club-results] ${phase2Teams.length} équipes Phase 2 trouvées sur ${allTeams.length} au total.`);
 
     // 3. Enrichir avec les classements
-    const enrichedTeams = await Promise.all(teams.map(async (team) => {
+    const enrichedTeams = await Promise.all(phase2Teams.map(async (team) => {
       const rawLink = team.liendivision || "";
-      // On cherche D1 et cx_poule dans le lien, peu importe la casse
       const d1Match = rawLink.match(/[Dd]1=([^&]+)/);
       const pouleMatch = rawLink.match(/cx_poule=([^&]+)/);
       
@@ -74,7 +80,6 @@ serve(async (req) => {
         const rankingXml = await rankingRes.text();
         const ranking = parseXmlList(rankingXml, 'classement');
         
-        // Si le classement est vide, on tente sans le paramètre action=classement (parfois par défaut)
         if (ranking.length === 0) {
           const altUrl = `${API_BASE_URL}/xml_result_equ.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}&D1=${d1}&cx_poule=${cx_poule}`;
           const altRes = await fetch(altUrl);
