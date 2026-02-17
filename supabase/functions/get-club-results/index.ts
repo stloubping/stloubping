@@ -32,7 +32,14 @@ function parseXmlList(xml: string, tagName: string) {
     const tagRegex = /<([\w]+)>([\s\S]*?)<\/\1>/g;
     let tagMatch;
     while ((tagMatch = tagRegex.exec(content)) !== null) {
-      obj[tagMatch[1]] = tagMatch[2].trim().replace(/&/g, '&');
+      // Décodage plus complet des entités XML/HTML courantes
+      let val = tagMatch[2].trim()
+        .replace(/&/g, '&')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&ndash;/g, '-')
+        .replace(/&mdash;/g, '-')
+        .replace(/&quot;/g, '"');
+      obj[tagMatch[1]] = val;
     }
     results.push(obj);
   }
@@ -56,20 +63,27 @@ serve(async (req) => {
     const teamsXml = await teamsRes.text();
     const allTeams = parseXmlList(teamsXml, 'equipe');
 
-    // FILTRE STRICT : On ne garde que ce qui contient explicitement "Phase 2" ou équivalent
+    // FILTRE HYBRIDE
     const phase2Teams = allTeams.filter(team => {
       const lib = (team.libepr || "").toLowerCase();
       const div = (team.libdivision || "").toLowerCase();
+      const fullText = `${lib} ${div}`;
       
-      return lib.includes("phase 2") || 
-             div.includes("phase 2") || 
-             lib.includes("ph2") || 
-             div.includes("ph2") || 
-             lib.includes("2ème phase") ||
-             lib.includes("2eme phase");
+      // Détection large de la Phase 2 (accepte "Phase 2", "Ph 2", "2ème Phase", etc.)
+      const isExplicitP2 = /phase.*2|ph.*2|2.*phase|2.*eme|2.*ème/.test(fullText);
+      
+      // Détection large de la Phase 1 pour l'exclure
+      const isExplicitP1 = /phase.*1|ph.*1|1.*phase|1.*ere|1.*ère/.test(fullText);
+      
+      if (isExplicitP2) return true;
+      if (isExplicitP1) return false;
+      
+      // Si aucune phase n'est mentionnée (cas de certaines départementales), 
+      // on garde si c'est un championnat et qu'on n'a pas détecté de Phase 1.
+      return fullText.includes("championnat");
     });
 
-    console.log(`[get-club-results] ${phase2Teams.length} équipes Phase 2 strictement filtrées.`);
+    console.log(`[get-club-results] ${phase2Teams.length} équipes retenues.`);
 
     // 3. Enrichir avec les classements
     const enrichedTeams = await Promise.all(phase2Teams.map(async (team) => {
