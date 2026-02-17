@@ -9,9 +9,8 @@ const corsHeaders = {
 const APP_ID = "SX046";
 const APP_PASSWORD = "NQC2rNs85g";
 const CLUB_NUMBER = "10330022";
-const API_BASE_URL = "http://www.fftt.com/mobile/pxml";
+const API_BASE_URL = "https://www.fftt.com/mobile/pxml"; // Passage en HTTPS
 
-// Format standard 14 caractères : YYYYMMDDHHMMSS
 function getTimestamp() {
   const now = new Date();
   const pad = (n: number) => n.toString().padStart(2, '0');
@@ -20,8 +19,7 @@ function getTimestamp() {
 
 function generateSmartpingHash(tm: string) {
   const passwordMd5 = CryptoJS.MD5(APP_PASSWORD).toString();
-  const hash = CryptoJS.HmacSHA1(tm, passwordMd5).toString();
-  return hash;
+  return CryptoJS.HmacSHA1(tm, passwordMd5).toString();
 }
 
 function parseXmlList(xml: string, tagName: string) {
@@ -34,7 +32,6 @@ function parseXmlList(xml: string, tagName: string) {
     const tagRegex = /<([\w]+)>([\s\S]*?)<\/\1>/g;
     let tagMatch;
     while ((tagMatch = tagRegex.exec(content)) !== null) {
-      // Nettoyage des données (suppression des espaces inutiles)
       obj[tagMatch[1]] = tagMatch[2].trim().replace(/&/g, '&');
     }
     results.push(obj);
@@ -48,10 +45,9 @@ serve(async (req) => {
   try {
     const tm = getTimestamp();
     const tmc = generateSmartpingHash(tm);
-    // Série de 15 caractères exactement
     const serie = "STLB" + Math.random().toString(36).substring(2, 13).toUpperCase().padEnd(11, 'X');
 
-    console.log(`[get-club-results] Init avec série: ${serie} et tm: ${tm}`);
+    console.log(`[get-club-results] Init HTTPS avec série: ${serie}`);
 
     // 1. Initialisation
     await fetch(`${API_BASE_URL}/xml_initialisation.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}`);
@@ -65,17 +61,28 @@ serve(async (req) => {
     // 3. Enrichir avec les classements
     const enrichedTeams = await Promise.all(teams.map(async (team) => {
       const rawLink = team.liendivision || "";
-      const decodedLink = rawLink.replace(/&/g, '&');
-      const params = new URLSearchParams(decodedLink.includes('?') ? decodedLink.split('?')[1] : decodedLink);
+      // On cherche D1 et cx_poule dans le lien, peu importe la casse
+      const d1Match = rawLink.match(/[Dd]1=([^&]+)/);
+      const pouleMatch = rawLink.match(/cx_poule=([^&]+)/);
       
-      const d1 = params.get('D1');
-      const cx_poule = params.get('cx_poule');
+      const d1 = d1Match ? d1Match[1] : null;
+      const cx_poule = pouleMatch ? pouleMatch[1] : null;
 
       if (d1 && cx_poule) {
         const rankingUrl = `${API_BASE_URL}/xml_result_equ.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}&action=classement&D1=${d1}&cx_poule=${cx_poule}`;
         const rankingRes = await fetch(rankingUrl);
         const rankingXml = await rankingRes.text();
         const ranking = parseXmlList(rankingXml, 'classement');
+        
+        // Si le classement est vide, on tente sans le paramètre action=classement (parfois par défaut)
+        if (ranking.length === 0) {
+          const altUrl = `${API_BASE_URL}/xml_result_equ.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}&D1=${d1}&cx_poule=${cx_poule}`;
+          const altRes = await fetch(altUrl);
+          const altXml = await altRes.text();
+          const altRanking = parseXmlList(altXml, 'classement');
+          return { ...team, ranking: altRanking };
+        }
+
         return { ...team, ranking };
       }
       return team;
