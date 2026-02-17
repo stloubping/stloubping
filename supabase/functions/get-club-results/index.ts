@@ -9,7 +9,7 @@ const corsHeaders = {
 const APP_ID = "SX046";
 const APP_PASSWORD = "NQC2rNs85g";
 const CLUB_NUMBER = "10330022";
-const API_BASE_URL = "http://www.fftt.com/mobile/pxml"; // Retour au HTTP selon la doc
+const API_BASE_URL = "http://www.fftt.com/mobile/pxml";
 
 function getTimestamp() {
   const now = new Date();
@@ -31,7 +31,7 @@ function parseXmlList(xml: string, tagName: string) {
   while ((match = regex.exec(xml)) !== null) {
     const content = match[1];
     const obj: any = {};
-    // Regex plus robuste pour capturer les balises même avec des espaces ou des retours à la ligne
+    // Regex améliorée pour capturer le contenu des balises
     const tagRegex = /<([\w]+)>([\s\S]*?)<\/\1>/g;
     let tagMatch;
     while ((tagMatch = tagRegex.exec(content)) !== null) {
@@ -48,30 +48,26 @@ serve(async (req) => {
   try {
     const tm = getTimestamp();
     const tmc = generateSmartpingHash(tm);
-    // Génération d'une série de 15 caractères exacts
     const serie = "STLB" + Math.random().toString(36).substring(2, 13).toUpperCase();
 
-    console.log(`[get-club-results] Appel API pour le club ${CLUB_NUMBER} avec série ${serie}`);
-
     // 1. Initialisation
-    const initUrl = `${API_BASE_URL}/xml_initialisation.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}`;
-    await fetch(initUrl);
+    await fetch(`${API_BASE_URL}/xml_initialisation.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}`);
 
-    // 2. Récupérer la liste des équipes (ajout de type=A pour forcer la récupération)
+    // 2. Récupérer les équipes
     const teamsUrl = `${API_BASE_URL}/xml_equipe.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}&numclu=${CLUB_NUMBER}&type=A`;
     const teamsRes = await fetch(teamsUrl);
     const teamsXml = await teamsRes.text();
-    
-    console.log(`[get-club-results] Réponse XML reçue (longueur: ${teamsXml.length})`);
-
     const teams = parseXmlList(teamsXml, 'equipe');
-    console.log(`[get-club-results] ${teams.length} équipes détectées après parsing.`);
+
+    console.log(`[get-club-results] ${teams.length} équipes trouvées. Tentative de récupération des classements...`);
 
     // 3. Enrichir avec les classements
     const enrichedTeams = await Promise.all(teams.map(async (team) => {
-      // On nettoie le lien qui peut contenir des entités HTML
-      const cleanLink = team.liendivision.replace(/&/g, '&');
-      const queryString = cleanLink.includes('?') ? cleanLink.split('?')[1] : cleanLink;
+      // IMPORTANT : Remplacer les entités HTML pour que URLSearchParams fonctionne
+      const rawLink = team.liendivision || "";
+      const decodedLink = rawLink.replace(/&/g, '&');
+      
+      const queryString = decodedLink.includes('?') ? decodedLink.split('?')[1] : decodedLink;
       const params = new URLSearchParams(queryString);
       
       const d1 = params.get('D1');
@@ -81,9 +77,15 @@ serve(async (req) => {
         const rankingUrl = `${API_BASE_URL}/xml_result_equ.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}&action=classement&D1=${d1}&cx_poule=${cx_poule}`;
         const rankingRes = await fetch(rankingUrl);
         const rankingXml = await rankingRes.text();
+        
+        // On cherche la balise <classement>
         const ranking = parseXmlList(rankingXml, 'classement');
+        console.log(`[get-club-results] Classement pour ${team.libequipe} : ${ranking.length} lignes trouvées.`);
+        
         return { ...team, ranking };
       }
+      
+      console.warn(`[get-club-results] Paramètres manquants pour ${team.libequipe} (Lien: ${decodedLink})`);
       return team;
     }));
 
