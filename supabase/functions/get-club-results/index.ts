@@ -60,35 +60,44 @@ serve(async (req) => {
     const teamsXml = await teamsRes.text();
     const allTeams = parseXmlList(teamsXml, 'equipe');
 
-    // Filtrage et détection de phase améliorée
+    // Filtrage et détection de phase ultra-robuste
     const processedTeams = allTeams
       .filter(t => (t.libepr || "").toLowerCase().includes("championnat"))
       .map(team => {
         const lib = (team.libepr || "").toLowerCase();
         const div = (team.libdivision || "").toLowerCase();
-        const fullText = `${div} ${lib}`; // Priorité au texte de la division
+        const fullText = `${div} ${lib}`;
         
         let phase = "2"; // Par défaut Phase 2 (actuelle)
 
-        // 1. Détection par mots clés explicites
-        if (/phase.*2|ph.*2|2.*phase|2.*eme|2.*ème/.test(fullText)) {
-          phase = "2";
-        }
-        else if (/phase.*1|ph.*1|1.*phase|1.*ere|1.*ère/.test(fullText)) {
+        // LOGIQUE DE DÉTECTION PHASE 1
+        const isPhase1 = 
+          fullText.includes("phase 1") || 
+          fullText.includes("ph 1") || 
+          fullText.includes("1ere phase") || 
+          fullText.includes("1ère phase") ||
+          (fullText.includes("2024") && !fullText.includes("2025")); // Si 2024 est présent mais pas 2025
+
+        if (isPhase1) {
           phase = "1";
-        }
-        // 2. Détection par année si le mot "Phase" est absent
-        else if (fullText.includes("2024") && !fullText.includes("2025")) {
-          phase = "1";
-        }
-        else if (fullText.includes("2025")) {
-          phase = "2";
+        } else {
+          // LOGIQUE DE DÉTECTION PHASE 2 (pour confirmer le défaut)
+          const isPhase2 = 
+            fullText.includes("phase 2") || 
+            fullText.includes("ph 2") || 
+            fullText.includes("2eme phase") || 
+            fullText.includes("2ème phase") ||
+            fullText.includes("2025");
+
+          if (isPhase2) {
+            phase = "2";
+          }
         }
 
         return { ...team, phase };
       });
 
-    // Nettoyage des doublons : on ne garde qu'une seule fois la même équipe par phase
+    // Nettoyage des doublons : on garde l'équipe si elle a une division et une phase unique
     const uniqueTeams = processedTeams.filter((team, index, self) =>
       index === self.findIndex((t) => (
         t.libequipe === team.libequipe && 
