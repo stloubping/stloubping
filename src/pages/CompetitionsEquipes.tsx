@@ -35,9 +35,20 @@ const CompetitionsEquipes = () => {
         const { data, error } = await supabase.functions.invoke('get-club-results');
         if (error) throw error;
         
-        // Tri des équipes : Phase 2 d'abord, puis Phase 1
+        // Fonction pour extraire le numéro d'équipe (ex: "ST LOUBES 1" -> 1)
+        const getTeamNumber = (lib: string) => {
+          const match = lib.match(/\d+$/);
+          return match ? parseInt(match[0]) : 999;
+        };
+
+        // Tri des équipes : 
+        // 1. Par Phase (Phase 2 d'abord)
+        // 2. Par Numéro d'équipe (1, 2, 3...)
         const sortedTeams = (data.teams || []).sort((a: Team, b: Team) => {
-          return parseInt(b.phase) - parseInt(a.phase);
+          if (a.phase !== b.phase) {
+            return parseInt(b.phase) - parseInt(a.phase);
+          }
+          return getTeamNumber(a.libequipe) - getTeamNumber(b.libequipe);
         });
         
         setTeams(sortedTeams);
