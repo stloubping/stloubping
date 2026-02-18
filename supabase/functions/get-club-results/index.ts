@@ -14,14 +14,7 @@ const SERIE = "STLBP2025ABCD1";
 
 function getTimestamp(): string {
   const now = new Date();
-  const Y = now.getFullYear();
-  const M = String(now.getMonth() + 1).padStart(2, '0');
-  const D = String(now.getDate()).padStart(2, '0');
-  const h = String(now.getHours()).padStart(2, '0');
-  const m = String(now.getMinutes()).padStart(2, '0');
-  const s = String(now.getSeconds()).padStart(2, '0');
-  const ms = String(now.getMilliseconds()).padStart(3, '0');
-  return `${Y}${M}${D}${h}${m}${s}${ms}`;
+  return `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}${String(now.getMilliseconds()).padStart(3,'0')}`;
 }
 
 function generateHash(tm: string): string {
@@ -32,22 +25,16 @@ function generateHash(tm: string): string {
 async function callSmartping(script: string, params: Record<string, string> = {}): Promise<string> {
   const tm = getTimestamp();
   const tmc = generateHash(tm);
-
-  const queryParams = new URLSearchParams({
-    id: APP_ID,
-    serie: SERIE,
-    tm,
-    tmc,
-    ...params,
-  });
-
+  const queryParams = new URLSearchParams({ id: APP_ID, serie: SERIE, tm, tmc, ...params });
   const url = `${API_BASE_URL}/${script}?${queryParams.toString()}`;
-  console.log(`[get-club-results] Appel API: ${script}`, JSON.stringify(params));
-  
+  console.log(`[API] ${script}`, JSON.stringify(params));
   const res = await fetch(url);
   return await res.text();
 }
 
+/**
+ * Parse XML robuste qui gère correctement les attributs contenant &
+ */
 function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
   const results: Record<string, string>[] = [];
   const regex = new RegExp(`<${tagName}>([\\s\\S]*?)<\\/${tagName}>`, 'gi');
@@ -56,11 +43,21 @@ function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
   while ((match = regex.exec(xml)) !== null) {
     const content = match[1];
     const obj: Record<string, string> = {};
-    const fieldRegex = /<([\w]+)>([\s\S]*?)<\/\1>/g;
-    let fieldMatch;
-
-    while ((fieldMatch = fieldRegex.exec(content)) !== null) {
-      obj[fieldMatch[1]] = fieldMatch[2].trim();
+    
+    const openTagRegex = /<(\w+)>/g;
+    let tagMatch;
+    
+    while ((tagMatch = openTagRegex.exec(content)) !== null) {
+      const fieldName = tagMatch[1];
+      const afterOpenTag = tagMatch.index + tagMatch[0].length;
+      const closeTag = `</${fieldName}>`;
+      const closeIdx = content.indexOf(closeTag, afterOpenTag);
+      
+      if (closeIdx !== -1) {
+        const rawValue = content.substring(afterOpenTag, closeIdx);
+        obj[fieldName] = rawValue.trim();
+        openTagRegex.lastIndex = closeIdx + closeTag.length;
+      }
     }
 
     results.push(obj);
@@ -69,56 +66,53 @@ function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
   return results;
 }
 
-function decodeXmlEntities(str: string): string {
+function decodeEntities(str: string): string {
   return str
     .replace(/&/g, '&')
     .replace(/</g, '<')
     .replace(/>/g, '>')
     .replace(/&quot;/g, '"')
-    .replace(/&apos;/g, "'")
     .replace(/&nbsp;/g, ' ');
 }
 
 /**
- * Parseur manuel ultra-robuste pour extraire D1 et cx_poule
+ * Parse le liendivision BRUT
  */
-function parseLienDivision(lienBrut: string): Record<string, string> {
+function parseLien(lienBrut: string): Record<string, string> {
   const params: Record<string, string> = {};
   if (!lienBrut) return params;
 
-  console.log(`[get-club-results] Parsing lien brut: "${lienBrut}"`);
-
-  // Étape 1 : décoder toutes les variantes de & (y compris double encodage)
-  let clean = lienBrut
+  const decoded = lienBrut
     .replace(/&amp;/g, '&')
-    .replace(/&/g, '&')
     .replace(/&/g, '&');
 
-  // Étape 2 : splitter manuellement sur &
-  clean.split('&').forEach(part => {
-    const idx = part.indexOf('=');
-    if (idx > 0) {
-      const key = part.substring(0, idx).trim();
-      const value = part.substring(idx + 1).trim();
-      if (key && value) {
-        params[key] = value;
-      }
+  decoded.split('&').forEach(part => {
+    const eq = part.indexOf('=');
+    if (eq > 0) {
+      const key = part.substring(0, eq).trim();
+      const val = part.substring(eq + 1).trim();
+      if (key && val) params[key] = val;
     }
   });
 
-  console.log(`[get-club-results] Paramètres extraits:`, JSON.stringify(params));
   return params;
 }
 
-function detectPhase(team: Record<string, string>): string {
-  const text = decodeXmlEntities(`${team.libepr || ''} ${team.libdivision || ''} ${team.libequipe || ''}`).toLowerCase();
-  if (text.includes('phase 2') || text.includes('ph.2') || text.includes('ph 2')) return "2";
-  if (text.includes('phase 1') || text.includes('ph.1') || text.includes('ph 1')) return "1";
+function detectPhase(text: string): string {
+  const l = text.toLowerCase();
+  if (l.includes('phase 2') || l.includes('ph.2') || l.includes('ph 2')) return "2";
+  if (l.includes('phase 1') || l.includes('ph.1') || l.includes('ph 1')) return "1";
   return "unknown";
 }
 
+function getCurrentPhase(): string {
+  return (new Date().getMonth() + 1 >= 1 && new Date().getMonth() + 1 <= 8) ? "2" : "1";
+}
+
 serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
 
   try {
     await callSmartping('xml_initialisation.php');
@@ -126,10 +120,24 @@ serve(async (req) => {
     const teamsXml = await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER });
     const allTeams = parseXmlList(teamsXml, 'equipe');
 
-    const teamsWithPhase = allTeams.map(team => ({ ...team, _phase: detectPhase(team) }));
+    const currentPhase = getCurrentPhase();
+
+    // Filtrage des équipes (Critérium ou toutes si non trouvé)
+    const criteriumTeams = allTeams.filter(team => {
+      const lib = decodeEntities(`${team.libepr || ''} ${team.libdivision || ''}`).toLowerCase();
+      return lib.includes('crit') || lib.includes('gironde') || lib.includes('départ') || lib.includes('depart');
+    });
+
+    const teamsToProcess = criteriumTeams.length > 0 ? criteriumTeams : allTeams;
+
+    const teamsWithPhase = teamsToProcess.map(team => ({
+      ...team,
+      _phase: detectPhase(decodeEntities(`${team.libepr || ''} ${team.libdivision || ''}`)),
+    }));
+
     const byName: Record<string, any[]> = {};
     teamsWithPhase.forEach(team => {
-      const name = decodeXmlEntities(team.libequipe || 'unknown');
+      const name = decodeEntities(team.libequipe || 'unknown');
       if (!byName[name]) byName[name] = [];
       byName[name].push(team);
     });
@@ -141,60 +149,108 @@ serve(async (req) => {
       } else {
         const p2 = versions.find(v => v._phase === "2");
         if (p2) selectedTeams.push(p2);
-        else selectedTeams.push(versions.sort((a, b) => (parseInt(b.idepr || '0') - parseInt(a.idepr || '0')))[0]);
+        else {
+          versions.sort((a, b) => parseInt(b.idepr || '0') - parseInt(a.idepr || '0'));
+          selectedTeams.push(versions[0]);
+        }
       }
     });
 
     const finalTeams = [];
+
     for (const team of selectedTeams) {
-      const lienParams = parseLienDivision(team.liendivision || '');
-      const teamName = decodeXmlEntities(team.libequipe || '');
+      const lienBrut = team.liendivision || '';
+      const lienParams = parseLien(lienBrut);
+      const teamName = decodeEntities(team.libequipe || '');
 
       if (!lienParams.D1) {
         finalTeams.push({
           libequipe: teamName,
-          libdivision: decodeXmlEntities(team.libdivision || ''),
-          libepr: decodeXmlEntities(team.libepr || ''),
-          phase: team._phase === "unknown" ? "2" : team._phase,
+          libdivision: decodeEntities(team.libdivision || ''),
+          libepr: decodeEntities(team.libepr || ''),
+          phase: team._phase === "unknown" ? currentPhase : team._phase,
           ranking: [],
+          rencontres: [],
         });
         continue;
       }
 
       try {
-        const classParams: Record<string, string> = { 
-          action: 'classement', 
-          auto: '1', 
-          D1: lienParams.D1 
+        const classParams: Record<string, string> = {
+          action: 'classement',
+          auto: '1',
+          D1: lienParams.D1,
         };
-        
         if (lienParams.cx_poule) {
           classParams.cx_poule = lienParams.cx_poule;
         }
 
-        const classXml = await callSmartping('xml_result_equ.php', classParams);
-        const ranking = parseXmlList(classXml, 'classement');
+        let classXml = await callSmartping('xml_result_equ.php', classParams);
+        let ranking = parseXmlList(classXml, 'classement');
+
+        // AUTO-CORRECTION : Vérifier si le club est dans ce classement
+        const hasClub = ranking.some(r =>
+          decodeEntities(r.equipe || '').toLowerCase().includes('loub')
+        );
+
+        if (!hasClub) {
+          console.log(`[get-club-results] ${teamName} absent de la poule ${lienParams.cx_poule}. Scan des poules...`);
+          
+          const poulesXml = await callSmartping('xml_result_equ.php', { action: 'poule', auto: '1', D1: lienParams.D1 });
+          const poules = parseXmlList(poulesXml, 'poule');
+
+          for (const poule of poules) {
+            const pouleLienParams = parseLien(poule.lien || '');
+            if (pouleLienParams.cx_poule === lienParams.cx_poule) continue;
+
+            const testXml = await callSmartping('xml_result_equ.php', { action: 'classement', auto: '1', D1: lienParams.D1, cx_poule: pouleLienParams.cx_poule });
+            const testRanking = parseXmlList(testXml, 'classement');
+
+            if (testRanking.some(r => decodeEntities(r.equipe || '').toLowerCase().includes('loub'))) {
+              console.log(`[get-club-results] Bonne poule trouvée pour ${teamName} : ${pouleLienParams.cx_poule}`);
+              ranking = testRanking;
+              lienParams.cx_poule = pouleLienParams.cx_poule;
+              break;
+            }
+          }
+        }
+
+        // Récupérer les rencontres de la poule finale
+        const rencXml = await callSmartping('xml_result_equ.php', { action: '', auto: '1', D1: lienParams.D1, cx_poule: lienParams.cx_poule });
+        const rencontres = parseXmlList(rencXml, 'tour');
 
         finalTeams.push({
           libequipe: teamName,
-          libdivision: decodeXmlEntities(team.libdivision || ''),
-          libepr: decodeXmlEntities(team.libepr || ''),
-          phase: team._phase === "unknown" ? "2" : team._phase,
+          libdivision: decodeEntities(team.libdivision || ''),
+          libepr: decodeEntities(team.libepr || ''),
+          phase: team._phase === "unknown" ? currentPhase : team._phase,
           ranking: ranking.map(c => ({
-            clt: c.clt || '',
-            equipe: decodeXmlEntities(c.equipe || ''),
-            joue: c.joue || '0',
-            pts: c.pts || '0',
-            vic: c.vic || '0',
-            nul: c.nul || '0',
-            def: c.def || '0',
+            clt: c.clt || '', equipe: decodeEntities(c.equipe || ''),
+            joue: c.joue || '0', pts: c.pts || '0',
+            vic: c.vic || '0', nul: c.nul || '0', def: c.def || '0',
+          })),
+          rencontres: rencontres.map(r => ({
+            libelle: decodeEntities(r.libelle || ''),
+            equa: decodeEntities(r.equa || ''), equb: decodeEntities(r.equb || ''),
+            scorea: r.scorea || '', scoreb: r.scoreb || '',
+            dateprevue: r.dateprevue || '',
           })),
         });
       } catch (err) {
         console.error(`[get-club-results] Erreur pour ${teamName}:`, err);
-        finalTeams.push({ libequipe: teamName, libdivision: decodeXmlEntities(team.libdivision || ''), libepr: decodeXmlEntities(team.libepr || ''), phase: team._phase || '2', ranking: [] });
+        finalTeams.push({
+          libequipe: teamName, libdivision: decodeEntities(team.libdivision || ''),
+          libepr: decodeEntities(team.libepr || ''), phase: team._phase || currentPhase,
+          ranking: [], rencontres: [],
+        });
       }
     }
+
+    finalTeams.sort((a, b) => {
+      const numA = parseInt((a.libequipe.match(/\d+$/) || ['99'])[0]);
+      const numB = parseInt((b.libequipe.match(/\d+$/) || ['99'])[0]);
+      return numA - numB;
+    });
 
     return new Response(JSON.stringify({ teams: finalTeams }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -203,8 +259,7 @@ serve(async (req) => {
   } catch (error) {
     console.error(`[get-club-results] Erreur fatale:`, error);
     return new Response(JSON.stringify({ error: error.message, teams: [] }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
-})
+});
