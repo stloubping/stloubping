@@ -21,7 +21,11 @@ import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useLightbox } from "@/context/LightboxContext";
 
-const MAX_REGISTRATIONS = 48;
+// Fonction pour obtenir la limite spécifique à chaque tableau
+const getTableauLimit = (id: string) => {
+  if (id === "t3" || id === "t5") return 57;
+  return 48;
+};
 
 const tableauxOptions = [
   { id: "t1", label: "Tableau 1 : 500-799 (8h30)" },
@@ -209,14 +213,12 @@ const TournamentRegistration = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
                       {tableauxOptions.map((item) => {
                         const currentCount = counts[item.id] || 0;
-                        const remaining = MAX_REGISTRATIONS - currentCount;
+                        const limit = getTableauLimit(item.id);
+                        const remaining = limit - currentCount;
                         const isFull = remaining <= 0;
                         const isIndividual = item.id !== "d1";
                         const isAlreadySelected = field.value.includes(item.id);
                         
-                        // On désactive si :
-                        // 1. Le tableau est complet
-                        // 2. C'est un tableau individuel, la limite est atteinte, et il n'est pas déjà sélectionné
                         const isDisabled = isFull || (isIndividual && individualLimitReached && !isAlreadySelected);
 
                         return (
