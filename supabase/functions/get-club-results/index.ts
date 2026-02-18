@@ -42,11 +42,33 @@ async function callSmartping(script: string, params: Record<string, string> = {}
   });
 
   const url = `${API_BASE_URL}/${script}?${queryParams.toString()}`;
-  console.log(`[get-club-results] GET ${script}`, params);
-
   const res = await fetch(url);
-  const text = await res.text();
-  return text;
+  return await res.text();
+}
+
+/**
+ * Décode récursivement les entités HTML (gère &amp; etc)
+ */
+function decodeHtmlEntities(text: string): string {
+  let decoded = text;
+  const entities: Record<string, string> = {
+    '&': '&',
+    '<': '<',
+    '>': '>',
+    '&quot;': '"',
+    '&apos;': "'",
+    '&nbsp;': ' '
+  };
+  
+  let previous;
+  do {
+    previous = decoded;
+    for (const [entity, char] of Object.entries(entities)) {
+      decoded = decoded.replace(new RegExp(entity, 'g'), char);
+    }
+  } while (decoded !== previous);
+  
+  return decoded;
 }
 
 function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
@@ -61,19 +83,10 @@ function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
     let fieldMatch;
 
     while ((fieldMatch = fieldRegex.exec(content)) !== null) {
-      obj[fieldMatch[1]] = fieldMatch[2]
-        .trim()
-        .replace(/&/g, '&')
-        .replace(/</g, '<')
-        .replace(/>/g, '>')
-        .replace(/&quot;/g, '"')
-        .replace(/&apos;/g, "'")
-        .replace(/&nbsp;/g, ' ');
+      obj[fieldMatch[1]] = decodeHtmlEntities(fieldMatch[2].trim());
     }
-
     results.push(obj);
   }
-
   return results;
 }
 
@@ -81,18 +94,16 @@ function parseLienDivision(lien: string): Record<string, string> {
   const params: Record<string, string> = {};
   if (!lien) return params;
 
-  // Nettoyage agressif des entités HTML dans l'URL
-  const clean = lien
-    .replace(/&amp;/g, '&')
-    .replace(/&/g, '&')
-    .replace(/&/g, '&');
-
-  clean.split('&').forEach(part => {
-    const idx = part.indexOf('=');
-    if (idx > 0) {
-      const key = part.substring(0, idx).trim();
-      const val = part.substring(idx + 1).trim();
-      params[key] = val;
+  // On décode d'abord toutes les entités HTML du lien
+  const decodedLien = decodeHtmlEntities(lien);
+  
+  // On extrait les paramètres après le '?' ou directement si pas de '?'
+  const queryString = decodedLien.includes('?') ? decodedLien.split('?')[1] : decodedLien;
+  
+  queryString.split('&').forEach(part => {
+    const [key, val] = part.split('=');
+    if (key && val) {
+      params[key.trim()] = val.trim();
     }
   });
 
@@ -112,19 +123,15 @@ serve(async (req) => {
   try {
     await callSmartping('xml_initialisation.php');
 
+    // Récupération des équipes (on essaie plusieurs types si nécessaire)
     let allTeams = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER, type: 'A' }), 'equipe');
-
     if (allTeams.length === 0) {
-      const teamsM = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER, type: 'M' }), 'equipe');
-      const teamsF = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER, type: 'F' }), 'equipe');
-      allTeams = [...teamsM, ...teamsF];
-      
-      if (allTeams.length === 0) {
-        allTeams = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER }), 'equipe');
-      }
+      allTeams = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER }), 'equipe');
     }
 
     const teamsWithPhase = allTeams.map(team => ({ ...team, _phase: detectPhase(team) }));
+    
+    // Groupement par nom d'équipe pour gérer les doublons de phase
     const byName: Record<string, any[]> = {};
     teamsWithPhase.forEach(team => {
       const name = team.libequipe || 'unknown';
@@ -133,28 +140,26 @@ serve(async (req) => {
     });
 
     const selectedTeams: any[] = [];
-    Object.entries(byName).forEach(([name, versions]) => {
-      if (versions.length === 1) {
-        selectedTeams.push(versions[0]);
-      } else {
-        const p2 = versions.find(v => v._phase === "2");
-        if (p2) selectedTeams.push(p2);
-        else selectedTeams.push(versions.sort((a, b) => (parseInt(b.idepr || '0') - parseInt(a.idepr || '0')))[0]);
-      }
+    Object.entries(byName).forEach(([_, versions]) => {
+      // On privilégie la Phase 2, sinon la Phase 1, sinon la plus récente
+      const p2 = versions.find(v => v._phase === "2");
+      const p1 = versions.find(v => v._phase === "1");
+      if (p2) selectedTeams.push(p2);
+      else if (p1) selectedTeams.push(p1);
+      else selectedTeams.push(versions[0]);
     });
 
     const finalTeams = [];
     for (const team of selectedTeams) {
       const lienParams = parseLienDivision(team.liendivision || '');
       
-      // LOG DE DEBUG POUR VÉRIFIER LES PARAMÈTRES EXTRAITS
       console.log(`[get-club-results] Équipe: ${team.libequipe} | D1: ${lienParams.D1} | cx_poule: ${lienParams.cx_poule}`);
 
       if (!lienParams.D1) {
         finalTeams.push({
-          libequipe: team.libequipe || '',
-          libdivision: team.libdivision || '',
-          libepr: team.libepr || '',
+          libequipe: team.libequipe,
+          libdivision: team.libdivision,
+          libepr: team.libepr,
           phase: team._phase === "unknown" ? "2" : team._phase,
           ranking: [],
         });
@@ -171,9 +176,9 @@ serve(async (req) => {
         const classement = parseXmlList(classXml, 'classement');
         
         finalTeams.push({
-          libequipe: team.libequipe || '',
-          libdivision: team.libdivision || '',
-          libepr: team.libepr || '',
+          libequipe: team.libequipe,
+          libdivision: team.libdivision,
+          libepr: team.libepr,
           phase: team._phase === "unknown" ? "2" : team._phase,
           ranking: classement.map(c => ({
             clt: c.clt || '',
@@ -186,7 +191,7 @@ serve(async (req) => {
           })),
         });
       } catch (err) {
-        finalTeams.push({ libequipe: team.libequipe || '', libdivision: team.libdivision || '', libepr: team.libepr || '', phase: team._phase || '2', ranking: [] });
+        finalTeams.push({ libequipe: team.libequipe, libdivision: team.libdivision, libepr: team.libepr, phase: team._phase, ranking: [] });
       }
     }
 
