@@ -33,29 +33,32 @@ const CompetitionsEquipes = () => {
     const fetchResults = async () => {
       try {
         const { data, error } = await supabase.functions.invoke('get-club-results');
-        if (error) throw error;
         
-        // Fonction robuste pour extraire le numéro d'équipe
+        if (error) {
+          console.error("Erreur Supabase:", error);
+          throw error;
+        }
+
+        console.log('=== DEBUG API ===');
+        console.log('Nombre équipes reçues:', data?.teams?.length);
+        console.log('Équipes:', data?.teams?.map((t: any) => 
+          `${t.libequipe} (Phase ${t.phase}) - ${t.ranking?.length || 0} lignes de classement`
+        ));
+
+        if (!data?.teams || data.teams.length === 0) {
+          setTeams([]);
+          return;
+        }
+
         const getTeamNumber = (lib: string) => {
-          // On cherche tous les nombres dans la chaîne et on prend le dernier (souvent le n° d'équipe)
           const matches = lib.match(/\d+/g);
-          if (matches && matches.length > 0) {
-            return parseInt(matches[matches.length - 1]);
-          }
-          return 999;
+          return matches ? parseInt(matches[matches.length - 1]) : 999;
         };
 
-        // Tri des équipes
-        const sortedTeams = (data.teams || []).sort((a: Team, b: Team) => {
-          // 1. D'abord par Phase (Phase 2 en premier)
-          if (a.phase !== b.phase) {
-            return parseInt(b.phase) - parseInt(a.phase);
-          }
-          // 2. Puis par numéro d'équipe (1, 2, 3...)
-          const numA = getTeamNumber(a.libequipe);
-          const numB = getTeamNumber(b.libequipe);
-          return numA - numB;
-        });
+        // On filtre pour ne garder que la Phase 2 (ou unknown qui est souvent la phase en cours)
+        const sortedTeams = data.teams
+          .filter((t: Team) => t.phase === "2" || t.phase === "unknown")
+          .sort((a: Team, b: Team) => getTeamNumber(a.libequipe) - getTeamNumber(b.libequipe));
         
         setTeams(sortedTeams);
       } catch (err) {
@@ -89,7 +92,7 @@ const CompetitionsEquipes = () => {
       {teams.length === 0 ? (
         <div className="text-center py-20 bg-clubSection/30 rounded-xl border-2 border-dashed border-gray-300">
           <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500">Aucune équipe trouvée.</p>
+          <p className="text-gray-500">Aucune donnée de classement disponible pour le moment.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-8">
@@ -106,8 +109,8 @@ const CompetitionsEquipes = () => {
                       {team.libdivision} — {team.libepr}
                     </CardDescription>
                   </div>
-                  <Badge variant="outline" className={`w-fit border-clubPrimary text-clubPrimary text-[10px] md:text-xs ${team.phase === "2" ? "bg-clubPrimary/20" : "bg-gray-500/20"}`}>
-                    Phase {team.phase} {team.phase === "2" ? "(Actuelle)" : "(Archives)"}
+                  <Badge variant="outline" className="w-fit border-clubPrimary text-clubPrimary bg-clubPrimary/10">
+                    Phase {team.phase === "unknown" ? "2" : team.phase}
                   </Badge>
                 </div>
               </CardHeader>
@@ -126,25 +129,33 @@ const CompetitionsEquipes = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {team.ranking?.map((row, rIdx) => {
-                        const isStLoub = row.equipe.toLowerCase().includes("loub");
-                        return (
-                          <TableRow 
-                            key={rIdx} 
-                            className={isStLoub ? "bg-clubPrimary/5 font-semibold" : ""}
-                          >
-                            <TableCell className="text-center font-bold text-[10px] md:text-sm">{row.clt}</TableCell>
-                            <TableCell className={isStLoub ? "text-clubPrimary text-[10px] md:text-sm" : "text-[10px] md:text-sm"}>
-                              {row.equipe}
-                            </TableCell>
-                            <TableCell className="text-center text-[10px] md:text-sm">{row.joue}</TableCell>
-                            <TableCell className="text-center text-[10px] md:text-sm">{row.vic}</TableCell>
-                            <TableCell className="text-center text-[10px] md:text-sm">{row.nul}</TableCell>
-                            <TableCell className="text-center text-[10px] md:text-sm">{row.def}</TableCell>
-                            <TableCell className="text-center font-bold text-clubPrimary text-[10px] md:text-sm">{row.pts}</TableCell>
-                          </TableRow>
-                        );
-                      })}
+                      {team.ranking && team.ranking.length > 0 ? (
+                        team.ranking.map((row, rIdx) => {
+                          const isStLoub = row.equipe.toLowerCase().includes("loub");
+                          return (
+                            <TableRow 
+                              key={rIdx} 
+                              className={isStLoub ? "bg-clubPrimary/5 font-semibold" : ""}
+                            >
+                              <TableCell className="text-center font-bold text-[10px] md:text-sm">{row.clt}</TableCell>
+                              <TableCell className={isStLoub ? "text-clubPrimary text-[10px] md:text-sm" : "text-[10px] md:text-sm"}>
+                                {row.equipe}
+                              </TableCell>
+                              <TableCell className="text-center text-[10px] md:text-sm">{row.joue}</TableCell>
+                              <TableCell className="text-center text-[10px] md:text-sm">{row.vic}</TableCell>
+                              <TableCell className="text-center text-[10px] md:text-sm">{row.nul}</TableCell>
+                              <TableCell className="text-center text-[10px] md:text-sm">{row.def}</TableCell>
+                              <TableCell className="text-center font-bold text-clubPrimary text-[10px] md:text-sm">{row.pts}</TableCell>
+                            </TableRow>
+                          );
+                        })
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={7} className="text-center py-4 text-muted-foreground italic">
+                            Classement non disponible pour cette équipe.
+                          </TableCell>
+                        </TableRow>
+                      )}
                     </TableBody>
                   </Table>
                 </div>

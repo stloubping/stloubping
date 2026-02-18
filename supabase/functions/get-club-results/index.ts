@@ -10,180 +10,168 @@ const APP_ID = "SX046";
 const APP_PASSWORD = "NQC2rNs85g";
 const CLUB_NUMBER = "10330022";
 const API_BASE_URL = "https://www.fftt.com/mobile/pxml";
-
-// Numéro de série fixe pour la session
 const SERIE = "STLBP2025ABCD1";
 
-/**
- * Génère le timestamp au format YYYYMMDDHHMMSSmmm (17 caractères)
- */
-function getTimestamp() {
+function getTimestamp(): string {
   const now = new Date();
-  const pad = (n: number, l = 2) => n.toString().padStart(l, '0');
-  return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}${pad(now.getMilliseconds(), 3)}`;
+  const Y = now.getFullYear();
+  const M = String(now.getMonth() + 1).padStart(2, '0');
+  const D = String(now.getDate()).padStart(2, '0');
+  const h = String(now.getHours()).padStart(2, '0');
+  const m = String(now.getMinutes()).padStart(2, '0');
+  const s = String(now.getSeconds()).padStart(2, '0');
+  const ms = String(now.getMilliseconds()).padStart(3, '0');
+  return `${Y}${M}${D}${h}${m}${s}${ms}`;
 }
 
-function generateSmartpingHash(tm: string) {
-  const passwordMd5 = CryptoJS.MD5(APP_PASSWORD).toString();
-  return CryptoJS.HmacSHA1(tm, passwordMd5).toString();
+function generateHash(tm: string): string {
+  const key = CryptoJS.MD5(APP_PASSWORD).toString();
+  return CryptoJS.HmacSHA1(tm, key).toString();
 }
 
-/**
- * Effectue un appel à l'API FFTT avec une authentification fraîche (timestamp + hash)
- */
 async function callSmartping(script: string, params: Record<string, string> = {}): Promise<string> {
   const tm = getTimestamp();
-  const tmc = generateSmartpingHash(tm);
-  
-  const allParams = new URLSearchParams({
+  const tmc = generateHash(tm);
+
+  const queryParams = new URLSearchParams({
     id: APP_ID,
     serie: SERIE,
     tm,
     tmc,
-    ...params
+    ...params,
   });
-  
-  const url = `${API_BASE_URL}/${script}?${allParams.toString()}`;
-  console.log(`[get-club-results] Appel API: ${script} avec params: ${JSON.stringify(params)}`);
-  
-  const response = await fetch(url);
-  const text = await response.text();
+
+  const url = `${API_BASE_URL}/${script}?${queryParams.toString()}`;
+  console.log(`[get-club-results] GET ${script}`, params);
+
+  const res = await fetch(url);
+  const text = await res.text();
   return text;
 }
 
-function parseXmlList(xml: string, tagName: string) {
-  const regex = new RegExp(`<${tagName}>([\\s\\S]*?)<\\/${tagName}>`, 'g');
+/**
+ * Parse XML robuste - gère les entités HTML
+ */
+function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
   const results: Record<string, string>[] = [];
+  const regex = new RegExp(`<${tagName}>([\\s\\S]*?)<\\/${tagName}>`, 'gi');
   let match;
+
   while ((match = regex.exec(xml)) !== null) {
     const content = match[1];
     const obj: Record<string, string> = {};
-    const tagRegex = /<([\w]+)>([\s\S]*?)<\/\1>/g;
-    let tagMatch;
-    while ((tagMatch = tagRegex.exec(content)) !== null) {
-      let val = tagMatch[2].trim()
+    const fieldRegex = /<([\w]+)>([\s\S]*?)<\/\1>/g;
+    let fieldMatch;
+
+    while ((fieldMatch = fieldRegex.exec(content)) !== null) {
+      obj[fieldMatch[1]] = fieldMatch[2]
+        .trim()
         .replace(/&/g, '&')
-        .replace(/&nbsp;/g, ' ')
-        .replace(/&ndash;/g, '-')
-        .replace(/&mdash;/g, '-')
-        .replace(/&quot;/g, '"');
-      obj[tagMatch[1]] = val;
+        .replace(/</g, '<')
+        .replace(/>/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&apos;/g, "'")
+        .replace(/&nbsp;/g, ' ');
     }
+
     results.push(obj);
   }
+
   return results;
 }
 
+/**
+ * Parse le liendivision pour extraire D1 et cx_poule
+ */
 function parseLienDivision(lien: string): Record<string, string> {
   const params: Record<string, string> = {};
   if (!lien) return params;
-  
-  const clean = lien.replace(/&/g, '&');
-  
+
+  const clean = lien
+    .replace(/&amp;/g, '&')
+    .replace(/&/g, '&')
+    .replace(/&/g, '&');
+
   clean.split('&').forEach(part => {
-    const eqIndex = part.indexOf('=');
-    if (eqIndex > 0) {
-      const key = part.substring(0, eqIndex).trim();
-      const value = part.substring(eqIndex + 1).trim();
-      params[key] = value;
+    const idx = part.indexOf('=');
+    if (idx > 0) {
+      params[part.substring(0, idx).trim()] = part.substring(idx + 1).trim();
     }
   });
-  
+
   return params;
 }
 
+function detectPhase(team: Record<string, string>): string {
+  const text = `${team.libepr || ''} ${team.libdivision || ''} ${team.libequipe || ''}`.toLowerCase();
+  if (text.includes('phase 2') || text.includes('ph.2') || text.includes('ph 2')) return "2";
+  if (text.includes('phase 1') || text.includes('ph.1') || text.includes('ph 1')) return "1";
+  return "unknown";
+}
+
 serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
+  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
   try {
-    // 1. Initialisation
     await callSmartping('xml_initialisation.php');
 
-    // 2. Récupérer toutes les équipes (Type A)
-    const teamsXml = await callSmartping('xml_equipe.php', {
-      numclu: CLUB_NUMBER,
-      type: 'A'
-    });
-    
-    const allTeams = parseXmlList(teamsXml, 'equipe');
-    
-    console.log(`[get-club-results] Total équipes reçues: ${allTeams.length}`);
+    // Récupération des équipes avec fallbacks
+    let allTeams = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER, type: 'A' }), 'equipe');
 
-    // 3. Détection de phase et filtrage intelligent
-    const teamsWithPhase = allTeams.map(team => {
-      const lib = `${team.libepr || ''} ${team.libdivision || ''}`.toLowerCase();
-      let phase = "unknown";
+    if (allTeams.length === 0) {
+      const teamsM = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER, type: 'M' }), 'equipe');
+      const teamsF = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER, type: 'F' }), 'equipe');
+      allTeams = [...teamsM, ...teamsF];
       
-      if (lib.includes('phase 2') || lib.includes('ph.2') || lib.includes('ph 2') || lib.includes('p2')) {
-        phase = "2";
-      } else if (lib.includes('phase 1') || lib.includes('ph.1') || lib.includes('ph 1') || lib.includes('p1')) {
-        phase = "1";
+      if (allTeams.length === 0) {
+        allTeams = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER }), 'equipe');
       }
-      
-      return { ...team, _detectedPhase: phase };
-    });
+    }
 
-    // Regroupement par nom d'équipe pour ne garder que la version la plus récente (Phase 2)
-    const teamsByName: Record<string, typeof teamsWithPhase> = {};
+    // Filtrage intelligent
+    const teamsWithPhase = allTeams.map(team => ({ ...team, _phase: detectPhase(team) }));
+    const byName: Record<string, any[]> = {};
     teamsWithPhase.forEach(team => {
       const name = team.libequipe || 'unknown';
-      if (!teamsByName[name]) teamsByName[name] = [];
-      teamsByName[name].push(team);
+      if (!byName[name]) byName[name] = [];
+      byName[name].push(team);
     });
 
-    const filteredTeams: typeof teamsWithPhase = [];
-    Object.entries(teamsByName).forEach(([name, versions]) => {
+    const selectedTeams: any[] = [];
+    Object.entries(byName).forEach(([name, versions]) => {
       if (versions.length === 1) {
-        filteredTeams.push(versions[0]);
+        selectedTeams.push(versions[0]);
       } else {
-        const phase2 = versions.find(v => v._detectedPhase === "2");
-        if (phase2) {
-          filteredTeams.push(phase2);
-        } else {
-          // Si pas de Phase 2 explicite, on prend l'ID d'épreuve le plus élevé
-          const sorted = versions.sort((a, b) => parseInt(b.idepr || '0') - parseInt(a.idepr || '0'));
-          filteredTeams.push(sorted[0]);
-        }
+        const p2 = versions.find(v => v._phase === "2");
+        if (p2) selectedTeams.push(p2);
+        else selectedTeams.push(versions.sort((a, b) => (parseInt(b.idepr || '0') - parseInt(a.idepr || '0')))[0]);
       }
     });
 
-    // 4. Récupération des classements avec authentification fraîche pour chaque appel
-    const enrichedTeams = [];
-    for (const team of filteredTeams) {
-      try {
-        const params = parseLienDivision(team.liendivision || '');
-        
-        if (!params.D1) {
-          enrichedTeams.push({
-            libequipe: team.libequipe || '',
-            libdivision: team.libdivision || '',
-            libepr: team.libepr || '',
-            phase: team._detectedPhase === "unknown" ? "2" : team._detectedPhase,
-            ranking: []
-          });
-          continue;
-        }
-
-        const rankingParams: Record<string, string> = {
-          action: 'classement',
-          auto: '1',
-          D1: params.D1,
-        };
-        if (params.cx_poule) {
-          rankingParams.cx_poule = params.cx_poule;
-        }
-
-        const rankingXml = await callSmartping('xml_result_equ.php', rankingParams);
-        const ranking = parseXmlList(rankingXml, 'classement');
-        
-        enrichedTeams.push({
+    // Classements
+    const finalTeams = [];
+    for (const team of selectedTeams) {
+      const lienParams = parseLienDivision(team.liendivision || '');
+      if (!lienParams.D1) {
+        finalTeams.push({
           libequipe: team.libequipe || '',
           libdivision: team.libdivision || '',
           libepr: team.libepr || '',
-          phase: team._detectedPhase === "unknown" ? "2" : team._detectedPhase,
-          ranking: ranking.map(c => ({
+          phase: team._phase === "unknown" ? "2" : team._phase,
+          ranking: [],
+        });
+        continue;
+      }
+
+      try {
+        const classXml = await callSmartping('xml_result_equ.php', { action: 'classement', auto: '1', D1: lienParams.D1, cx_poule: lienParams.cx_poule || '' });
+        const classement = parseXmlList(classXml, 'classement');
+        finalTeams.push({
+          libequipe: team.libequipe || '',
+          libdivision: team.libdivision || '',
+          libepr: team.libepr || '',
+          phase: team._phase === "unknown" ? "2" : team._phase,
+          ranking: classement.map(c => ({
             clt: c.clt || '',
             equipe: c.equipe || '',
             joue: c.joue || '0',
@@ -191,26 +179,19 @@ serve(async (req) => {
             vic: c.vic || '0',
             nul: c.nul || '0',
             def: c.def || '0',
-          }))
+          })),
         });
       } catch (err) {
-        console.error(`[get-club-results] Erreur classement pour ${team.libequipe}:`, err.message);
+        finalTeams.push({ libequipe: team.libequipe || '', libdivision: team.libdivision || '', libepr: team.libepr || '', phase: team._phase || '2', ranking: [] });
       }
     }
 
-    return new Response(JSON.stringify({ 
-      teams: enrichedTeams,
-      debug: {
-        totalFromAPI: allTeams.length,
-        afterFilter: filteredTeams.length
-      }
-    }), {
+    return new Response(JSON.stringify({ teams: finalTeams }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
   } catch (error) {
-    console.error(`[get-club-results] Erreur fatale: ${error.message}`);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: error.message, teams: [] }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
