@@ -39,23 +39,18 @@ const CompetitionsEquipes = () => {
           throw error;
         }
 
-        console.log('=== DEBUG API ===');
-        console.log('Nombre équipes reçues:', data?.teams?.length);
-        console.log('Équipes:', data?.teams?.map((t: any) => 
-          `${t.libequipe} (Phase ${t.phase}) - ${t.ranking?.length || 0} lignes de classement`
-        ));
-
         if (!data?.teams || data.teams.length === 0) {
           setTeams([]);
           return;
         }
 
+        // Fonction de tri améliorée : on cherche le PREMIER nombre dans le nom de l'équipe
+        // (ex: "Saint Loubès 1" -> 1, même si c'est la "Phase 2")
         const getTeamNumber = (lib: string) => {
-          const matches = lib.match(/\d+/g);
-          return matches ? parseInt(matches[matches.length - 1]) : 999;
+          const match = lib.match(/\d+/); // Trouve le premier nombre
+          return match ? parseInt(match[0]) : 999;
         };
 
-        // On filtre pour ne garder que la Phase 2 (ou unknown qui est souvent la phase en cours)
         const sortedTeams = data.teams
           .filter((t: Team) => t.phase === "2" || t.phase === "unknown")
           .sort((a: Team, b: Team) => getTeamNumber(a.libequipe) - getTeamNumber(b.libequipe));
