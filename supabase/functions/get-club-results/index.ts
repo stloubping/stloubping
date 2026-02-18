@@ -32,9 +32,6 @@ async function callSmartping(script: string, params: Record<string, string> = {}
   return await res.text();
 }
 
-/**
- * Parse XML robuste qui gère correctement les attributs contenant &
- */
 function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
   const results: Record<string, string>[] = [];
   const regex = new RegExp(`<${tagName}>([\\s\\S]*?)<\\/${tagName}>`, 'gi');
@@ -43,7 +40,6 @@ function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
   while ((match = regex.exec(xml)) !== null) {
     const content = match[1];
     const obj: Record<string, string> = {};
-    
     const openTagRegex = /<(\w+)>/g;
     let tagMatch;
     
@@ -54,38 +50,23 @@ function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
       const closeIdx = content.indexOf(closeTag, afterOpenTag);
       
       if (closeIdx !== -1) {
-        const rawValue = content.substring(afterOpenTag, closeIdx);
-        obj[fieldName] = rawValue.trim();
+        obj[fieldName] = content.substring(afterOpenTag, closeIdx).trim();
         openTagRegex.lastIndex = closeIdx + closeTag.length;
       }
     }
-
     results.push(obj);
   }
-
   return results;
 }
 
 function decodeEntities(str: string): string {
-  return str
-    .replace(/&/g, '&')
-    .replace(/</g, '<')
-    .replace(/>/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&nbsp;/g, ' ');
+  return str.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ');
 }
 
-/**
- * Parse le liendivision BRUT
- */
 function parseLien(lienBrut: string): Record<string, string> {
   const params: Record<string, string> = {};
   if (!lienBrut) return params;
-
-  const decoded = lienBrut
-    .replace(/&amp;/g, '&')
-    .replace(/&/g, '&');
-
+  const decoded = lienBrut.replace(/&amp;/g, '&').replace(/&/g, '&');
   decoded.split('&').forEach(part => {
     const eq = part.indexOf('=');
     if (eq > 0) {
@@ -94,7 +75,6 @@ function parseLien(lienBrut: string): Record<string, string> {
       if (key && val) params[key] = val;
     }
   });
-
   return params;
 }
 
@@ -109,6 +89,24 @@ function getCurrentPhase(): string {
   return (new Date().getMonth() + 1 >= 1 && new Date().getMonth() + 1 <= 8) ? "2" : "1";
 }
 
+function extractTeamNumber(libequipe: string): string {
+  const match = libequipe.match(/(\d+)\s*$/);
+  return match ? match[1] : "1";
+}
+
+function isTeamInRanking(ranking: Record<string, string>[], teamNumber: string): boolean {
+  return ranking.some(r => {
+    const equipe = decodeEntities(r.equipe || '').toLowerCase();
+    const hasClub = equipe.includes('loub') || equipe.includes('st lou') || equipe.includes('saint lou');
+    if (!hasClub) return false;
+    
+    const matchNum = equipe.match(/(\d+)\s*$/);
+    const rankingTeamNum = matchNum ? matchNum[1] : "1";
+    
+    return rankingTeamNum === teamNumber;
+  });
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -118,11 +116,14 @@ serve(async (req) => {
     await callSmartping('xml_initialisation.php');
 
     const teamsXml = await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER });
-    const allTeams = parseXmlList(teamsXml, 'equipe');
 
+    console.log(`\n===== XML BRUT COMPLET =====`);
+    console.log(teamsXml);
+    console.log(`===== FIN XML BRUT =====\n`);
+
+    const allTeams = parseXmlList(teamsXml, 'equipe');
     const currentPhase = getCurrentPhase();
 
-    // Filtrage des équipes (Critérium ou toutes si non trouvé)
     const criteriumTeams = allTeams.filter(team => {
       const lib = decodeEntities(`${team.libepr || ''} ${team.libdivision || ''}`).toLowerCase();
       return lib.includes('crit') || lib.includes('gironde') || lib.includes('départ') || lib.includes('depart');
@@ -147,10 +148,10 @@ serve(async (req) => {
       if (versions.length === 1) {
         selectedTeams.push(versions[0]);
       } else {
-        const p2 = versions.find(v => v._phase === "2");
+        const p2 = versions.find((v: any) => v._phase === "2");
         if (p2) selectedTeams.push(p2);
         else {
-          versions.sort((a, b) => parseInt(b.idepr || '0') - parseInt(a.idepr || '0'));
+          versions.sort((a: any, b: any) => parseInt(b.idepr || '0') - parseInt(a.idepr || '0'));
           selectedTeams.push(versions[0]);
         }
       }
@@ -162,6 +163,7 @@ serve(async (req) => {
       const lienBrut = team.liendivision || '';
       const lienParams = parseLien(lienBrut);
       const teamName = decodeEntities(team.libequipe || '');
+      const teamNumber = extractTeamNumber(teamName);
 
       if (!lienParams.D1) {
         finalTeams.push({
@@ -169,54 +171,58 @@ serve(async (req) => {
           libdivision: decodeEntities(team.libdivision || ''),
           libepr: decodeEntities(team.libepr || ''),
           phase: team._phase === "unknown" ? currentPhase : team._phase,
-          ranking: [],
-          rencontres: [],
+          ranking: [], rencontres: [],
         });
         continue;
       }
 
       try {
         const classParams: Record<string, string> = {
-          action: 'classement',
-          auto: '1',
-          D1: lienParams.D1,
+          action: 'classement', auto: '1', D1: lienParams.D1,
         };
-        if (lienParams.cx_poule) {
-          classParams.cx_poule = lienParams.cx_poule;
-        }
+        if (lienParams.cx_poule) classParams.cx_poule = lienParams.cx_poule;
 
-        let classXml = await callSmartping('xml_result_equ.php', classParams);
+        const classXml = await callSmartping('xml_result_equ.php', classParams);
         let ranking = parseXmlList(classXml, 'classement');
+        let usedCxPoule = lienParams.cx_poule || '';
 
-        // AUTO-CORRECTION : Vérifier si le club est dans ce classement
-        const hasClub = ranking.some(r =>
-          decodeEntities(r.equipe || '').toLowerCase().includes('loub')
-        );
+        const teamFound = isTeamInRanking(ranking, teamNumber);
 
-        if (!hasClub) {
-          console.log(`[get-club-results] ${teamName} absent de la poule ${lienParams.cx_poule}. Scan des poules...`);
-          
-          const poulesXml = await callSmartping('xml_result_equ.php', { action: 'poule', auto: '1', D1: lienParams.D1 });
+        if (!teamFound && ranking.length > 0) {
+          const poulesXml = await callSmartping('xml_result_equ.php', {
+            action: 'poule', auto: '1', D1: lienParams.D1,
+          });
           const poules = parseXmlList(poulesXml, 'poule');
 
           for (const poule of poules) {
             const pouleLienParams = parseLien(poule.lien || '');
-            if (pouleLienParams.cx_poule === lienParams.cx_poule) continue;
+            const testCxPoule = pouleLienParams.cx_poule || '';
+            
+            if (testCxPoule === usedCxPoule) continue;
 
-            const testXml = await callSmartping('xml_result_equ.php', { action: 'classement', auto: '1', D1: lienParams.D1, cx_poule: pouleLienParams.cx_poule });
+            const testParams: Record<string, string> = {
+              action: 'classement', auto: '1',
+              D1: pouleLienParams.D1 || lienParams.D1,
+            };
+            if (testCxPoule) testParams.cx_poule = testCxPoule;
+
+            const testXml = await callSmartping('xml_result_equ.php', testParams);
             const testRanking = parseXmlList(testXml, 'classement');
 
-            if (testRanking.some(r => decodeEntities(r.equipe || '').toLowerCase().includes('loub'))) {
-              console.log(`[get-club-results] Bonne poule trouvée pour ${teamName} : ${pouleLienParams.cx_poule}`);
+            if (isTeamInRanking(testRanking, teamNumber)) {
               ranking = testRanking;
-              lienParams.cx_poule = pouleLienParams.cx_poule;
+              usedCxPoule = testCxPoule;
               break;
             }
           }
         }
 
-        // Récupérer les rencontres de la poule finale
-        const rencXml = await callSmartping('xml_result_equ.php', { action: '', auto: '1', D1: lienParams.D1, cx_poule: lienParams.cx_poule });
+        const rencParams: Record<string, string> = {
+          action: '', auto: '1', D1: lienParams.D1,
+        };
+        if (usedCxPoule) rencParams.cx_poule = usedCxPoule;
+
+        const rencXml = await callSmartping('xml_result_equ.php', rencParams);
         const rencontres = parseXmlList(rencXml, 'tour');
 
         finalTeams.push({
@@ -225,22 +231,31 @@ serve(async (req) => {
           libepr: decodeEntities(team.libepr || ''),
           phase: team._phase === "unknown" ? currentPhase : team._phase,
           ranking: ranking.map(c => ({
-            clt: c.clt || '', equipe: decodeEntities(c.equipe || ''),
-            joue: c.joue || '0', pts: c.pts || '0',
-            vic: c.vic || '0', nul: c.nul || '0', def: c.def || '0',
+            clt: c.clt || '',
+            equipe: decodeEntities(c.equipe || ''),
+            joue: c.joue || '0',
+            pts: c.pts || '0',
+            vic: c.vic || '0',
+            nul: c.nul || '0',
+            def: c.def || '0',
           })),
           rencontres: rencontres.map(r => ({
             libelle: decodeEntities(r.libelle || ''),
-            equa: decodeEntities(r.equa || ''), equb: decodeEntities(r.equb || ''),
-            scorea: r.scorea || '', scoreb: r.scoreb || '',
+            equa: decodeEntities(r.equa || ''),
+            equb: decodeEntities(r.equb || ''),
+            scorea: r.scorea || '',
+            scoreb: r.scoreb || '',
             dateprevue: r.dateprevue || '',
           })),
         });
+
       } catch (err) {
         console.error(`[get-club-results] Erreur pour ${teamName}:`, err);
         finalTeams.push({
-          libequipe: teamName, libdivision: decodeEntities(team.libdivision || ''),
-          libepr: decodeEntities(team.libepr || ''), phase: team._phase || currentPhase,
+          libequipe: teamName,
+          libdivision: decodeEntities(team.libdivision || ''),
+          libepr: decodeEntities(team.libepr || ''),
+          phase: team._phase || currentPhase,
           ranking: [], rencontres: [],
         });
       }
@@ -257,7 +272,7 @@ serve(async (req) => {
     });
 
   } catch (error) {
-    console.error(`[get-club-results] Erreur fatale:`, error);
+    console.error(`[FATAL]`, error);
     return new Response(JSON.stringify({ error: error.message, teams: [] }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
