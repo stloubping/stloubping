@@ -34,30 +34,28 @@ const CompetitionsEquipes = () => {
       try {
         const { data, error } = await supabase.functions.invoke('get-club-results');
         
-        if (error) {
-          console.error("Erreur Supabase:", error);
-          throw error;
-        }
+        if (error) throw error;
 
-        if (!data?.teams || data.teams.length === 0) {
-          setTeams([]);
-          return;
-        }
+        if (!data?.teams) return;
 
-        // Fonction de tri améliorée : on cherche le PREMIER nombre dans le nom de l'équipe
-        // (ex: "Saint Loubès 1" -> 1, même si c'est la "Phase 2")
-        const getTeamNumber = (lib: string) => {
-          const match = lib.match(/\d+/); // Trouve le premier nombre
-          return match ? parseInt(match[0]) : 999;
-        };
+        // Filtrage : Uniquement Championnat (on exclut le Critérium)
+        const championnatTeams = data.teams.filter((t: Team) => 
+          !t.libepr.toLowerCase().includes("critérium") && 
+          !t.libepr.toLowerCase().includes("criterium")
+        );
 
-        const sortedTeams = data.teams
+        // Tri par numéro d'équipe (1 à 6)
+        const sortedTeams = championnatTeams
           .filter((t: Team) => t.phase === "2" || t.phase === "unknown")
-          .sort((a: Team, b: Team) => getTeamNumber(a.libequipe) - getTeamNumber(b.libequipe));
+          .sort((a: Team, b: Team) => {
+            const numA = parseInt(a.libequipe.match(/\d+/)?.[0] || "999");
+            const numB = parseInt(b.libequipe.match(/\d+/)?.[0] || "999");
+            return numA - numB;
+          });
         
         setTeams(sortedTeams);
       } catch (err) {
-        console.error("Erreur lors de la récupération des résultats:", err);
+        console.error("Erreur Championnat:", err);
       } finally {
         setLoading(false);
       }
@@ -77,9 +75,9 @@ const CompetitionsEquipes = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
-      <div className="text-center mb-8 md:mb-12">
+      <div className="text-center mb-12">
         <h1 className="text-3xl md:text-4xl font-bold text-clubDark mb-4">Championnat par Équipes</h1>
-        <p className="text-muted-foreground max-w-2xl mx-auto text-sm md:text-base">
+        <p className="text-muted-foreground max-w-2xl mx-auto">
           Retrouvez tous les classements officiels de nos équipes pour la saison 2025-2026.
         </p>
       </div>
@@ -87,7 +85,7 @@ const CompetitionsEquipes = () => {
       {teams.length === 0 ? (
         <div className="text-center py-20 bg-clubSection/30 rounded-xl border-2 border-dashed border-gray-300">
           <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500">Aucune donnée de classement disponible pour le moment.</p>
+          <p className="text-gray-500">Aucune donnée de classement disponible.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-8">
@@ -100,7 +98,7 @@ const CompetitionsEquipes = () => {
                       <Trophy className="h-5 w-5 md:h-6 md:w-6 text-clubPrimary" />
                       {team.libequipe}
                     </CardTitle>
-                    <CardDescription className="text-gray-300 mt-1 text-xs md:text-sm">
+                    <CardDescription className="text-gray-300 mt-1">
                       {team.libdivision} — {team.libepr}
                     </CardDescription>
                   </div>
@@ -114,13 +112,13 @@ const CompetitionsEquipes = () => {
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-clubSection/50 hover:bg-clubSection/50">
-                        <TableHead className="w-[50px] md:w-[60px] text-center font-bold text-[10px] md:text-sm">Pos</TableHead>
-                        <TableHead className="font-bold text-[10px] md:text-sm">Équipe</TableHead>
-                        <TableHead className="text-center font-bold text-[10px] md:text-sm">J</TableHead>
-                        <TableHead className="text-center font-bold text-[10px] md:text-sm">V</TableHead>
-                        <TableHead className="text-center font-bold text-[10px] md:text-sm">N</TableHead>
-                        <TableHead className="text-center font-bold text-[10px] md:text-sm">D</TableHead>
-                        <TableHead className="text-center font-bold text-clubPrimary text-[10px] md:text-sm">Pts</TableHead>
+                        <TableHead className="w-[60px] text-center font-bold">Pos</TableHead>
+                        <TableHead className="font-bold">Équipe</TableHead>
+                        <TableHead className="text-center font-bold">J</TableHead>
+                        <TableHead className="text-center font-bold">V</TableHead>
+                        <TableHead className="text-center font-bold">N</TableHead>
+                        <TableHead className="text-center font-bold">D</TableHead>
+                        <TableHead className="text-center font-bold text-clubPrimary">Pts</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -128,26 +126,21 @@ const CompetitionsEquipes = () => {
                         team.ranking.map((row, rIdx) => {
                           const isStLoub = row.equipe.toLowerCase().includes("loub");
                           return (
-                            <TableRow 
-                              key={rIdx} 
-                              className={isStLoub ? "bg-clubPrimary/5 font-semibold" : ""}
-                            >
-                              <TableCell className="text-center font-bold text-[10px] md:text-sm">{row.clt}</TableCell>
-                              <TableCell className={isStLoub ? "text-clubPrimary text-[10px] md:text-sm" : "text-[10px] md:text-sm"}>
-                                {row.equipe}
-                              </TableCell>
-                              <TableCell className="text-center text-[10px] md:text-sm">{row.joue}</TableCell>
-                              <TableCell className="text-center text-[10px] md:text-sm">{row.vic}</TableCell>
-                              <TableCell className="text-center text-[10px] md:text-sm">{row.nul}</TableCell>
-                              <TableCell className="text-center text-[10px] md:text-sm">{row.def}</TableCell>
-                              <TableCell className="text-center font-bold text-clubPrimary text-[10px] md:text-sm">{row.pts}</TableCell>
+                            <TableRow key={rIdx} className={isStLoub ? "bg-clubPrimary/5 font-semibold" : ""}>
+                              <TableCell className="text-center font-bold">{row.clt}</TableCell>
+                              <TableCell className={isStLoub ? "text-clubPrimary" : ""}>{row.equipe}</TableCell>
+                              <TableCell className="text-center">{row.joue}</TableCell>
+                              <TableCell className="text-center">{row.vic}</TableCell>
+                              <TableCell className="text-center">{row.nul}</TableCell>
+                              <TableCell className="text-center">{row.def}</TableCell>
+                              <TableCell className="text-center font-bold text-clubPrimary">{row.pts}</TableCell>
                             </TableRow>
                           );
                         })
                       ) : (
                         <TableRow>
                           <TableCell colSpan={7} className="text-center py-4 text-muted-foreground italic">
-                            Classement non disponible pour cette équipe.
+                            Classement non disponible.
                           </TableCell>
                         </TableRow>
                       )}
