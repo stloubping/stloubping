@@ -46,29 +46,16 @@ async function callSmartping(script: string, params: Record<string, string> = {}
   return await res.text();
 }
 
-/**
- * Décode récursivement les entités HTML (gère &amp; etc)
- */
 function decodeHtmlEntities(text: string): string {
-  let decoded = text;
-  const entities: Record<string, string> = {
-    '&': '&',
-    '<': '<',
-    '>': '>',
-    '&quot;': '"',
-    '&apos;': "'",
-    '&nbsp;': ' '
-  };
-  
-  let previous;
-  do {
-    previous = decoded;
-    for (const [entity, char] of Object.entries(entities)) {
-      decoded = decoded.replace(new RegExp(entity, 'g'), char);
-    }
-  } while (decoded !== previous);
-  
-  return decoded;
+  if (!text) return "";
+  return text
+    .replace(/&/g, '&')
+    .replace(/</g, '<')
+    .replace(/>/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&/g, '&'); // Double décodage au cas où
 }
 
 function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
@@ -90,22 +77,21 @@ function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
   return results;
 }
 
-function parseLienDivision(lien: string): Record<string, string> {
+/**
+ * Extraction robuste des paramètres D1 et cx_poule depuis le lien FFTT
+ */
+function extractParamsFromLien(lien: string): Record<string, string> {
   const params: Record<string, string> = {};
   if (!lien) return params;
 
-  // On décode d'abord toutes les entités HTML du lien
-  const decodedLien = decodeHtmlEntities(lien);
+  const decoded = decodeHtmlEntities(lien);
   
-  // On extrait les paramètres après le '?' ou directement si pas de '?'
-  const queryString = decodedLien.includes('?') ? decodedLien.split('?')[1] : decodedLien;
-  
-  queryString.split('&').forEach(part => {
-    const [key, val] = part.split('=');
-    if (key && val) {
-      params[key.trim()] = val.trim();
-    }
-  });
+  // Utilisation de regex pour être sûr de capturer les valeurs même si le format varie
+  const d1Match = decoded.match(/[?&]D1=([^&]+)/);
+  const cxPouleMatch = decoded.match(/[?&]cx_poule=([^&]+)/);
+
+  if (d1Match) params.D1 = d1Match[1];
+  if (cxPouleMatch) params.cx_poule = cxPouleMatch[1];
 
   return params;
 }
@@ -123,15 +109,12 @@ serve(async (req) => {
   try {
     await callSmartping('xml_initialisation.php');
 
-    // Récupération des équipes (on essaie plusieurs types si nécessaire)
-    let allTeams = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER, type: 'A' }), 'equipe');
-    if (allTeams.length === 0) {
-      allTeams = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER }), 'equipe');
-    }
-
+    // On récupère TOUTES les équipes sans filtre de type au début
+    const allTeams = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER }), 'equipe');
+    
     const teamsWithPhase = allTeams.map(team => ({ ...team, _phase: detectPhase(team) }));
     
-    // Groupement par nom d'équipe pour gérer les doublons de phase
+    // Groupement par nom d'équipe pour ne garder que la meilleure phase disponible
     const byName: Record<string, any[]> = {};
     teamsWithPhase.forEach(team => {
       const name = team.libequipe || 'unknown';
@@ -141,7 +124,7 @@ serve(async (req) => {
 
     const selectedTeams: any[] = [];
     Object.entries(byName).forEach(([_, versions]) => {
-      // On privilégie la Phase 2, sinon la Phase 1, sinon la plus récente
+      // On cherche la Phase 2, sinon la Phase 1, sinon n'importe laquelle
       const p2 = versions.find(v => v._phase === "2");
       const p1 = versions.find(v => v._phase === "1");
       if (p2) selectedTeams.push(p2);
@@ -151,16 +134,14 @@ serve(async (req) => {
 
     const finalTeams = [];
     for (const team of selectedTeams) {
-      const lienParams = parseLienDivision(team.liendivision || '');
+      const params = extractParamsFromLien(team.liendivision || '');
       
-      console.log(`[get-club-results] Équipe: ${team.libequipe} | D1: ${lienParams.D1} | cx_poule: ${lienParams.cx_poule}`);
-
-      if (!lienParams.D1) {
+      if (!params.D1) {
         finalTeams.push({
           libequipe: team.libequipe,
           libdivision: team.libdivision,
           libepr: team.libepr,
-          phase: team._phase === "unknown" ? "2" : team._phase,
+          phase: team._phase === "unknown" ? "1" : team._phase,
           ranking: [],
         });
         continue;
@@ -170,8 +151,8 @@ serve(async (req) => {
         const classXml = await callSmartping('xml_result_equ.php', { 
           action: 'classement', 
           auto: '1', 
-          D1: lienParams.D1, 
-          cx_poule: lienParams.cx_poule || '' 
+          D1: params.D1, 
+          cx_poule: params.cx_poule || '' 
         });
         const classement = parseXmlList(classXml, 'classement');
         
@@ -179,7 +160,7 @@ serve(async (req) => {
           libequipe: team.libequipe,
           libdivision: team.libdivision,
           libepr: team.libepr,
-          phase: team._phase === "unknown" ? "2" : team._phase,
+          phase: team._phase === "unknown" ? "1" : team._phase,
           ranking: classement.map(c => ({
             clt: c.clt || '',
             equipe: c.equipe || '',
