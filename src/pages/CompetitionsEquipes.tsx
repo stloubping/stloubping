@@ -45,11 +45,13 @@ const CompetitionsEquipes = () => {
         );
 
         // Tri par numéro d'équipe (1 à 6)
-        const sortedTeams = championnatTeams.sort((a: Team, b: Team) => {
-          const numA = parseInt(a.libequipe.match(/\d+/)?.[0] || "999");
-          const numB = parseInt(b.libequipe.match(/\d+/)?.[0] || "999");
-          return numA - numB;
-        });
+        const sortedTeams = championnatTeams
+          .filter((t: Team) => t.phase === "2" || t.phase === "unknown")
+          .sort((a: Team, b: Team) => {
+            const numA = parseInt(a.libequipe.match(/\d+/)?.[0] || "999");
+            const numB = parseInt(b.libequipe.match(/\d+/)?.[0] || "999");
+            return numA - numB;
+          });
         
         setTeams(sortedTeams);
       } catch (err) {
@@ -101,7 +103,7 @@ const CompetitionsEquipes = () => {
                     </CardDescription>
                   </div>
                   <Badge variant="outline" className="w-fit border-clubPrimary text-clubPrimary bg-clubPrimary/10">
-                    Phase {team.phase}
+                    Phase {team.phase === "unknown" ? "2" : team.phase}
                   </Badge>
                 </div>
               </CardHeader>
