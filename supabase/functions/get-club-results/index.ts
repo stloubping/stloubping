@@ -42,7 +42,7 @@ async function callSmartping(script: string, params: Record<string, string> = {}
   });
 
   const url = `${API_BASE_URL}/${script}?${queryParams.toString()}`;
-  console.log(`[get-club-results] Appel API: ${script} avec params:`, JSON.stringify(params));
+  console.log(`[get-club-results] Appel API: ${script}`, JSON.stringify(params));
   
   const res = await fetch(url);
   return await res.text();
@@ -80,25 +80,33 @@ function decodeXmlEntities(str: string): string {
 }
 
 /**
- * Parseur de lien ultra-robuste
+ * Parseur manuel ultra-robuste pour extraire D1 et cx_poule
  */
 function parseLienDivision(lienBrut: string): Record<string, string> {
   const params: Record<string, string> = {};
   if (!lienBrut) return params;
 
-  // On décode d'abord les entités XML (& -> &)
-  const decoded = decodeXmlEntities(lienBrut);
-  
-  // On utilise URLSearchParams pour extraire proprement les clés/valeurs
-  // On gère le cas où le lien commence par un '?' ou non
-  const searchStr = decoded.includes('?') ? decoded.split('?')[1] : decoded;
-  const searchParams = new URLSearchParams(searchStr);
-  
-  searchParams.forEach((value, key) => {
-    // Nettoyage forcé de tout caractère invisible ou espace
-    params[key.trim()] = value.trim();
+  console.log(`[get-club-results] Parsing lien brut: "${lienBrut}"`);
+
+  // Étape 1 : décoder toutes les variantes de & (y compris double encodage)
+  let clean = lienBrut
+    .replace(/&amp;/g, '&')
+    .replace(/&/g, '&')
+    .replace(/&/g, '&');
+
+  // Étape 2 : splitter manuellement sur &
+  clean.split('&').forEach(part => {
+    const idx = part.indexOf('=');
+    if (idx > 0) {
+      const key = part.substring(0, idx).trim();
+      const value = part.substring(idx + 1).trim();
+      if (key && value) {
+        params[key] = value;
+      }
+    }
   });
 
+  console.log(`[get-club-results] Paramètres extraits:`, JSON.stringify(params));
   return params;
 }
 
@@ -142,8 +150,6 @@ serve(async (req) => {
       const lienParams = parseLienDivision(team.liendivision || '');
       const teamName = decodeXmlEntities(team.libequipe || '');
 
-      console.log(`[get-club-results] Traitement équipe: ${teamName}, D1: ${lienParams.D1}, cx_poule: ${lienParams.cx_poule}`);
-
       if (!lienParams.D1) {
         finalTeams.push({
           libequipe: teamName,
@@ -162,7 +168,6 @@ serve(async (req) => {
           D1: lienParams.D1 
         };
         
-        // On s'assure que cx_poule est bien présent et nettoyé
         if (lienParams.cx_poule) {
           classParams.cx_poule = lienParams.cx_poule;
         }
