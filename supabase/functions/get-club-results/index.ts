@@ -45,6 +45,16 @@ function parseXmlList(xml: string, tagName: string) {
   return results;
 }
 
+/**
+ * Détermine la phase actuelle en fonction du mois
+ * Janvier (1) à Août (8) -> Phase 2
+ * Septembre (9) à Décembre (12) -> Phase 1
+ */
+function getCurrentPhase(): string {
+  const month = new Date().getMonth() + 1;
+  return (month >= 1 && month <= 8) ? "2" : "1";
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
@@ -53,48 +63,52 @@ serve(async (req) => {
     const tmc = generateSmartpingHash(tm);
     const serie = "STLB" + Math.random().toString(36).substring(2, 13).toUpperCase().padEnd(11, 'X');
 
+    // Initialisation de la session Smartping
     await fetch(`${API_BASE_URL}/xml_initialisation.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}`);
 
+    // Récupération de toutes les équipes du club (Type A = Toutes)
     const teamsUrl = `${API_BASE_URL}/xml_equipe.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}&numclu=${CLUB_NUMBER}&type=A`;
     const teamsRes = await fetch(teamsUrl);
     const teamsXml = await teamsRes.text();
     const allTeams = parseXmlList(teamsXml, 'equipe');
 
-    // Filtrage et détection de phase
-    const processedTeams = allTeams
-      .filter(t => (t.libepr || "").toLowerCase().includes("championnat"))
-      .map(team => {
-        const lib = (team.libepr || "").toUpperCase();
-        const div = (team.libdivision || "").toUpperCase();
-        
-        // Par défaut, on considère que c'est la phase actuelle (Phase 2)
-        let phase = "2"; 
+    const currentPhase = getCurrentPhase();
+    console.log(`[get-club-results] Phase actuelle détectée : ${currentPhase}`);
 
-        // Détection de la Phase 1
-        // On cherche "PHASE 1" ou "PH 1" ou "2024" (sans 2025)
-        const isP1 = /PHASE\s*1|PH\s*1|1ERE\s*PHASE|1ÈRE\s*PHASE/.test(lib) || 
-                     /PHASE\s*1|PH\s*1|1ERE\s*PHASE|1ÈRE\s*PHASE/.test(div) ||
-                     (lib.includes("2024") && !lib.includes("2025"));
+    // Filtrage des équipes pour ne garder que le championnat et la phase en cours
+    const filteredTeams = allTeams.filter(team => {
+      const lib = (team.libepr || "").toLowerCase();
+      const div = (team.libdivision || "").toLowerCase();
+      const combined = `${lib} ${div}`;
 
-        // Détection de la Phase 2
-        const isP2 = /PHASE\s*2|PH\s*2|2EME\s*PHASE|2ÈME\s*PHASE/.test(lib) || 
-                     /PHASE\s*2|PH\s*2|2EME\s*PHASE|2ÈME\s*PHASE/.test(div) ||
-                     lib.includes("2025");
+      // On ne garde que le championnat
+      if (!combined.includes("championnat")) return false;
 
-        if (isP1 && !isP2) {
-          phase = "1";
-        } else if (isP2) {
-          phase = "2";
-        }
+      // Logique de filtrage par phase
+      if (combined.includes(`phase ${currentPhase}`) || combined.includes(`ph ${currentPhase}`)) {
+        return true;
+      }
 
-        return { ...team, phase };
-      });
+      // Si on est en Phase 2, on exclut explicitement la Phase 1
+      if (currentPhase === "2" && (combined.includes("phase 1") || combined.includes("ph 1"))) {
+        return false;
+      }
 
-    // On garde chaque équipe unique par son lien de division pour éviter les fusions
-    const uniqueTeams = processedTeams.filter((team, index, self) =>
+      // Si on est en Phase 1, on exclut explicitement la Phase 2
+      if (currentPhase === "1" && (combined.includes("phase 2") || combined.includes("ph 2"))) {
+        return false;
+      }
+
+      // Par défaut, si aucune phase n'est mentionnée, on garde (cas rare)
+      return true;
+    });
+
+    // On garde chaque équipe unique par son lien de division
+    const uniqueTeams = filteredTeams.filter((team, index, self) =>
       index === self.findIndex((t) => t.liendivision === team.liendivision)
     );
 
+    // Enrichissement avec les classements
     const enrichedTeams = await Promise.all(uniqueTeams.map(async (team) => {
       const rawLink = team.liendivision || "";
       const d1Match = rawLink.match(/[Dd]1=([^&]+)/);
@@ -109,17 +123,16 @@ serve(async (req) => {
         const rankingXml = await rankingRes.text();
         const ranking = parseXmlList(rankingXml, 'classement');
         
-        if (ranking.length === 0) {
-          const altUrl = `${API_BASE_URL}/xml_result_equ.php?id=${APP_ID}&serie=${serie}&tm=${tm}&tmc=${tmc}&D1=${d1}&cx_poule=${cx_poule}`;
-          const altRes = await fetch(altUrl);
-          const altXml = await altRes.text();
-          const altRanking = parseXmlList(altXml, 'classement');
-          return { ...team, ranking: altRanking };
-        }
-        return { ...team, ranking };
+        return { 
+          ...team, 
+          phase: currentPhase,
+          ranking 
+        };
       }
-      return team;
+      return { ...team, phase: currentPhase };
     }));
+
+    console.log(`[get-club-results] ${enrichedTeams.length} équipes renvoyées pour la Phase ${currentPhase}`);
 
     return new Response(JSON.stringify({ teams: enrichedTeams }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
