@@ -42,6 +42,8 @@ async function callSmartping(script: string, params: Record<string, string> = {}
   });
 
   const url = `${API_BASE_URL}/${script}?${queryParams.toString()}`;
+  console.log(`[get-club-results] Appel API: ${script} avec params:`, JSON.stringify(params));
+  
   const res = await fetch(url);
   return await res.text();
 }
@@ -77,34 +79,33 @@ function decodeXmlEntities(str: string): string {
     .replace(/&nbsp;/g, ' ');
 }
 
+/**
+ * Parseur de lien ultra-robuste
+ */
 function parseLienDivision(lienBrut: string): Record<string, string> {
   const params: Record<string, string> = {};
   if (!lienBrut) return params;
 
-  // Nettoyage agressif des entités HTML dans l'URL
-  let clean = lienBrut
-    .replace(/&amp;/g, '&')
-    .replace(/&/g, '&')
-    .replace(/&/g, '&');
-
-  clean.split('&').forEach(part => {
-    const idx = part.indexOf('=');
-    if (idx > 0) {
-      const key = part.substring(0, idx).trim();
-      const value = part.substring(idx + 1).trim();
-      if (key && value) {
-        params[key] = value;
-      }
-    }
+  // On décode d'abord les entités XML (& -> &)
+  const decoded = decodeXmlEntities(lienBrut);
+  
+  // On utilise URLSearchParams pour extraire proprement les clés/valeurs
+  // On gère le cas où le lien commence par un '?' ou non
+  const searchStr = decoded.includes('?') ? decoded.split('?')[1] : decoded;
+  const searchParams = new URLSearchParams(searchStr);
+  
+  searchParams.forEach((value, key) => {
+    // Nettoyage forcé de tout caractère invisible ou espace
+    params[key.trim()] = value.trim();
   });
 
   return params;
 }
 
-function detectPhaseFromText(text: string): string {
-  const lower = text.toLowerCase();
-  if (lower.includes('phase 2') || lower.includes('ph.2') || lower.includes('ph 2')) return "2";
-  if (lower.includes('phase 1') || lower.includes('ph.1') || lower.includes('ph 1')) return "1";
+function detectPhase(team: Record<string, string>): string {
+  const text = decodeXmlEntities(`${team.libepr || ''} ${team.libdivision || ''} ${team.libequipe || ''}`).toLowerCase();
+  if (text.includes('phase 2') || text.includes('ph.2') || text.includes('ph 2')) return "2";
+  if (text.includes('phase 1') || text.includes('ph.1') || text.includes('ph 1')) return "1";
   return "unknown";
 }
 
@@ -114,16 +115,10 @@ serve(async (req) => {
   try {
     await callSmartping('xml_initialisation.php');
 
-    // 1. Récupération de toutes les équipes
     const teamsXml = await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER });
     const allTeams = parseXmlList(teamsXml, 'equipe');
 
-    // 2. Détection de phase et dédoublonnage
-    const teamsWithPhase = allTeams.map(team => ({
-      ...team,
-      _phase: detectPhaseFromText(decodeXmlEntities(`${team.libepr || ''} ${team.libdivision || ''} ${team.libequipe || ''}`)),
-    }));
-
+    const teamsWithPhase = allTeams.map(team => ({ ...team, _phase: detectPhase(team) }));
     const byName: Record<string, any[]> = {};
     teamsWithPhase.forEach(team => {
       const name = decodeXmlEntities(team.libequipe || 'unknown');
@@ -136,18 +131,18 @@ serve(async (req) => {
       if (versions.length === 1) {
         selectedTeams.push(versions[0]);
       } else {
-        // Priorité à la Phase 2 si elle existe
         const p2 = versions.find(v => v._phase === "2");
         if (p2) selectedTeams.push(p2);
-        else selectedTeams.push(versions.sort((a, b) => parseInt(b.idepr || '0') - parseInt(a.idepr || '0'))[0]);
+        else selectedTeams.push(versions.sort((a, b) => (parseInt(b.idepr || '0') - parseInt(a.idepr || '0')))[0]);
       }
     });
 
-    // 3. Récupération des classements pour chaque équipe sélectionnée
     const finalTeams = [];
     for (const team of selectedTeams) {
       const lienParams = parseLienDivision(team.liendivision || '');
       const teamName = decodeXmlEntities(team.libequipe || '');
+
+      console.log(`[get-club-results] Traitement équipe: ${teamName}, D1: ${lienParams.D1}, cx_poule: ${lienParams.cx_poule}`);
 
       if (!lienParams.D1) {
         finalTeams.push({
@@ -161,13 +156,13 @@ serve(async (req) => {
       }
 
       try {
-        const classParams: Record<string, string> = {
-          action: 'classement',
-          auto: '1',
-          D1: lienParams.D1,
+        const classParams: Record<string, string> = { 
+          action: 'classement', 
+          auto: '1', 
+          D1: lienParams.D1 
         };
         
-        // CRUCIAL : On passe cx_poule s'il est présent
+        // On s'assure que cx_poule est bien présent et nettoyé
         if (lienParams.cx_poule) {
           classParams.cx_poule = lienParams.cx_poule;
         }
@@ -191,27 +186,17 @@ serve(async (req) => {
           })),
         });
       } catch (err) {
-        finalTeams.push({ 
-          libequipe: teamName, 
-          libdivision: decodeXmlEntities(team.libdivision || ''), 
-          libepr: decodeXmlEntities(team.libepr || ''), 
-          phase: team._phase || '2', 
-          ranking: [] 
-        });
+        console.error(`[get-club-results] Erreur pour ${teamName}:`, err);
+        finalTeams.push({ libequipe: teamName, libdivision: decodeXmlEntities(team.libdivision || ''), libepr: decodeXmlEntities(team.libepr || ''), phase: team._phase || '2', ranking: [] });
       }
     }
 
-    return new Response(JSON.stringify({ 
-      teams: finalTeams,
-      _debug: selectedTeams.map(t => ({
-        name: decodeXmlEntities(t.libequipe || ''),
-        params: parseLienDivision(t.liendivision || '')
-      }))
-    }), {
+    return new Response(JSON.stringify({ teams: finalTeams }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
   } catch (error) {
+    console.error(`[get-club-results] Erreur fatale:`, error);
     return new Response(JSON.stringify({ error: error.message, teams: [] }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
