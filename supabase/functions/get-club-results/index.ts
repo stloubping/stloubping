@@ -42,15 +42,12 @@ async function callSmartping(script: string, params: Record<string, string> = {}
   });
 
   const url = `${API_BASE_URL}/${script}?${queryParams.toString()}`;
-  console.log(`[get-club-results] GET ${script}`, params);
-
   const res = await fetch(url);
-  const text = await res.text();
-  return text;
+  return await res.text();
 }
 
 /**
- * Parse XML robuste - gère les entités HTML
+ * Parse XML sans décoder les entités immédiatement pour préserver les URLs
  */
 function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
   const results: Record<string, string>[] = [];
@@ -64,14 +61,7 @@ function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
     let fieldMatch;
 
     while ((fieldMatch = fieldRegex.exec(content)) !== null) {
-      obj[fieldMatch[1]] = fieldMatch[2]
-        .trim()
-        .replace(/&/g, '&')
-        .replace(/</g, '<')
-        .replace(/>/g, '>')
-        .replace(/&quot;/g, '"')
-        .replace(/&apos;/g, "'")
-        .replace(/&nbsp;/g, ' ');
+      obj[fieldMatch[1]] = fieldMatch[2].trim();
     }
 
     results.push(obj);
@@ -81,13 +71,26 @@ function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
 }
 
 /**
- * Parse le liendivision pour extraire D1 et cx_poule
+ * Décode les entités XML pour l'affichage final
  */
-function parseLienDivision(lien: string): Record<string, string> {
-  const params: Record<string, string> = {};
-  if (!lien) return params;
+function decodeXmlEntities(str: string): string {
+  return str
+    .replace(/&/g, '&')
+    .replace(/</g, '<')
+    .replace(/>/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&nbsp;/g, ' ');
+}
 
-  const clean = lien
+/**
+ * Extrait D1 et cx_poule en gérant les &
+ */
+function parseLienDivision(lienBrut: string): Record<string, string> {
+  const params: Record<string, string> = {};
+  if (!lienBrut) return params;
+
+  const clean = lienBrut
     .replace(/&amp;/g, '&')
     .replace(/&/g, '&')
     .replace(/&/g, '&');
@@ -103,7 +106,7 @@ function parseLienDivision(lien: string): Record<string, string> {
 }
 
 function detectPhase(team: Record<string, string>): string {
-  const text = `${team.libepr || ''} ${team.libdivision || ''} ${team.libequipe || ''}`.toLowerCase();
+  const text = decodeXmlEntities(`${team.libepr || ''} ${team.libdivision || ''} ${team.libequipe || ''}`).toLowerCase();
   if (text.includes('phase 2') || text.includes('ph.2') || text.includes('ph 2')) return "2";
   if (text.includes('phase 1') || text.includes('ph.1') || text.includes('ph 1')) return "1";
   return "unknown";
@@ -115,24 +118,14 @@ serve(async (req) => {
   try {
     await callSmartping('xml_initialisation.php');
 
-    // Récupération des équipes avec fallbacks
-    let allTeams = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER, type: 'A' }), 'equipe');
+    // Récupération des équipes (Championnat + Critérium)
+    let allTeams = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER }), 'equipe');
 
-    if (allTeams.length === 0) {
-      const teamsM = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER, type: 'M' }), 'equipe');
-      const teamsF = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER, type: 'F' }), 'equipe');
-      allTeams = [...teamsM, ...teamsF];
-      
-      if (allTeams.length === 0) {
-        allTeams = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER }), 'equipe');
-      }
-    }
-
-    // Filtrage intelligent
+    // Filtrage Phase 2 et dédoublonnage
     const teamsWithPhase = allTeams.map(team => ({ ...team, _phase: detectPhase(team) }));
     const byName: Record<string, any[]> = {};
     teamsWithPhase.forEach(team => {
-      const name = team.libequipe || 'unknown';
+      const name = decodeXmlEntities(team.libequipe || 'unknown');
       if (!byName[name]) byName[name] = [];
       byName[name].push(team);
     });
@@ -148,15 +141,16 @@ serve(async (req) => {
       }
     });
 
-    // Classements
     const finalTeams = [];
     for (const team of selectedTeams) {
       const lienParams = parseLienDivision(team.liendivision || '');
+      const teamName = decodeXmlEntities(team.libequipe || '');
+
       if (!lienParams.D1) {
         finalTeams.push({
-          libequipe: team.libequipe || '',
-          libdivision: team.libdivision || '',
-          libepr: team.libepr || '',
+          libequipe: teamName,
+          libdivision: decodeXmlEntities(team.libdivision || ''),
+          libepr: decodeXmlEntities(team.libepr || ''),
           phase: team._phase === "unknown" ? "2" : team._phase,
           ranking: [],
         });
@@ -164,16 +158,20 @@ serve(async (req) => {
       }
 
       try {
-        const classXml = await callSmartping('xml_result_equ.php', { action: 'classement', auto: '1', D1: lienParams.D1, cx_poule: lienParams.cx_poule || '' });
-        const classement = parseXmlList(classXml, 'classement');
+        const classParams: Record<string, string> = { action: 'classement', auto: '1', D1: lienParams.D1 };
+        if (lienParams.cx_poule) classParams.cx_poule = lienParams.cx_poule;
+
+        const classXml = await callSmartping('xml_result_equ.php', classParams);
+        const ranking = parseXmlList(classXml, 'classement');
+
         finalTeams.push({
-          libequipe: team.libequipe || '',
-          libdivision: team.libdivision || '',
-          libepr: team.libepr || '',
+          libequipe: teamName,
+          libdivision: decodeXmlEntities(team.libdivision || ''),
+          libepr: decodeXmlEntities(team.libepr || ''),
           phase: team._phase === "unknown" ? "2" : team._phase,
-          ranking: classement.map(c => ({
+          ranking: ranking.map(c => ({
             clt: c.clt || '',
-            equipe: c.equipe || '',
+            equipe: decodeXmlEntities(c.equipe || ''),
             joue: c.joue || '0',
             pts: c.pts || '0',
             vic: c.vic || '0',
@@ -182,7 +180,7 @@ serve(async (req) => {
           })),
         });
       } catch (err) {
-        finalTeams.push({ libequipe: team.libequipe || '', libdivision: team.libdivision || '', libepr: team.libepr || '', phase: team._phase || '2', ranking: [] });
+        finalTeams.push({ libequipe: teamName, libdivision: decodeXmlEntities(team.libdivision || ''), libepr: decodeXmlEntities(team.libepr || ''), phase: team._phase || '2', ranking: [] });
       }
     }
 
