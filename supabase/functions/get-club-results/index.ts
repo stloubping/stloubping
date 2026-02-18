@@ -49,9 +49,6 @@ async function callSmartping(script: string, params: Record<string, string> = {}
   return text;
 }
 
-/**
- * Parse XML robuste - gère les entités HTML
- */
 function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
   const results: Record<string, string>[] = [];
   const regex = new RegExp(`<${tagName}>([\\s\\S]*?)<\\/${tagName}>`, 'gi');
@@ -80,13 +77,11 @@ function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
   return results;
 }
 
-/**
- * Parse le liendivision pour extraire D1 et cx_poule
- */
 function parseLienDivision(lien: string): Record<string, string> {
   const params: Record<string, string> = {};
   if (!lien) return params;
 
+  // Nettoyage agressif des entités HTML dans l'URL
   const clean = lien
     .replace(/&amp;/g, '&')
     .replace(/&/g, '&')
@@ -95,7 +90,9 @@ function parseLienDivision(lien: string): Record<string, string> {
   clean.split('&').forEach(part => {
     const idx = part.indexOf('=');
     if (idx > 0) {
-      params[part.substring(0, idx).trim()] = part.substring(idx + 1).trim();
+      const key = part.substring(0, idx).trim();
+      const val = part.substring(idx + 1).trim();
+      params[key] = val;
     }
   });
 
@@ -115,7 +112,6 @@ serve(async (req) => {
   try {
     await callSmartping('xml_initialisation.php');
 
-    // Récupération des équipes avec fallbacks
     let allTeams = parseXmlList(await callSmartping('xml_equipe.php', { numclu: CLUB_NUMBER, type: 'A' }), 'equipe');
 
     if (allTeams.length === 0) {
@@ -128,7 +124,6 @@ serve(async (req) => {
       }
     }
 
-    // Filtrage intelligent
     const teamsWithPhase = allTeams.map(team => ({ ...team, _phase: detectPhase(team) }));
     const byName: Record<string, any[]> = {};
     teamsWithPhase.forEach(team => {
@@ -148,10 +143,13 @@ serve(async (req) => {
       }
     });
 
-    // Classements
     const finalTeams = [];
     for (const team of selectedTeams) {
       const lienParams = parseLienDivision(team.liendivision || '');
+      
+      // LOG DE DEBUG POUR VÉRIFIER LES PARAMÈTRES EXTRAITS
+      console.log(`[get-club-results] Équipe: ${team.libequipe} | D1: ${lienParams.D1} | cx_poule: ${lienParams.cx_poule}`);
+
       if (!lienParams.D1) {
         finalTeams.push({
           libequipe: team.libequipe || '',
@@ -164,8 +162,14 @@ serve(async (req) => {
       }
 
       try {
-        const classXml = await callSmartping('xml_result_equ.php', { action: 'classement', auto: '1', D1: lienParams.D1, cx_poule: lienParams.cx_poule || '' });
+        const classXml = await callSmartping('xml_result_equ.php', { 
+          action: 'classement', 
+          auto: '1', 
+          D1: lienParams.D1, 
+          cx_poule: lienParams.cx_poule || '' 
+        });
         const classement = parseXmlList(classXml, 'classement');
+        
         finalTeams.push({
           libequipe: team.libequipe || '',
           libdivision: team.libdivision || '',
