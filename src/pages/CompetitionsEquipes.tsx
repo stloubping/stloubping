@@ -33,34 +33,21 @@ const CompetitionsEquipes = () => {
     const fetchResults = async () => {
       try {
         const { data, error } = await supabase.functions.invoke('get-club-results');
-        
         if (error) throw error;
-
         if (!data?.teams) return;
 
-        // Filtrage : Uniquement Championnat (on exclut le Critérium)
         const championnatTeams = data.teams.filter((t: Team) => 
           !t.libepr.toLowerCase().includes("critérium") && 
           !t.libepr.toLowerCase().includes("criterium")
         );
-
-        // Tri par numéro d'équipe (1 à 6)
-        const sortedTeams = championnatTeams
-          .filter((t: Team) => t.phase === "2" || t.phase === "unknown")
-          .sort((a: Team, b: Team) => {
-            const numA = parseInt(a.libequipe.match(/\d+/)?.[0] || "999");
-            const numB = parseInt(b.libequipe.match(/\d+/)?.[0] || "999");
-            return numA - numB;
-          });
         
-        setTeams(sortedTeams);
+        setTeams(championnatTeams);
       } catch (err) {
         console.error("Erreur Championnat:", err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchResults();
   }, []);
 
@@ -78,7 +65,7 @@ const CompetitionsEquipes = () => {
       <div className="text-center mb-12">
         <h1 className="text-3xl md:text-4xl font-bold text-clubDark mb-4">Championnat par Équipes</h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Retrouvez tous les classements officiels de nos équipes pour la saison 2025-2026.
+          Retrouvez tous les classements officiels de nos équipes.
         </p>
       </div>
 
@@ -103,7 +90,7 @@ const CompetitionsEquipes = () => {
                     </CardDescription>
                   </div>
                   <Badge variant="outline" className="w-fit border-clubPrimary text-clubPrimary bg-clubPrimary/10">
-                    Phase {team.phase === "unknown" ? "2" : team.phase}
+                    Phase {team.phase}
                   </Badge>
                 </div>
               </CardHeader>
