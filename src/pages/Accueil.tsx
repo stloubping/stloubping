@@ -27,7 +27,7 @@ const allNewsItems = [
     location: "Salle Jacques-Durieux, Saint-Loubès",
     description: "Une nouvelle vague de jeunes pongistes a brillamment obtenu son diplôme de la balle blanche. Bravo à tous pour vos progrès, votre assiduité et votre passion pour la petite balle orange !",
     link: "#",
-    image: "dyad-media://media/stloubping/.dyad/media/1b045583f8f9ef8760fd98c55564c664.jpg",
+    image: "/images/actualites/diplomes-balle-blanche.jpg",
   },
   {
     id: 501,
@@ -36,7 +36,7 @@ const allNewsItems = [
     location: "Salle Jacques-Durieux, Saint-Loubès",
     description: "Philippe Roux, président du St-Loub' Ping, a remis les diplômes aux jeunes du club. Ce programme de progression, dirigé par l'entraîneur Pierre-Louis Stevance, a vu 49 jeunes réussir les tests de la balle blanche et 13 ceux de la balle orange. Une belle récompense pour l'investissement de nos futurs champions !",
     link: "#",
-    image: "dyad-media://media/stloubping/.dyad/media/17ff4af851a610d91cdbcd17be306103.jpg",
+    image: "/images/actualites/jeunes-medailles.jpg",
   },
   {
     id: 4,
