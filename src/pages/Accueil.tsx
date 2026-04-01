@@ -31,12 +31,12 @@ const allNewsItems = [
   },
   {
     id: 501,
-    title: "Soirée Paella mémorable après le Critérium !",
-    date: "Novembre 2025",
-    location: "Salle du club",
-    description: "Ce qui a le plus marqué la soirée de critérium, c'est le repas partagé avec nos adversaires ! Patrice et Sandra nous ont préparé une paella d'anthologie. Un moment ultra convivial qui fait le succès de cette compétition et de ses après-matchs !",
+    title: "Une soixantaine de jeunes pongistes médaillés",
+    date: "12 Mars 2026",
+    location: "Salle Jacques-Durieux, Saint-Loubès",
+    description: "Philippe Roux, président du St-Loub' Ping, a remis les diplômes aux jeunes du club. Ce programme de progression, dirigé par l'entraîneur Pierre-Louis Stevance, a vu 49 jeunes réussir les tests de la balle blanche et 13 ceux de la balle orange. Une belle récompense pour l'investissement de nos futurs champions !",
     link: "#",
-    image: "/images/actualites/616230059_854903077381615_8680231693854484940_n.jpg",
+    image: "/images/actualites/jeunes-medailles-2026.jpg",
   },
   {
     id: 4,
