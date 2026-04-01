@@ -36,7 +36,7 @@ const allNewsItems = [
     location: "Salle Jacques-Durieux, Saint-Loubès",
     description: "Philippe Roux, président du St-Loub' Ping, a remis les diplômes aux jeunes du club. Ce programme de progression, dirigé par l'entraîneur Pierre-Louis Stevance, a vu 49 jeunes réussir les tests de la balle blanche et 13 ceux de la balle orange. Une belle récompense pour l'investissement de nos futurs champions !",
     link: "#",
-    image: "/images/actualites/jeunes-medailles-2026.jpg",
+    image: "dyad-media://media/stloubping/.dyad/media/17ff4af851a610d91cdbcd17be306103.jpg",
   },
   {
     id: 4,
