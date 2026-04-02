@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { Loader2, Users } from "lucide-material";
+import { Loader2, Users } from "lucide-react";
 import { useLightbox } from "@/context/LightboxContext";
 
 // Fonction pour obtenir la limite spécifique à chaque tableau
