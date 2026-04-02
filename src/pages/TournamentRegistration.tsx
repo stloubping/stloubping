@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, Users } from "lucide-react";
 import { useLightbox } from "@/context/LightboxContext";
 
 // Fonction pour obtenir la limite spécifique à chaque tableau
@@ -242,9 +244,15 @@ const TournamentRegistration = () => {
                               <FormLabel className={`font-normal ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                                 {item.label}
                               </FormLabel>
-                              <span className={`text-[10px] font-bold ${remaining <= 5 ? 'text-red-500' : 'text-green-600'}`}>
-                                {isFull ? "COMPLET" : `${remaining} places restantes`}
-                              </span>
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-[10px] flex items-center text-clubDark font-medium">
+                                  <Users className="h-3 w-3 mr-1 text-clubPrimary" />
+                                  {currentCount} inscrit(s)
+                                </span>
+                                <span className={`text-[10px] font-bold ${remaining <= 5 ? 'text-red-500' : 'text-green-600'}`}>
+                                  {isFull ? "COMPLET" : `(${remaining} places libres)`}
+                                </span>
+                              </div>
                             </div>
                           </FormItem>
                         );
