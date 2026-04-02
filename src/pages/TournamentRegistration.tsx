@@ -25,7 +25,8 @@ import { useLightbox } from "@/context/LightboxContext";
 
 // Fonction pour obtenir la limite spécifique à chaque tableau
 const getTableauLimit = (id: string) => {
-  if (id === "t3" || id === "t5") return 57;
+  // Mise à jour de la limite à 60 pour T3 et T5
+  if (id === "t3" || id === "t5") return 60;
   return 48;
 };
 
@@ -83,7 +84,6 @@ const TournamentRegistration = () => {
 
   useEffect(() => {
     const fetchCounts = async () => {
-      // On force la récupération sans cache pour avoir les vrais chiffres
       const { data, error } = await supabase
         .from('tableau_counts')
         .select('*');
