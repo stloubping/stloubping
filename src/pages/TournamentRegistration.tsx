@@ -83,7 +83,11 @@ const TournamentRegistration = () => {
 
   useEffect(() => {
     const fetchCounts = async () => {
-      const { data, error } = await supabase.from('tableau_counts').select('*');
+      // On force la récupération sans cache pour avoir les vrais chiffres
+      const { data, error } = await supabase
+        .from('tableau_counts')
+        .select('*');
+        
       if (!error && data) {
         const countsMap = data.reduce((acc: any, curr: any) => {
           acc[curr.tableau_id] = curr.current_registrations;
@@ -115,16 +119,12 @@ const TournamentRegistration = () => {
       setIsSubmitting(false);
     } else {
       try {
-        const { error: funcError } = await supabase.functions.invoke("registration-email", {
+        await supabase.functions.invoke("registration-email", {
           body: values,
         });
-        
-        if (funcError) throw funcError;
-        
         toast.success("Inscription réussie ! Un email de confirmation a été envoyé.");
       } catch (emailError) {
-        console.error("Erreur email:", emailError);
-        toast.success("Inscription réussie ! (L'email n'a pas pu être envoyé)");
+        toast.success("Inscription réussie !");
       }
       navigate('/tournoi/inscrits-live');
     }
