@@ -9,14 +9,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu } from "lucide-react";
+import { Menu, ChevronRight } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface NavItem {
   name: string;
   path?: string;
-  type?: "link" | "dropdown";
+  type?: "link" | "dropdown" | "label";
   children?: NavItem[];
 }
 
@@ -48,9 +48,12 @@ const navItems: NavItem[] = [
     name: "Tournoi",
     type: "dropdown",
     children: [
+      { name: "Édition 2026", type: "label" },
       { name: "Inscription au Tournoi", path: "/tournoi-inscription", type: "link" },
-      { name: "Les Inscrits LIVE", path: "/tournoi/inscrits-live", type: "link" }, // New link
+      { name: "Les Inscrits LIVE", path: "/tournoi/inscrits-live", type: "link" },
       { name: "Liste des Inscriptions", path: "/tournoi-inscriptions-liste", type: "link" },
+      { name: "Résultats", path: "/tournoi/2026/resultats", type: "link" },
+      { name: "Photos", path: "/tournoi/2026/photos", type: "link" },
     ],
   },
   {
@@ -69,55 +72,43 @@ const Navbar = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [isVideosDropdownOpen, setIsVideosDropdownOpen] = useState(false);
-  const [isJoueursDropdownOpen, setIsJoueursDropdownOpen] = useState(false);
-  const [isEquipesDropdownOpen, setIsEquipesDropdownOpen] = useState(false);
-  const [isTournoiDropdownOpen, setIsTournoiDropdownOpen] = useState(false);
+  const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({});
+
+  const toggleDropdown = (name: string, isOpen: boolean) => {
+    setOpenDropdowns(prev => ({ ...prev, [name]: isOpen }));
+  };
 
   const NavLinks = ({ className, closeSheet, isMobileView = false }: { className?: string; closeSheet?: () => void; isMobileView?: boolean }) => {
     return (
       <nav className={cn("flex", isMobileView ? "flex-col space-x-0 space-y-4 p-0" : "items-center space-x-4 lg:space-x-6", className)}>
         {navItems.map((item) => {
           if (item.type === "dropdown") {
-            let isCurrentDropdownOpen;
-            let setIsCurrentDropdownOpen;
-
-            if (item.name === "Vidéos") {
-              isCurrentDropdownOpen = isVideosDropdownOpen;
-              setIsCurrentDropdownOpen = setIsVideosDropdownOpen;
-            } else if (item.name === "Les Joueurs") {
-              isCurrentDropdownOpen = isJoueursDropdownOpen;
-              setIsCurrentDropdownOpen = setIsJoueursDropdownOpen;
-            } else if (item.name === "Équipes") {
-              isCurrentDropdownOpen = isEquipesDropdownOpen;
-              setIsCurrentDropdownOpen = setIsEquipesDropdownOpen;
-            } else if (item.name === "Tournoi") {
-              isCurrentDropdownOpen = isTournoiDropdownOpen;
-              setIsCurrentDropdownOpen = setIsTournoiDropdownOpen;
-            } else {
-              return null;
-            }
-
             if (isMobileView) {
               return (
                 <Accordion type="single" collapsible key={item.name} className="w-full">
-                  <AccordionItem value={item.name}>
-                    <AccordionTrigger className="text-clubDark-foreground hover:text-clubPrimary text-base font-medium py-2">
+                  <AccordionItem value={item.name} className="border-none">
+                    <AccordionTrigger className="text-clubDark-foreground hover:text-clubPrimary text-base font-medium py-2 hover:no-underline">
                       {item.name}
                     </AccordionTrigger>
                     <AccordionContent className="pl-4 space-y-2 flex flex-col">
                       {item.children?.map((child) => (
-                        <Link
-                          key={child.name}
-                          to={child.path || "#"}
-                          onClick={closeSheet}
-                          className={cn(
-                            "block text-sm font-normal transition-colors hover:text-clubPrimary",
-                            location.pathname === child.path ? "text-clubPrimary font-semibold" : "text-clubDark-foreground/80"
-                          )}
-                        >
-                          {child.name}
-                        </Link>
+                        child.type === "label" ? (
+                          <div key={child.name} className="text-xs font-bold text-clubPrimary uppercase tracking-wider mt-4 mb-1">
+                            {child.name}
+                          </div>
+                        ) : (
+                          <Link
+                            key={child.name}
+                            to={child.path || "#"}
+                            onClick={closeSheet}
+                            className={cn(
+                              "block text-sm font-normal transition-colors hover:text-clubPrimary py-1",
+                              location.pathname === child.path ? "text-clubPrimary font-semibold" : "text-clubDark-foreground/80"
+                            )}
+                          >
+                            {child.name}
+                          </Link>
+                        )
                       ))}
                     </AccordionContent>
                   </AccordionItem>
@@ -125,7 +116,7 @@ const Navbar = () => {
               );
             } else {
               return (
-                <DropdownMenu key={item.name} open={isCurrentDropdownOpen} onOpenChange={setIsCurrentDropdownOpen}>
+                <DropdownMenu key={item.name} open={openDropdowns[item.name]} onOpenChange={(open) => toggleDropdown(item.name, open)}>
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
@@ -133,33 +124,40 @@ const Navbar = () => {
                         "text-sm font-medium transition-colors hover:text-clubPrimary",
                         item.children?.some(child => location.pathname === child.path) ? "text-clubPrimary" : "text-clubDark-foreground"
                       )}
-                      onMouseEnter={() => setIsCurrentDropdownOpen(true)}
-                      onMouseLeave={() => setIsCurrentDropdownOpen(false)}
+                      onMouseEnter={() => toggleDropdown(item.name, true)}
+                      onMouseLeave={() => toggleDropdown(item.name, false)}
                     >
                       {item.name}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
-                    className="bg-clubLight text-clubLight-foreground border-border"
-                    onMouseEnter={() => setIsCurrentDropdownOpen(true)}
-                    onMouseLeave={() => setIsCurrentDropdownOpen(false)}
+                    className="bg-clubLight text-clubLight-foreground border-border min-w-[200px]"
+                    onMouseEnter={() => toggleDropdown(item.name, true)}
+                    onMouseLeave={() => toggleDropdown(item.name, false)}
                   >
                     {item.children?.map((child) => (
-                      <DropdownMenuItem key={child.name} asChild>
-                        <Link
-                          to={child.path || "#"}
-                          onClick={() => {
-                            closeSheet?.();
-                            setIsCurrentDropdownOpen(false);
-                          }}
-                          className={cn(
-                            "block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary",
-                            location.pathname === child.path ? "text-clubPrimary font-semibold" : ""
-                          )}
-                        >
+                      child.type === "label" ? (
+                        <div key={child.name} className="px-4 py-2 text-[10px] font-black text-clubPrimary uppercase tracking-widest border-b border-clubSection mb-1">
                           {child.name}
-                        </Link>
-                      </DropdownMenuItem>
+                        </div>
+                      ) : (
+                        <DropdownMenuItem key={child.name} asChild>
+                          <Link
+                            to={child.path || "#"}
+                            onClick={() => {
+                              closeSheet?.();
+                              toggleDropdown(item.name, false);
+                            }}
+                            className={cn(
+                              "flex items-center px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary transition-colors",
+                              location.pathname === child.path ? "text-clubPrimary font-bold bg-clubSection/50" : ""
+                            )}
+                          >
+                            {location.pathname === child.path && <ChevronRight className="h-3 w-3 mr-1" />}
+                            {child.name}
+                          </Link>
+                        </DropdownMenuItem>
+                      )
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>

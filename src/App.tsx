@@ -13,7 +13,9 @@ import Partenaires from "./pages/Partenaires";
 import Contact from "./pages/Contact";
 import TournamentRegistration from "./pages/TournamentRegistration";
 import TournamentRegistrationsList from "./pages/TournamentRegistrationsList";
-import TournamentLiveRegistrations from "./pages/TournamentLiveRegistrations"; // Import new page
+import TournamentLiveRegistrations from "./pages/TournamentLiveRegistrations";
+import TournamentResults2026 from "./pages/TournamentResults2026";
+import TournamentPhotos2026 from "./pages/TournamentPhotos2026";
 import ClassementJoueurs from "./pages/ClassementJoueurs";
 import ProgressionMensuelle from "./pages/ProgressionMensuelle";
 import ProgressionAnnuelle from "./pages/ProgressionAnnuelle";
@@ -53,8 +55,10 @@ const App = () => (
                 <Route path="/boutique" element={<Boutique />} />
                 <Route path="/partenaires" element={<Partenaires />} />
                 <Route path="/tournoi-inscription" element={<TournamentRegistration />} />
-                <Route path="/tournoi/inscrits-live" element={<TournamentLiveRegistrations />} /> {/* New route */}
+                <Route path="/tournoi/inscrits-live" element={<TournamentLiveRegistrations />} />
                 <Route path="/tournoi-inscriptions-liste" element={<TournamentRegistrationsList />} />
+                <Route path="/tournoi/2026/resultats" element={<TournamentResults2026 />} />
+                <Route path="/tournoi/2026/photos" element={<TournamentPhotos2026 />} />
                 <Route path="/videos/wtt" element={<WTTVideos />} />
                 <Route path="/videos/tutos" element={<Tutos />} />
                 <Route path="/videos/les-legendes" element={<LesLegendes />} />
