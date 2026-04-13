@@ -19,7 +19,6 @@ const tournamentPhotos = [
   { id: 11, url: "/images/tournoi/2026/photo-11.jpg", alt: "Action de jeu tournoi 2026 - 11" },
   { id: 12, url: "/images/tournoi/2026/photo-12.jpg", alt: "Action de jeu tournoi 2026 - 12" },
   { id: 13, url: "/images/tournoi/2026/photo-13.jpg", alt: "Action de jeu tournoi 2026 - 13" },
-  { id: 13, url: "/images/tournoi/2026/photo-13.jpg", alt: "Action de jeu tournoi 2026 - 13" },
   { id: 14, url: "/images/tournoi/2026/photo-14.jpg", alt: "Action de jeu tournoi 2026 - 14" },
   { id: 15, url: "/images/tournoi/2026/photo-15.jpg", alt: "Action de jeu tournoi 2026 - 15" },
   { id: 16, url: "/images/tournoi/2026/photo-16.jpg", alt: "Action de jeu tournoi 2026 - 16" },
@@ -38,8 +37,8 @@ const tournamentPhotos = [
   { id: 29, url: "/images/tournoi/2026/photo-29.jpg", alt: "Action de jeu tournoi 2026 - 29" },
   { id: 30, url: "/images/tournoi/2026/photo-30.jpg", alt: "Action de jeu tournoi 2026 - 30" },
   { id: 31, url: "/images/tournoi/2026/photo-31.jpg", alt: "Action de jeu tournoi 2026 - 31" },
-  { id: 32, url: "/images/tournoi/2026/photo-32.jpg", alt: "Action de jeu tournoi 2026 - 32" },
-  { id: 33, url: "/images/tournoi/2026/photo-33.jpg", alt: "Action de jeu tournoi 2026 - 33" },
+  // { id: 32, url: "/images/tournoi/2026/photo-32.jpg", alt: "Action de jeu tournoi 2026 - 32" }, // Supprimé
+  // { id: 33, url: "/images/tournoi/2026/photo-33.jpg", alt: "Action de jeu tournoi 2026 - 33" }, // Supprimé
 ];
 
 const TournamentPhotos2026 = () => {
