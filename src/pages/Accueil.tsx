@@ -8,29 +8,72 @@ import { useLightbox } from '@/context/LightboxContext';
 import HeroSection from "@/components/HeroSection";
 import VideoCard from "@/components/VideoCard";
 import { allVideos } from '@/data/videos';
-import CompetitionCalendar from "@/components/CompetitionCalendar";
+import CompetitionCalendar from '@/components/CompetitionCalendar';
 
 const allNewsItems = [
-  // ... articles existants
   {
-    id: 103,
-    title: "Nouvelle page Résultats 2026 en ligne",
-    date: "15 Avril 2026",
-    location: "Saint-Loubès",
-    description: "Découvrez le palmarès complet de l'édition 2026 du tournoi régional avec les vainqueurs de chaque tableau et les photos des finales.",
-    link: "/tournoi/2026/resultats",
-    image: "/images/actualites/resultats-2026.jpg",
+    id: 102,
+    title: "Tournoi Régional Saint-Loub'Ping 2026",
+    date: "11 Avril 2026",
+    location: "Gymnase de Saint-Loubès",
+    description: "Préparez vos raquettes ! Notre tournoi régional annuel revient avec de nouvelles catégories et de nombreux lots à gagner. Inscriptions ouvertes dès maintenant sur notre site. Ne manquez pas ce rendez-vous incontournable du tennis de table girondin !",
+    link: "/tournoi-inscription",
+    image: "/images/actualites/tournoi-regional-2026-affiche.png",
   },
   {
-    id: 104,
-    title: "Découvrez la Galerie Photos 2026",
-    date: "16 Avril 2026",
-    location: "Saint-Loubès",
-    description: "Revivez les meilleurs moments du tournoi avec notre nouvelle galerie photos interactive. Cliquez pour agrandir chaque cliché.",
-    link: "/tournoi/2026/photos",
-    image: "/images/actualites/photos-2026.jpg",
+    id: 602,
+    title: "Félicitations à nos diplômés de la balle blanche !",
+    date: "Mars 2026",
+    location: "Salle Jacques-Durieux, Saint-Loubès",
+    description: "Une nouvelle vague de jeunes pongistes a brillamment obtenu son diplôme de la balle blanche. Bravo à tous pour vos progrès, votre assiduité et votre passion pour la petite balle orange !",
+    link: "#",
+    image: "/images/actualites/diplomes-balle-blanche.jpg",
   },
-  // ... autres articles existants
+  {
+    id: 501,
+    title: "Une soixantaine de jeunes pongistes médaillés",
+    date: "12 Mars 2026",
+    location: "Salle Jacques-Durieux, Saint-Loubès",
+    description: "Philippe Roux, président du St-Loub' Ping, a remis les diplômes aux jeunes du club. Ce programme de progression, dirigé par l'entraîneur Pierre-Louis Stevance, a vu 49 jeunes réussir les tests de la balle blanche et 13 ceux de la balle orange. Une belle récompense pour l'investissement de nos futurs champions !",
+    link: "#",
+    image: "/images/actualites/jeunes-medailles.jpg",
+  },
+  {
+    id: 4,
+    title: "Le Maillot Officiel est Arrivé !",
+    date: "Disponible maintenant",
+    location: "Boutique du Club",
+    description: "Représentez fièrement le St Loub Ping ! Le nouveau maillot officiel est disponible à la commande. Découvrez les tailles et les modalités d'achat sur notre page Boutique.",
+    link: "/boutique",
+    image: "/images/boutique/maillot-club-officiel.png",
+  },
+  {
+    id: 101,
+    title: "Stage de Noël pour les Jeunes",
+    date: "22, 23 et 24 Décembre",
+    location: "Salle du club",
+    description: "Un stage intensif pour les jeunes compétiteurs souhaitant améliorer leur technique et leur stratégie avant les fêtes. Encadrement par nos meilleurs entraîneurs.",
+    link: "/adhesions",
+    image: "/images/actualites/stage-de-noel.jpg",
+  },
+  {
+    id: 201,
+    title: "Tournoi de Noël des Jeunes",
+    date: "20 Décembre 2025",
+    location: "Salle du club",
+    description: "Le Saint Loub’ping a organisé son traditionnel tournoi de Noël. Comme chaque année, cette compétition amicale a réuni nos jeunes licenciés pour un moment de sport et de partage.",
+    link: "#",
+    image: "/images/actualites/bordeauxrivedroite-5abc395193ac4b90ab4842d2eea90891-104939-ph0.avif",
+  },
+  {
+    id: 202,
+    title: "Reprise phase 2 du championnat",
+    date: "28 février 2026",
+    location: "Salle du club",
+    description: "C'est reparti pour la seconde phase du championnat ! Venez nombreux encourager nos équipes pour cette reprise tant attendue à domicile dès 15h00.",
+    link: "/competitions-equipes",
+    image: "/images/events/IMG-20251003-WA0001.jpg",
+  },
 ];
 
 const Accueil = () => {
@@ -58,7 +101,7 @@ const Accueil = () => {
           </div>
         </section>
 
-        <section className="mb-12">
+        <section className="text-center mb-12">
           <Card className="bg-clubLight shadow-lg p-4 md:p-8 rounded-xl">
             <CardTitle className="text-xl md:text-2xl font-bold text-clubDark mb-4">Suivez-nous sur Facebook !</CardTitle>
             <CardContent className="px-0">
