@@ -2,15 +2,11 @@ import React, { useState } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Menu, ChevronRight } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -79,145 +75,115 @@ const navItems: NavItem[] = [
 const Navbar = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({});
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  const toggleDropdown = (name: string, isOpen: boolean) => {
-    setOpenDropdowns(prev => ({ ...prev, [name]: isOpen }));
+  const toggleDropdown = (name: string) => {
+    if (openDropdown === name) {
+      setOpenDropdown(null);
+    } else {
+      setOpenDropdown(name);
+    }
   };
 
-  const NavLinks = ({ className, closeSheet, isMobileView = false }: { className?: string; closeSheet?: () => void; isMobileView?: boolean }) => {
+  const closeAllDropdowns = () => {
+    setOpenDropdown(null);
+  };
+
+  const NavLinks = ({
+    closeSheet,
+    isMobileView = false,
+  }: {
+    closeSheet?: () => void;
+    isMobileView?: boolean;
+  }) => {
     return (
-      <nav className={cn("flex", isMobileView ? "flex-col space-x-0 space-y-4 p-0" : "items-center space-x-4 lg:space-x-6", className)}>
+      <nav        className={cn(
+          "flex",
+          isMobileView ? "flex-col space-x-0 space-y-4 p-0" : "items-center space-x-4 lg:space-x-6",
+          "w-full"
+        )}
+      >
         {navItems.map((item) => {
+          // ==== SIMPLE DROPDOWN HANDLING ====
           if (item.type === "dropdown") {
-            if (isMobileView) {
-              return (
-                <Accordion type="single" collapsible key={item.name} className="w-full">
-                  <AccordionItem value={item.name} className="border-none">
-                    <AccordionTrigger className="text-clubDark-foreground hover:text-clubPrimary text-base font-medium py-2 hover:no-underline">
-                      {item.name}
-                    </AccordionTrigger>
-                    <AccordionContent className="pl-4 space-y-2 flex flex-col">
-                      {item.children?.map((child) => (
-                        child.type === "dropdown" ? (
-                          <Accordion type="single" collapsible key={child.name} className="w-full">
-                            <AccordionItem value={child.name} className="border-none">
-                              <AccordionTrigger className="text-clubPrimary text-sm font-bold py-2 hover:no-underline">
-                                {child.name}
-                              </AccordionTrigger>
-                              <AccordionContent className="pl-4 space-y-2 flex flex-col">
-                                {child.children?.map((subChild) => (
-                                  <Link
-                                    key={subChild.name}
-                                    to={subChild.path || "#"}
-                                    onClick={closeSheet}
-                                    className={cn(
-                                      "block text-sm font-normal transition-colors hover:text-clubPrimary py-1",
-                                      location.pathname === subChild.path ? "text-clubPrimary font-semibold" : "text-clubDark-foreground/80"
-                                    )}
-                                  >
-                                    {subChild.name}
-                                  </Link>
-                                ))}
-                              </AccordionContent>
-                            </AccordionItem>
-                          </Accordion>
-                        ) : (
-                          <Link
-                            key={child.name}
-                            to={child.path || "#"}
-                            onClick={closeSheet}
-                            className={cn(
-                              "block text-sm font-normal transition-colors hover:text-clubPrimary py-1",
-                              location.pathname === child.path ? "text-clubPrimary font-semibold" : "text-clubDark-foreground/80"
-                            )}
-                          >
-                            {child.name}
-                          </Link>
-                        )
+            // Sub‑menu toggle
+            const isSubOpen = openDropdown === item.name;
+
+            return (
+              <div key={item.name} className="relative">
+                {/* Trigger button – always clickable */}
+                <Button
+                  variant="ghost"
+                  className={cn(
+                    "text-sm font-medium transition-colors hover:text-clubPrimary",
+                    isSubOpen ? "text-clubPrimary" : "text-clubDark-foreground"
+                  )}
+                  onClick={() => toggleDropdown(item.name)}
+                >
+                  {item.name}
+                </Button>
+
+                {/* Sub‑menu – always rendered, hidden via CSS when collapsed */}
+                <DropdownMenu
+                  asChild
+                  open={isSubOpen}
+                  onOpenChange={toggleDropdown}
+                  className="bg-clubLight text-clubLight-foreground border-border min-w-[200px]"
+                >
+                  {item.children?.map((child) => {
+                    if (child.type === "dropdown") {
+                      // Second level dropdown                      const childIsOpen = openDropdown === child.name;
+                      return (
+                        <DropdownMenu                          key={child.name}
+                          asChild                          open={childIsOpen}
+                          onOpenChange={() => {
+                            toggleDropdown(item.name);
+                            toggleDropdown(child.name);
+                          }}
+                          className="bg-clubLight text-clubLight-foreground border-border"
+                        >
+                          {child.children?.map((subChild) => (
+                            <DropdownMenuItem
+                              key={subChild.name}
+                              asChild
+                              onClick={() => {
+                                closeAllDropdowns();
+                                navigate(subChild.path || "#");
+                              }}
+                              className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary transition-colors"
+                            >
+                              {subChild.name}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenu>
                       ))}
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              );
-            } else {
-              return (
-                <DropdownMenu key={item.name} open={openDropdowns[item.name]} onOpenChange={(open) => toggleDropdown(item.name, open)}>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className={cn(
-                        "text-sm font-medium transition-colors hover:text-clubPrimary",
-                        item.children?.some(child => location.pathname === child.path || child.children?.some(sc => location.pathname === sc.path)) ? "text-clubPrimary" : "text-clubDark-foreground"
-                      )}
-                      onMouseEnter={() => toggleDropdown(item.name, true)}
-                      onMouseLeave={() => toggleDropdown(item.name, false)}
-                    >
-                      {item.name}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    className="bg-clubLight text-clubLight-foreground border-border min-w-[200px]"
-                    onMouseEnter={() => toggleDropdown(item.name, true)}
-                    onMouseLeave={() => toggleDropdown(item.name, false)}
-                  >
-                    {item.children?.map((child) => (
-                      child.type === "dropdown" ? (
-                        <DropdownMenuSub key={child.name}>
-                          <DropdownMenuSubTrigger className="flex items-center px-4 py-2 text-sm font-bold text-clubPrimary hover:bg-clubSection">
-                            {child.name}
-                          </DropdownMenuSubTrigger>
-                          <DropdownMenuSubContent className="bg-clubLight text-clubLight-foreground border-border min-w-[200px]">
-                            {child.children?.map((subChild) => (
-                              <DropdownMenuItem key={subChild.name} asChild>
-                                <Link
-                                  to={subChild.path || "#"}
-                                  onClick={() => {
-                                    closeSheet?.();
-                                    toggleDropdown(item.name, false);
-                                  }}
-                                  className={cn(
-                                    "flex items-center px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary transition-colors",
-                                    location.pathname === subChild.path ? "text-clubPrimary font-bold bg-clubSection/50" : ""
-                                  )}
-                                >
-                                  {location.pathname === subChild.path && <ChevronRight className="h-3 w-3 mr-1" />}
-                                  {subChild.name}
-                                </Link>
-                              </DropdownMenuItem>
-                            ))}
-                          </DropdownMenuSubContent>
-                        </DropdownMenuSub>
-                      ) : (
-                        <DropdownMenuItem key={child.name} asChild>
-                          <Link
-                            to={child.path || "#"}
-                            onClick={() => {
-                              closeSheet?.();
-                              toggleDropdown(item.name, false);
-                            }}
-                            className={cn(
-                              "flex items-center px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary transition-colors",
-                              location.pathname === child.path ? "text-clubPrimary font-bold bg-clubSection/50" : ""
-                            )}
-                          >
-                            {location.pathname === child.path && <ChevronRight className="h-3 w-3 mr-1" />}
-                            {child.name}
-                          </Link>
+                    } else {
+                      // Simple link child
+                      return (
+                        <DropdownMenuItem
+                          key={child.name}
+                          asChild
+                          onClick={() => {
+                            closeAllDropdowns();
+                            navigate(child.path || "#");
+                          }}
+                          className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary transition-colors"
+                        >
+                          {child.name}
                         </DropdownMenuItem>
-                      )
-                    ))}
-                  </DropdownMenuContent>
+                      );
+                    }
+                  })}
                 </DropdownMenu>
-              );
-            }
+              </div>
+            );
           } else {
+            // Regular link items
             return (
               <Link
                 key={item.name}
                 to={item.path || "#"}
-                onClick={closeSheet}
+                onClick={closeAllDropdowns}
                 className={cn(
                   isMobileView ? "text-base" : "text-sm",
                   "font-medium transition-colors hover:text-clubPrimary",
@@ -240,6 +206,8 @@ const Navbar = () => {
           <img src="/images/logo/telecharge.jpg" alt="St Loub Ping Logo" className="h-8 w-8 mr-2" />
           <span>St Loub Ping</span>
         </Link>
+
+        {/* Mobile – use accordion for the whole menu */}
         {isMobile ? (
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
@@ -249,13 +217,7 @@ const Navbar = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="bg-clubDark text-clubDark-foreground border-clubPrimary w-full sm:w-3/4 md:max-w-xs p-6">
-              <SheetHeader className="mb-6">
-                <SheetTitle className="text-clubPrimary text-2xl font-bold">Navigation</SheetTitle>
-                <SheetDescription className="text-clubDark-foreground/80">
-                  Explorez les sections du club.
-                </SheetDescription>
-              </SheetHeader>
-              <NavLinks className="flex flex-col space-x-0 space-y-4 p-0" closeSheet={() => setIsSheetOpen(false)} isMobileView={true} />
+              <NavLinks closeSheet={() => setIsSheetOpen(false)} isMobileView={true} />
             </SheetContent>
           </Sheet>
         ) : (
