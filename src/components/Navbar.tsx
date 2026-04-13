@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Menu, ChevronRight } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -48,12 +51,17 @@ const navItems: NavItem[] = [
     name: "Tournoi",
     type: "dropdown",
     children: [
-      { name: "Édition 2026", type: "label" },
-      { name: "Inscription au Tournoi", path: "/tournoi-inscription", type: "link" },
-      { name: "Les Inscrits LIVE", path: "/tournoi/inscrits-live", type: "link" },
-      { name: "Liste des Inscriptions", path: "/tournoi-inscriptions-liste", type: "link" },
-      { name: "Résultats", path: "/tournoi/2026/resultats", type: "link" },
-      { name: "Photos", path: "/tournoi/2026/photos", type: "link" },
+      {
+        name: "Édition 2026",
+        type: "dropdown",
+        children: [
+          { name: "Inscription au Tournoi", path: "/tournoi-inscription", type: "link" },
+          { name: "Les Inscrits LIVE", path: "/tournoi/inscrits-live", type: "link" },
+          { name: "Liste des Inscriptions", path: "/tournoi-inscriptions-liste", type: "link" },
+          { name: "Résultats", path: "/tournoi/2026/resultats", type: "link" },
+          { name: "Photos", path: "/tournoi/2026/photos", type: "link" },
+        ],
+      },
     ],
   },
   {
@@ -92,10 +100,29 @@ const Navbar = () => {
                     </AccordionTrigger>
                     <AccordionContent className="pl-4 space-y-2 flex flex-col">
                       {item.children?.map((child) => (
-                        child.type === "label" ? (
-                          <div key={child.name} className="text-xs font-bold text-clubPrimary uppercase tracking-wider mt-4 mb-1">
-                            {child.name}
-                          </div>
+                        child.type === "dropdown" ? (
+                          <Accordion type="single" collapsible key={child.name} className="w-full">
+                            <AccordionItem value={child.name} className="border-none">
+                              <AccordionTrigger className="text-clubPrimary text-sm font-bold py-2 hover:no-underline">
+                                {child.name}
+                              </AccordionTrigger>
+                              <AccordionContent className="pl-4 space-y-2 flex flex-col">
+                                {child.children?.map((subChild) => (
+                                  <Link
+                                    key={subChild.name}
+                                    to={subChild.path || "#"}
+                                    onClick={closeSheet}
+                                    className={cn(
+                                      "block text-sm font-normal transition-colors hover:text-clubPrimary py-1",
+                                      location.pathname === subChild.path ? "text-clubPrimary font-semibold" : "text-clubDark-foreground/80"
+                                    )}
+                                  >
+                                    {subChild.name}
+                                  </Link>
+                                ))}
+                              </AccordionContent>
+                            </AccordionItem>
+                          </Accordion>
                         ) : (
                           <Link
                             key={child.name}
@@ -122,7 +149,7 @@ const Navbar = () => {
                       variant="ghost"
                       className={cn(
                         "text-sm font-medium transition-colors hover:text-clubPrimary",
-                        item.children?.some(child => location.pathname === child.path) ? "text-clubPrimary" : "text-clubDark-foreground"
+                        item.children?.some(child => location.pathname === child.path || child.children?.some(sc => location.pathname === sc.path)) ? "text-clubPrimary" : "text-clubDark-foreground"
                       )}
                       onMouseEnter={() => toggleDropdown(item.name, true)}
                       onMouseLeave={() => toggleDropdown(item.name, false)}
@@ -136,10 +163,32 @@ const Navbar = () => {
                     onMouseLeave={() => toggleDropdown(item.name, false)}
                   >
                     {item.children?.map((child) => (
-                      child.type === "label" ? (
-                        <div key={child.name} className="px-4 py-2 text-[10px] font-black text-clubPrimary uppercase tracking-widest border-b border-clubSection mb-1">
-                          {child.name}
-                        </div>
+                      child.type === "dropdown" ? (
+                        <DropdownMenuSub key={child.name}>
+                          <DropdownMenuSubTrigger className="flex items-center px-4 py-2 text-sm font-bold text-clubPrimary hover:bg-clubSection">
+                            {child.name}
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuSubContent className="bg-clubLight text-clubLight-foreground border-border min-w-[200px]">
+                            {child.children?.map((subChild) => (
+                              <DropdownMenuItem key={subChild.name} asChild>
+                                <Link
+                                  to={subChild.path || "#"}
+                                  onClick={() => {
+                                    closeSheet?.();
+                                    toggleDropdown(item.name, false);
+                                  }}
+                                  className={cn(
+                                    "flex items-center px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary transition-colors",
+                                    location.pathname === subChild.path ? "text-clubPrimary font-bold bg-clubSection/50" : ""
+                                  )}
+                                >
+                                  {location.pathname === subChild.path && <ChevronRight className="h-3 w-3 mr-1" />}
+                                  {subChild.name}
+                                </Link>
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuSubContent>
+                        </DropdownMenuSub>
                       ) : (
                         <DropdownMenuItem key={child.name} asChild>
                           <Link
