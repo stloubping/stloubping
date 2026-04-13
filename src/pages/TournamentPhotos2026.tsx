@@ -7,7 +7,6 @@ import { useLightbox } from '@/context/LightboxContext';
 
 const tournamentPhotos = [
   { id: 1, url: "/images/tournoi/2026/photo-1.jpg", alt: "Action de jeu tournoi 2026 - 1" },
-  { id: 2, url: "/images/tournoi/2026/photo-2.jpg", alt: "Action de jeu tournoi 2026 - 2" },
   { id: 3, url: "/images/tournoi/2026/photo-3.jpg", alt: "Action de jeu tournoi 2026 - 3" },
   { id: 4, url: "/images/tournoi/2026/photo-4.jpg", alt: "Action de jeu tournoi 2026 - 4" },
   { id: 5, url: "/images/tournoi/2026/photo-5.jpg", alt: "Action de jeu tournoi 2026 - 5" },
@@ -37,8 +36,6 @@ const tournamentPhotos = [
   { id: 29, url: "/images/tournoi/2026/photo-29.jpg", alt: "Action de jeu tournoi 2026 - 29" },
   { id: 30, url: "/images/tournoi/2026/photo-30.jpg", alt: "Action de jeu tournoi 2026 - 30" },
   { id: 31, url: "/images/tournoi/2026/photo-31.jpg", alt: "Action de jeu tournoi 2026 - 31" },
-  // { id: 32, url: "/images/tournoi/2026/photo-32.jpg", alt: "Action de jeu tournoi 2026 - 32" }, // Supprimé
-  // { id: 33, url: "/images/tournoi/2026/photo-33.jpg", alt: "Action de jeu tournoi 2026 - 33" }, // Supprimé
 ];
 
 const TournamentPhotos2026 = () => {
@@ -69,7 +66,8 @@ const TournamentPhotos2026 = () => {
                 >
                   <img 
                     src={photo.url} 
-                    alt={photo.alt}                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    alt={photo.alt} 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <span className="text-white text-sm font-medium bg-clubPrimary/80 px-3 py-1 rounded-full">Agrandir</span>
