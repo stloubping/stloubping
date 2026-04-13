@@ -37,7 +37,7 @@ const TournamentResults2026 = () => {
                 <div className="flex flex-col items-center p-4">
                   <Star className="h-8 w-8 text-clubPrimary mb-2" />
                   <span className="font-bold">Tableau Doubles</span>
-                  <span className="text-sm text-muted-foreground">< 2800 pts</span>
+                  <span className="text-sm text-muted-foreground">Moins de 2800 pts</span>
                 </div>
                 <div className="flex flex-col items-center p-4">
                   <Trophy className="h-8 w-8 text-blue-500 mb-2" />
