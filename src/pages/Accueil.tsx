@@ -1,4 +1,5 @@
 "use client";
+
 import React from 'react';
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -73,6 +74,25 @@ const allNewsItems = [
     description: "C'est reparti pour la seconde phase du championnat ! Venez nombreux encourager nos équipes pour cette reprise tant attendue à domicile dès 15h00.",
     link: "/competitions-equipes",
     image: "/images/events/IMG-20251003-WA0001.jpg",
+  },
+  // Nouveaux articles ajoutés pour les résultats et photos du tournoi 2026
+  {
+    id: 301,
+    title: "Résultats du tournoi 2026 – Découvrez les vainqueurs",
+    date: "12 Avril 2026",
+    location: "Gymnase de Saint-Loubès",
+    description: "Félicitations aux champions de chaque tableau ! Retrouvez le palmarès complet et les temps forts de la finale.",
+    link: "/tournoi/2026/resultats",
+    image: "/images/tournoi/2026/photo-5.jpg",
+  },
+  {
+    id: 302,
+    title: "Galerie photos du tournoi 2026 – Revivez les meilleurs moments",
+    date: "13 Avril 2026",
+    location: "Salle du club",
+    description: "Plus de 30 clichés capturant l’énergie et l’émotion du tournoi. Cliquez pour agrandir chaque photo.",
+    link: "/tournoi/2026/photos",
+    image: "/images/tournoi/2026/photo-1.jpg",
   },
 ];
 
