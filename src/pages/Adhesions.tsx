@@ -172,33 +172,23 @@ const Adhesions = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-72 bg-clubLight text-clubLight-foreground border-clubPrimary">
                 <DropdownMenuItem asChild>
-                  <a href="/documents/adhesions/25-2-licence.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
-                    Formulaire de licence FFTT
+                  <a href="/documents/adhesions/26-2-licence.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
+                    Formulaire de licence FFTT (2026-2027)
                   </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <a href="/documents/adhesions/25-9-certificat.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
-                    Certificat médical
+                  <a href="/documents/adhesions/26-9-certificat.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
+                    Certificat médical (2026-2027)
                   </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <a href="/documents/adhesions/25-10-1-autoquestionnaire-medical-majeur.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
-                    Autoquestionnaire médical (Majeur)
+                  <a href="/documents/adhesions/26-10-2-autoquestionnaire-medical-mineur.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
+                    Autoquestionnaire médical mineur (2026-2027)
                   </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <a href="/documents/adhesions/25-10-2-autoquestionnaire-medical-mineur.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
-                    Autoquestionnaire médical (Mineur)
-                  </a>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <a href="/documents/adhesions/Droit à l_image adulte.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
-                    Droit à l'image (Adulte)
-                  </a>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <a href="/documents/adhesions/Droit à l_image enfant.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
-                    Droit à l'image (Enfant)
+                  <a href="/documents/adhesions/droit-a-l-image-et-rgpd.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
+                    Droit à l'image et RGPD
                   </a>
                 </DropdownMenuItem>
               </DropdownMenuContent>
