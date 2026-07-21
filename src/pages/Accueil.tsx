@@ -12,7 +12,17 @@ import { allVideos } from '@/data/videos';
 import CompetitionCalendar from '@/components/CompetitionCalendar';
 
 const allNewsItems = [
-  // 1️⃣ Résultats du tournoi 2026 – mis en première position avec nouvelle image
+  // 🆕 Annonce de la nouvelle saison 2026-2027
+  {
+    id: 701,
+    title: "Saison 2026-2027 : Ouverture des Inscriptions & Adhésions !",
+    date: "Juillet 2026",
+    location: "St Loub Ping - Saint-Loubès",
+    description: "La nouvelle saison 2026-2027 se prépare ! Retrouvez nos nouveaux tarifs, le planning complet des entraînements ainsi que tous les formulaires téléchargeables. Rejoignez-nous pour une nouvelle année de tennis de table dans la convivialité et la passion !",
+    link: "/adhesions",
+    image: "/images/adhesions/tarifs-2026-2027.jpg",
+  },
+  // 1️⃣ Résultats du tournoi 2026
   {
     id: 301,
     title: "Résultats du tournoi 2026 – Découvrez les vainqueurs",
@@ -20,10 +30,9 @@ const allNewsItems = [
     location: "Gymnase de Saint-Loubès",
     description: "Félicitations aux champions de chaque tableau ! Retrouvez le palmarès complet et les temps forts de la finale.",
     link: "/tournoi/2026/resultats",
-    // nouvelle image choisie parmi les photos du tournoi
     image: "/images/tournoi/2026/photo-2.jpg",
   },
-  // 2️⃣ Galerie photos du tournoi 2026 – mise en deuxième position
+  // 2️⃣ Galerie photos du tournoi 2026
   {
     id: 302,
     title: "Galerie photos du tournoi 2026 – Revivez les meilleurs moments",
@@ -33,7 +42,7 @@ const allNewsItems = [
     link: "/tournoi/2026/photos",
     image: "/images/tournoi/2026/photo-1.jpg",
   },
-  // Articles suivants (ordre conservé)
+  // Articles suivants
   {
     id: 602,
     title: "Félicitations à nos diplômés de la balle blanche !",
@@ -78,15 +87,6 @@ const allNewsItems = [
     description: "Le Saint Loub’ping a organisé son traditionnel tournoi de Noël. Comme chaque année, cette compétition amicale a réuni nos jeunes licenciés pour un moment de sport et de partage.",
     link: "#",
     image: "/images/actualites/bordeauxrivedroite-5abc395193ac4b90ab4842d2eea90891-104939-ph0.avif",
-  },
-  {
-    id: 202,
-    title: "Reprise phase 2 du championnat",
-    date: "28 février 2026",
-    location: "Salle du club",
-    description: "C'est reparti pour la seconde phase du championnat ! Venez nombreux encourager nos équipes pour cette reprise tant attendue à domicile dès 15h00.",
-    link: "/competitions-equipes",
-    image: "/images/events/IMG-20251003-WA0001.jpg",
   },
 ];
 
