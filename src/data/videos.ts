@@ -1,3 +1,12 @@
+export interface VideoItem {
+  id: string;
+  title: string;
+  description: string;
+  youtubeId: string;
+  category: 'wtt' | 'tutos' | 'legends';
+  dateAdded: string;
+}
+
 export const allVideos: VideoItem[] = [
   // Vidéos WTT
   {
@@ -40,7 +49,6 @@ export const allVideos: VideoItem[] = [
     category: 'wtt',
     dateAdded: "2024-08-01",
   },
-  // New WTT video added by user
   {
     id: 'wtt-6',
     title: "Nouvelle Vidéo WTT (exemple)",
@@ -49,14 +57,13 @@ export const allVideos: VideoItem[] = [
     category: 'wtt',
     dateAdded: "2024-12-01",
   },
-  // Nouvelle vidéo WTT ajoutée
   {
     id: 'wtt-7',
     title: "WTT Contender Tunis 2024 - Highlights",
     description: "Les meilleurs moments du WTT Contender Tunis 2024.",
     youtubeId: "8WmChQ5_eDo",
     category: 'wtt',
-    dateAdded: new Date().toISOString().split('T')[0],
+    dateAdded: "2025-01-01",
   },
   // Vidéos Tutos
   {
@@ -115,13 +122,5 @@ export const allVideos: VideoItem[] = [
     youtubeId: "lxZiv-fiHkY",
     category: 'legends',
     dateAdded: "2024-07-30",
-  },
-  {
-    id: 'legend-6',
-    title: "Fan Zhendong - Highlights",
-    description: "Les meilleurs moments de Fan Zhendong, l'un des joueurs les plus dominants de sa génération.",
-    youtubeId: "sWCjWVqIosQ",
-    category: 'legends',
-    dateAdded: new Date().toISOString().split('T')[0], // Date d'ajout actuelle
   },
 ];
