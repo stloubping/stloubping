@@ -44,15 +44,6 @@ const allNewsItems = [
   },
   // Articles suivants
   {
-    id: 602,
-    title: "Félicitations à nos diplômés de la balle blanche !",
-    date: "Mars 2026",
-    location: "Salle Jacques-Durieux, Saint-Loubès",
-    description: "Une nouvelle vague de jeunes pongistes a brillamment obtenu son diplôme de la balle blanche. Bravo à tous pour vos progrès, votre assiduité et votre passion pour la petite balle orange !",
-    link: "#",
-    image: "/images/actualites/diplomes-balle-blanche.jpg",
-  },
-  {
     id: 501,
     title: "Une soixantaine de jeunes pongistes médaillés",
     date: "12 Mars 2026",
