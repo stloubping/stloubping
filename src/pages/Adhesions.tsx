@@ -1,26 +1,25 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Link } from 'react-router-dom';
-import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
+import { useLightbox } from '@/context/LightboxContext';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, CreditCard, Users, ShieldCheck } from 'lucide-react';
 
 const Adhesions = () => {
-  const { openLightbox } = useLightbox(); // Use the lightbox hook
+  const { openLightbox } = useLightbox();
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
-      <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Adhésions</h1>
+      <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Adhésions Saison 2026-2027</h1>
 
+      {/* Intro */}
       <section className="mb-12">
-        <Card className="bg-clubLight shadow-lg rounded-xl">
+        <Card className="bg-clubLight shadow-lg rounded-xl border border-border">
           <CardHeader>
             <CardTitle className="text-2xl text-clubDark">Devenez Membre de Notre Club !</CardTitle>
           </CardHeader>
@@ -30,24 +29,83 @@ const Adhesions = () => {
               Rejoignez une communauté passionnée et bénéficiez d'un encadrement de qualité et d'infrastructures adaptées.
             </p>
             <p className="text-clubLight-foreground">
-              L'adhésion à notre club inclus la licence FFTT, l'accès aux entraînements encadrés,
-              et la participation aux événements du club.
+              L'adhésion à notre club comprend la licence FFTT, l'accès aux entraînements encadrés, 
+              l'assurance sportive ainsi que la participation aux événements du club.
             </p>
           </CardContent>
         </Card>
       </section>
 
+      {/* Tarifs 2026-2027 */}
       <section className="mb-12">
-        <Card className="bg-clubLight shadow-lg rounded-xl">
+        <Card className="bg-clubLight shadow-lg rounded-xl border border-border overflow-hidden">
           <CardHeader>
-            <CardTitle className="text-2xl text-clubDark">Planning des Entraînements Saison 2025-2026</CardTitle>
+            <CardTitle className="text-2xl text-clubDark">Tarifs des Inscriptions 2026-2027</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              <div>
+                <img
+                  src="/images/adhesions/tarifs-2026-2027.jpg"
+                  alt="Tarifs des inscriptions saison 2026-2027"
+                  className="w-full h-auto object-contain rounded-lg shadow-md cursor-zoom-in hover:opacity-90 transition-opacity"
+                  onClick={() => openLightbox("/images/adhesions/tarifs-2026-2027.jpg")}
+                />
+                <p className="text-xs text-muted-foreground text-center mt-2">Cliquez sur l'image pour l'agrandir</p>
+              </div>
+
+              <div className="space-y-6">
+                <div className="p-4 bg-clubSection rounded-lg border border-clubPrimary/20">
+                  <h3 className="text-xl font-bold text-clubDark mb-3 flex items-center gap-2">
+                    <ShieldCheck className="text-clubPrimary h-5 w-5" /> Tarifs de base
+                  </h3>
+                  <div className="space-y-2">
+                    <p className="text-2xl font-bold text-clubPrimary">Licence Jeunes : 140 €</p>
+                    <p className="text-2xl font-bold text-clubPrimary">Licence Adultes : 160 €</p>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-3">
+                    Inclus : adhésion, licence fédérale (loisir ou compétition) et assurance pour la période du 1er septembre 2026 au 30 juin 2027.
+                  </p>
+                </div>
+
+                <div className="p-4 bg-clubSection rounded-lg border border-clubPrimary/20">
+                  <h3 className="text-xl font-bold text-clubDark mb-3 flex items-center gap-2">
+                    <Users className="text-clubPrimary h-5 w-5" /> Tarifs Familles
+                  </h3>
+                  <ul className="text-sm space-y-1 text-clubLight-foreground">
+                    <li>• 2 personnes : <strong>-5 %</strong></li>
+                    <li>• 3 personnes : <strong>-10 %</strong></li>
+                    <li>• 4 personnes : <strong>-15 %</strong></li>
+                    <li>• 5 personnes et + : <strong>-20 %</strong></li>
+                  </ul>
+                </div>
+
+                <div className="p-4 bg-clubSection rounded-lg border border-clubPrimary/20">
+                  <h3 className="text-xl font-bold text-clubDark mb-2 flex items-center gap-2">
+                    <CreditCard className="text-clubPrimary h-5 w-5" /> Moyens de Paiement Acceptés
+                  </h3>
+                  <p className="text-sm font-medium text-clubLight-foreground">
+                    CB, Virement, Chèque, Pass Sport, Chèques ANCV.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Horaires 2026-2027 */}
+      <section className="mb-12">
+        <Card className="bg-clubLight shadow-lg rounded-xl border border-border">
+          <CardHeader>
+            <CardTitle className="text-2xl text-clubDark">Planning des Entraînements Saison 2026-2027</CardTitle>
           </CardHeader>
           <CardContent>
             <img
-              src="/images/schedule/training-schedule-2025-2026.jpg"
-              alt="Planning des entraînements Saison 2025-2026"
-              className="w-full h-auto object-contain rounded-lg shadow-md cursor-zoom-in"
-              onClick={() => openLightbox("/images/schedule/training-schedule-2025-2026.jpg")} // Open lightbox on image click
+              src="/images/adhesions/training-schedule-2026-2027.jpg"
+              alt="Planning des entraînements Saison 2026-2027"
+              className="w-full h-auto object-contain rounded-lg shadow-md cursor-zoom-in hover:opacity-90 transition-opacity"
+              onClick={() => openLightbox("/images/adhesions/training-schedule-2026-2027.jpg")}
             />
             <p className="mt-4 text-sm text-muted-foreground text-center">
               Ces horaires sont susceptibles d'ajustements à l'issue des premiers entraînements.
@@ -56,8 +114,9 @@ const Adhesions = () => {
         </Card>
       </section>
 
+      {/* Types de licences */}
       <section className="mb-12">
-        <Card className="bg-clubLight shadow-lg rounded-xl">
+        <Card className="bg-clubLight shadow-lg rounded-xl border border-border">
           <CardHeader>
             <CardTitle className="text-2xl text-clubDark">Types de Licences</CardTitle>
           </CardHeader>
@@ -66,52 +125,28 @@ const Adhesions = () => {
               <div className="bg-clubSection p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-semibold mb-2 text-clubDark">Licence Loisir</h3>
                 <p className="mb-4 text-clubLight-foreground">
-                  Idéale pour ceux qui souhaitent pratiquer le tennis de table pour le plaisir, avec la possibilité de faire quelques petites compétitions dédiées aux joueurs loisirs. Accès aux entraînements libres
-                  et aux sessions encadrées dédiées au loisir.
+                  Idéale pour ceux qui souhaitent pratiquer le tennis de table pour le plaisir, avec la possibilité de faire quelques petites compétitions dédiées aux joueurs loisirs.
                 </p>
-                <ul className="list-disc list-inside mb-4 text-clubLight-foreground">
+                <ul className="list-disc list-inside mb-4 text-clubLight-foreground space-y-1">
                   <li>Accès aux créneaux de jeu libre</li>
                   <li>Participation aux entraînements dirigés loisirs</li>
                   <li>Assurance FFTT incluse</li>
-                  <br/>
-                  <p className="mb-4 text-clubLight-foreground">Accès aux compétitions jeunes :</p>
+                  <li className="font-semibold pt-2">Accès compétitions jeunes & adultes :</li>
                   <li>Tournois du Conseil Départemental</li>
-                  <li>Championnat par équipe jeunes</li>
-                  <br/>
-                  <p className="mb-4 text-clubLight-foreground">Accès aux compétitions adultes :</p>
-                  <li>Rencontres interclubs de Gironde</li>
-                  <li>Criterium de Gironde</li>
+                  <li>Rencontres interclubs & Critérium de Gironde</li>
                 </ul>
               </div>
               <div className="bg-clubSection p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-semibold mb-2 text-clubDark">Licence Compétition</h3>
                 <p className="mb-4 text-clubLight-foreground">
-                  Pour les joueurs désireux de s'investir dans la compétition.
-                  Permet de participer aux championnats par équipes et aux tournois
-                  organisés par la FFTT.
+                  Pour les joueurs désireux de s'investir dans la compétition et de participer aux championnats par équipes et tournois organisés par la FFTT.
                 </p>
-                <ul className="list-disc list-inside mb-4 text-clubLight-foreground">
-                  <li>Accès aux créneaux de jeu libre</li>
-                  <li>Accès aux entraînements dirigés compétition</li>
-                  <li>Assurance FFTT incluse</li>
-                  <li>Classement FFTT</li>
-                  <br/>
-                  <p className="mb-4 text-clubLight-foreground">Accès aux compétitions jeunes :</p>
-                  <li>Tournois du Conseil Départemental</li>
-                  <li>Championnat par équipe jeunes</li>
-                  <li>Championnat par équipe sénior</li>
-                  <li>Criterium Fédéral</li>
-                  <li>Titres jeunes</li>
-                  <li>Finales par classement</li>
-                  <li>Top détection</li>
-                  <br/>
-                  <p className="mb-4 text-clubLight-foreground">Accès aux compétitions adultes :</p>
-                  <li>Championnat par équipe sénior</li>
-                  <li>Criterium de Gironde</li>
-                  <li>Criterium Fédéral</li>
-                  <li>Finales par classement</li>
-                  <li>Tournois officiels organisés par les clubs</li>
-                  
+                <ul className="list-disc list-inside mb-4 text-clubLight-foreground space-y-1">
+                  <li>Accès aux créneaux de jeu libre & entraînements compétition</li>
+                  <li>Assurance FFTT & Classement officiel FFTT</li>
+                  <li className="font-semibold pt-2">Accès aux compétitions officielles :</li>
+                  <li>Championnat par équipes jeunes & séniors</li>
+                  <li>Critérium Fédéral, Titres jeunes, Tournois régionaux</li>
                 </ul>
               </div>
             </div>
@@ -119,17 +154,16 @@ const Adhesions = () => {
         </Card>
       </section>
 
+      {/* Téléchargements */}
       <section className="text-center">
-        <Card className="bg-clubLight shadow-lg p-8 rounded-xl">
+        <Card className="bg-clubLight shadow-lg p-8 rounded-xl border border-border">
           <CardTitle className="text-2xl text-clubDark mb-4">Documents d'Inscription</CardTitle>
           <CardContent>
-            <p className="mb-6 text-clubLight-foreground">
-              Pour vous inscrire, veuillez télécharger et remplir les documents nécessaires ci-dessous.
-              Une fois complétés, vous pourrez les remettre à un membre du bureau ou à un entraîneur.
+            <p className="mb-6 text-clubLight-foreground max-w-xl mx-auto">
+              Pour vous inscrire, téléchargez et remplissez les documents ci-dessous.
+              Remettez-les ensuite à un membre du bureau ou à un entraîneur.
             </p>
-            <p className="text-2xl font-bold text-clubPrimary">Tarif Jeunes: 130€ / an</p>
-            <p className="text-2xl font-bold text-clubPrimary">Tarif Adultes: 150€ / an</p>
-            <br/>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
@@ -169,8 +203,9 @@ const Adhesions = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <p className="mt-4 text-sm text-muted-foreground">
-              Pour toute question, n'hésitez pas à nous contacter via la page Contact.
+            
+            <p className="mt-6 text-sm text-muted-foreground">
+              Pour toute question, vous pouvez nous contacter directement depuis la page Contact.
             </p>
           </CardContent>
         </Card>
