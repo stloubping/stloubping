@@ -20,6 +20,16 @@ export const categoryLabels: Record<CompetitionEvent['category'], { label: strin
 };
 
 export const competitions20262027: CompetitionEvent[] = [
+  // --- ÉVÉNEMENT CLUB : ASSEMBLÉE GÉNÉRALE ---
+  {
+    id: "ag-2026",
+    date: "2026-08-29",
+    title: "Assemblée Générale Ordinaire du Club",
+    category: "club",
+    location: "Salle du club - Saint-Loubès",
+    details: "Convocation de l'ensemble des membres et parents du club St Loub Ping."
+  },
+
   // --- CRITÉRIUM DE GIRONDE (ADULTES - LICENCES PROMO OU TRADI - COEFF 0,75) ---
   {
     id: "cg-j1",

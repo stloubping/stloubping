@@ -27,7 +27,7 @@ export const allNewsItems: NewsItem[] = [
     location: "Salle du club - Saint-Loubès",
     description: "L'ensemble des adhérents, dirigeants et parents du club St Loub Ping est convoqué à l'Assemblée Générale Ordinaire du club qui se tiendra le Samedi 29 Août 2026. Retrouvez et téléchargez le document officiel de convocation ci-dessous.",
     link: "/documents/actualites/Convocation-AG-2026.pdf",
-    image: "/images/hero/FB_IMG_1759672983725.jpg",
+    image: "/images/actualites/convocation-ag-2026.png",
   },
   // 3️⃣ Dernier stage de la saison 2025-2026
   {

@@ -26,6 +26,7 @@ import { competitions20262027, categoryLabels, CompetitionEvent } from "@/data/c
 
 const months = [
   { value: "all", label: "Toute la saison" },
+  { value: "08", label: "Août 2026" },
   { value: "09", label: "Septembre 2026" },
   { value: "10", label: "Octobre 2026" },
   { value: "11", label: "Novembre 2026" },
