@@ -48,7 +48,7 @@ const Adhesions = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
-      <h1 className="text-4xl font-bold text-center mb-12 text-clubDark">Adhésions Saison 2026-2027</h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-clubDark">Adhésions Saison 2026-2027</h1>
 
       {/* Intro */}
       <section className="mb-12">
@@ -91,20 +91,21 @@ const Adhesions = () => {
 
       {/* Documents d'Inscription */}
       <section className="text-center mb-12">
-        <Card className="bg-clubLight shadow-lg p-8 rounded-xl border border-clubPrimary/30">
+        <Card className="bg-clubLight shadow-lg p-4 sm:p-8 rounded-xl border border-clubPrimary/30">
           <CardTitle className="text-2xl text-clubDark mb-4">Documents d'Inscription</CardTitle>
-          <CardContent>
-            <p className="mb-6 text-clubLight-foreground max-w-xl mx-auto leading-relaxed">
+          <CardContent className="px-2 sm:px-6">
+            <p className="mb-6 text-sm sm:text-base text-clubLight-foreground max-w-xl mx-auto leading-relaxed">
               Pour vous inscrire, téléchargez et remplissez les documents ci-dessous. Remettez-les ensuite à un membre du bureau ou à un entraîneur, ou envoyez-les par mail à <a href="mailto:saintloubping@laposte.net" className="font-semibold text-clubPrimary underline hover:text-clubPrimary/80">saintloubping@laposte.net</a> conjointement à un virement en mettant en référence "licence nom-prénom".
             </p>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-8 py-4 text-lg rounded-md shadow-lg">
-                  Télécharger les documents <ChevronDown className="ml-2 h-4 w-4" />
+                <Button className="w-full sm:w-auto h-auto max-w-full bg-clubPrimary hover:bg-clubPrimary/90 text-clubPrimary-foreground px-4 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-md shadow-lg whitespace-normal leading-snug">
+                  <span>Télécharger les documents</span>
+                  <ChevronDown className="ml-2 h-4 w-4 shrink-0 inline-block" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-72 bg-clubLight text-clubLight-foreground border-clubPrimary">
+              <DropdownMenuContent className="w-[calc(100vw-3rem)] sm:w-80 max-w-sm bg-clubLight text-clubLight-foreground border-clubPrimary">
                 <DropdownMenuItem asChild>
                   <a href="/documents/adhesions/26-2-licence.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
                     Formulaire de licence FFTT (2026-2027)
@@ -133,7 +134,7 @@ const Adhesions = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             
-            <p className="mt-6 text-sm text-muted-foreground">
+            <p className="mt-6 text-xs sm:text-sm text-muted-foreground">
               Pour toute question, vous pouvez nous contacter directement depuis la page Contact.
             </p>
           </CardContent>
