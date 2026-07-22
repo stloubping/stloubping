@@ -18,11 +18,11 @@ export const categoryLabels: Record<CompetitionEvent['category'], { label: strin
 };
 
 export const competitions20262027: CompetitionEvent[] = [
-  // --- TOURNOI GRAND PRIX CONSEIL DÉPARTEMENTAL ---
+  // --- TOURNOI GRAND PRIX CONSEIL DÉPARTEMENTAL (2026-2027) ---
   {
     id: "gp-cd-t1",
-    date: "2025-11-08",
-    endDate: "2025-11-09",
+    date: "2026-11-08",
+    endDate: "2026-11-09",
     title: "Grand Prix Conseil Départemental - Tour 1",
     category: "youth",
     location: "Gironde",
@@ -30,8 +30,8 @@ export const competitions20262027: CompetitionEvent[] = [
   },
   {
     id: "gp-cd-t2",
-    date: "2025-12-06",
-    endDate: "2025-12-07",
+    date: "2026-12-06",
+    endDate: "2026-12-07",
     title: "Grand Prix Conseil Départemental - Tour 2",
     category: "youth",
     location: "Gironde",
@@ -39,8 +39,8 @@ export const competitions20262027: CompetitionEvent[] = [
   },
   {
     id: "gp-cd-t3",
-    date: "2026-01-31",
-    endDate: "2026-02-01",
+    date: "2027-01-31",
+    endDate: "2027-02-01",
     title: "Grand Prix Conseil Départemental - Tour 3",
     category: "youth",
     location: "Gironde",
@@ -48,8 +48,8 @@ export const competitions20262027: CompetitionEvent[] = [
   },
   {
     id: "gp-cd-t4",
-    date: "2026-04-04",
-    endDate: "2026-04-05",
+    date: "2027-04-04",
+    endDate: "2027-04-05",
     title: "Grand Prix Conseil Départemental - Tour 4",
     category: "youth",
     location: "Gironde",
@@ -57,8 +57,8 @@ export const competitions20262027: CompetitionEvent[] = [
   },
   {
     id: "gp-cd-t5",
-    date: "2026-05-16",
-    endDate: "2026-05-17",
+    date: "2027-05-16",
+    endDate: "2027-05-17",
     title: "Grand Prix Conseil Départemental - Tour 5",
     category: "youth",
     location: "Gironde",
@@ -66,7 +66,7 @@ export const competitions20262027: CompetitionEvent[] = [
   },
   {
     id: "gp-cd-titre-loisirs",
-    date: "2026-06-14",
+    date: "2027-06-14",
     title: "Grand Prix Conseil Départemental - Titre Indiv Jeunes Loisirs",
     category: "youth",
     location: "Gironde",
