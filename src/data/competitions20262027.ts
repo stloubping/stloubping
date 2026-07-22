@@ -25,7 +25,7 @@ export const competitions20262027: CompetitionEvent[] = [
     title: "Forum des Associations & Portes Ouvertes",
     category: "club",
     location: "Saint-Loubès",
-    details: "Inscriptions, renseignements et démonstrations."
+    details: "Présentation des activités du club et inscriptions."
   },
   {
     id: "p1-j1",
@@ -34,18 +34,16 @@ export const competitions20262027: CompetitionEvent[] = [
     title: "Championnat par Équipes - Journée 1",
     category: "teams",
     phase: "Phase 1",
-    location: "Régional & Départemental",
-    details: "1ère journée du championnat par équipes Séniors."
+    location: "Régional & Départemental"
   },
   {
     id: "p1-jeunes-j1",
     date: "2026-09-26",
     endDate: "2026-09-27",
-    title: "Championnat Jeunes - Journée 1",
+    title: "Championnat Jeunes par Équipes - Journée 1",
     category: "youth",
     phase: "Phase 1",
-    location: "Gironde",
-    details: "1ère journée du championnat Jeunes par équipes."
+    location: "Gironde"
   },
 
   // --- OCTOBRE 2026 ---
@@ -66,7 +64,15 @@ export const competitions20262027: CompetitionEvent[] = [
     category: "criterium",
     phase: "Phase 1",
     location: "Nationale, Régionale & Départementale",
-    details: "Épreuve individuelle de référence pour toutes les catégories."
+    details: "Indiv. Licences traditionnelles (Matchs comptabilisés Coeff. 1,5)"
+  },
+  {
+    id: "club-familles",
+    date: "2026-10-16",
+    title: "Tournoi des Familles (Vendredi soir)",
+    category: "club",
+    location: "Salle du club - Saint-Loubès",
+    details: "Soirée conviviale par paires parent/enfant."
   },
   {
     id: "p1-j3",
@@ -76,15 +82,6 @@ export const competitions20262027: CompetitionEvent[] = [
     category: "teams",
     phase: "Phase 1",
     location: "Régional & Départemental"
-  },
-  {
-    id: "p1-jeunes-j2",
-    date: "2026-10-24",
-    endDate: "2026-10-25",
-    title: "Championnat Jeunes - Journée 2",
-    category: "youth",
-    phase: "Phase 1",
-    location: "Gironde"
   },
 
   // --- NOVEMBRE 2026 ---
@@ -104,7 +101,8 @@ export const competitions20262027: CompetitionEvent[] = [
     title: "Critérium Fédéral - 2ème Tour",
     category: "criterium",
     phase: "Phase 1",
-    location: "Nationale, Régionale & Départementale"
+    location: "Nationale, Régionale & Départementale",
+    details: "Indiv. Licences traditionnelles (Matchs comptabilisés Coeff. 1,5)"
   },
   {
     id: "p1-j5",
@@ -134,15 +132,15 @@ export const competitions20262027: CompetitionEvent[] = [
     category: "teams",
     phase: "Phase 1",
     location: "Régional & Départemental",
-    details: "Dernière journée décisive de la Phase 1."
+    details: "Dernière journée de la Phase 1."
   },
   {
-    id: "p1-noel",
+    id: "club-noel",
     date: "2026-12-19",
-    title: "Tournoi de Noël du Club & Stage Jeunes",
+    title: "Tournoi de Noël du Club",
     category: "club",
     location: "Salle Jacques-Durieux, Saint-Loubès",
-    details: "Compétition amicale festive pour tous les adhérents."
+    details: "Tournoi interne et fête de fin d'année du club."
   },
 
   // --- JANVIER 2027 ---
@@ -152,16 +150,17 @@ export const competitions20262027: CompetitionEvent[] = [
     title: "Finales par Classement - Échelon Départemental",
     category: "individual",
     phase: "Phase 2",
-    location: "Gironde"
+    location: "Gironde",
+    details: "Indiv. Licences traditionnelles"
   },
   {
-    id: "p2-jeunes-j1",
-    date: "2027-01-09",
-    endDate: "2027-01-10",
-    title: "Championnat Jeunes - Journée 1 (Phase 2)",
+    id: "titres-jeunes-dep",
+    date: "2027-01-10",
+    title: "Titres Individuels Jeunes - Échelon Départemental",
     category: "youth",
     phase: "Phase 2",
-    location: "Gironde"
+    location: "Gironde",
+    details: "Licences traditionnelles -11 à -19 ans (Coeff. 1,25)"
   },
   {
     id: "p2-j1",
@@ -170,8 +169,7 @@ export const competitions20262027: CompetitionEvent[] = [
     title: "Championnat par Équipes - Journée 1 (Phase 2)",
     category: "teams",
     phase: "Phase 2",
-    location: "Régional & Départemental",
-    details: "1ère journée de la Phase 2 du championnat par équipes."
+    location: "Régional & Départemental"
   },
   {
     id: "p2-j2",
@@ -189,7 +187,8 @@ export const competitions20262027: CompetitionEvent[] = [
     title: "Critérium Fédéral - 3ème Tour",
     category: "criterium",
     phase: "Phase 2",
-    location: "Nationale, Régionale & Départementale"
+    location: "Nationale, Régionale & Départementale",
+    details: "Indiv. Licences traditionnelles (Matchs comptabilisés Coeff. 1,5)"
   },
 
   // --- FÉVRIER 2027 ---
@@ -212,7 +211,7 @@ export const competitions20262027: CompetitionEvent[] = [
     category: "criterium",
     phase: "Phase 2",
     location: "Nationale, Régionale & Départementale",
-    details: "Dernier tour du Critérium Fédéral individuel de la saison."
+    details: "Indiv. Licences traditionnelles (Matchs comptabilisés Coeff. 1,5)"
   },
   {
     id: "p2-j4",
@@ -229,19 +228,30 @@ export const competitions20262027: CompetitionEvent[] = [
     title: "Finales par Classement - Échelon Territorial",
     category: "individual",
     phase: "Phase 2",
-    location: "Territoire"
+    location: "Territoire",
+    details: "Indiv. Licences traditionnelles"
   },
   {
-    id: "ppp-2027",
-    date: "2027-03-27",
-    endDate: "2027-03-28",
-    title: "Premier Pas Pongiste & Découverte",
+    id: "indiv-promo-t1",
+    date: "2027-03-21",
+    title: "Indiv. Jeunes & Féminines - Tour 1",
     category: "youth",
-    location: "Saint-Loubès",
-    details: "Animation découverte pour les débutants et écoles."
+    phase: "Phase 2",
+    location: "Gironde",
+    details: "Licences promotionnelles ou traditionnelles (Coeff. 0,5)"
   },
 
   // --- AVRIL 2027 ---
+  {
+    id: "titres-jeunes-reg",
+    date: "2027-04-03",
+    endDate: "2027-04-04",
+    title: "Titres Individuels Jeunes - Échelon Régional",
+    category: "youth",
+    phase: "Phase 2",
+    location: "Nouvelle-Aquitaine",
+    details: "Licences traditionnelles -11 à -19 ans (Coeff. 1,25)"
+  },
   {
     id: "p2-j5",
     date: "2027-04-10",
@@ -252,24 +262,43 @@ export const competitions20262027: CompetitionEvent[] = [
     location: "Régional & Départemental"
   },
   {
+    id: "tournoi-stloubes-2027",
+    date: "2027-04-17",
+    title: "Grand Tournoi Régional de Saint-Loubès 2027",
+    category: "club",
+    location: "Gymnase de Saint-Loubès",
+    details: "Tournoi régional annuel homologué par le club."
+  },
+  {
     id: "fpc-reg",
     date: "2027-04-24",
     title: "Finales par Classement - Échelon Régional",
     category: "individual",
     phase: "Phase 2",
-    location: "Nouvelle-Aquitaine"
+    location: "Nouvelle-Aquitaine",
+    details: "Indiv. Licences traditionnelles"
   },
   {
-    id: "tournoi-stloubes-2027",
-    date: "2027-04-24",
-    endDate: "2027-04-25",
-    title: "Grand Tournoi Régional de Saint-Loubès 2027",
-    category: "club",
-    location: "Gymnase de Saint-Loubès",
-    details: "Grand évènement annuel homologué avec 7 tableaux et petite restauration."
+    id: "cf-cadet-benjamin",
+    date: "2027-04-30",
+    endDate: "2027-05-02",
+    title: "Championnat de France Cadet / Benjamin",
+    category: "youth",
+    phase: "Phase 2",
+    location: "National",
+    details: "Titres Individuels Jeunes"
   },
 
   // --- MAI 2027 ---
+  {
+    id: "indiv-promo-t2",
+    date: "2027-05-02",
+    title: "Indiv. Jeunes & Féminines - Tour 2",
+    category: "youth",
+    phase: "Phase 2",
+    location: "Gironde",
+    details: "Licences promotionnelles ou traditionnelles (Coeff. 0,5)"
+  },
   {
     id: "p2-j6",
     date: "2027-05-22",
@@ -286,36 +315,27 @@ export const competitions20262027: CompetitionEvent[] = [
     title: "Championnat par Équipes - Journée 7 (Phase 2)",
     category: "teams",
     phase: "Phase 2",
-    location: "Régional & Départemental",
-    details: "Dernière journée officielle de Phase 2."
+    location: "Régional & Départemental"
   },
 
   // --- JUIN 2027 ---
   {
-    id: "p2-titres-dep",
-    date: "2027-06-05",
+    id: "cf-junior-minime",
+    date: "2027-06-04",
     endDate: "2027-06-06",
-    title: "Titres Départementaux par Équipes",
-    category: "individual",
+    title: "Championnat de France Junior / Minime",
+    category: "youth",
     phase: "Phase 2",
-    location: "Gironde"
-  },
-  {
-    id: "p2-titres-reg",
-    date: "2027-06-12",
-    endDate: "2027-06-13",
-    title: "Titres Régionaux par Équipes",
-    category: "individual",
-    phase: "Phase 2",
-    location: "Nouvelle-Aquitaine"
+    location: "National",
+    details: "Titres Individuels Jeunes"
   },
   {
     id: "fete-club-2027",
     date: "2027-06-19",
-    title: "Fête du Club & Assemblée Générale St Loub Ping",
+    title: "Fête du Club & Tournoi Interne de Fin de Saison",
     category: "club",
     location: "Club House Saint-Loubès",
-    details: "Bilan de la saison, récompenses des jeunes et repas convivial."
+    details: "Bilan, remise des diplômes, tournoi interne et repas du club."
   },
   {
     id: "fpc-nat",
@@ -324,6 +344,16 @@ export const competitions20262027: CompetitionEvent[] = [
     title: "Finales par Classement - Échelon National",
     category: "individual",
     phase: "Phase 2",
-    location: "National"
+    location: "National",
+    details: "Indiv. Licences traditionnelles"
+  },
+  {
+    id: "indiv-promo-t3",
+    date: "2027-06-27",
+    title: "Indiv. Jeunes & Féminines - Tour 3",
+    category: "youth",
+    phase: "Phase 2",
+    location: "Gironde",
+    details: "Licences promotionnelles ou traditionnelles (Coeff. 0,5)"
   }
 ];
