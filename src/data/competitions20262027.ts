@@ -147,6 +147,14 @@ export const competitions20262027: CompetitionEvent[] = [
 
   // --- JANVIER 2027 ---
   {
+    id: "fpc-dep",
+    date: "2027-01-09",
+    title: "Finales par Classement - Échelon Départemental",
+    category: "individual",
+    phase: "Phase 2",
+    location: "Gironde"
+  },
+  {
     id: "p2-jeunes-j1",
     date: "2027-01-09",
     endDate: "2027-01-10",
@@ -216,6 +224,14 @@ export const competitions20262027: CompetitionEvent[] = [
     location: "Régional & Départemental"
   },
   {
+    id: "fpc-terr",
+    date: "2027-03-20",
+    title: "Finales par Classement - Échelon Territorial",
+    category: "individual",
+    phase: "Phase 2",
+    location: "Territoire"
+  },
+  {
     id: "ppp-2027",
     date: "2027-03-27",
     endDate: "2027-03-28",
@@ -234,6 +250,14 @@ export const competitions20262027: CompetitionEvent[] = [
     category: "teams",
     phase: "Phase 2",
     location: "Régional & Départemental"
+  },
+  {
+    id: "fpc-reg",
+    date: "2027-04-24",
+    title: "Finales par Classement - Échelon Régional",
+    category: "individual",
+    phase: "Phase 2",
+    location: "Nouvelle-Aquitaine"
   },
   {
     id: "tournoi-stloubes-2027",
@@ -292,5 +316,14 @@ export const competitions20262027: CompetitionEvent[] = [
     category: "club",
     location: "Club House Saint-Loubès",
     details: "Bilan de la saison, récompenses des jeunes et repas convivial."
+  },
+  {
+    id: "fpc-nat",
+    date: "2027-06-26",
+    endDate: "2027-06-27",
+    title: "Finales par Classement - Échelon National",
+    category: "individual",
+    phase: "Phase 2",
+    location: "National"
   }
 ];
