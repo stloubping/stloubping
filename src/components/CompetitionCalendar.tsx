@@ -18,7 +18,9 @@ import {
   CalendarPlus, 
   Clock,
   FileText,
-  Sparkles
+  Sparkles,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import { competitions20262027, categoryLabels, CompetitionEvent } from "@/data/competitions20262027";
 
@@ -61,13 +63,18 @@ const createGoogleCalendarUrl = (event: CompetitionEvent) => {
   return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&location=${location}`;
 };
 
-const CompetitionCalendar = () => {
+interface CompetitionCalendarProps {
+  initialLimit?: number;
+}
+
+const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit }) => {
   const pdfPath = "/documents/schedule/Competitions-2026-2027.pdf";
   
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedMonth, setSelectedMonth] = useState<string>("all");
   const [selectedPhase, setSelectedPhase] = useState<string>("all");
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const todayStr = new Date().toISOString().split('T')[0];
 
@@ -93,6 +100,15 @@ const CompetitionCalendar = () => {
       })
       .sort((a, b) => a.date.localeCompare(b.date));
   }, [searchQuery, selectedCategory, selectedMonth, selectedPhase]);
+
+  const displayedCompetitions = useMemo(() => {
+    if (initialLimit && !isExpanded && !searchQuery && selectedCategory === "all" && selectedMonth === "all" && selectedPhase === "all") {
+      return filteredCompetitions.slice(0, initialLimit);
+    }
+    return filteredCompetitions;
+  }, [filteredCompetitions, initialLimit, isExpanded, searchQuery, selectedCategory, selectedMonth, selectedPhase]);
+
+  const hasMore = initialLimit && filteredCompetitions.length > initialLimit && !searchQuery && selectedCategory === "all" && selectedMonth === "all" && selectedPhase === "all";
 
   return (
     <section className="mb-12">
@@ -221,7 +237,7 @@ const CompetitionCalendar = () => {
               </div>
 
               {/* --- Tableau des événements --- */}
-              {filteredCompetitions.length === 0 ? (
+              {displayedCompetitions.length === 0 ? (
                 <div className="text-center py-12 bg-clubSection/30 rounded-xl border border-dashed border-border">
                   <Clock className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
                   <p className="text-clubDark font-semibold">Aucun événement ne correspond à vos critères.</p>
@@ -240,7 +256,7 @@ const CompetitionCalendar = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredCompetitions.map((event) => {
+                      {displayedCompetitions.map((event) => {
                         const isPast = (event.endDate || event.date) < todayStr;
                         const cat = categoryLabels[event.category];
 
@@ -330,8 +346,32 @@ const CompetitionCalendar = () => {
                 </div>
               )}
 
-              <div className="text-center text-xs text-muted-foreground pt-2">
-                Affichage de {filteredCompetitions.length} compétition(s) sur un total de {competitions20262027.length}.
+              {/* Bouton afficher tout / réduire si limite */}
+              {hasMore ? (
+                <div className="text-center pt-2">
+                  <Button
+                    onClick={() => setIsExpanded(true)}
+                    className="bg-clubPrimary hover:bg-clubPrimary/90 text-white font-medium text-xs md:text-sm px-6 py-2 rounded-full shadow"
+                  >
+                    Voir toutes les {filteredCompetitions.length} dates de la saison
+                    <ChevronDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              ) : isExpanded && initialLimit ? (
+                <div className="text-center pt-2">
+                  <Button
+                    onClick={() => setIsExpanded(false)}
+                    variant="outline"
+                    className="border-clubPrimary text-clubPrimary hover:bg-clubPrimary/10 font-medium text-xs md:text-sm px-6 py-2 rounded-full"
+                  >
+                    Réduire aux 10 premières dates
+                    <ChevronUp className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              ) : null}
+
+              <div className="text-center text-xs text-muted-foreground pt-1">
+                Affichage de {displayedCompetitions.length} compétition(s) sur un total de {competitions20262027.length}.
               </div>
             </TabsContent>
 

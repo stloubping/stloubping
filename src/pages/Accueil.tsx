@@ -136,8 +136,8 @@ const Accueil = () => {
           </Card>
         </section>
 
-        {/* ---------- Calendrier des compétitions ---------- */}
-        <CompetitionCalendar />
+        {/* ---------- Calendrier des compétitions (limité aux 10 premières dates) ---------- */}
+        <CompetitionCalendar initialLimit={10} />
 
         {/* ---------- Dernières Vidéos ---------- */}
         <section className="mb-12">
