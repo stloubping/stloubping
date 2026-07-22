@@ -5,84 +5,16 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import NewsCard from "@/components/NewsCard";
-import { useLightbox } from '@/context/LightboxContext';
 import HeroSection from "@/components/HeroSection";
 import VideoCard from "@/components/VideoCard";
 import { allVideos } from '@/data/videos';
+import { allNewsItems } from '@/data/news';
 import CompetitionCalendar from '@/components/CompetitionCalendar';
-
-const allNewsItems = [
-  // 🆕 Annonce de la nouvelle saison 2026-2027
-  {
-    id: 701,
-    title: "Saison 2026-2027 : Ouverture des Inscriptions & Adhésions !",
-    date: "Juillet 2026",
-    location: "St Loub Ping - Saint-Loubès",
-    description: "La nouvelle saison 2026-2027 se prépare ! Retrouvez nos nouveaux tarifs, le planning complet des entraînements ainsi que tous les formulaires téléchargeables. Rejoignez-nous pour une nouvelle année de tennis de table dans la convivialité et la passion !",
-    link: "/adhesions",
-    image: "/images/adhesions/tarifs-2026-2027.jpg",
-  },
-  // 1️⃣ Résultats du tournoi 2026
-  {
-    id: 301,
-    title: "Résultats du tournoi 2026 – Découvrez les vainqueurs",
-    date: "12 Avril 2026",
-    location: "Gymnase de Saint-Loubès",
-    description: "Félicitations aux champions de chaque tableau ! Retrouvez le palmarès complet et les temps forts de la finale.",
-    link: "/tournoi/2026/resultats",
-    image: "/images/tournoi/2026/photo-2.jpg",
-  },
-  // 2️⃣ Galerie photos du tournoi 2026
-  {
-    id: 302,
-    title: "Galerie photos du tournoi 2026 – Revivez les meilleurs moments",
-    date: "13 Avril 2026",
-    location: "Salle du club",
-    description: "Plus de 30 clichés capturant l’énergie et l’émotion du tournoi. Cliquez pour agrandir chaque photo.",
-    link: "/tournoi/2026/photos",
-    image: "/images/tournoi/2026/galerie-cover.jpg",
-  },
-  // Articles suivants
-  {
-    id: 501,
-    title: "Une soixantaine de jeunes pongistes médaillés",
-    date: "12 Mars 2026",
-    location: "Salle Jacques-Durieux, Saint-Loubès",
-    description: "Philippe Roux, président du St-Loub' Ping, a remis les diplômes aux jeunes du club. Ce programme de progression, dirigé par l'entraîneur Pierre-Louis Stevance, a vu 49 jeunes réussir les tests de la balle blanche et 13 ceux de la balle orange. Une belle récompense pour l'investissement de nos futurs champions !",
-    link: "#",
-    image: "/images/actualites/jeunes-medailles.jpg",
-  },
-  {
-    id: 4,
-    title: "Le Maillot Officiel est Arrivé !",
-    date: "Disponible maintenant",
-    location: "Boutique du Club",
-    description: "Représentez fièrement le St Loub Ping ! Le nouveau maillot officiel est disponible à la commande. Découvrez les tailles et les modalités d'achat sur notre page Boutique.",
-    link: "/boutique",
-    image: "/images/boutique/maillot-club-officiel.png",
-  },
-  {
-    id: 101,
-    title: "Stage de Noël pour les Jeunes",
-    date: "22, 23 et 24 Décembre",
-    location: "Salle du club",
-    description: "Un stage intensif pour les jeunes compétiteurs souhaitant améliorer leur technique et leur stratégie avant les fêtes. Encadrement par nos meilleurs entraîneurs.",
-    link: "/adhesions",
-    image: "/images/actualites/stage-de-noel.jpg",
-  },
-  {
-    id: 201,
-    title: "Tournoi de Noël des Jeunes",
-    date: "20 Décembre 2025",
-    location: "Salle du club",
-    description: "Le Saint Loub’ping a organisé son traditionnel tournoi de Noël. Comme chaque année, cette compétition amicale a réuni nos jeunes licenciés pour un moment de sport et de partage.",
-    link: "#",
-    image: "/images/actualites/bordeauxrivedroite-5abc395193ac4b90ab4842d2eea90891-104939-ph0.avif",
-  },
-];
+import { ArrowRight, Archive } from 'lucide-react';
 
 const Accueil = () => {
-  const { openLightbox } = useLightbox();
+  // Sélection des 6 articles les plus récents pour la page d'accueil
+  const homeNewsItems = allNewsItems.slice(0, 6);
 
   const latestVideos = [...allVideos]
     .sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime())
@@ -97,15 +29,26 @@ const Accueil = () => {
         imageAlt="Joueurs de tennis de table en plein entraînement"
       />
       <div className="container mx-auto px-4 py-4 md:py-8">
-        {/* ---------- Dernières Actualités ---------- */}
+        {/* ---------- Dernières Actualités (6 articles) ---------- */}
         <section className="mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-clubDark">
             Dernières Actualités
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
-            {allNewsItems.map((news) => (
+            {homeNewsItems.map((news) => (
               <NewsCard key={news.id} news={news} />
             ))}
+          </div>
+
+          {/* Bouton vers les archives */}
+          <div className="text-center mt-8">
+            <Button asChild variant="outline" className="border-2 border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white font-semibold rounded-full px-6 py-5">
+              <Link to="/actualites" className="flex items-center gap-2">
+                <Archive className="h-4 w-4" />
+                Voir toutes les actualités (Archives)
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </section>
 

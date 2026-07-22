@@ -33,6 +33,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { name: "Accueil", path: "/", type: "link" },
+  { name: "Archives", path: "/actualites", type: "link" },
   { name: "Le Club", path: "/le-club", type: "link" },
   {
     name: "Équipes",
