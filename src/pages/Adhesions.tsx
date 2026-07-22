@@ -14,7 +14,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ChevronDown, CreditCard, Users, ShieldCheck, HelpCircle } from 'lucide-react';
+import { ChevronDown, HelpCircle } from 'lucide-react';
 
 const faqItems = [
   {
@@ -76,58 +76,20 @@ const Adhesions = () => {
             <CardTitle className="text-2xl text-clubDark">Tarifs des Inscriptions 2026-2027</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div>
-                <img
-                  src="/images/adhesions/tarifs-2026-2027.jpg"
-                  alt="Tarifs des inscriptions saison 2026-2027"
-                  className="w-full h-auto object-contain rounded-lg shadow-md cursor-zoom-in hover:opacity-90 transition-opacity"
-                  onClick={() => openLightbox("/images/adhesions/tarifs-2026-2027.jpg")}
-                />
-                <p className="text-xs text-muted-foreground text-center mt-2">Cliquez sur l'image pour l'agrandir</p>
-              </div>
-
-              <div className="space-y-6">
-                <div className="p-4 bg-clubSection rounded-lg border border-clubPrimary/20">
-                  <h3 className="text-xl font-bold text-clubDark mb-3 flex items-center gap-2">
-                    <ShieldCheck className="text-clubPrimary h-5 w-5" /> Tarifs de base
-                  </h3>
-                  <div className="space-y-2">
-                    <p className="text-2xl font-bold text-clubPrimary">Licence Jeunes : 140 €</p>
-                    <p className="text-2xl font-bold text-clubPrimary">Licence Adultes : 160 €</p>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-3">
-                    Inclus : adhésion, licence fédérale (loisir ou compétition) et assurance pour la période du 1er septembre 2026 au 30 juin 2027.
-                  </p>
-                </div>
-
-                <div className="p-4 bg-clubSection rounded-lg border border-clubPrimary/20">
-                  <h3 className="text-xl font-bold text-clubDark mb-3 flex items-center gap-2">
-                    <Users className="text-clubPrimary h-5 w-5" /> Tarifs Familles
-                  </h3>
-                  <ul className="text-sm space-y-1 text-clubLight-foreground">
-                    <li>• 2 personnes : <strong>-5 %</strong></li>
-                    <li>• 3 personnes : <strong>-10 %</strong></li>
-                    <li>• 4 personnes : <strong>-15 %</strong></li>
-                    <li>• 5 personnes et + : <strong>-20 %</strong></li>
-                  </ul>
-                </div>
-
-                <div className="p-4 bg-clubSection rounded-lg border border-clubPrimary/20">
-                  <h3 className="text-xl font-bold text-clubDark mb-2 flex items-center gap-2">
-                    <CreditCard className="text-clubPrimary h-5 w-5" /> Moyens de Paiement Acceptés
-                  </h3>
-                  <p className="text-sm font-medium text-clubLight-foreground">
-                    CB, Virement, Chèque, Pass Sport, Chèques ANCV.
-                  </p>
-                </div>
-              </div>
+            <div className="max-w-2xl mx-auto">
+              <img
+                src="/images/adhesions/tarifs-2026-2027.jpg"
+                alt="Tarifs des inscriptions saison 2026-2027"
+                className="w-full h-auto object-contain rounded-lg shadow-md cursor-zoom-in hover:opacity-90 transition-opacity"
+                onClick={() => openLightbox("/images/adhesions/tarifs-2026-2027.jpg")}
+              />
+              <p className="text-xs text-muted-foreground text-center mt-2">Cliquez sur l'image pour l'agrandir</p>
             </div>
           </CardContent>
         </Card>
       </section>
 
-      {/* Documents d'Inscription (déplacé juste sous les tarifs) */}
+      {/* Documents d'Inscription */}
       <section className="text-center mb-12">
         <Card className="bg-clubLight shadow-lg p-8 rounded-xl border border-clubPrimary/30">
           <CardTitle className="text-2xl text-clubDark mb-4">Documents d'Inscription</CardTitle>
