@@ -17,10 +17,9 @@ import {
   TrendingUp, 
   Medal, 
   RefreshCw, 
-  ExternalLink,
   Table as TableIcon,
   Globe,
-  Database
+  Award
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -71,8 +70,6 @@ const ClassementJoueurs = () => {
   const avgPoints = totalPlayers > 0 
     ? Math.round(players.reduce((acc, p) => acc + p.points, 0) / totalPlayers) 
     : 0;
-  
-  const currentSource = players.length > 0 ? (players[0].source || "Direct FFTT") : "FFTT";
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
@@ -83,7 +80,7 @@ const ClassementJoueurs = () => {
           Classement des Joueurs
         </h1>
         <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto">
-          Joueurs et classements du St Loub Ping (Club N° 10330022).
+          Joueurs et classements officiels du St Loub Ping (Club N° 10330022).
         </p>
       </div>
 
@@ -104,7 +101,7 @@ const ClassementJoueurs = () => {
         <div className="flex justify-center mb-6">
           <TabsList className="bg-clubSection p-1 rounded-xl">
             <TabsTrigger value="live" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-medium text-xs md:text-sm">
-              <TableIcon className="mr-2 h-4 w-4" /> Tableau en Direct API
+              <TableIcon className="mr-2 h-4 w-4" /> Classement du Club
             </TabsTrigger>
             <TabsTrigger value="pingpocket" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-medium text-xs md:text-sm">
               <Globe className="mr-2 h-4 w-4" /> Vue Pingpocket
@@ -112,7 +109,7 @@ const ClassementJoueurs = () => {
           </TabsList>
         </div>
 
-        {/* --- Onglet 1 : Tableau Interactif --- */}
+        {/* --- Onglet 1 : Tableau du Club --- */}
         <TabsContent value="live" className="space-y-6">
           {/* Cartes KPI Statistiques */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -161,9 +158,9 @@ const ClassementJoueurs = () => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
                 <div>
                   <CardTitle className="text-xl md:text-2xl font-bold text-clubDark flex items-center gap-2">
-                    Classement des Licenciés ({filteredPlayers.length})
+                    Classement des Licenciés St Loub Ping ({filteredPlayers.length})
                     <Badge variant="outline" className="text-[10px] border-clubPrimary text-clubPrimary bg-clubPrimary/10">
-                      <Database className="h-3 w-3 mr-1" /> {currentSource}
+                      <Award className="h-3 w-3 mr-1" /> FFTT Officiel
                     </Badge>
                   </CardTitle>
                   <CardDescription className="text-xs md:text-sm text-muted-foreground">
