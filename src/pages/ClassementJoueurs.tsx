@@ -20,9 +20,10 @@ import {
   Table as TableIcon,
   Globe,
   Award,
-  ExternalLink
+  Calendar,
+  CalendarDays,
+  UserCheck
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const ClassementJoueurs = () => {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -30,7 +31,10 @@ const ClassementJoueurs = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
-  const pingpocketRankingLink = "https://www.pingpocket.fr/app/fftt/clubs/10330022/licencies?themeId=redBrick";
+  const pingpocketBase = "https://www.pingpocket.fr/app/fftt/clubs/10330022/licencies?themeId=redBrick";
+  const pingpocketMonthlyLink = `${pingpocketBase}&SORT=MONTHLY_INCREASE`;
+  const pingpocketAnnualLink = `${pingpocketBase}&SORT=SEASON_INCREASE`;
+  const pingpocketCategoryLink = `${pingpocketBase}&SORT=CATEGORY`;
 
   const loadPlayers = async () => {
     setLoading(true);
@@ -81,36 +85,33 @@ const ClassementJoueurs = () => {
           Classement des Joueurs
         </h1>
         <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto">
-          Consultez l'ensemble des 141 licenciés du St Loub Ping (Club N° 10330022).
+          Consultez l'ensemble des 141 licenciés du St Loub Ping (Club N° 10330022) et leurs progressions.
         </p>
       </div>
 
-      {/* Raccourcis de navigation */}
-      <div className="flex flex-wrap justify-center gap-2 mb-8">
-        <Button asChild variant="outline" size="sm" className="border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white text-xs">
-          <Link to="/classement-joueurs/progression-mensuelle">Progression Mensuelle</Link>
-        </Button>
-        <Button asChild variant="outline" size="sm" className="border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white text-xs">
-          <Link to="/classement-joueurs/progression-annuelle">Progression Annuelle</Link>
-        </Button>
-        <Button asChild variant="outline" size="sm" className="border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white text-xs">
-          <Link to="/classement-joueurs/par-categorie-age">Par Catégorie d'Âge</Link>
-        </Button>
-      </div>
-
       <Tabs defaultValue="live" className="w-full">
-        <div className="flex justify-center mb-6">
-          <TabsList className="bg-clubSection p-1 rounded-xl">
-            <TabsTrigger value="live" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-medium text-xs md:text-sm">
-              <TableIcon className="mr-2 h-4 w-4" /> Vue Tableau Filtres
+        {/* Onglets principaux */}
+        <div className="flex justify-center mb-6 overflow-x-auto">
+          <TabsList className="bg-clubSection p-1 rounded-xl flex flex-wrap justify-center gap-1 h-auto">
+            <TabsTrigger value="live" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-medium text-xs md:text-sm py-2 px-3">
+              <TableIcon className="mr-1.5 h-4 w-4" /> Vue Tableau Filtres
             </TabsTrigger>
-            <TabsTrigger value="pingpocket" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-medium text-xs md:text-sm">
-              <Globe className="mr-2 h-4 w-4" /> Liste Officielle Pingpocket (141 Licenciés)
+            <TabsTrigger value="pingpocket" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-medium text-xs md:text-sm py-2 px-3">
+              <Globe className="mr-1.5 h-4 w-4" /> Liste Officielle (141)
+            </TabsTrigger>
+            <TabsTrigger value="mensuelle" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-medium text-xs md:text-sm py-2 px-3">
+              <Calendar className="mr-1.5 h-4 w-4" /> Progression Mensuelle
+            </TabsTrigger>
+            <TabsTrigger value="annuelle" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-medium text-xs md:text-sm py-2 px-3">
+              <TrendingUp className="mr-1.5 h-4 w-4" /> Progression Annuelle
+            </TabsTrigger>
+            <TabsTrigger value="categorie" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-medium text-xs md:text-sm py-2 px-3">
+              <UserCheck className="mr-1.5 h-4 w-4" /> Par Catégorie d'Âge
             </TabsTrigger>
           </TabsList>
         </div>
 
-        {/* --- Onglet 1 : Tableau interactif dynamique (Mise en avant) --- */}
+        {/* --- Onglet 1 : Tableau interactif dynamique --- */}
         <TabsContent value="live" className="space-y-6">
           {/* Cartes KPI Statistiques */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -313,8 +314,98 @@ const ClassementJoueurs = () => {
                   width="100%"
                   height="800"
                   scrolling="auto"
-                  src={pingpocketRankingLink}
+                  src={pingpocketBase}
                   title="Classement officiel des 141 licenciés Pingpocket"
+                >
+                  <p>Votre navigateur ne supporte pas les iframes.</p>
+                </iframe>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* --- Onglet 3 : Progression Mensuelle --- */}
+        <TabsContent value="mensuelle">
+          <Card className="bg-clubLight shadow-lg rounded-xl border border-border">
+            <CardHeader className="text-center pb-2">
+              <CardTitle className="text-2xl font-bold text-clubDark">Progression Mensuelle des Joueurs</CardTitle>
+              <CardDescription className="text-muted-foreground text-xs md:text-sm">
+                Classement par gain de points mensuel via Pingpocket.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden my-4">
+                <small className="block text-right text-xs text-muted-foreground p-2">
+                  powered by <a target="_blank" rel="noopener noreferrer" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary text-clubPrimary">www.pingpocket.fr</a>
+                </small>
+                <iframe
+                  frameBorder="1"
+                  name="pingpocket-monthly-ranking"
+                  width="100%"
+                  height="800"
+                  scrolling="auto"
+                  src={pingpocketMonthlyLink}
+                  title="Progression mensuelle des joueurs Pingpocket"
+                >
+                  <p>Votre navigateur ne supporte pas les iframes.</p>
+                </iframe>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* --- Onglet 4 : Progression Annuelle --- */}
+        <TabsContent value="annuelle">
+          <Card className="bg-clubLight shadow-lg rounded-xl border border-border">
+            <CardHeader className="text-center pb-2">
+              <CardTitle className="text-2xl font-bold text-clubDark">Progression Annuelle (Saison)</CardTitle>
+              <CardDescription className="text-muted-foreground text-xs md:text-sm">
+                Classement par gain de points sur l'ensemble de la saison via Pingpocket.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden my-4">
+                <small className="block text-right text-xs text-muted-foreground p-2">
+                  powered by <a target="_blank" rel="noopener noreferrer" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary text-clubPrimary">www.pingpocket.fr</a>
+                </small>
+                <iframe
+                  frameBorder="1"
+                  name="pingpocket-annual-ranking"
+                  width="100%"
+                  height="800"
+                  scrolling="auto"
+                  src={pingpocketAnnualLink}
+                  title="Progression annuelle des joueurs Pingpocket"
+                >
+                  <p>Votre navigateur ne supporte pas les iframes.</p>
+                </iframe>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* --- Onglet 5 : Par Catégorie d'Âge --- */}
+        <TabsContent value="categorie">
+          <Card className="bg-clubLight shadow-lg rounded-xl border border-border">
+            <CardHeader className="text-center pb-2">
+              <CardTitle className="text-2xl font-bold text-clubDark">Licenciés par Catégorie d'Âge</CardTitle>
+              <CardDescription className="text-muted-foreground text-xs md:text-sm">
+                Classement trié par tranches d'âge (Jeunes à Vétérans) via Pingpocket.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden my-4">
+                <small className="block text-right text-xs text-muted-foreground p-2">
+                  powered by <a target="_blank" rel="noopener noreferrer" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary text-clubPrimary">www.pingpocket.fr</a>
+                </small>
+                <iframe
+                  frameBorder="1"
+                  name="pingpocket-category-ranking"
+                  width="100%"
+                  height="800"
+                  scrolling="auto"
+                  src={pingpocketCategoryLink}
+                  title="Licenciés par catégorie d'âge Pingpocket"
                 >
                   <p>Votre navigateur ne supporte pas les iframes.</p>
                 </iframe>
