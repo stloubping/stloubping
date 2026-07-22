@@ -9,6 +9,16 @@ export interface NewsItem {
 }
 
 export const allNewsItems: NewsItem[] = [
+  // 0️⃣ Dernier stage de la saison 2025-2026
+  {
+    id: 801,
+    title: "Retour sur le dernier stage de la saison 2025-2026 !",
+    date: "Juillet 2026",
+    location: "Salle du club - Saint-Loubès",
+    description: "La semaine dernière s'est déroulé le dernier stage de la saison 2025-2026, 21 joueurs y ont participé sur un ou plusieurs jours avec la moitié issu du groupe jeunes compétiteurs et l'autre moitié des différents groupes loisirs.\n\nAu programme, du travail technique et tactique sur les matinées avec notamment beaucoup de panier de balles, des jeux de société sur les pauses déjeuners, un exercice physique par équipes en début d'après-midi suivi de différentes formules compétitives.\n\nLa journée du jeudi après-midi a permis ainsi par exemple de réaliser une compétition sur multi-tables (ultimate, z-ping, mini-table, camion, fleuve ...) et le vendredi le stage s'est terminé avec le traditionnel match en 11 manches gagnantes suivi d'un goûter partagé avec l'ensemble des stagiaires pour clôturer cette saison.\n\nNous souhaitons à tous nos joueurs un très bel été, de quoi se reposer et revenir en pleine forme à la rentrée.",
+    link: "#",
+    image: "/images/actualites/stage-fin-saison-2026-1.jpg",
+  },
   // 1️⃣ Annonce de la nouvelle saison 2026-2027
   {
     id: 701,
