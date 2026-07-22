@@ -8,7 +8,40 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, CreditCard, Users, ShieldCheck } from 'lucide-react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ChevronDown, CreditCard, Users, ShieldCheck, HelpCircle } from 'lucide-react';
+
+const faqItems = [
+  {
+    question: "Puis-je effectuer des séances d'essai gratuites avant de m'inscrire ?",
+    answer: "Oui, tout à fait ! Le club vous propose 2 séances d'essai gratuites en début de saison. Il vous suffit de vous présenter au gymnase lors d'un créneau adapté à votre catégorie pour tester l'ambiance et les entraînements."
+  },
+  {
+    question: "Quelle est la différence entre la licence Loisir et la licence Compétition ?",
+    answer: "La licence Loisir vous donne accès aux entraînements (libres ou dirigés) et aux compétitions amicales ou départementales d'animation. La licence Compétition vous permet en plus de participer aux championnats officiels FFTT par équipes le week-end, ainsi qu'aux tournois individuels régionaux et au Critérium Fédéral."
+  },
+  {
+    question: "À partir de quel âge mon enfant peut-il s'inscrire ?",
+    answer: "Nous accueillons les enfants dès l'âge de 6 ans (section Jeunes Débutants / Loisirs Primaire). Des groupes de niveau sont ensuite constitués pour garantir une progression ludique et adaptée."
+  },
+  {
+    question: "Faut-il apporter sa propre raquette ?",
+    answer: "Pour les séances d'essai, le club peut vous prêter une raquette. Pour la suite de la saison, il est recommandé d'acquérir votre propre raquette. Nos entraîneurs et membres du bureau sont à votre disposition pour vous conseiller selon votre style de jeu et votre budget."
+  },
+  {
+    question: "Quels sont les moyens de paiement acceptés et existe-t-il des aides ?",
+    answer: "Nous acceptons les règlements par carte bancaire, virement, chèque (possibilité de paiement en plusieurs fois), chèques ANCV / Coupons Sport, ainsi que le Pass'Sport du gouvernement. De plus, une réduction dégressive est appliquée si plusieurs membres d'une même famille s'inscrivent."
+  },
+  {
+    question: "Le certificat médical est-il obligatoire ?",
+    answer: "Pour les mineurs, le questionnaire de santé annuel suffit dans la majorité des cas. Pour les majeurs, la présentation d'un certificat médical est requise lors de la première souscription d'une licence compétition ou en cas de réponse positive au questionnaire de santé officiel."
+  }
+];
 
 const Adhesions = () => {
   const { openLightbox } = useLightbox();
@@ -150,6 +183,31 @@ const Adhesions = () => {
                 </ul>
               </div>
             </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Foire Aux Questions (FAQ) */}
+      <section className="mb-12">
+        <Card className="bg-clubLight shadow-lg rounded-xl border border-border">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl text-clubDark flex items-center justify-center gap-2">
+              <HelpCircle className="text-clubPrimary h-6 w-6" /> Questions Fréquentes (FAQ)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="max-w-3xl mx-auto">
+            <Accordion type="single" collapsible className="w-full">
+              {faqItems.map((item, index) => (
+                <AccordionItem key={index} value={`item-${index}`} className="border-b-border">
+                  <AccordionTrigger className="text-left font-semibold text-clubDark hover:text-clubPrimary py-4">
+                    {item.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-clubLight-foreground text-sm leading-relaxed pb-4">
+                    {item.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </CardContent>
         </Card>
       </section>
