@@ -98,13 +98,13 @@ export const competitions20262027: CompetitionEvent[] = [
     location: "Régional & Départemental"
   },
   {
-    id: "p1-jeunes-j3",
+    id: "p1-crit2",
     date: "2026-11-14",
     endDate: "2026-11-15",
-    title: "Championnat Jeunes - Journée 3",
-    category: "youth",
+    title: "Critérium Fédéral - 2ème Tour",
+    category: "criterium",
     phase: "Phase 1",
-    location: "Gironde"
+    location: "Nationale, Régionale & Départementale"
   },
   {
     id: "p1-j5",
@@ -114,15 +114,6 @@ export const competitions20262027: CompetitionEvent[] = [
     category: "teams",
     phase: "Phase 1",
     location: "Régional & Départemental"
-  },
-  {
-    id: "p1-crit2",
-    date: "2026-11-28",
-    endDate: "2026-11-29",
-    title: "Critérium Fédéral - 2ème Tour",
-    category: "criterium",
-    phase: "Phase 1",
-    location: "Nationale, Régionale & Départementale"
   },
 
   // --- DÉCEMBRE 2026 ---
@@ -154,7 +145,7 @@ export const competitions20262027: CompetitionEvent[] = [
     details: "Compétition amicale festive pour tous les adhérents."
   },
 
-  // --- PHASE 2 (DATES OFFICIELLES CORRIGÉES) ---
+  // --- JANVIER 2027 ---
   {
     id: "p2-jeunes-j1",
     date: "2027-01-09",
@@ -192,6 +183,8 @@ export const competitions20262027: CompetitionEvent[] = [
     phase: "Phase 2",
     location: "Nationale, Régionale & Départementale"
   },
+
+  // --- FÉVRIER 2027 ---
   {
     id: "p2-j3",
     date: "2027-02-06",
@@ -201,6 +194,8 @@ export const competitions20262027: CompetitionEvent[] = [
     phase: "Phase 2",
     location: "Régional & Départemental"
   },
+
+  // --- MARS 2027 ---
   {
     id: "p2-crit4",
     date: "2027-03-06",
@@ -208,7 +203,8 @@ export const competitions20262027: CompetitionEvent[] = [
     title: "Critérium Fédéral - 4ème Tour",
     category: "criterium",
     phase: "Phase 2",
-    location: "Nationale, Régionale & Départementale"
+    location: "Nationale, Régionale & Départementale",
+    details: "Dernier tour du Critérium Fédéral individuel de la saison."
   },
   {
     id: "p2-j4",
@@ -228,6 +224,8 @@ export const competitions20262027: CompetitionEvent[] = [
     location: "Saint-Loubès",
     details: "Animation découverte pour les débutants et écoles."
   },
+
+  // --- AVRIL 2027 ---
   {
     id: "p2-j5",
     date: "2027-04-10",
@@ -246,6 +244,8 @@ export const competitions20262027: CompetitionEvent[] = [
     location: "Gymnase de Saint-Loubès",
     details: "Grand évènement annuel homologué avec 7 tableaux et petite restauration."
   },
+
+  // --- MAI 2027 ---
   {
     id: "p2-j6",
     date: "2027-05-22",
@@ -265,6 +265,8 @@ export const competitions20262027: CompetitionEvent[] = [
     location: "Régional & Départemental",
     details: "Dernière journée officielle de Phase 2."
   },
+
+  // --- JUIN 2027 ---
   {
     id: "p2-titres-dep",
     date: "2027-06-05",
