@@ -9,13 +9,17 @@ export interface Player {
   cat: string;
   rang?: string;
   source?: string;
+  valinit?: number;
+  valmen?: number;
+  progmens?: number;
+  progans?: number;
 }
 
 const APP_ID = "SX046";
 const APP_PASSWORD = "NQC2rNs85g";
 const CLUB_NUMBER = "10330022";
-const CACHE_KEY = "stloub_club_141_members_cache_v4";
-const CACHE_TIME_KEY = "stloub_club_141_members_time_v4";
+const CACHE_KEY = "stloub_club_141_members_cache_v5";
+const CACHE_TIME_KEY = "stloub_club_141_members_time_v5";
 const CACHE_DURATION_MS = 1000 * 60 * 60 * 12; // 12h cache
 
 function getTimestamp(): string {
@@ -97,7 +101,7 @@ async function fetchFreshClubMembers(): Promise<Player[]> {
       fetchPromises.push(
         (async () => {
           const proxyUrl = makeProxy(targetUrl);
-          const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(3000) });
+          const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(4000) });
           if (!res.ok) throw new Error("HTTP error");
           const xmlText = await res.text();
           const players = parseSmartpingXml(xmlText);
@@ -135,6 +139,25 @@ function parseSmartpingXml(xmlText: string): Player[] {
     const cat = getVal("cat");
     const rang = getVal("rang") || getVal("clast_glo");
 
+    // Extraction des vraies valeurs de début de période FFTT
+    const valinitStr = getVal("valinit");
+    const valmenStr = getVal("valmen");
+    const progmensStr = getVal("progmens");
+    const progansStr = getVal("progans");
+
+    const valinit = valinitStr ? parseFloat(valinitStr) : undefined;
+    const valmen = valmenStr ? parseFloat(valmenStr) : undefined;
+
+    let progmens = progmensStr ? parseFloat(progmensStr) : undefined;
+    if (progmens === undefined && valmen !== undefined) {
+      progmens = points - valmen;
+    }
+
+    let progans = progansStr ? parseFloat(progansStr) : undefined;
+    if (progans === undefined && valinit !== undefined) {
+      progans = points - valinit;
+    }
+
     if (nom || prenom) {
       players.push({
         licence,
@@ -144,6 +167,10 @@ function parseSmartpingXml(xmlText: string): Player[] {
         clast,
         cat,
         rang,
+        valinit,
+        valmen,
+        progmens,
+        progans,
         source: "FFTT Officiel",
       });
     }

@@ -25,7 +25,8 @@ import {
   Zap,
   Sparkles,
   BarChart3,
-  ArrowUpRight
+  ArrowUpRight,
+  ExternalLink
 } from 'lucide-react';
 
 const ClassementJoueurs = () => {
@@ -33,6 +34,16 @@ const ClassementJoueurs = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [viewMode, setViewMode] = useState<Record<string, 'native' | 'pingpocket'>>({
+    mensuelle: 'native',
+    annuelle: 'native',
+    categorie: 'native',
+  });
+
+  const pingpocketBase = "https://www.pingpocket.fr/app/fftt/clubs/10330022/licencies?themeId=redBrick";
+  const pingpocketMonthlyLink = `${pingpocketBase}&SORT=MONTHLY_INCREASE`;
+  const pingpocketAnnualLink = `${pingpocketBase}&SORT=SEASON_INCREASE`;
+  const pingpocketCategoryLink = `${pingpocketBase}&SORT=CATEGORY`;
 
   const loadPlayers = async () => {
     setLoading(true);
@@ -44,6 +55,13 @@ const ClassementJoueurs = () => {
   useEffect(() => {
     loadPlayers();
   }, []);
+
+  const toggleViewMode = (tabKey: string) => {
+    setViewMode(prev => ({
+      ...prev,
+      [tabKey]: prev[tabKey] === 'native' ? 'pingpocket' : 'native'
+    }));
+  };
 
   const categoriesList = useMemo(() => {
     const setCat = new Set<string>();
@@ -68,6 +86,14 @@ const ClassementJoueurs = () => {
     });
   }, [players, searchQuery, selectedCategory]);
 
+  const monthlySortedPlayers = useMemo(() => {
+    return [...filteredPlayers].sort((a, b) => (b.progmens || 0) - (a.progmens || 0));
+  }, [filteredPlayers]);
+
+  const annualSortedPlayers = useMemo(() => {
+    return [...filteredPlayers].sort((a, b) => (b.progans || 0) - (a.progans || 0));
+  }, [filteredPlayers]);
+
   const groupedByCat = useMemo(() => {
     const groups: Record<string, Player[]> = {};
     filteredPlayers.forEach(p => {
@@ -84,14 +110,14 @@ const ClassementJoueurs = () => {
     ? Math.round(players.reduce((acc, p) => acc + p.points, 0) / players.length) 
     : 0;
 
-  const renderTableHead = (showProgressionColumn = false) => (
+  const renderTableHead = (progressionType?: 'mens' | 'ans') => (
     <TableHeader>
       <TableRow className="bg-clubDark hover:bg-clubDark">
         <TableHead className="text-white font-bold text-center w-[50px] text-xs">Rang</TableHead>
         <TableHead className="text-white font-bold text-xs">Joueur</TableHead>
         <TableHead className="text-white font-bold text-center text-xs">Points FFTT</TableHead>
-        {showProgressionColumn && (
-          <TableHead className="text-white font-bold text-center text-xs">Progression</TableHead>
+        {progressionType && (
+          <TableHead className="text-white font-bold text-center text-xs">Progression {progressionType === 'mens' ? 'Mois' : 'Saison'}</TableHead>
         )}
         <TableHead className="text-white font-bold text-center text-xs hidden sm:table-cell">Clast Officiel</TableHead>
         <TableHead className="text-white font-bold text-center text-xs hidden md:table-cell">Catégorie</TableHead>
@@ -100,12 +126,12 @@ const ClassementJoueurs = () => {
     </TableHeader>
   );
 
-  const renderPlayerRow = (player: Player, index: number, showProgression = false, customGain?: number) => {
+  const renderPlayerRow = (player: Player, index: number, progressionType?: 'mens' | 'ans') => {
     const rank = players.findIndex(p => p.licence === player.licence) + 1;
     const isTop3 = rank <= 3 && rank > 0;
-    
-    // Détermination d'un gain simulé basé sur les points si non fourni
-    const gain = customGain !== undefined ? customGain : Math.floor((player.points % 47) + 3);
+
+    const gainVal = progressionType === 'mens' ? player.progmens : player.progans;
+    const hasGain = gainVal !== undefined && gainVal !== null;
 
     return (
       <TableRow 
@@ -122,7 +148,7 @@ const ClassementJoueurs = () => {
           ) : rank === 3 ? (
             <span className="inline-flex items-center justify-center bg-amber-600 text-white font-extrabold h-6 w-6 rounded-full text-xs shadow-sm">3</span>
           ) : (
-            <span className="text-muted-foreground">{rank > 0 ? rank : index + 1}</span>
+            <span className="text-muted-foreground">{index + 1}</span>
           )}
         </TableCell>
 
@@ -134,11 +160,20 @@ const ClassementJoueurs = () => {
           {player.points} pts
         </TableCell>
 
-        {showProgression && (
-          <TableCell className="text-center text-xs md:text-sm font-bold text-emerald-600">
-            <span className="inline-flex items-center justify-center gap-0.5 bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">
-              <ArrowUpRight className="h-3 w-3" /> +{gain} pts
-            </span>
+        {progressionType && (
+          <TableCell className="text-center text-xs md:text-sm font-bold">
+            {hasGain ? (
+              <span className={`inline-flex items-center justify-center gap-0.5 px-2 py-0.5 rounded-full border ${
+                gainVal >= 0 
+                  ? "bg-emerald-50 text-emerald-700 border-emerald-200" 
+                  : "bg-red-50 text-red-700 border-red-200"
+              }`}>
+                {gainVal >= 0 ? <ArrowUpRight className="h-3 w-3" /> : null}
+                {gainVal > 0 ? `+${gainVal}` : gainVal} pts
+              </span>
+            ) : (
+              <span className="text-xs text-muted-foreground font-normal">Officiel sur Pingpocket</span>
+            )}
           </TableCell>
         )}
 
@@ -164,6 +199,28 @@ const ClassementJoueurs = () => {
       </TableRow>
     );
   };
+
+  const renderPingpocketIframe = (srcUrl: string, title: string) => (
+    <div className="w-full max-w-2xl mx-auto border border-border rounded-xl overflow-hidden my-4 shadow-sm bg-white">
+      <div className="bg-clubSection/60 p-2 text-right border-b border-border">
+        <small className="text-xs text-muted-foreground">
+          powered by <a target="_blank" rel="noopener noreferrer" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary font-semibold text-clubPrimary">www.pingpocket.fr</a>
+        </small>
+      </div>
+      <iframe
+        frameBorder="0"
+        name="pingpocket-frame"
+        width="100%"
+        height="800"
+        scrolling="auto"
+        src={srcUrl}
+        title={title}
+        className="w-full"
+      >
+        <p>Votre navigateur ne supporte pas les iframes.</p>
+      </iframe>
+    </div>
+  );
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
@@ -430,7 +487,7 @@ const ClassementJoueurs = () => {
                   <Zap className="h-4 w-4 text-yellow-400" /> Bilan
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-bold text-white">
-                  Points Gagnés
+                  Points Mensuels FFTT
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -438,10 +495,10 @@ const ClassementJoueurs = () => {
             <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
               <CardHeader className="p-4 pb-2">
                 <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <BarChart3 className="h-4 w-4 text-emerald-400" /> Évolution
+                  <BarChart3 className="h-4 w-4 text-emerald-400" /> Source
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-extrabold text-emerald-400">
-                  Forme du Moment
+                  {viewMode.mensuelle === 'native' ? 'Tableau Natif' : 'Pingpocket Direct'}
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -455,12 +512,26 @@ const ClassementJoueurs = () => {
                     Classement par Progression Mensuelle
                   </CardTitle>
                   <CardDescription className="text-xs md:text-sm text-muted-foreground">
-                    Liste triée par la dynamique récente et les gains de points mensuels.
+                    Consultez la dynamique du mois via notre tableau natif ou directement via l'intégration officielle Pingpocket.
                   </CardDescription>
                 </div>
 
-                <div className="relative w-full sm:w-72">
-                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={() => toggleViewMode('mensuelle')}
+                    variant="outline"
+                    size="sm"
+                    className="border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white text-xs"
+                  >
+                    <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                    {viewMode.mensuelle === 'native' ? "Activer Vue Pingpocket Direct" : "Afficher Tableau Natif"}
+                  </Button>
+                </div>
+              </div>
+
+              {viewMode.mensuelle === 'native' && (
+                <div className="relative w-full sm:w-72 pt-2">
+                  <Search className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder="Rechercher un joueur..."
@@ -469,11 +540,13 @@ const ClassementJoueurs = () => {
                     className="pl-9 bg-input border-clubPrimary/40 text-xs md:text-sm text-clubDark rounded-lg"
                   />
                 </div>
-              </div>
+              )}
             </CardHeader>
 
             <CardContent className="p-0 md:p-6 pt-2">
-              {loading ? (
+              {viewMode.mensuelle === 'pingpocket' ? (
+                renderPingpocketIframe(pingpocketMonthlyLink, "Progression mensuelle Pingpocket")
+              ) : loading ? (
                 <div className="flex flex-col items-center justify-center py-16">
                   <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
                   <p className="text-sm font-semibold text-clubDark">Chargement des progressions mensuelles...</p>
@@ -481,9 +554,9 @@ const ClassementJoueurs = () => {
               ) : (
                 <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
                   <Table className="min-w-full">
-                    {renderTableHead(true)}
+                    {renderTableHead('mens')}
                     <TableBody>
-                      {filteredPlayers.map((player, index) => renderPlayerRow(player, index, true))}
+                      {monthlySortedPlayers.map((player, index) => renderPlayerRow(player, index, 'mens'))}
                     </TableBody>
                   </Table>
                 </div>
@@ -514,7 +587,7 @@ const ClassementJoueurs = () => {
                   <Trophy className="h-4 w-4 text-yellow-400" /> Objectif
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-bold text-white">
-                  Palmarès de la Saison
+                  Palmarès Annuel
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -522,10 +595,10 @@ const ClassementJoueurs = () => {
             <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
               <CardHeader className="p-4 pb-2">
                 <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Sparkles className="h-4 w-4 text-emerald-400" /> Évolution
+                  <Sparkles className="h-4 w-4 text-emerald-400" /> Source
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-extrabold text-emerald-400">
-                  Progression Globale
+                  {viewMode.annuelle === 'native' ? 'Tableau Natif' : 'Pingpocket Direct'}
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -543,8 +616,22 @@ const ClassementJoueurs = () => {
                   </CardDescription>
                 </div>
 
-                <div className="relative w-full sm:w-72">
-                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={() => toggleViewMode('annuelle')}
+                    variant="outline"
+                    size="sm"
+                    className="border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white text-xs"
+                  >
+                    <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                    {viewMode.annuelle === 'native' ? "Activer Vue Pingpocket Direct" : "Afficher Tableau Natif"}
+                  </Button>
+                </div>
+              </div>
+
+              {viewMode.annuelle === 'native' && (
+                <div className="relative w-full sm:w-72 pt-2">
+                  <Search className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder="Rechercher un joueur..."
@@ -553,11 +640,13 @@ const ClassementJoueurs = () => {
                     className="pl-9 bg-input border-clubPrimary/40 text-xs md:text-sm text-clubDark rounded-lg"
                   />
                 </div>
-              </div>
+              )}
             </CardHeader>
 
             <CardContent className="p-0 md:p-6 pt-2">
-              {loading ? (
+              {viewMode.annuelle === 'pingpocket' ? (
+                renderPingpocketIframe(pingpocketAnnualLink, "Progression annuelle Pingpocket")
+              ) : loading ? (
                 <div className="flex flex-col items-center justify-center py-16">
                   <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
                   <p className="text-sm font-semibold text-clubDark">Chargement des progressions annuelles...</p>
@@ -565,12 +654,9 @@ const ClassementJoueurs = () => {
               ) : (
                 <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
                   <Table className="min-w-full">
-                    {renderTableHead(true)}
+                    {renderTableHead('ans')}
                     <TableBody>
-                      {filteredPlayers.map((player, index) => {
-                        const annualGain = Math.floor((player.points % 120) + 15);
-                        return renderPlayerRow(player, index, true, annualGain);
-                      })}
+                      {annualSortedPlayers.map((player, index) => renderPlayerRow(player, index, 'ans'))}
                     </TableBody>
                   </Table>
                 </div>
@@ -609,10 +695,10 @@ const ClassementJoueurs = () => {
             <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
               <CardHeader className="p-4 pb-2">
                 <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Award className="h-4 w-4 text-emerald-400" /> Homogénéité
+                  <Award className="h-4 w-4 text-emerald-400" /> Source
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-extrabold text-emerald-400">
-                  Tous Niveaux
+                  {viewMode.categorie === 'native' ? 'Tableau Natif' : 'Pingpocket Direct'}
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -630,8 +716,22 @@ const ClassementJoueurs = () => {
                   </CardDescription>
                 </div>
 
-                <div className="relative w-full sm:w-72">
-                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={() => toggleViewMode('categorie')}
+                    variant="outline"
+                    size="sm"
+                    className="border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white text-xs"
+                  >
+                    <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                    {viewMode.categorie === 'native' ? "Activer Vue Pingpocket Direct" : "Afficher Tableau Natif"}
+                  </Button>
+                </div>
+              </div>
+
+              {viewMode.categorie === 'native' && (
+                <div className="relative w-full sm:w-72 pt-2">
+                  <Search className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder="Filtrer par nom..."
@@ -640,11 +740,13 @@ const ClassementJoueurs = () => {
                     className="pl-9 bg-input border-clubPrimary/40 text-xs md:text-sm text-clubDark rounded-lg"
                   />
                 </div>
-              </div>
+              )}
             </CardHeader>
 
             <CardContent className="p-4 md:p-6 space-y-8">
-              {loading ? (
+              {viewMode.categorie === 'pingpocket' ? (
+                renderPingpocketIframe(pingpocketCategoryLink, "Licenciés par catégorie Pingpocket")
+              ) : loading ? (
                 <div className="flex flex-col items-center justify-center py-16">
                   <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
                   <p className="text-sm font-semibold text-clubDark">Chargement des catégories d'âge...</p>
