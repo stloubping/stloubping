@@ -5,6 +5,10 @@ const APP_PASSWORD = "NQC2rNs85g";
 const CLUB_NUMBER = "10330022";
 const SERIE = "STLBP2025PLAY1";
 
+const CACHE_KEY = "stloub_players_cache_v2";
+const CACHE_TIME_KEY = "stloub_players_cache_time_v2";
+const CACHE_DURATION_MS = 1000 * 60 * 60 * 6; // Cache valide 6 heures
+
 export interface Player {
   licence: string;
   nom: string;
@@ -57,58 +61,119 @@ const defaultClubPlayers: Player[] = [
   { licence: "3334005", nom: "LABORDE", prenom: "Yann", points: 500, clast: "5", cat: "S", source: "Base St Loub Ping" },
 ];
 
+function getCachedPlayers(): Player[] | null {
+  try {
+    const cachedData = localStorage.getItem(CACHE_KEY);
+    const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
+    if (cachedData && cachedTime) {
+      const age = Date.now() - parseInt(cachedTime, 10);
+      if (age < CACHE_DURATION_MS) {
+        return JSON.parse(cachedData);
+      }
+    }
+  } catch (e) {
+    // Ignorer les erreurs de localStorage
+  }
+  return null;
+}
+
+function savePlayersToCache(players: Player[]) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify(players));
+    localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+  } catch (e) {
+    // Ignorer les erreurs d'écriture
+  }
+}
+
 export async function fetchClubPlayers(): Promise<Player[]> {
+  // 1. Retourner le cache instantanément s'il existe
+  const cached = getCachedPlayers();
+  if (cached && cached.length > 0) {
+    // Lancer la mise à jour en arrière-plan sans bloquer
+    refreshInBackground();
+    return cached;
+  }
+
+  // 2. Sinon récupérer le classement avec des requêtes rapides en parallèle
+  const freshPlayers = await fetchFreshPlayers();
+  if (freshPlayers.length > 0) {
+    savePlayersToCache(freshPlayers);
+    return freshPlayers;
+  }
+
+  // 3. Fallback immédiat si le réseau/proxies ne répondent pas rapidement
+  const fallback = defaultClubPlayers.sort((a, b) => b.points - a.points);
+  savePlayersToCache(fallback);
+  return fallback;
+}
+
+async function refreshInBackground() {
+  try {
+    const fresh = await fetchFreshPlayers();
+    if (fresh.length > 0) {
+      savePlayersToCache(fresh);
+    }
+  } catch (e) {
+    // Silencieux en arrière-plan
+  }
+}
+
+async function fetchFreshPlayers(): Promise<Player[]> {
   const tm = getTimestamp();
   const tmc = generateHash(tm);
 
-  const ffttUrls = [
+  const targetUrls = [
     `https://www.fftt.com/mobile/pxml/xml_joueur.php?id=${APP_ID}&serie=${SERIE}&tm=${tm}&tmc=${tmc}&club=${CLUB_NUMBER}`,
     `https://www.fftt.com/mobile/pxml/xml_licence_b.php?id=${APP_ID}&serie=${SERIE}&tm=${tm}&tmc=${tmc}&club=${CLUB_NUMBER}`
   ];
 
-  const corsProxies = [
+  const proxies = [
     (u: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
     (u: string) => `https://corsproxy.io/?${encodeURIComponent(u)}`,
     (u: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`
   ];
 
-  // 1. Essai direct / proxies sur FFTT Smartping XML
-  for (const baseUrl of ffttUrls) {
-    for (const makeProxy of corsProxies) {
-      try {
-        const proxyUrl = makeProxy(baseUrl);
-        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(4000) });
-        if (res.ok) {
+  // Exécution parallèle des requêtes FFTT avec timeout court (1.8s)
+  const fetchPromises: Promise<Player[]>[] = [];
+
+  for (const url of targetUrls) {
+    for (const makeProxy of proxies) {
+      fetchPromises.push(
+        (async () => {
+          const proxyUrl = makeProxy(url);
+          const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(1800) });
+          if (!res.ok) throw new Error("HTTP Error");
           const xml = await res.text();
           const players = parsePlayersFromXml(xml);
-          if (players.length > 0) {
-            return players;
-          }
-        }
-      } catch (e) {
-        // Ignorer et essayer le suivant
-      }
+          if (players.length === 0) throw new Error("No players");
+          return players;
+        })()
+      );
     }
   }
 
-  // 2. Essai d'extraction depuis la page Pingpocket du club
-  try {
-    const pingpocketUrl = `https://www.pingpocket.fr/app/fftt/clubs/${CLUB_NUMBER}/licencies`;
-    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(pingpocketUrl)}`;
-    const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(4000) });
-    if (res.ok) {
+  // Requête alternative Pingpocket en parallèle
+  fetchPromises.push(
+    (async () => {
+      const pingpocketUrl = `https://www.pingpocket.fr/app/fftt/clubs/${CLUB_NUMBER}/licencies`;
+      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(pingpocketUrl)}`;
+      const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(1800) });
+      if (!res.ok) throw new Error("HTTP Error");
       const html = await res.text();
-      const parsedPingpocket = parsePingpocketHtml(html);
-      if (parsedPingpocket.length > 0) {
-        return parsedPingpocket;
-      }
-    }
-  } catch (e) {
-    console.warn("Échec parsing Pingpocket HTML, utilisation des données du club.", e);
-  }
+      const players = parsePingpocketHtml(html);
+      if (players.length === 0) throw new Error("No players");
+      return players;
+    })()
+  );
 
-  // 3. Fallback complet sur les données du St Loub Ping
-  return defaultClubPlayers.sort((a, b) => b.points - a.points);
+  try {
+    // Récupérer le premier résultat concluant qui répond le plus vite
+    const fastestResult = await Promise.any(fetchPromises);
+    return fastestResult;
+  } catch (e) {
+    return [];
+  }
 }
 
 function parsePlayersFromXml(xml: string): Player[] {
