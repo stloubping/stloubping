@@ -3,7 +3,7 @@ export interface CompetitionEvent {
   date: string; // Format ISO YYYY-MM-DD
   endDate?: string;
   title: string;
-  category: 'teams' | 'criterium' | 'individual' | 'youth' | 'leisure' | 'club';
+  category: 'teams' | 'criterium' | 'criteriumGironde' | 'individual' | 'youth' | 'leisure' | 'club';
   phase?: 'Phase 1' | 'Phase 2';
   location?: string;
   details?: string;
@@ -12,6 +12,7 @@ export interface CompetitionEvent {
 export const categoryLabels: Record<CompetitionEvent['category'], { label: string; color: string }> = {
   teams: { label: "Championnat par Équipes", color: "bg-blue-600 text-white" },
   criterium: { label: "Critérium Fédéral", color: "bg-purple-600 text-white" },
+  criteriumGironde: { label: "Critérium de Gironde", color: "bg-indigo-600 text-white" },
   individual: { label: "Finales par Classement", color: "bg-amber-600 text-white" },
   youth: { label: "Compétitions Jeunes", color: "bg-emerald-600 text-white" },
   leisure: { label: "Loisirs", color: "bg-teal-600 text-white" },
@@ -24,7 +25,7 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "cg-j1",
     date: "2026-09-11",
     title: "Critérium de Gironde - J1",
-    category: "criterium",
+    category: "criteriumGironde",
     location: "Gironde",
     details: "Licences promotionnelles ou traditionnelles (Coeff. 0,75)"
   },
@@ -32,7 +33,7 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "cg-j2",
     date: "2026-09-25",
     title: "Critérium de Gironde - J2",
-    category: "criterium",
+    category: "criteriumGironde",
     location: "Gironde",
     details: "Licences promotionnelles ou traditionnelles (Coeff. 0,75)"
   },
@@ -40,7 +41,7 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "cg-j3",
     date: "2026-10-09",
     title: "Critérium de Gironde - J3",
-    category: "criterium",
+    category: "criteriumGironde",
     location: "Gironde",
     details: "Licences promotionnelles ou traditionnelles (Coeff. 0,75)"
   },
@@ -48,7 +49,7 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "cg-j4",
     date: "2026-11-13",
     title: "Critérium de Gironde - J4",
-    category: "criterium",
+    category: "criteriumGironde",
     location: "Gironde",
     details: "Licences promotionnelles ou traditionnelles (Coeff. 0,75)"
   },
@@ -56,7 +57,7 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "cg-j5",
     date: "2026-11-27",
     title: "Critérium de Gironde - J5",
-    category: "criterium",
+    category: "criteriumGironde",
     location: "Gironde",
     details: "Licences promotionnelles ou traditionnelles (Coeff. 0,75)"
   },
@@ -64,7 +65,7 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "cg-j6",
     date: "2026-12-18",
     title: "Critérium de Gironde - J6",
-    category: "criterium",
+    category: "criteriumGironde",
     location: "Gironde",
     details: "Licences promotionnelles ou traditionnelles (Coeff. 0,75)"
   },
@@ -72,7 +73,7 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "cg-j7",
     date: "2027-01-08",
     title: "Critérium de Gironde - J7",
-    category: "criterium",
+    category: "criteriumGironde",
     location: "Gironde",
     details: "Licences promotionnelles ou traditionnelles (Coeff. 0,75)"
   },
@@ -80,7 +81,7 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "cg-j8",
     date: "2027-01-28",
     title: "Critérium de Gironde - J8",
-    category: "criterium",
+    category: "criteriumGironde",
     location: "Gironde",
     details: "Licences promotionnelles ou traditionnelles (Coeff. 0,75)"
   },
@@ -88,7 +89,7 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "cg-j9",
     date: "2027-03-05",
     title: "Critérium de Gironde - J9",
-    category: "criterium",
+    category: "criteriumGironde",
     location: "Gironde",
     details: "Licences promotionnelles ou traditionnelles (Coeff. 0,75)"
   },
@@ -96,7 +97,7 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "cg-j10",
     date: "2027-03-26",
     title: "Critérium de Gironde - J10",
-    category: "criterium",
+    category: "criteriumGironde",
     location: "Gironde",
     details: "Licences promotionnelles ou traditionnelles (Coeff. 0,75)"
   },
@@ -104,7 +105,7 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "cg-demis",
     date: "2027-05-14",
     title: "Critérium de Gironde - ½ Finales",
-    category: "criterium",
+    category: "criteriumGironde",
     location: "Gironde",
     details: "Licences promotionnelles ou traditionnelles (Coeff. 0,75)"
   },
@@ -112,7 +113,7 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "cg-finales",
     date: "2027-06-18",
     title: "Critérium de Gironde - Finales",
-    category: "criterium",
+    category: "criteriumGironde",
     location: "Gironde",
     details: "Licences promotionnelles ou traditionnelles (Coeff. 0,75)"
   },
