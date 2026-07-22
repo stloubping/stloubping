@@ -18,6 +18,61 @@ export const categoryLabels: Record<CompetitionEvent['category'], { label: strin
 };
 
 export const competitions20262027: CompetitionEvent[] = [
+  // --- TOURNOI GRAND PRIX CONSEIL DÉPARTEMENTAL ---
+  {
+    id: "gp-cd-t1",
+    date: "2025-11-08",
+    endDate: "2025-11-09",
+    title: "Grand Prix Conseil Départemental - Tour 1",
+    category: "youth",
+    location: "Gironde",
+    details: "Indiv. jeunes et féminines (licences promo ou tradi - Coeff. 0,5)"
+  },
+  {
+    id: "gp-cd-t2",
+    date: "2025-12-06",
+    endDate: "2025-12-07",
+    title: "Grand Prix Conseil Départemental - Tour 2",
+    category: "youth",
+    location: "Gironde",
+    details: "Indiv. jeunes et féminines (licences promo ou tradi - Coeff. 0,5)"
+  },
+  {
+    id: "gp-cd-t3",
+    date: "2026-01-31",
+    endDate: "2026-02-01",
+    title: "Grand Prix Conseil Départemental - Tour 3",
+    category: "youth",
+    location: "Gironde",
+    details: "Indiv. jeunes et féminines (licences promo ou tradi - Coeff. 0,5)"
+  },
+  {
+    id: "gp-cd-t4",
+    date: "2026-04-04",
+    endDate: "2026-04-05",
+    title: "Grand Prix Conseil Départemental - Tour 4",
+    category: "youth",
+    location: "Gironde",
+    details: "Indiv. jeunes et féminines (licences promo ou tradi - Coeff. 0,5)"
+  },
+  {
+    id: "gp-cd-t5",
+    date: "2026-05-16",
+    endDate: "2026-05-17",
+    title: "Grand Prix Conseil Départemental - Tour 5",
+    category: "youth",
+    location: "Gironde",
+    details: "Indiv. jeunes et féminines (licences promo ou tradi - Coeff. 0,5)"
+  },
+  {
+    id: "gp-cd-titre-loisirs",
+    date: "2026-06-14",
+    title: "Grand Prix Conseil Départemental - Titre Indiv Jeunes Loisirs",
+    category: "youth",
+    location: "Gironde",
+    details: "Matchs comptabilisés Coeff. 0,5"
+  },
+
   // --- SEPTEMBRE 2026 ---
   {
     id: "sep-forum",
@@ -36,15 +91,6 @@ export const competitions20262027: CompetitionEvent[] = [
     phase: "Phase 1",
     location: "Régional & Départemental"
   },
-  {
-    id: "p1-jeunes-j1",
-    date: "2026-09-26",
-    endDate: "2026-09-27",
-    title: "Championnat Jeunes par Équipes - Journée 1",
-    category: "youth",
-    phase: "Phase 1",
-    location: "Gironde"
-  },
 
   // --- OCTOBRE 2026 ---
   {
@@ -60,11 +106,11 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "p1-crit1",
     date: "2026-10-10",
     endDate: "2026-10-11",
-    title: "Critérium Fédéral - 1er Tour",
+    title: "Critérium Fédéral - Tour 1",
     category: "criterium",
     phase: "Phase 1",
     location: "Nationale, Régionale & Départementale",
-    details: "Indiv. Licences traditionnelles (Matchs comptabilisés Coeff. 1,5)"
+    details: "Indiv. licences traditionnelles (Matchs comptabilisés Coeff. 1,5)"
   },
   {
     id: "club-familles",
@@ -72,7 +118,7 @@ export const competitions20262027: CompetitionEvent[] = [
     title: "Tournoi des Familles (Vendredi soir)",
     category: "club",
     location: "Salle du club - Saint-Loubès",
-    details: "Soirée conviviale par paires parent/enfant."
+    details: "Soirée conviviale (Championnat le lendemain)"
   },
   {
     id: "p1-j3",
@@ -98,11 +144,11 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "p1-crit2",
     date: "2026-11-14",
     endDate: "2026-11-15",
-    title: "Critérium Fédéral - 2ème Tour",
+    title: "Critérium Fédéral - Tour 2",
     category: "criterium",
     phase: "Phase 1",
     location: "Nationale, Régionale & Départementale",
-    details: "Indiv. Licences traditionnelles (Matchs comptabilisés Coeff. 1,5)"
+    details: "Indiv. licences traditionnelles (Matchs comptabilisés Coeff. 1,5)"
   },
   {
     id: "p1-j5",
@@ -140,27 +186,27 @@ export const competitions20262027: CompetitionEvent[] = [
     title: "Tournoi de Noël du Club",
     category: "club",
     location: "Salle Jacques-Durieux, Saint-Loubès",
-    details: "Tournoi interne et fête de fin d'année du club."
+    details: "Tournoi interne du club (Critérium la veille)"
   },
 
   // --- JANVIER 2027 ---
   {
     id: "fpc-dep",
     date: "2027-01-09",
-    title: "Finales par Classement - Échelon Départemental",
+    title: "Finales par Classement - Départemental",
     category: "individual",
     phase: "Phase 2",
     location: "Gironde",
-    details: "Indiv. Licences traditionnelles"
+    details: "Indiv. licences traditionnelles (Matchs comptabilisés Coeff. 1,25)"
   },
   {
     id: "titres-jeunes-dep",
     date: "2027-01-10",
-    title: "Titres Individuels Jeunes - Échelon Départemental",
+    title: "Titres Individuels Jeunes - Départemental",
     category: "youth",
     phase: "Phase 2",
     location: "Gironde",
-    details: "Licences traditionnelles -11 à -19 ans (Coeff. 1,25)"
+    details: "Licences traditionnelles -11 à -19 ans (Matchs comptabilisés Coeff. 1,5)"
   },
   {
     id: "p2-j1",
@@ -184,11 +230,11 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "p2-crit3",
     date: "2027-01-30",
     endDate: "2027-01-31",
-    title: "Critérium Fédéral - 3ème Tour",
+    title: "Critérium Fédéral - Tour 3",
     category: "criterium",
     phase: "Phase 2",
     location: "Nationale, Régionale & Départementale",
-    details: "Indiv. Licences traditionnelles (Matchs comptabilisés Coeff. 1,5)"
+    details: "Indiv. licences traditionnelles (Matchs comptabilisés Coeff. 1,5)"
   },
 
   // --- FÉVRIER 2027 ---
@@ -207,11 +253,11 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "p2-crit4",
     date: "2027-03-06",
     endDate: "2027-03-07",
-    title: "Critérium Fédéral - 4ème Tour",
+    title: "Critérium Fédéral - Tour 4",
     category: "criterium",
     phase: "Phase 2",
     location: "Nationale, Régionale & Départementale",
-    details: "Indiv. Licences traditionnelles (Matchs comptabilisés Coeff. 1,5)"
+    details: "Indiv. licences traditionnelles (Matchs comptabilisés Coeff. 1,5)"
   },
   {
     id: "p2-j4",
@@ -225,20 +271,20 @@ export const competitions20262027: CompetitionEvent[] = [
   {
     id: "fpc-terr",
     date: "2027-03-20",
-    title: "Finales par Classement - Échelon Territorial",
+    title: "Finales par Classement - Territorial",
     category: "individual",
     phase: "Phase 2",
     location: "Territoire",
-    details: "Indiv. Licences traditionnelles"
+    details: "Indiv. licences traditionnelles (Matchs comptabilisés Coeff. 1,25)"
   },
   {
-    id: "indiv-promo-t1",
+    id: "eq-jeunes-t1",
     date: "2027-03-21",
-    title: "Indiv. Jeunes & Féminines - Tour 1",
+    title: "Championnat par équipe Jeunes - Tour 1",
     category: "youth",
     phase: "Phase 2",
     location: "Gironde",
-    details: "Licences promotionnelles ou traditionnelles (Coeff. 0,5)"
+    details: "Licences promotionnelles ou traditionnelles (Matchs comptabilisés Coeff. 0,5)"
   },
 
   // --- AVRIL 2027 ---
@@ -246,11 +292,11 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "titres-jeunes-reg",
     date: "2027-04-03",
     endDate: "2027-04-04",
-    title: "Titres Individuels Jeunes - Échelon Régional",
+    title: "Titres Individuels Jeunes - Régional",
     category: "youth",
     phase: "Phase 2",
     location: "Nouvelle-Aquitaine",
-    details: "Licences traditionnelles -11 à -19 ans (Coeff. 1,25)"
+    details: "Licences traditionnelles -11 à -19 ans (Matchs comptabilisés Coeff. 1,5)"
   },
   {
     id: "p2-j5",
@@ -267,37 +313,37 @@ export const competitions20262027: CompetitionEvent[] = [
     title: "Grand Tournoi Régional de Saint-Loubès 2027",
     category: "club",
     location: "Gymnase de Saint-Loubès",
-    details: "Tournoi régional annuel homologué par le club."
+    details: "Tournoi régional annuel du club."
   },
   {
     id: "fpc-reg",
     date: "2027-04-24",
-    title: "Finales par Classement - Échelon Régional",
+    title: "Finales par Classement - Régional",
     category: "individual",
     phase: "Phase 2",
     location: "Nouvelle-Aquitaine",
-    details: "Indiv. Licences traditionnelles"
+    details: "Indiv. licences traditionnelles (Matchs comptabilisés Coeff. 1,25)"
   },
   {
     id: "cf-cadet-benjamin",
     date: "2027-04-30",
     endDate: "2027-05-02",
-    title: "Championnat de France Cadet / Benjamin",
+    title: "Titres Individuels Jeunes - Champ France Cadet/Benjamin",
     category: "youth",
     phase: "Phase 2",
     location: "National",
-    details: "Titres Individuels Jeunes"
+    details: "Licences traditionnelles -11 à -19 ans (Matchs comptabilisés Coeff. 1,5)"
   },
 
   // --- MAI 2027 ---
   {
-    id: "indiv-promo-t2",
+    id: "eq-jeunes-t2",
     date: "2027-05-02",
-    title: "Indiv. Jeunes & Féminines - Tour 2",
+    title: "Championnat par équipe Jeunes - Tour 2",
     category: "youth",
     phase: "Phase 2",
     location: "Gironde",
-    details: "Licences promotionnelles ou traditionnelles (Coeff. 0,5)"
+    details: "Licences promotionnelles ou traditionnelles (Matchs comptabilisés Coeff. 0,5)"
   },
   {
     id: "p2-j6",
@@ -323,11 +369,11 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "cf-junior-minime",
     date: "2027-06-04",
     endDate: "2027-06-06",
-    title: "Championnat de France Junior / Minime",
+    title: "Titres Individuels Jeunes - Champ France Junior/Minime",
     category: "youth",
     phase: "Phase 2",
     location: "National",
-    details: "Titres Individuels Jeunes"
+    details: "Licences traditionnelles -11 à -19 ans (Matchs comptabilisés Coeff. 1,5)"
   },
   {
     id: "fete-club-2027",
@@ -341,19 +387,19 @@ export const competitions20262027: CompetitionEvent[] = [
     id: "fpc-nat",
     date: "2027-06-26",
     endDate: "2027-06-27",
-    title: "Finales par Classement - Échelon National",
+    title: "Finales par Classement - National",
     category: "individual",
     phase: "Phase 2",
     location: "National",
-    details: "Indiv. Licences traditionnelles"
+    details: "Indiv. licences traditionnelles (Matchs comptabilisés Coeff. 1,25)"
   },
   {
-    id: "indiv-promo-t3",
+    id: "eq-jeunes-t3",
     date: "2027-06-27",
-    title: "Indiv. Jeunes & Féminines - Tour 3",
+    title: "Championnat par équipe Jeunes - Tour 3",
     category: "youth",
     phase: "Phase 2",
     location: "Gironde",
-    details: "Licences promotionnelles ou traditionnelles (Coeff. 0,5)"
+    details: "Licences promotionnelles ou traditionnelles (Matchs comptabilisés Coeff. 0,5)"
   }
 ];
