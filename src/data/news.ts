@@ -19,7 +19,17 @@ export const allNewsItems: NewsItem[] = [
     link: "/adhesions",
     image: "/images/adhesions/tarifs-2026-2027.jpg",
   },
-  // 2️⃣ Dernier stage de la saison 2025-2026
+  // 2️⃣ Convocation Assemblée Générale 2026
+  {
+    id: 901,
+    title: "Convocation Assemblée Générale",
+    date: "Samedi 29 Août 2026",
+    location: "Salle du club - Saint-Loubès",
+    description: "L'ensemble des adhérents, dirigeants et parents du club St Loub Ping est convoqué à l'Assemblée Générale Ordinaire du club qui se tiendra le Samedi 29 Août 2026. Retrouvez et téléchargez le document officiel de convocation ci-dessous.",
+    link: "/documents/actualites/Convocation-AG-2026.pdf",
+    image: "/images/hero/FB_IMG_1759672983725.jpg",
+  },
+  // 3️⃣ Dernier stage de la saison 2025-2026
   {
     id: 801,
     title: "Retour sur le dernier stage de la saison 2025-2026 !",
@@ -29,7 +39,7 @@ export const allNewsItems: NewsItem[] = [
     link: "#",
     image: "/images/actualites/stage-fin-saison-2026-1.jpg",
   },
-  // 3️⃣ Résultats du tournoi 2026
+  // 4️⃣ Résultats du tournoi 2026
   {
     id: 301,
     title: "Résultats du tournoi 2026 – Découvrez les vainqueurs",
@@ -39,7 +49,7 @@ export const allNewsItems: NewsItem[] = [
     link: "/tournoi/2026/resultats",
     image: "/images/tournoi/2026/photo-2.jpg",
   },
-  // 4️⃣ Galerie photos du tournoi 2026
+  // 5️⃣ Galerie photos du tournoi 2026
   {
     id: 302,
     title: "Galerie photos du tournoi 2026 – Revivez les meilleurs moments",
@@ -49,7 +59,7 @@ export const allNewsItems: NewsItem[] = [
     link: "/tournoi/2026/photos",
     image: "/images/tournoi/2026/galerie-cover.jpg",
   },
-  // 5️⃣ Diplômes jeunes
+  // 6️⃣ Diplômes jeunes
   {
     id: 501,
     title: "Une soixantaine de jeunes pongistes médaillés",
@@ -59,7 +69,7 @@ export const allNewsItems: NewsItem[] = [
     link: "#",
     image: "/images/actualites/jeunes-medailles.jpg",
   },
-  // 6️⃣ Maillot officiel
+  // 7️⃣ Maillot officiel
   {
     id: 401,
     title: "Le Maillot Officiel est Arrivé !",
@@ -69,7 +79,7 @@ export const allNewsItems: NewsItem[] = [
     link: "/boutique",
     image: "/images/boutique/maillot-club-officiel.png",
   },
-  // 7️⃣ Stage de Noël
+  // 8️⃣ Stage de Noël
   {
     id: 101,
     title: "Stage de Noël pour les Jeunes",

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, MapPin, ArrowRight } from "lucide-react";
+import { CalendarDays, MapPin, ArrowRight, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLightbox } from '@/context/LightboxContext';
 
@@ -31,7 +31,10 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
     ? news.description.substring(0, truncateLength) + "..."
     : news.description;
 
+  const isPdfOrExternal = news.link.endsWith('.pdf') || news.link.startsWith('http') || news.link.startsWith('/documents');
+
   const getButtonText = (link: string) => {
+    if (link.includes('Convocation') || link.endsWith('.pdf')) return "Télécharger la convocation";
     if (link.includes('inscription')) return "S'inscrire";
     if (link.includes('live')) return "Voir les inscrits";
     if (link.includes('boutique')) return "Boutique";
@@ -78,10 +81,18 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
       <CardFooter className="pt-0 pb-4 px-4">
         {hasLink ? (
           <Button asChild className="w-full bg-clubPrimary hover:bg-clubPrimary/90 text-white shadow-md group h-9 md:h-10 text-xs md:text-sm">
-            <Link to={news.link}>
-              {getButtonText(news.link)}
-              <ArrowRight className="ml-1 h-3 w-3 md:h-4 md:w-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
+            {isPdfOrExternal ? (
+              <a href={news.link} target="_blank" rel="noopener noreferrer">
+                {news.link.endsWith('.pdf') && <Download className="mr-1.5 h-3.5 w-3.5" />}
+                {getButtonText(news.link)}
+                {!news.link.endsWith('.pdf') && <ArrowRight className="ml-1 h-3 w-3 md:h-4 md:w-4 group-hover:translate-x-1 transition-transform" />}
+              </a>
+            ) : (
+              <Link to={news.link}>
+                {getButtonText(news.link)}
+                <ArrowRight className="ml-1 h-3 w-3 md:h-4 md:w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            )}
           </Button>
         ) : (
           <div className="h-9 md:h-10 w-full" />
