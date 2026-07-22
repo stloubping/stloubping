@@ -19,7 +19,8 @@ import {
   RefreshCw, 
   Table as TableIcon,
   Globe,
-  Award
+  Award,
+  ExternalLink
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -97,49 +98,19 @@ const ClassementJoueurs = () => {
         </Button>
       </div>
 
-      <Tabs defaultValue="pingpocket" className="w-full">
+      <Tabs defaultValue="live" className="w-full">
         <div className="flex justify-center mb-6">
           <TabsList className="bg-clubSection p-1 rounded-xl">
-            <TabsTrigger value="pingpocket" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-medium text-xs md:text-sm">
-              <Globe className="mr-2 h-4 w-4" /> Liste Officielle Pingpocket (141 Licenciés)
-            </TabsTrigger>
             <TabsTrigger value="live" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-medium text-xs md:text-sm">
               <TableIcon className="mr-2 h-4 w-4" /> Vue Tableau Filtres
+            </TabsTrigger>
+            <TabsTrigger value="pingpocket" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-medium text-xs md:text-sm">
+              <Globe className="mr-2 h-4 w-4" /> Liste Officielle Pingpocket (141 Licenciés)
             </TabsTrigger>
           </TabsList>
         </div>
 
-        {/* --- Onglet 1 : Vue Pingpocket Officielle (141 licenciés) --- */}
-        <TabsContent value="pingpocket">
-          <Card className="bg-clubLight shadow-lg rounded-xl border border-border">
-            <CardHeader className="text-center pb-2">
-              <CardTitle className="text-2xl font-bold text-clubDark">Classement FFTT des 141 Licenciés</CardTitle>
-              <CardDescription className="text-muted-foreground text-xs md:text-sm">
-                Accès direct au classement officiel mis à jour par la FFTT via Pingpocket.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden my-4">
-                <small className="block text-right text-xs text-muted-foreground p-2">
-                  powered by <a target="_blank" rel="noopener noreferrer" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary text-clubPrimary">www.pingpocket.fr</a>
-                </small>
-                <iframe
-                  frameBorder="1"
-                  name="pingpocket-official-ranking"
-                  width="100%"
-                  height="800"
-                  scrolling="auto"
-                  src={pingpocketRankingLink}
-                  title="Classement officiel des 141 licenciés Pingpocket"
-                >
-                  <p>Votre navigateur ne supporte pas les iframes.</p>
-                </iframe>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* --- Onglet 2 : Tableau interactif dynamique --- */}
+        {/* --- Onglet 1 : Tableau interactif dynamique (Mise en avant) --- */}
         <TabsContent value="live" className="space-y-6">
           {/* Cartes KPI Statistiques */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -241,11 +212,11 @@ const ClassementJoueurs = () => {
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-16">
                   <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
-                  <p className="text-sm font-semibold text-clubDark">Récupération des 141 licenciés...</p>
+                  <p className="text-sm font-semibold text-clubDark">Chargement du tableau...</p>
                 </div>
               ) : filteredPlayers.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground text-sm italic">
-                  Utilisez le premier onglet Pingpocket pour consulter directement la liste complète des 141 licenciés.
+                  Aucun joueur ne correspond à votre recherche. Vous pouvez consulter l'onglet <strong>Liste Officielle Pingpocket</strong> pour voir les 141 licenciés.
                 </div>
               ) : (
                 <div className="overflow-x-auto border-t sm:border border-border sm:rounded-lg">
@@ -318,6 +289,36 @@ const ClassementJoueurs = () => {
                   </Table>
                 </div>
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* --- Onglet 2 : Vue Pingpocket Officielle (141 licenciés) --- */}
+        <TabsContent value="pingpocket">
+          <Card className="bg-clubLight shadow-lg rounded-xl border border-border">
+            <CardHeader className="text-center pb-2">
+              <CardTitle className="text-2xl font-bold text-clubDark">Classement FFTT des 141 Licenciés</CardTitle>
+              <CardDescription className="text-muted-foreground text-xs md:text-sm">
+                Accès direct au classement officiel mis à jour en temps réel par la FFTT via Pingpocket.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="w-full max-w-xl mx-auto border border-border rounded-lg overflow-hidden my-4">
+                <small className="block text-right text-xs text-muted-foreground p-2">
+                  powered by <a target="_blank" rel="noopener noreferrer" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary text-clubPrimary">www.pingpocket.fr</a>
+                </small>
+                <iframe
+                  frameBorder="1"
+                  name="pingpocket-official-ranking"
+                  width="100%"
+                  height="800"
+                  scrolling="auto"
+                  src={pingpocketRankingLink}
+                  title="Classement officiel des 141 licenciés Pingpocket"
+                >
+                  <p>Votre navigateur ne supporte pas les iframes.</p>
+                </iframe>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
