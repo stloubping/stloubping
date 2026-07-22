@@ -52,6 +52,9 @@ const Accueil = () => {
           </div>
         </section>
 
+        {/* ---------- Calendrier des compétitions (limité aux 10 premières dates) ---------- */}
+        <CompetitionCalendar initialLimit={10} />
+
         {/* ---------- Facebook ---------- */}
         <section className="text-center mb-12">
           <Card className="bg-clubLight shadow-lg p-4 md:p-8 rounded-xl">
@@ -78,9 +81,6 @@ const Accueil = () => {
             </CardContent>
           </Card>
         </section>
-
-        {/* ---------- Calendrier des compétitions (limité aux 10 premières dates) ---------- */}
-        <CompetitionCalendar initialLimit={10} />
 
         {/* ---------- Dernières Vidéos ---------- */}
         <section className="mb-12">
