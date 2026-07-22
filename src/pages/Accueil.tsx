@@ -40,7 +40,7 @@ const allNewsItems = [
     location: "Salle du club",
     description: "Plus de 30 clichés capturant l’énergie et l’émotion du tournoi. Cliquez pour agrandir chaque photo.",
     link: "/tournoi/2026/photos",
-    image: "/images/tournoi/2026/photo-1.jpg",
+    image: "/images/tournoi/2026/galerie-cover.jpg",
   },
   // Articles suivants
   {
