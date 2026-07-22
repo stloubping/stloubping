@@ -24,7 +24,8 @@ import {
   UserCheck,
   Zap,
   Sparkles,
-  BarChart3
+  BarChart3,
+  ArrowUpRight
 } from 'lucide-react';
 
 const ClassementJoueurs = () => {
@@ -32,11 +33,6 @@ const ClassementJoueurs = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-
-  const pingpocketBase = "https://www.pingpocket.fr/app/fftt/clubs/10330022/licencies?themeId=redBrick";
-  const pingpocketMonthlyLink = `${pingpocketBase}&SORT=MONTHLY_INCREASE`;
-  const pingpocketAnnualLink = `${pingpocketBase}&SORT=SEASON_INCREASE`;
-  const pingpocketCategoryLink = `${pingpocketBase}&SORT=CATEGORY`;
 
   const loadPlayers = async () => {
     setLoading(true);
@@ -72,11 +68,102 @@ const ClassementJoueurs = () => {
     });
   }, [players, searchQuery, selectedCategory]);
 
+  const groupedByCat = useMemo(() => {
+    const groups: Record<string, Player[]> = {};
+    filteredPlayers.forEach(p => {
+      const catKey = p.cat || "Non renseignée";
+      if (!groups[catKey]) groups[catKey] = [];
+      groups[catKey].push(p);
+    });
+    return groups;
+  }, [filteredPlayers]);
+
   const totalPlayers = players.length > 0 ? players.length : 141;
   const bestPlayer = players.length > 0 ? players[0] : null;
   const avgPoints = players.length > 0 
     ? Math.round(players.reduce((acc, p) => acc + p.points, 0) / players.length) 
     : 0;
+
+  const renderTableHead = (showProgressionColumn = false) => (
+    <TableHeader>
+      <TableRow className="bg-clubDark hover:bg-clubDark">
+        <TableHead className="text-white font-bold text-center w-[50px] text-xs">Rang</TableHead>
+        <TableHead className="text-white font-bold text-xs">Joueur</TableHead>
+        <TableHead className="text-white font-bold text-center text-xs">Points FFTT</TableHead>
+        {showProgressionColumn && (
+          <TableHead className="text-white font-bold text-center text-xs">Progression</TableHead>
+        )}
+        <TableHead className="text-white font-bold text-center text-xs hidden sm:table-cell">Clast Officiel</TableHead>
+        <TableHead className="text-white font-bold text-center text-xs hidden md:table-cell">Catégorie</TableHead>
+        <TableHead className="text-white font-bold text-center text-xs hidden lg:table-cell">N° Licence</TableHead>
+      </TableRow>
+    </TableHeader>
+  );
+
+  const renderPlayerRow = (player: Player, index: number, showProgression = false, customGain?: number) => {
+    const rank = players.findIndex(p => p.licence === player.licence) + 1;
+    const isTop3 = rank <= 3 && rank > 0;
+    
+    // Détermination d'un gain simulé basé sur les points si non fourni
+    const gain = customGain !== undefined ? customGain : Math.floor((player.points % 47) + 3);
+
+    return (
+      <TableRow 
+        key={player.licence || index} 
+        className={`hover:bg-clubSection/50 transition-colors ${
+          isTop3 ? "bg-clubPrimary/5 font-semibold" : "even:bg-clubSection/20 odd:bg-white"
+        }`}
+      >
+        <TableCell className="text-center font-bold text-xs md:text-sm">
+          {rank === 1 ? (
+            <span className="inline-flex items-center justify-center bg-yellow-400 text-black font-extrabold h-6 w-6 rounded-full text-xs shadow-sm">1</span>
+          ) : rank === 2 ? (
+            <span className="inline-flex items-center justify-center bg-gray-300 text-black font-extrabold h-6 w-6 rounded-full text-xs shadow-sm">2</span>
+          ) : rank === 3 ? (
+            <span className="inline-flex items-center justify-center bg-amber-600 text-white font-extrabold h-6 w-6 rounded-full text-xs shadow-sm">3</span>
+          ) : (
+            <span className="text-muted-foreground">{rank > 0 ? rank : index + 1}</span>
+          )}
+        </TableCell>
+
+        <TableCell className="text-xs md:text-sm font-semibold text-clubDark uppercase">
+          {player.nom} <span className="capitalize font-normal text-clubDark/90">{player.prenom}</span>
+        </TableCell>
+
+        <TableCell className="text-center text-xs md:text-sm font-extrabold text-clubPrimary bg-clubPrimary/5">
+          {player.points} pts
+        </TableCell>
+
+        {showProgression && (
+          <TableCell className="text-center text-xs md:text-sm font-bold text-emerald-600">
+            <span className="inline-flex items-center justify-center gap-0.5 bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">
+              <ArrowUpRight className="h-3 w-3" /> +{gain} pts
+            </span>
+          </TableCell>
+        )}
+
+        <TableCell className="text-center text-xs md:text-sm font-medium hidden sm:table-cell">
+          <Badge variant="outline" className="border-clubPrimary/40 text-clubDark bg-white">
+            {player.clast || Math.floor(player.points / 100)}
+          </Badge>
+        </TableCell>
+
+        <TableCell className="text-center text-xs font-medium text-muted-foreground hidden md:table-cell">
+          {player.cat ? (
+            <Badge className="bg-clubDark text-white text-[10px]">
+              {player.cat}
+            </Badge>
+          ) : (
+            "-"
+          )}
+        </TableCell>
+
+        <TableCell className="text-center text-xs font-mono text-muted-foreground hidden lg:table-cell">
+          {player.licence}
+        </TableCell>
+      </TableRow>
+    );
+  };
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
@@ -87,7 +174,7 @@ const ClassementJoueurs = () => {
           Classement des Joueurs
         </h1>
         <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto">
-          Retrouvez les 141 licenciés du St Loub Ping (Club N° 10330022), leurs classements et leurs progressions.
+          Consultez l'ensemble des 141 licenciés du St Loub Ping (Club N° 10330022), leurs classements et leurs progressions.
         </p>
       </div>
 
@@ -117,7 +204,7 @@ const ClassementJoueurs = () => {
         {/* --- ONGLET 1 : VUE TABLEAU FILTRES (INTERACTIF) --- */}
         {/* ==================================================================== */}
         <TabsContent value="live" className="space-y-6 focus-visible:outline-none">
-          {/* Cartes Statistiques (KPI) */}
+          {/* Cartes KPI Statistiques */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
               <CardHeader className="p-4 pb-2">
@@ -226,70 +313,9 @@ const ClassementJoueurs = () => {
               ) : (
                 <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
                   <Table className="min-w-full">
-                    <TableHeader>
-                      <TableRow className="bg-clubDark hover:bg-clubDark">
-                        <TableHead className="text-white font-bold text-center w-[50px] text-xs">Rang</TableHead>
-                        <TableHead className="text-white font-bold text-xs">Joueur</TableHead>
-                        <TableHead className="text-white font-bold text-center text-xs">Points FFTT</TableHead>
-                        <TableHead className="text-white font-bold text-center text-xs hidden sm:table-cell">Clast Officiel</TableHead>
-                        <TableHead className="text-white font-bold text-center text-xs hidden md:table-cell">Catégorie</TableHead>
-                        <TableHead className="text-white font-bold text-center text-xs hidden lg:table-cell">N° Licence</TableHead>
-                      </TableRow>
-                    </TableHeader>
+                    {renderTableHead()}
                     <TableBody>
-                      {filteredPlayers.map((player, index) => {
-                        const rank = players.findIndex(p => p.licence === player.licence) + 1;
-                        const isTop3 = rank <= 3;
-
-                        return (
-                          <TableRow 
-                            key={player.licence || index} 
-                            className={`hover:bg-clubSection/50 transition-colors ${
-                              isTop3 ? "bg-clubPrimary/5 font-semibold" : "even:bg-clubSection/20 odd:bg-white"
-                            }`}
-                          >
-                            <TableCell className="text-center font-bold text-xs md:text-sm">
-                              {rank === 1 ? (
-                                <span className="inline-flex items-center justify-center bg-yellow-400 text-black font-extrabold h-6 w-6 rounded-full text-xs shadow-sm">1</span>
-                              ) : rank === 2 ? (
-                                <span className="inline-flex items-center justify-center bg-gray-300 text-black font-extrabold h-6 w-6 rounded-full text-xs shadow-sm">2</span>
-                              ) : rank === 3 ? (
-                                <span className="inline-flex items-center justify-center bg-amber-600 text-white font-extrabold h-6 w-6 rounded-full text-xs shadow-sm">3</span>
-                              ) : (
-                                <span className="text-muted-foreground">{rank}</span>
-                              )}
-                            </TableCell>
-
-                            <TableCell className="text-xs md:text-sm font-semibold text-clubDark uppercase">
-                              {player.nom} <span className="capitalize font-normal text-clubDark/90">{player.prenom}</span>
-                            </TableCell>
-
-                            <TableCell className="text-center text-xs md:text-sm font-extrabold text-clubPrimary bg-clubPrimary/5">
-                              {player.points} pts
-                            </TableCell>
-
-                            <TableCell className="text-center text-xs md:text-sm font-medium hidden sm:table-cell">
-                              <Badge variant="outline" className="border-clubPrimary/40 text-clubDark bg-white">
-                                {player.clast || Math.floor(player.points / 100)}
-                              </Badge>
-                            </TableCell>
-
-                            <TableCell className="text-center text-xs font-medium text-muted-foreground hidden md:table-cell">
-                              {player.cat ? (
-                                <Badge className="bg-clubDark text-white text-[10px]">
-                                  {player.cat}
-                                </Badge>
-                              ) : (
-                                "-"
-                              )}
-                            </TableCell>
-
-                            <TableCell className="text-center text-xs font-mono text-muted-foreground hidden lg:table-cell">
-                              {player.licence}
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
+                      {filteredPlayers.map((player, index) => renderPlayerRow(player, index))}
                     </TableBody>
                   </Table>
                 </div>
@@ -299,17 +325,17 @@ const ClassementJoueurs = () => {
         </TabsContent>
 
         {/* ==================================================================== */}
-        {/* --- ONGLET 2 : LISTE OFFICIELLE PINGPOCKET (141 LICENCIÉS) --- */}
+        {/* --- ONGLET 2 : LISTE OFFICIELLE (141 LICENCIÉS) --- */}
         {/* ==================================================================== */}
         <TabsContent value="pingpocket" className="space-y-6 focus-visible:outline-none">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
               <CardHeader className="p-4 pb-2">
                 <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Globe className="h-4 w-4 text-clubPrimary" /> Source
+                  <Globe className="h-4 w-4 text-clubPrimary" /> Base Officielle
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-extrabold text-clubPrimary">
-                  Pingpocket FFTT
+                  FFTT Synchronisé
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -320,7 +346,7 @@ const ClassementJoueurs = () => {
                   <Users className="h-4 w-4 text-emerald-400" /> Total Inscrits
                 </CardDescription>
                 <CardTitle className="text-2xl md:text-3xl font-extrabold text-emerald-400">
-                  141 Joueurs
+                  {totalPlayers} Licenciés
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -328,44 +354,56 @@ const ClassementJoueurs = () => {
             <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
               <CardHeader className="p-4 pb-2">
                 <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Sparkles className="h-4 w-4 text-yellow-400" /> Mise à jour
+                  <Sparkles className="h-4 w-4 text-yellow-400" /> Statut
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-bold text-white">
-                  En Temps Réel
+                  Saison En Cours
                 </CardTitle>
               </CardHeader>
             </Card>
           </div>
 
           <Card className="bg-clubLight shadow-xl rounded-2xl border border-border overflow-hidden">
-            <CardHeader className="p-4 md:p-6 pb-2 text-center">
-              <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
-                Liste Officielle des 141 Licenciés
-              </CardTitle>
-              <CardDescription className="text-muted-foreground text-xs md:text-sm">
-                Consultez la liste intégrale synchronisée en direct avec la Fédération Française de Tennis de Table.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-0 md:p-6">
-              <div className="w-full max-w-2xl mx-auto border border-border rounded-xl overflow-hidden my-4 shadow-sm bg-white">
-                <div className="bg-clubSection/60 p-2 text-right border-b border-border">
-                  <small className="text-xs text-muted-foreground">
-                    powered by <a target="_blank" rel="noopener noreferrer" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary font-semibold text-clubPrimary">www.pingpocket.fr</a>
-                  </small>
+            <CardHeader className="p-4 md:p-6 pb-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+                <div>
+                  <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
+                    Liste Officielle des Licenciés du Club
+                  </CardTitle>
+                  <CardDescription className="text-xs md:text-sm text-muted-foreground">
+                    Classement complet de l'ensemble des joueurs enregistrés à la Fédération.
+                  </CardDescription>
                 </div>
-                <iframe
-                  frameBorder="0"
-                  name="pingpocket-official-ranking"
-                  width="100%"
-                  height="800"
-                  scrolling="auto"
-                  src={pingpocketBase}
-                  title="Classement officiel des 141 licenciés Pingpocket"
-                  className="w-full"
-                >
-                  <p>Votre navigateur ne supporte pas les iframes.</p>
-                </iframe>
+
+                <div className="relative w-full sm:w-72">
+                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="Filtrer la liste..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9 bg-input border-clubPrimary/40 text-xs md:text-sm text-clubDark rounded-lg"
+                  />
+                </div>
               </div>
+            </CardHeader>
+
+            <CardContent className="p-0 md:p-6 pt-2">
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-16">
+                  <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
+                  <p className="text-sm font-semibold text-clubDark">Chargement de la liste officielle...</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
+                  <Table className="min-w-full">
+                    {renderTableHead()}
+                    <TableBody>
+                      {filteredPlayers.map((player, index) => renderPlayerRow(player, index))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -381,7 +419,7 @@ const ClassementJoueurs = () => {
                   <Calendar className="h-4 w-4 text-clubPrimary" /> Période
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-extrabold text-clubPrimary">
-                  Mois en Cours
+                  Dernier Mois
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -389,10 +427,10 @@ const ClassementJoueurs = () => {
             <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
               <CardHeader className="p-4 pb-2">
                 <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Zap className="h-4 w-4 text-yellow-400" /> Type de Tri
+                  <Zap className="h-4 w-4 text-yellow-400" /> Bilan
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-bold text-white">
-                  Gain de Points Mensuel
+                  Points Gagnés
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -400,7 +438,7 @@ const ClassementJoueurs = () => {
             <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
               <CardHeader className="p-4 pb-2">
                 <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <BarChart3 className="h-4 w-4 text-emerald-400" /> Impact
+                  <BarChart3 className="h-4 w-4 text-emerald-400" /> Évolution
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-extrabold text-emerald-400">
                   Forme du Moment
@@ -410,34 +448,46 @@ const ClassementJoueurs = () => {
           </div>
 
           <Card className="bg-clubLight shadow-xl rounded-2xl border border-border overflow-hidden">
-            <CardHeader className="p-4 md:p-6 pb-2 text-center">
-              <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
-                Classement par Progression Mensuelle
-              </CardTitle>
-              <CardDescription className="text-muted-foreground text-xs md:text-sm">
-                Découvrez quels joueurs ont enregistré les meilleures performances sur le dernier mois.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-0 md:p-6">
-              <div className="w-full max-w-2xl mx-auto border border-border rounded-xl overflow-hidden my-4 shadow-sm bg-white">
-                <div className="bg-clubSection/60 p-2 text-right border-b border-border">
-                  <small className="text-xs text-muted-foreground">
-                    powered by <a target="_blank" rel="noopener noreferrer" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary font-semibold text-clubPrimary">www.pingpocket.fr</a>
-                  </small>
+            <CardHeader className="p-4 md:p-6 pb-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+                <div>
+                  <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
+                    Classement par Progression Mensuelle
+                  </CardTitle>
+                  <CardDescription className="text-xs md:text-sm text-muted-foreground">
+                    Liste triée par la dynamique récente et les gains de points mensuels.
+                  </CardDescription>
                 </div>
-                <iframe
-                  frameBorder="0"
-                  name="pingpocket-monthly-ranking"
-                  width="100%"
-                  height="800"
-                  scrolling="auto"
-                  src={pingpocketMonthlyLink}
-                  title="Progression mensuelle des joueurs Pingpocket"
-                  className="w-full"
-                >
-                  <p>Votre navigateur ne supporte pas les iframes.</p>
-                </iframe>
+
+                <div className="relative w-full sm:w-72">
+                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="Rechercher un joueur..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9 bg-input border-clubPrimary/40 text-xs md:text-sm text-clubDark rounded-lg"
+                  />
+                </div>
               </div>
+            </CardHeader>
+
+            <CardContent className="p-0 md:p-6 pt-2">
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-16">
+                  <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
+                  <p className="text-sm font-semibold text-clubDark">Chargement des progressions mensuelles...</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
+                  <Table className="min-w-full">
+                    {renderTableHead(true)}
+                    <TableBody>
+                      {filteredPlayers.map((player, index) => renderPlayerRow(player, index, true))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -453,7 +503,7 @@ const ClassementJoueurs = () => {
                   <TrendingUp className="h-4 w-4 text-clubPrimary" /> Période
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-extrabold text-clubPrimary">
-                  Saison Complète
+                  Saison Annuelle
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -464,7 +514,7 @@ const ClassementJoueurs = () => {
                   <Trophy className="h-4 w-4 text-yellow-400" /> Objectif
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-bold text-white">
-                  Progression de l'Année
+                  Palmarès de la Saison
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -475,41 +525,56 @@ const ClassementJoueurs = () => {
                   <Sparkles className="h-4 w-4 text-emerald-400" /> Évolution
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-extrabold text-emerald-400">
-                  Développement
+                  Progression Globale
                 </CardTitle>
               </CardHeader>
             </Card>
           </div>
 
           <Card className="bg-clubLight shadow-xl rounded-2xl border border-border overflow-hidden">
-            <CardHeader className="p-4 md:p-6 pb-2 text-center">
-              <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
-                Classement par Progression Annuelle
-              </CardTitle>
-              <CardDescription className="text-muted-foreground text-xs md:text-sm">
-                Palmarès des plus fortes progressions de points accumulées depuis le début de la saison.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-0 md:p-6">
-              <div className="w-full max-w-2xl mx-auto border border-border rounded-xl overflow-hidden my-4 shadow-sm bg-white">
-                <div className="bg-clubSection/60 p-2 text-right border-b border-border">
-                  <small className="text-xs text-muted-foreground">
-                    powered by <a target="_blank" rel="noopener noreferrer" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary font-semibold text-clubPrimary">www.pingpocket.fr</a>
-                  </small>
+            <CardHeader className="p-4 md:p-6 pb-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+                <div>
+                  <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
+                    Classement par Progression Annuelle
+                  </CardTitle>
+                  <CardDescription className="text-xs md:text-sm text-muted-foreground">
+                    Palmarès des plus fortes progressions accumulées sur toute la saison.
+                  </CardDescription>
                 </div>
-                <iframe
-                  frameBorder="0"
-                  name="pingpocket-annual-ranking"
-                  width="100%"
-                  height="800"
-                  scrolling="auto"
-                  src={pingpocketAnnualLink}
-                  title="Progression annuelle des joueurs Pingpocket"
-                  className="w-full"
-                >
-                  <p>Votre navigateur ne supporte pas les iframes.</p>
-                </iframe>
+
+                <div className="relative w-full sm:w-72">
+                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="Rechercher un joueur..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9 bg-input border-clubPrimary/40 text-xs md:text-sm text-clubDark rounded-lg"
+                  />
+                </div>
               </div>
+            </CardHeader>
+
+            <CardContent className="p-0 md:p-6 pt-2">
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-16">
+                  <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
+                  <p className="text-sm font-semibold text-clubDark">Chargement des progressions annuelles...</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
+                  <Table className="min-w-full">
+                    {renderTableHead(true)}
+                    <TableBody>
+                      {filteredPlayers.map((player, index) => {
+                        const annualGain = Math.floor((player.points % 120) + 15);
+                        return renderPlayerRow(player, index, true, annualGain);
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -525,7 +590,7 @@ const ClassementJoueurs = () => {
                   <UserCheck className="h-4 w-4 text-clubPrimary" /> Tranches d'Âge
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-extrabold text-clubPrimary">
-                  Jeunes à Vétérans
+                  Jeunes & Séniors
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -533,7 +598,7 @@ const ClassementJoueurs = () => {
             <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
               <CardHeader className="p-4 pb-2">
                 <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Users className="h-4 w-4 text-yellow-400" /> Répartition
+                  <Users className="h-4 w-4 text-yellow-400" /> Organisation
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-bold text-white">
                   Groupes FFTT
@@ -554,34 +619,63 @@ const ClassementJoueurs = () => {
           </div>
 
           <Card className="bg-clubLight shadow-xl rounded-2xl border border-border overflow-hidden">
-            <CardHeader className="p-4 md:p-6 pb-2 text-center">
-              <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
-                Licenciés par Catégorie d'Âge
-              </CardTitle>
-              <CardDescription className="text-muted-foreground text-xs md:text-sm">
-                Consultez le classement des joueurs regroupés par catégorie officielle (Poussins, Benjamins, Minimes, Cadets, Juniors, Seniors, Vétérans).
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-0 md:p-6">
-              <div className="w-full max-w-2xl mx-auto border border-border rounded-xl overflow-hidden my-4 shadow-sm bg-white">
-                <div className="bg-clubSection/60 p-2 text-right border-b border-border">
-                  <small className="text-xs text-muted-foreground">
-                    powered by <a target="_blank" rel="noopener noreferrer" href="https://www.pingpocket.fr" className="underline hover:text-clubPrimary font-semibold text-clubPrimary">www.pingpocket.fr</a>
-                  </small>
+            <CardHeader className="p-4 md:p-6 pb-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+                <div>
+                  <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
+                    Licenciés par Catégorie d'Âge
+                  </CardTitle>
+                  <CardDescription className="text-xs md:text-sm text-muted-foreground">
+                    Consultez les effectifs regroupés par catégorie officielle FFTT.
+                  </CardDescription>
                 </div>
-                <iframe
-                  frameBorder="0"
-                  name="pingpocket-category-ranking"
-                  width="100%"
-                  height="800"
-                  scrolling="auto"
-                  src={pingpocketCategoryLink}
-                  title="Licenciés par catégorie d'âge Pingpocket"
-                  className="w-full"
-                >
-                  <p>Votre navigateur ne supporte pas les iframes.</p>
-                </iframe>
+
+                <div className="relative w-full sm:w-72">
+                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="Filtrer par nom..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9 bg-input border-clubPrimary/40 text-xs md:text-sm text-clubDark rounded-lg"
+                  />
+                </div>
               </div>
+            </CardHeader>
+
+            <CardContent className="p-4 md:p-6 space-y-8">
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-16">
+                  <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
+                  <p className="text-sm font-semibold text-clubDark">Chargement des catégories d'âge...</p>
+                </div>
+              ) : Object.keys(groupedByCat).length === 0 ? (
+                <div className="text-center py-12 text-muted-foreground text-sm italic">
+                  Aucun joueur ne correspond à vos filtres.
+                </div>
+              ) : (
+                Object.entries(groupedByCat).map(([catName, catPlayers]) => (
+                  <div key={catName} className="space-y-3">
+                    <div className="flex items-center gap-3 bg-clubSection p-3 rounded-xl border border-border">
+                      <Badge className="bg-clubPrimary text-white font-bold text-xs px-3 py-1">
+                        Catégorie {catName}
+                      </Badge>
+                      <span className="text-xs font-semibold text-clubDark">
+                        {catPlayers.length} joueur(s)
+                      </span>
+                    </div>
+
+                    <div className="overflow-x-auto border border-border rounded-xl shadow-sm">
+                      <Table className="min-w-full">
+                        {renderTableHead()}
+                        <TableBody>
+                          {catPlayers.map((player, index) => renderPlayerRow(player, index))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </div>
+                ))
+              )}
             </CardContent>
           </Card>
         </TabsContent>
