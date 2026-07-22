@@ -450,7 +450,7 @@ const ClassementJoueurs = () => {
                   <Zap className="h-4 w-4 text-yellow-400" /> Bilan
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-bold text-white">
-                  Points Mensuels FFTT
+                  Points Mensuels FFTT / Pingpocket
                 </CardTitle>
               </CardHeader>
             </Card>
