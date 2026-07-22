@@ -217,9 +217,8 @@ const Adhesions = () => {
         <Card className="bg-clubLight shadow-lg p-8 rounded-xl border border-border">
           <CardTitle className="text-2xl text-clubDark mb-4">Documents d'Inscription</CardTitle>
           <CardContent>
-            <p className="mb-6 text-clubLight-foreground max-w-xl mx-auto">
-              Pour vous inscrire, téléchargez et remplissez les documents ci-dessous.
-              Remettez-les ensuite à un membre du bureau ou à un entraîneur.
+            <p className="mb-6 text-clubLight-foreground max-w-xl mx-auto leading-relaxed">
+              Pour vous inscrire, téléchargez et remplissez les documents ci-dessous. Remettez-les ensuite à un membre du bureau ou à un entraîneur, ou envoyez-les par mail à <a href="mailto:saintloubping@laposte.net" className="font-semibold text-clubPrimary underline hover:text-clubPrimary/80">saintloubping@laposte.net</a> conjointement à un virement en mettant en référence "licence nom-prénom".
             </p>
 
             <DropdownMenu>
