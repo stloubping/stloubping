@@ -16,7 +16,6 @@ import {
   ExternalLink, 
   MapPin, 
   CalendarPlus, 
-  CheckCircle2,
   Clock,
   FileText,
   Sparkles
@@ -73,24 +72,26 @@ const CompetitionCalendar = () => {
   const todayStr = new Date().toISOString().split('T')[0];
 
   const filteredCompetitions = useMemo(() => {
-    return competitions20262027.filter((item) => {
-      // Filtre recherche textuelle
-      const matchesSearch = searchQuery === "" || 
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (item.location && item.location.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (item.details && item.details.toLowerCase().includes(searchQuery.toLowerCase()));
+    return competitions20262027
+      .filter((item) => {
+        // Filtre recherche textuelle
+        const matchesSearch = searchQuery === "" || 
+          item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (item.location && item.location.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (item.details && item.details.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      // Filtre catégorie
-      const matchesCategory = selectedCategory === "all" || item.category === selectedCategory;
+        // Filtre catégorie
+        const matchesCategory = selectedCategory === "all" || item.category === selectedCategory;
 
-      // Filtre mois
-      const matchesMonth = selectedMonth === "all" || item.date.split("-")[1] === selectedMonth;
+        // Filtre mois
+        const matchesMonth = selectedMonth === "all" || item.date.split("-")[1] === selectedMonth;
 
-      // Filtre phase
-      const matchesPhase = selectedPhase === "all" || item.phase === selectedPhase;
+        // Filtre phase
+        const matchesPhase = selectedPhase === "all" || item.phase === selectedPhase;
 
-      return matchesSearch && matchesCategory && matchesMonth && matchesPhase;
-    });
+        return matchesSearch && matchesCategory && matchesMonth && matchesPhase;
+      })
+      .sort((a, b) => a.date.localeCompare(b.date));
   }, [searchQuery, selectedCategory, selectedMonth, selectedPhase]);
 
   return (
