@@ -154,7 +154,7 @@ export const competitions20262027: CompetitionEvent[] = [
     details: "Compétition amicale festive pour tous les adhérents."
   },
 
-  // --- JANVIER 2027 ---
+  // --- PHASE 2 (DATES OFFICIELLES CORRIGÉES) ---
   {
     id: "p2-jeunes-j1",
     date: "2027-01-09",
@@ -172,71 +172,48 @@ export const competitions20262027: CompetitionEvent[] = [
     category: "teams",
     phase: "Phase 2",
     location: "Régional & Départemental",
-    details: "Lancement de la Phase 2 du championnat par équipes Séniors."
+    details: "1ère journée de la Phase 2 du championnat par équipes."
+  },
+  {
+    id: "p2-j2",
+    date: "2027-01-23",
+    endDate: "2027-01-24",
+    title: "Championnat par Équipes - Journée 2 (Phase 2)",
+    category: "teams",
+    phase: "Phase 2",
+    location: "Régional & Départemental"
   },
   {
     id: "p2-crit3",
-    date: "2027-01-23",
-    endDate: "2027-01-24",
+    date: "2027-01-30",
+    endDate: "2027-01-31",
     title: "Critérium Fédéral - 3ème Tour",
     category: "criterium",
     phase: "Phase 2",
     location: "Nationale, Régionale & Départementale"
   },
   {
-    id: "p2-j2",
-    date: "2027-01-30",
-    endDate: "2027-01-31",
-    title: "Championnat par Équipes - Journée 2 (Phase 2)",
-    category: "teams",
-    phase: "Phase 2",
-    location: "Régional & Départemental"
-  },
-
-  // --- FÉVRIER 2027 ---
-  {
-    id: "p2-jeunes-j2",
+    id: "p2-j3",
     date: "2027-02-06",
     endDate: "2027-02-07",
-    title: "Championnat Jeunes - Journée 2 (Phase 2)",
-    category: "youth",
-    phase: "Phase 2",
-    location: "Gironde"
-  },
-  {
-    id: "p2-j3",
-    date: "2027-02-20",
-    endDate: "2027-02-21",
     title: "Championnat par Équipes - Journée 3 (Phase 2)",
     category: "teams",
     phase: "Phase 2",
     location: "Régional & Départemental"
   },
-
-  // --- MARS 2027 ---
-  {
-    id: "p2-jeunes-j3",
-    date: "2027-03-06",
-    endDate: "2027-03-07",
-    title: "Championnat Jeunes - Journée 3 (Phase 2)",
-    category: "youth",
-    phase: "Phase 2",
-    location: "Gironde"
-  },
   {
     id: "p2-crit4",
-    date: "2027-03-13",
-    endDate: "2027-03-14",
+    date: "2027-03-06",
+    endDate: "2027-03-07",
     title: "Critérium Fédéral - 4ème Tour",
     category: "criterium",
     phase: "Phase 2",
-    location: "Nationale, Régionale & Départementale",
-    details: "Dernier tour du Critérium Fédéral individuel de la saison."
+    location: "Nationale, Régionale & Départementale"
   },
   {
     id: "p2-j4",
-    date: "2027-03-20",
-    endDate: "2027-03-21",
+    date: "2027-03-13",
+    endDate: "2027-03-14",
     title: "Championnat par Équipes - Journée 4 (Phase 2)",
     category: "teams",
     phase: "Phase 2",
@@ -251,12 +228,10 @@ export const competitions20262027: CompetitionEvent[] = [
     location: "Saint-Loubès",
     details: "Animation découverte pour les débutants et écoles."
   },
-
-  // --- AVRIL 2027 ---
   {
     id: "p2-j5",
-    date: "2027-04-03",
-    endDate: "2027-04-04",
+    date: "2027-04-10",
+    endDate: "2027-04-11",
     title: "Championnat par Équipes - Journée 5 (Phase 2)",
     category: "teams",
     phase: "Phase 2",
@@ -264,8 +239,8 @@ export const competitions20262027: CompetitionEvent[] = [
   },
   {
     id: "tournoi-stloubes-2027",
-    date: "2027-04-10",
-    endDate: "2027-04-11",
+    date: "2027-04-24",
+    endDate: "2027-04-25",
     title: "Grand Tournoi Régional de Saint-Loubès 2027",
     category: "club",
     location: "Gymnase de Saint-Loubès",
@@ -273,38 +248,27 @@ export const competitions20262027: CompetitionEvent[] = [
   },
   {
     id: "p2-j6",
-    date: "2027-04-17",
-    endDate: "2027-04-18",
+    date: "2027-05-22",
+    endDate: "2027-05-23",
     title: "Championnat par Équipes - Journée 6 (Phase 2)",
     category: "teams",
     phase: "Phase 2",
     location: "Régional & Départemental"
   },
-
-  // --- MAI 2027 ---
-  {
-    id: "p2-jeunes-finales",
-    date: "2027-05-08",
-    endDate: "2027-05-09",
-    title: "Finales des Championnats Jeunes par Équipes",
-    category: "youth",
-    phase: "Phase 2",
-    location: "Gironde"
-  },
   {
     id: "p2-j7",
-    date: "2027-05-15",
-    endDate: "2027-05-16",
+    date: "2027-05-29",
+    endDate: "2027-05-30",
     title: "Championnat par Équipes - Journée 7 (Phase 2)",
     category: "teams",
     phase: "Phase 2",
     location: "Régional & Départemental",
-    details: "Dernière journée officielle du championnat par équipes."
+    details: "Dernière journée officielle de Phase 2."
   },
   {
     id: "p2-titres-dep",
-    date: "2027-05-22",
-    endDate: "2027-05-23",
+    date: "2027-06-05",
+    endDate: "2027-06-06",
     title: "Titres Départementaux par Équipes",
     category: "individual",
     phase: "Phase 2",
@@ -312,30 +276,12 @@ export const competitions20262027: CompetitionEvent[] = [
   },
   {
     id: "p2-titres-reg",
-    date: "2027-05-29",
-    endDate: "2027-05-30",
+    date: "2027-06-12",
+    endDate: "2027-06-13",
     title: "Titres Régionaux par Équipes",
     category: "individual",
     phase: "Phase 2",
     location: "Nouvelle-Aquitaine"
-  },
-
-  // --- JUIN 2027 ---
-  {
-    id: "veterans-2027",
-    date: "2027-06-05",
-    endDate: "2027-06-06",
-    title: "Finales Vétérans & Tournoi des Familles",
-    category: "individual",
-    location: "Gironde"
-  },
-  {
-    id: "titres-indivs-2027",
-    date: "2027-06-12",
-    endDate: "2027-06-13",
-    title: "Finales des Titres Individuels",
-    category: "individual",
-    location: "Gironde & Nouvelle-Aquitaine"
   },
   {
     id: "fete-club-2027",
