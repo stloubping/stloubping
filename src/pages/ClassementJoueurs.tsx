@@ -19,7 +19,8 @@ import {
   RefreshCw, 
   ExternalLink,
   Table as TableIcon,
-  Globe
+  Globe,
+  Database
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -70,6 +71,8 @@ const ClassementJoueurs = () => {
   const avgPoints = totalPlayers > 0 
     ? Math.round(players.reduce((acc, p) => acc + p.points, 0) / totalPlayers) 
     : 0;
+  
+  const currentSource = players.length > 0 ? (players[0].source || "Direct FFTT") : "FFTT";
 
   return (
     <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
@@ -80,7 +83,7 @@ const ClassementJoueurs = () => {
           Classement des Joueurs
         </h1>
         <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto">
-          Données officielles synchronisées avec la FFTT et Pingpocket.
+          Joueurs et classements du St Loub Ping (Club N° 10330022).
         </p>
       </div>
 
@@ -109,7 +112,7 @@ const ClassementJoueurs = () => {
           </TabsList>
         </div>
 
-        {/* --- Onglet 1 : Tableau Interactif API FFTT --- */}
+        {/* --- Onglet 1 : Tableau Interactif --- */}
         <TabsContent value="live" className="space-y-6">
           {/* Cartes KPI Statistiques */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -157,8 +160,11 @@ const ClassementJoueurs = () => {
             <CardHeader className="p-4 md:p-6 pb-2">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
                 <div>
-                  <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
+                  <CardTitle className="text-xl md:text-2xl font-bold text-clubDark flex items-center gap-2">
                     Classement des Licenciés ({filteredPlayers.length})
+                    <Badge variant="outline" className="text-[10px] border-clubPrimary text-clubPrimary bg-clubPrimary/10">
+                      <Database className="h-3 w-3 mr-1" /> {currentSource}
+                    </Badge>
                   </CardTitle>
                   <CardDescription className="text-xs md:text-sm text-muted-foreground">
                     Rechercher et filtrer parmi l'ensemble des joueurs du club.
@@ -210,13 +216,11 @@ const ClassementJoueurs = () => {
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-16">
                   <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
-                  <p className="text-sm font-semibold text-clubDark">Récupération des données FFTT en cours...</p>
+                  <p className="text-sm font-semibold text-clubDark">Chargement des données du club...</p>
                 </div>
               ) : filteredPlayers.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground text-sm italic">
-                  {players.length === 0 
-                    ? "Impossible de charger les données en direct. Vous pouvez consulter l'onglet 'Vue Pingpocket'." 
-                    : `Aucun joueur ne correspond à la recherche "${searchQuery}".`}
+                  Aucun joueur ne correspond à la recherche "{searchQuery}".
                 </div>
               ) : (
                 <div className="overflow-x-auto border-t sm:border border-border sm:rounded-lg">
