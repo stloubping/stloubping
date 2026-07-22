@@ -12,7 +12,7 @@ export interface CompetitionEvent {
 export const categoryLabels: Record<CompetitionEvent['category'], { label: string; color: string }> = {
   teams: { label: "Championnat par Équipes", color: "bg-blue-600 text-white" },
   criterium: { label: "Critérium Fédéral", color: "bg-purple-600 text-white" },
-  individual: { label: "Titres & Indivs", color: "bg-amber-600 text-white" },
+  individual: { label: "Finales par Classement", color: "bg-amber-600 text-white" },
   youth: { label: "Compétitions Jeunes", color: "bg-emerald-600 text-white" },
   club: { label: "Événements Club", color: "bg-clubPrimary text-white" },
 };
