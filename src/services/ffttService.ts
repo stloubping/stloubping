@@ -179,4 +179,3 @@ function parsePingpocketHtml(html: string): Player[] {
   }
   return players.sort((a, b) => b.points - a.points);
 }
-</dyad-service>
