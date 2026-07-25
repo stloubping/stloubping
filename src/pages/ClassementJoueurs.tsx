@@ -1,438 +1,379 @@
-"use client";
-
-import React, { useEffect, useState, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useEffect, useMemo, useState } from "react";
+import {
+  ArrowDown,
+  ArrowUp,
+  CalendarDays,
+  Minus,
+  RefreshCw,
+  Search,
+  Trophy,
+  Users,
+} from "lucide-react";
 import { fetchClubPlayers, Player } from "@/services/ffttService";
-import PingpocketIframe from "@/components/PingpocketIframe";
-import { 
-  Search, 
-  Trophy, 
-  Users, 
-  TrendingUp, 
-  Medal, 
-  RefreshCw, 
-  Table as TableIcon,
-  Globe,
-  Award,
-  Calendar,
-  UserCheck,
-  ArrowUpRight,
-  TrendingDown,
-  Loader2
-} from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const formatPoints = (value: number) =>
+  Number(value || 0).toLocaleString("fr-FR", {
+    maximumFractionDigits: 2,
+  });
+
+const normalize = (value = "") =>
+  value
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase();
+
+const playerName = (player: Player) =>
+  `${player.prenom} ${player.nom}`
+    .toLocaleLowerCase("fr-FR")
+    .replace(/(^|[\s'-])\p{L}/gu, (letter) =>
+      letter.toLocaleUpperCase("fr-FR"),
+    );
+
+const initials = (player: Player) =>
+  `${player.prenom?.[0] || ""}${player.nom?.[0] || ""}`.toUpperCase();
 
 const ClassementJoueurs = () => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedGender, setSelectedGender] = useState("all");
 
   const loadPlayers = async () => {
     setLoading(true);
-    const data = await fetchClubPlayers();
-    setPlayers(data);
-    setLoading(false);
+    setError("");
+
+    try {
+      setPlayers(await fetchClubPlayers());
+    } catch {
+      setError(
+        "Le classement FFTT est momentanément indisponible. Réessayez dans quelques instants.",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     loadPlayers();
   }, []);
 
-  const categoriesList = useMemo(() => {
-    const setCat = new Set<string>();
-    players.forEach(p => {
-      if (p.cat) setCat.add(p.cat);
-    });
-    return Array.from(setCat).sort();
-  }, [players]);
-
-  const filteredPlayers = useMemo(() => {
-    return players.filter(player => {
-      const query = searchQuery.toLowerCase().trim();
-      const matchesSearch = !query || 
-        player.nom.toLowerCase().includes(query) ||
-        player.prenom.toLowerCase().includes(query) ||
-        player.licence.toLowerCase().includes(query) ||
-        `${player.prenom} ${player.nom}`.toLowerCase().includes(query);
-
-      const matchesCat = selectedCategory === "all" || player.cat === selectedCategory;
-
-      return matchesSearch && matchesCat;
-    });
-  }, [players, searchQuery, selectedCategory]);
-
-  const monthlySortedPlayers = useMemo(() => {
-    return [...filteredPlayers].sort((a, b) => (b.progmens || 0) - (a.progmens || 0));
-  }, [filteredPlayers]);
-
-  const annualSortedPlayers = useMemo(() => {
-    return [...filteredPlayers].sort((a, b) => (b.progans || 0) - (a.progans || 0));
-  }, [filteredPlayers]);
-
-  const groupedByCat = useMemo(() => {
-    const groups: Record<string, Player[]> = {};
-    filteredPlayers.forEach(p => {
-      const catKey = p.cat || "Non renseignée";
-      if (!groups[catKey]) groups[catKey] = [];
-      groups[catKey].push(p);
-    });
-    return groups;
-  }, [filteredPlayers]);
-
-  const totalPlayers = players.length;
-  const bestPlayer = players.length > 0 ? players[0] : null;
-  const avgPoints = players.length > 0 
-    ? Math.round(players.reduce((acc, p) => acc + p.points, 0) / players.length) 
-    : 0;
-
-  const renderTableHead = (progressionType?: 'mens' | 'ans') => (
-    <TableHeader>
-      <TableRow className="bg-clubDark hover:bg-clubDark">
-        <TableHead className="text-white font-bold text-center w-[60px] text-xs">Rang</TableHead>
-        <TableHead className="text-white font-bold text-xs">Joueur</TableHead>
-        <TableHead className="text-white font-bold text-center text-xs">Points FFTT</TableHead>
-        {progressionType && (
-          <TableHead className="text-white font-bold text-center text-xs">
-            Gain {progressionType === 'mens' ? 'Mois' : 'Saison'}
-          </TableHead>
-        )}
-        <TableHead className="text-white font-bold text-center text-xs hidden sm:table-cell">Clast Officiel</TableHead>
-        <TableHead className="text-white font-bold text-center text-xs hidden md:table-cell">Catégorie</TableHead>
-        <TableHead className="text-white font-bold text-center text-xs hidden lg:table-cell">N° Licence</TableHead>
-      </TableRow>
-    </TableHeader>
+  const categories = useMemo(
+    () =>
+      [...new Set(players.map((player) => player.cat).filter(Boolean))].sort(
+        (a, b) => a.localeCompare(b, "fr"),
+      ),
+    [players],
   );
 
-  const renderPlayerRow = (player: Player, index: number, progressionType?: 'mens' | 'ans') => {
-    const rank = players.findIndex(p => p.licence === player.licence) + 1;
-    const isTop3 = rank <= 3 && rank > 0;
+  const filteredPlayers = useMemo(() => {
+    const query = normalize(searchQuery.trim());
 
-    const gainVal = progressionType === 'mens' ? player.progmens : player.progans;
-    const hasGain = gainVal !== undefined && gainVal !== null;
+    return players.filter((player) => {
+      const matchesSearch =
+        !query ||
+        normalize(`${player.prenom} ${player.nom} ${player.licence}`).includes(
+          query,
+        );
+      const matchesCategory =
+        selectedCategory === "all" || player.cat === selectedCategory;
+      const matchesGender =
+        selectedGender === "all" || player.sexe === selectedGender;
 
-    return (
-      <TableRow 
-        key={player.licence || index} 
-        className={`hover:bg-clubSection/50 transition-colors ${
-          isTop3 ? "bg-clubPrimary/5 font-semibold" : "even:bg-clubSection/20 odd:bg-white"
-        }`}
-      >
-        <TableCell className="text-center font-bold text-xs md:text-sm">
-          {rank === 1 ? (
-            <span className="inline-flex items-center justify-center bg-yellow-400 text-black font-extrabold h-6 w-6 rounded-full text-xs shadow-sm">1</span>
-          ) : rank === 2 ? (
-            <span className="inline-flex items-center justify-center bg-gray-300 text-black font-extrabold h-6 w-6 rounded-full text-xs shadow-sm">2</span>
-          ) : rank === 3 ? (
-            <span className="inline-flex items-center justify-center bg-amber-600 text-white font-extrabold h-6 w-6 rounded-full text-xs shadow-sm">3</span>
-          ) : (
-            <span className="text-muted-foreground">{index + 1}</span>
-          )}
-        </TableCell>
+      return matchesSearch && matchesCategory && matchesGender;
+    });
+  }, [players, searchQuery, selectedCategory, selectedGender]);
 
-        <TableCell className="text-xs md:text-sm font-semibold text-clubDark uppercase">
-          {player.nom} <span className="capitalize font-normal text-clubDark/90">{player.prenom}</span>
-        </TableCell>
+  const rankByLicence = useMemo(
+    () =>
+      new Map(
+        players.map((player, index) => [player.licence, index + 1] as const),
+      ),
+    [players],
+  );
 
-        <TableCell className="text-center text-xs md:text-sm font-extrabold text-clubPrimary bg-clubPrimary/5">
-          {player.points} pts
-        </TableCell>
-
-        {progressionType && (
-          <TableCell className="text-center text-xs md:text-sm font-bold">
-            {hasGain ? (
-              <span className={`inline-flex items-center justify-center gap-0.5 px-2.5 py-0.5 rounded-full border ${
-                gainVal >= 0 
-                  ? "bg-emerald-50 text-emerald-700 border-emerald-200" 
-                  : "bg-red-50 text-red-700 border-red-200"
-              }`}>
-                {gainVal >= 0 ? <ArrowUpRight className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                {gainVal > 0 ? `+${gainVal}` : gainVal} pts
-              </span>
-            ) : (
-              <span className="text-xs text-muted-foreground font-normal">0 pts</span>
-            )}
-          </TableCell>
-        )}
-
-        <TableCell className="text-center text-xs md:text-sm font-medium hidden sm:table-cell">
-          <Badge variant="outline" className="border-clubPrimary/40 text-clubDark bg-white">
-            {player.clast || Math.floor(player.points / 100)}
-          </Badge>
-        </TableCell>
-
-        <TableCell className="text-center text-xs font-medium text-muted-foreground hidden md:table-cell">
-          {player.cat ? (
-            <Badge className="bg-clubDark text-white text-[10px]">
-              {player.cat}
-            </Badge>
-          ) : (
-            "-"
-          )}
-        </TableCell>
-
-        <TableCell className="text-center text-xs font-mono text-muted-foreground hidden lg:table-cell">
-          {player.licence}
-        </TableCell>
-      </TableRow>
-    );
-  };
+  const bestPlayer = players[0];
+  const positiveEvolutions = players.filter(
+    (player) => Number(player.progmens || 0) > 0,
+  ).length;
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
-      {/* En-tête Général */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl md:text-5xl font-extrabold text-clubDark mb-3 flex items-center justify-center gap-3">
-          <Trophy className="h-8 w-8 md:h-10 md:w-10 text-clubPrimary" />
-          Classement Officiel FFTT
-        </h1>
-        <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto">
-          Données en direct des serveurs FFTT pour le St Loub Ping (Club N° 10330022).
-        </p>
-      </div>
+    <div className="min-h-screen bg-white text-clubDark">
+      <section className="relative isolate h-[430px] overflow-hidden text-white">
+        <img
+          src="/images/hero/club-training.jpg"
+          alt="Joueurs du St Loub Ping en entraînement"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/20" />
+        <div className="container relative flex h-full flex-col items-start justify-center px-4 md:px-6">
+          <span className="mb-4 rounded-full border border-white/30 bg-black/30 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em]">
+            Saison en cours · Club n° 10330022
+          </span>
+          <h1 className="max-w-4xl text-4xl font-extrabold tracking-tight sm:text-5xl md:text-7xl">
+            Classement des joueurs
+          </h1>
+          <p className="mt-4 max-w-2xl text-base text-white/85 md:text-lg">
+            Les points officiels et l’évolution mensuelle des licenciés du St
+            Loub Ping, synchronisés avec la FFTT.
+          </p>
+          <a
+            href="#classement"
+            className="mt-7 rounded-full bg-clubPrimary px-7 py-3 font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-red-600"
+          >
+            Voir le classement
+          </a>
+        </div>
+      </section>
 
-      <Tabs defaultValue="live" className="w-full">
-        {/* Navigation par Onglets */}
-        <div className="flex justify-center mb-8 overflow-x-auto">
-          <TabsList className="bg-clubSection p-1.5 rounded-2xl flex flex-wrap justify-center gap-1.5 h-auto shadow-inner border border-border">
-            <TabsTrigger value="live" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-semibold text-xs md:text-sm py-2 px-4 rounded-xl transition-all">
-              <TableIcon className="mr-2 h-4 w-4" /> Tableau des Joueurs
-            </TabsTrigger>
-            <TabsTrigger value="pingpocket" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-semibold text-xs md:text-sm py-2 px-4 rounded-xl transition-all">
-              <Globe className="mr-2 h-4 w-4" /> Vue Directe Pingpocket
-            </TabsTrigger>
-            <TabsTrigger value="mensuelle" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-semibold text-xs md:text-sm py-2 px-4 rounded-xl transition-all">
-              <Calendar className="mr-2 h-4 w-4" /> Progression Mensuelle
-            </TabsTrigger>
-            <TabsTrigger value="annuelle" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-semibold text-xs md:text-sm py-2 px-4 rounded-xl transition-all">
-              <TrendingUp className="mr-2 h-4 w-4" /> Progression Annuelle
-            </TabsTrigger>
-            <TabsTrigger value="categorie" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-semibold text-xs md:text-sm py-2 px-4 rounded-xl transition-all">
-              <UserCheck className="mr-2 h-4 w-4" /> Par Catégorie d'Âge
-            </TabsTrigger>
-          </TabsList>
+      <section className="container relative z-10 -mt-10 grid overflow-hidden rounded-xl border bg-white shadow-xl sm:grid-cols-3">
+        <article className="border-b p-6 sm:border-b-0 sm:border-r">
+          <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-clubPrimary">
+            <Users className="h-4 w-4" />
+            Licenciés
+          </div>
+          <strong className="mt-2 block text-3xl text-clubDark">
+            {loading ? "—" : players.length}
+          </strong>
+          <span className="text-sm text-muted-foreground">
+            joueurs et joueuses
+          </span>
+        </article>
+
+        <article className="border-b p-6 sm:border-b-0 sm:border-r">
+          <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-clubPrimary">
+            <Trophy className="h-4 w-4" />
+            Meilleur classement
+          </div>
+          <strong className="mt-2 block text-3xl text-clubDark">
+            {bestPlayer ? formatPoints(bestPlayer.points) : "—"}
+          </strong>
+          <span className="text-sm text-muted-foreground">points FFTT</span>
+        </article>
+
+        <article className="p-6">
+          <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-clubPrimary">
+            <CalendarDays className="h-4 w-4" />
+            Progressions du mois
+          </div>
+          <strong className="mt-2 block text-3xl text-clubDark">
+            {loading ? "—" : positiveEvolutions}
+          </strong>
+          <span className="text-sm text-muted-foreground">
+            joueurs en progression
+          </span>
+        </article>
+      </section>
+
+      <section
+        id="classement"
+        className="container scroll-mt-24 px-4 py-16 md:px-6 md:py-20"
+      >
+        <header className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-clubPrimary">
+              St Loub Ping
+            </span>
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-clubDark md:text-5xl">
+              Classement du club
+            </h2>
+            <p className="mt-2 text-muted-foreground">
+              Recherchez un licencié ou filtrez le tableau.
+            </p>
+          </div>
+          <span className="w-fit rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600">
+            {filteredPlayers.length} joueur
+            {filteredPlayers.length > 1 ? "s" : ""} affiché
+            {filteredPlayers.length > 1 ? "s" : ""}
+          </span>
+        </header>
+
+        <div className="mb-4 grid gap-3 md:grid-cols-[1fr_220px_190px_auto]">
+          <label className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Rechercher un joueur…"
+              className="h-12 rounded-md border-slate-200 bg-white pl-10 focus-visible:ring-clubPrimary"
+              aria-label="Rechercher un joueur"
+            />
+          </label>
+
+          <Select
+            value={selectedCategory}
+            onValueChange={setSelectedCategory}
+          >
+            <SelectTrigger className="h-12 rounded-md border-slate-200">
+              <SelectValue placeholder="Toutes les catégories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Toutes les catégories</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category} value={category}>
+                  {category}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={selectedGender} onValueChange={setSelectedGender}>
+            <SelectTrigger className="h-12 rounded-md border-slate-200">
+              <SelectValue placeholder="Tous les joueurs" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tous les joueurs</SelectItem>
+              <SelectItem value="M">Messieurs</SelectItem>
+              <SelectItem value="F">Dames</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Button
+            type="button"
+            onClick={loadPlayers}
+            disabled={loading}
+            variant="outline"
+            className="h-12 rounded-md border-slate-200"
+          >
+            <RefreshCw
+              className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`}
+            />
+            Actualiser
+          </Button>
         </div>
 
-        {/* --- ONGLET 1 : TABLEAU DES JOUEURS --- */}
-        <TabsContent value="live" className="space-y-6 focus-visible:outline-none">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Users className="h-4 w-4 text-clubPrimary" /> Licenciés FFTT
-                </CardDescription>
-                <CardTitle className="text-2xl md:text-3xl font-extrabold text-clubPrimary">
-                  {loading ? <Loader2 className="h-6 w-6 animate-spin" /> : totalPlayers}
-                </CardTitle>
-              </CardHeader>
-            </Card>
+        <div className="min-h-72 overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
+          {loading ? (
+            <div className="flex min-h-72 flex-col items-center justify-center text-muted-foreground">
+              <RefreshCw className="mb-4 h-8 w-8 animate-spin text-clubPrimary" />
+              <p>Récupération du classement FFTT…</p>
+            </div>
+          ) : error ? (
+            <div className="flex min-h-72 flex-col items-center justify-center px-6 text-center">
+              <p className="max-w-lg text-muted-foreground">{error}</p>
+              <Button
+                type="button"
+                onClick={loadPlayers}
+                className="mt-5 rounded-full bg-clubPrimary text-white hover:bg-red-600"
+              >
+                Réessayer
+              </Button>
+            </div>
+          ) : filteredPlayers.length === 0 ? (
+            <div className="flex min-h-72 items-center justify-center text-muted-foreground">
+              Aucun joueur ne correspond à cette recherche.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[900px] border-collapse">
+                <thead>
+                  <tr className="bg-slate-50 text-left text-[11px] uppercase tracking-wider text-slate-500">
+                    <th className="px-5 py-4">Rang</th>
+                    <th className="px-5 py-4">Joueur</th>
+                    <th className="px-5 py-4">Catégorie</th>
+                    <th className="px-5 py-4">Licence</th>
+                    <th className="px-5 py-4 text-right">
+                      Évolution mensuelle
+                    </th>
+                    <th className="px-5 py-4 text-right">Points</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredPlayers.map((player) => {
+                    const rank = rankByLicence.get(player.licence) || 0;
+                    const monthly = Number(player.progmens || 0);
+                    const isPositive = monthly > 0;
+                    const isNegative = monthly < 0;
 
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Medal className="h-4 w-4 text-yellow-500" /> N°1 du Club
-                </CardDescription>
-                <CardTitle className="text-lg md:text-xl font-bold truncate text-white">
-                  {loading ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                  ) : bestPlayer ? (
-                    <span>{bestPlayer.nom} {bestPlayer.prenom} <span className="text-clubPrimary font-extrabold">({bestPlayer.points} pts)</span></span>
-                  ) : (
-                    "-"
-                  )}
-                </CardTitle>
-              </CardHeader>
-            </Card>
+                    return (
+                      <tr
+                        key={player.idlicence || player.licence}
+                        className="border-t border-slate-200 transition hover:bg-red-50/40"
+                      >
+                        <td
+                          className={`px-5 py-4 font-bold ${
+                            rank <= 3 ? "text-clubPrimary" : "text-slate-500"
+                          }`}
+                        >
+                          {String(rank).padStart(2, "0")}
+                        </td>
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-3">
+                            <span className="grid h-10 w-10 flex-none place-items-center rounded-full bg-clubDark text-xs font-extrabold text-white">
+                              {initials(player)}
+                            </span>
+                            <span>
+                              <strong className="block text-sm text-clubDark">
+                                {playerName(player)}
+                              </strong>
+                              <small className="text-muted-foreground">
+                                {player.sexe === "F" ? "Joueuse" : "Joueur"} du
+                                club
+                              </small>
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-5 py-4">
+                          <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-800">
+                            {player.cat || "—"}
+                          </span>
+                        </td>
+                        <td className="px-5 py-4 font-mono text-sm text-slate-500">
+                          {player.licence}
+                        </td>
+                        <td className="px-5 py-4 text-right">
+                          <span
+                            className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-extrabold ${
+                              isPositive
+                                ? "bg-emerald-50 text-emerald-700"
+                                : isNegative
+                                  ? "bg-red-50 text-red-700"
+                                  : "bg-slate-100 text-slate-500"
+                            }`}
+                            title={`Points du mois précédent : ${formatPoints(
+                              Number(player.valmen || 0),
+                            )}`}
+                          >
+                            {isPositive ? (
+                              <ArrowUp className="h-3.5 w-3.5" />
+                            ) : isNegative ? (
+                              <ArrowDown className="h-3.5 w-3.5" />
+                            ) : (
+                              <Minus className="h-3.5 w-3.5" />
+                            )}
+                            {isPositive ? "+" : ""}
+                            {formatPoints(monthly)} pts
+                          </span>
+                        </td>
+                        <td className="px-5 py-4 text-right text-lg font-extrabold text-clubPrimary">
+                          {formatPoints(player.points)}{" "}
+                          <small className="text-xs font-medium text-slate-400">
+                            pts
+                          </small>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
 
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <TrendingUp className="h-4 w-4 text-emerald-400" /> Moyenne Points
-                </CardDescription>
-                <CardTitle className="text-2xl md:text-3xl font-extrabold text-emerald-400">
-                  {loading ? <Loader2 className="h-6 w-6 animate-spin" /> : avgPoints > 0 ? `${avgPoints} pts` : "-"}
-                </CardTitle>
-              </CardHeader>
-            </Card>
-          </div>
-
-          <Card className="bg-clubLight shadow-xl rounded-2xl border border-border overflow-hidden">
-            <CardHeader className="p-4 md:p-6 pb-2">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-                <div>
-                  <CardTitle className="text-xl md:text-2xl font-bold text-clubDark flex items-center gap-2">
-                    Tableau des Licenciés
-                    <Badge variant="outline" className="text-[10px] border-clubPrimary text-clubPrimary bg-clubPrimary/10">
-                      <Award className="h-3 w-3 mr-1" /> Serveur FFTT
-                    </Badge>
-                  </CardTitle>
-                  <CardDescription className="text-xs md:text-sm text-muted-foreground">
-                    Filtrez par nom, prénom, numéro de licence ou catégorie d'âge.
-                  </CardDescription>
-                </div>
-
-                <Button 
-                  onClick={loadPlayers} 
-                  variant="ghost" 
-                  size="sm" 
-                  disabled={loading}
-                  className="text-xs text-clubPrimary hover:bg-clubPrimary/10 self-start sm:self-auto rounded-lg"
-                >
-                  <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${loading ? 'animate-spin' : ''}`} />
-                  Actualiser
-                </Button>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                <div className="relative sm:col-span-2">
-                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="text"
-                    placeholder="Rechercher par nom, prénom ou licence..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 bg-input border-clubPrimary/40 text-xs md:text-sm text-clubDark rounded-lg"
-                  />
-                </div>
-
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="bg-input border-clubPrimary/40 text-xs md:text-sm text-clubDark rounded-lg">
-                    <SelectValue placeholder="Toutes les catégories" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-clubLight border-clubPrimary">
-                    <SelectItem value="all" className="text-xs md:text-sm">Toutes les catégories</SelectItem>
-                    {categoriesList.map(cat => (
-                      <SelectItem key={cat} value={cat} className="text-xs md:text-sm">
-                        Catégorie {cat}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardHeader>
-
-            <CardContent className="p-0 md:p-6 pt-2">
-              {loading ? (
-                <div className="flex flex-col items-center justify-center py-16">
-                  <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
-                  <p className="text-sm font-semibold text-clubDark">Interrogation en direct des serveurs FFTT (10330022)...</p>
-                </div>
-              ) : filteredPlayers.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground text-sm italic">
-                  Aucun joueur trouvé.
-                </div>
-              ) : (
-                <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
-                  <Table className="min-w-full">
-                    {renderTableHead()}
-                    <TableBody>
-                      {filteredPlayers.map((player, index) => renderPlayerRow(player, index))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* --- ONGLET 2 : PINGPOCKET DIRECT --- */}
-        <TabsContent value="pingpocket" className="space-y-6 focus-visible:outline-none">
-          <PingpocketIframe title="Classements & Joueurs du Club St Loub Ping (Pingpocket)" type="joueurs" />
-        </TabsContent>
-
-        {/* --- ONGLET 3 : PROGRESSION MENSUELLE --- */}
-        <TabsContent value="mensuelle" className="space-y-6 focus-visible:outline-none">
-          <Card className="bg-clubLight shadow-xl rounded-2xl border border-border overflow-hidden">
-            <CardHeader className="p-4 md:p-6 pb-2">
-              <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
-                Classement par Progression Mensuelle
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0 md:p-6 pt-2">
-              {loading ? (
-                <div className="flex items-center justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div>
-              ) : (
-                <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
-                  <Table className="min-w-full">
-                    {renderTableHead('mens')}
-                    <TableBody>
-                      {monthlySortedPlayers.map((player, index) => renderPlayerRow(player, index, 'mens'))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* --- ONGLET 4 : PROGRESSION ANNUELLE --- */}
-        <TabsContent value="annuelle" className="space-y-6 focus-visible:outline-none">
-          <Card className="bg-clubLight shadow-xl rounded-2xl border border-border overflow-hidden">
-            <CardHeader className="p-4 md:p-6 pb-2">
-              <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
-                Classement par Progression Annuelle
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0 md:p-6 pt-2">
-              {loading ? (
-                <div className="flex items-center justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div>
-              ) : (
-                <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
-                  <Table className="min-w-full">
-                    {renderTableHead('ans')}
-                    <TableBody>
-                      {annualSortedPlayers.map((player, index) => renderPlayerRow(player, index, 'ans'))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* --- ONGLET 5 : PAR CATÉGORIE D'ÂGE --- */}
-        <TabsContent value="categorie" className="space-y-6 focus-visible:outline-none">
-          <Card className="bg-clubLight shadow-xl rounded-2xl border border-border overflow-hidden">
-            <CardHeader className="p-4 md:p-6 pb-2">
-              <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
-                Licenciés par Catégorie d'Âge
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 md:p-6 space-y-8">
-              {loading ? (
-                <div className="flex items-center justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div>
-              ) : (
-                Object.entries(groupedByCat).map(([catName, catPlayers]) => (
-                  <div key={catName} className="space-y-3">
-                    <div className="flex items-center gap-3 bg-clubSection p-3 rounded-xl border border-border">
-                      <Badge className="bg-clubPrimary text-white font-bold text-xs px-3 py-1">
-                        Catégorie {catName}
-                      </Badge>
-                      <span className="text-xs font-semibold text-clubDark">
-                        {catPlayers.length} joueur(s)
-                      </span>
-                    </div>
-
-                    <div className="overflow-x-auto border border-border rounded-xl shadow-sm">
-                      <Table className="min-w-full">
-                        {renderTableHead()}
-                        <TableBody>
-                          {catPlayers.map((player, index) => renderPlayerRow(player, index))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </div>
-                ))
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+        <p className="mt-4 text-right text-xs text-muted-foreground">
+          Données officielles de la Fédération Française de Tennis de Table.
+        </p>
+      </section>
     </div>
   );
 };

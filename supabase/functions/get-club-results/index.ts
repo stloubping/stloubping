@@ -6,11 +6,15 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const APP_ID = "SX046";
-const APP_PASSWORD = "NQC2rNs85g";
-const CLUB_NUMBER = "10330022";
+const APP_ID = Deno.env.get("FFTT_APP_ID");
+const APP_PASSWORD = Deno.env.get("FFTT_APP_PASSWORD");
+const CLUB_NUMBER = Deno.env.get("FFTT_CLUB_NUMBER") || "10330022";
 const API_BASE_URL = "https://www.fftt.com/mobile/pxml";
-const SERIE = "STLBP2025ABCD1";
+const SERIE = Deno.env.get("FFTT_SERIAL");
+
+if (!APP_ID || !APP_PASSWORD || !SERIE) {
+  throw new Error("Secrets FFTT Supabase manquants");
+}
 
 function getTimestamp(): string {
   const now = new Date();
@@ -137,7 +141,7 @@ serve(async (req) => {
         const classParams: Record<string, string> = { action: 'classement', auto: '1', D1: lienParams.D1 };
         if (lienParams.cx_poule) classParams.cx_poule = lienParams.cx_poule;
 
-        let classXml = await callSmartping('xml_result_equ.php', classParams);
+        const classXml = await callSmartping('xml_result_equ.php', classParams);
         let ranking = parseXmlList(classXml, 'classement');
         let usedCxPoule = lienParams.cx_poule || '';
 

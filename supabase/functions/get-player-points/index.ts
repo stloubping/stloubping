@@ -7,9 +7,13 @@ const corsHeaders = {
 }
 
 // Configuration Smartping fournie par l'utilisateur
-const APP_ID = "SX046";
-const APP_PASSWORD = "NQC2rNs85g";
+const APP_ID = Deno.env.get("FFTT_APP_ID");
+const APP_PASSWORD = Deno.env.get("FFTT_APP_PASSWORD");
 const API_BASE_URL = "https://www.fftt.com/wp-content/plugins/fftt-api/api.php";
+
+if (!APP_ID || !APP_PASSWORD) {
+  throw new Error("Secrets FFTT Supabase manquants");
+}
 
 /**
  * Génère le timestamp au format YYYYMMDDHHMMSSmmm (17 caractères)
@@ -37,7 +41,7 @@ function generateSmartpingHash(serie: string) {
  * Parseur XML ultra-léger
  */
 function extractXmlTag(xml: string, tag: string) {
-  const match = xml.match(new RegExp(`<${tag}>(.*?)<\/${tag}>`));
+  const match = xml.match(new RegExp(`<${tag}>(.*?)</${tag}>`));
   return match ? match[1].trim() : "";
 }
 

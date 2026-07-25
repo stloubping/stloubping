@@ -1,13 +1,14 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import CryptoJS from "https://esm.sh/crypto-js@4.1.1";
+import { createHash, createHmac } from "node:crypto";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+type ApiRequest = {
+  method?: string;
 };
 
-const API_BASE_URL = "https://www.fftt.com/mobile/pxml";
+type ApiResponse = {
+  status: (code: number) => ApiResponse;
+  setHeader: (name: string, value: string) => void;
+  json: (body: unknown) => void;
+};
 
 type XmlNode = {
   name: string;
@@ -15,9 +16,11 @@ type XmlNode = {
   text: string;
 };
 
+const API_BASE_URL = "https://www.fftt.com/mobile/pxml";
+
 function requiredSecret(name: string): string {
-  const value = Deno.env.get(name);
-  if (!value) throw new Error(`Secret Supabase manquant : ${name}`);
+  const value = process.env[name];
+  if (!value) throw new Error(`Variable Vercel manquante : ${name}`);
   return value;
 }
 
@@ -26,7 +29,7 @@ function getConfiguration() {
     appId: requiredSecret("FFTT_APP_ID"),
     password: requiredSecret("FFTT_APP_PASSWORD"),
     serial: requiredSecret("FFTT_SERIAL"),
-    clubNumber: Deno.env.get("FFTT_CLUB_NUMBER") || "10330022",
+    clubNumber: process.env.FFTT_CLUB_NUMBER || "10330022",
   };
 }
 
@@ -53,8 +56,8 @@ function getTimestamp(date = new Date()): string {
 }
 
 function generateHash(timestamp: string, password: string): string {
-  const key = CryptoJS.MD5(password).toString();
-  return CryptoJS.HmacSHA1(timestamp, key).toString();
+  const key = createHash("md5").update(password, "utf8").digest("hex");
+  return createHmac("sha1", key).update(timestamp, "utf8").digest("hex");
 }
 
 async function callSmartping(
@@ -73,7 +76,12 @@ async function callSmartping(
 
   const response = await fetch(
     `${API_BASE_URL}/${script}.php?${queryParams.toString()}`,
-    { headers: { Accept: "application/xml, text/xml" } },
+    {
+      headers: {
+        Accept: "application/xml, text/xml",
+        "User-Agent": "Saint-Loub-Ping/1.0",
+      },
+    },
   );
   const body = await response.text();
 
@@ -96,10 +104,6 @@ function decodeXml(value = ""): string {
     .trim();
 }
 
-/**
- * Smartping renvoie un enregistrement <licence> qui contient lui-même
- * un champ <licence>. Une regex s'arrête donc au mauvais </licence>.
- */
 function parseXmlRecords(xml: string): Record<string, string>[] {
   const documentNode: XmlNode = {
     name: "#document",
@@ -161,16 +165,11 @@ function rounded(value: number): number {
   return Math.round(value * 100) / 100;
 }
 
-serve(async (request) => {
-  if (request.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
-
-  if (request.method !== "POST") {
-    return new Response(JSON.stringify({ error: "Méthode non autorisée" }), {
-      status: 405,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+export default async function handler(request: ApiRequest, response: ApiResponse) {
+  if (request.method !== "GET") {
+    response.setHeader("Allow", "GET");
+    response.status(405).json({ error: "Méthode non autorisée", players: [] });
+    return;
   }
 
   try {
@@ -208,36 +207,27 @@ serve(async (request) => {
           progans: rounded(points - initialSeason),
         };
       })
-      .filter((player) => player.nom && player.prenom)
-      .sort((a, b) => b.points - a.points || a.nom.localeCompare(b.nom));
+      .filter((player) => player.nom && player.prenom && player.licence)
+      .sort(
+        (a, b) =>
+          b.points - a.points ||
+          a.nom.localeCompare(b.nom, "fr") ||
+          a.prenom.localeCompare(b.prenom, "fr"),
+      );
 
-    return new Response(
-      JSON.stringify({
-        players,
-        updatedAt: new Date().toISOString(),
-      }),
-      {
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-          "Cache-Control": "public, max-age=300",
-        },
-      },
-    );
+    response.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600");
+    response.status(200).json({
+      players,
+      updatedAt: new Date().toISOString(),
+    });
   } catch (error) {
-    console.error("[get-club-players]", error);
-    return new Response(
-      JSON.stringify({
-        error:
-          error instanceof Error
-            ? error.message
-            : "Erreur interne du service FFTT",
-        players: [],
-      }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
-    );
+    console.error("[api/fftt/players]", error);
+    response.status(500).json({
+      error:
+        error instanceof Error
+          ? error.message
+          : "Erreur interne du service FFTT",
+      players: [],
+    });
   }
-});
+}
