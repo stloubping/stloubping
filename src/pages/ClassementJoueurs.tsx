@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { fetchClubPlayers, Player } from "@/services/ffttService";
+import PingpocketIframe from "@/components/PingpocketIframe";
 import { 
   Loader2, 
   Search, 
@@ -87,7 +88,7 @@ const ClassementJoueurs = () => {
     return groups;
   }, [filteredPlayers]);
 
-  const totalPlayers = players.length > 0 ? players.length : 141;
+  const totalPlayers = players.length;
   const bestPlayer = players.length > 0 ? players[0] : null;
   const avgPoints = players.length > 0 
     ? Math.round(players.reduce((acc, p) => acc + p.points, 0) / players.length) 
@@ -194,19 +195,19 @@ const ClassementJoueurs = () => {
           Classement des Joueurs
         </h1>
         <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto">
-          Consultez l'ensemble des 141 licenciés du St Loub Ping (Club N° 10330022), leurs classements et leurs progressions.
+          Consultez les licenciés du St Loub Ping (Club N° 10330022), leurs classements officiels FFTT et leurs progressions.
         </p>
       </div>
 
-      <Tabs defaultValue="live" className="w-full">
+      <Tabs defaultValue="pingpocket" className="w-full">
         {/* Navigation par Onglets */}
         <div className="flex justify-center mb-8 overflow-x-auto">
           <TabsList className="bg-clubSection p-1.5 rounded-2xl flex flex-wrap justify-center gap-1.5 h-auto shadow-inner border border-border">
-            <TabsTrigger value="live" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-semibold text-xs md:text-sm py-2 px-4 rounded-xl transition-all">
-              <TableIcon className="mr-2 h-4 w-4" /> Vue Tableau Filtres
-            </TabsTrigger>
             <TabsTrigger value="pingpocket" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-semibold text-xs md:text-sm py-2 px-4 rounded-xl transition-all">
-              <Globe className="mr-2 h-4 w-4" /> Liste Officielle (141)
+              <Globe className="mr-2 h-4 w-4" /> Vue Directe Pingpocket
+            </TabsTrigger>
+            <TabsTrigger value="live" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-semibold text-xs md:text-sm py-2 px-4 rounded-xl transition-all">
+              <TableIcon className="mr-2 h-4 w-4" /> Tableau Filtres FFTT
             </TabsTrigger>
             <TabsTrigger value="mensuelle" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-semibold text-xs md:text-sm py-2 px-4 rounded-xl transition-all">
               <Calendar className="mr-2 h-4 w-4" /> Progression Mensuelle
@@ -220,16 +221,18 @@ const ClassementJoueurs = () => {
           </TabsList>
         </div>
 
-        {/* ==================================================================== */}
-        {/* --- ONGLET 1 : VUE TABLEAU FILTRES (INTERACTIF) --- */}
-        {/* ==================================================================== */}
+        {/* --- ONGLET 1 : PINGPOCKET DIRECT --- */}
+        <TabsContent value="pingpocket" className="space-y-6 focus-visible:outline-none">
+          <PingpocketIframe title="Classements & Joueurs du Club St Loub Ping (Pingpocket)" type="joueurs" />
+        </TabsContent>
+
+        {/* --- ONGLET 2 : TABLEAU INTERACTIF FFTT --- */}
         <TabsContent value="live" className="space-y-6 focus-visible:outline-none">
-          {/* Cartes KPI Statistiques */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
               <CardHeader className="p-4 pb-2">
                 <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Users className="h-4 w-4 text-clubPrimary" /> Total Licenciés
+                  <Users className="h-4 w-4 text-clubPrimary" /> Licenciés Chargés
                 </CardDescription>
                 <CardTitle className="text-2xl md:text-3xl font-extrabold text-clubPrimary">
                   {totalPlayers}
@@ -258,7 +261,7 @@ const ClassementJoueurs = () => {
                   <TrendingUp className="h-4 w-4 text-emerald-400" /> Moyenne Points
                 </CardDescription>
                 <CardTitle className="text-2xl md:text-3xl font-extrabold text-emerald-400">
-                  {avgPoints > 0 ? `${avgPoints} pts` : "750 pts"}
+                  {avgPoints > 0 ? `${avgPoints} pts` : "-"}
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -271,7 +274,7 @@ const ClassementJoueurs = () => {
                   <CardTitle className="text-xl md:text-2xl font-bold text-clubDark flex items-center gap-2">
                     Tableau Interactif des Joueurs
                     <Badge variant="outline" className="text-[10px] border-clubPrimary text-clubPrimary bg-clubPrimary/10">
-                      <Award className="h-3 w-3 mr-1" /> FFTT Officiel
+                      <Award className="h-3 w-3 mr-1" /> API FFTT
                     </Badge>
                   </CardTitle>
                   <CardDescription className="text-xs md:text-sm text-muted-foreground">
@@ -291,7 +294,6 @@ const ClassementJoueurs = () => {
                 </Button>
               </div>
 
-              {/* Filtres */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
                 <div className="relative sm:col-span-2">
                   <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -324,7 +326,7 @@ const ClassementJoueurs = () => {
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-16">
                   <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
-                  <p className="text-sm font-semibold text-clubDark">Mise à jour des licenciés...</p>
+                  <p className="text-sm font-semibold text-clubDark">Chargement des données FFTT...</p>
                 </div>
               ) : filteredPlayers.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground text-sm italic">
@@ -344,159 +346,18 @@ const ClassementJoueurs = () => {
           </Card>
         </TabsContent>
 
-        {/* ==================================================================== */}
-        {/* --- ONGLET 2 : LISTE OFFICIELLE (141 LICENCIÉS) --- */}
-        {/* ==================================================================== */}
-        <TabsContent value="pingpocket" className="space-y-6 focus-visible:outline-none">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Globe className="h-4 w-4 text-clubPrimary" /> Base Officielle
-                </CardDescription>
-                <CardTitle className="text-lg md:text-xl font-extrabold text-clubPrimary">
-                  FFTT Synchronisé
-                </CardTitle>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Users className="h-4 w-4 text-emerald-400" /> Total Inscrits
-                </CardDescription>
-                <CardTitle className="text-2xl md:text-3xl font-extrabold text-emerald-400">
-                  {totalPlayers} Licenciés
-                </CardTitle>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Sparkles className="h-4 w-4 text-yellow-400" /> Statut
-                </CardDescription>
-                <CardTitle className="text-lg md:text-xl font-bold text-white">
-                  Saison En Cours
-                </CardTitle>
-              </CardHeader>
-            </Card>
-          </div>
-
-          <Card className="bg-clubLight shadow-xl rounded-2xl border border-border overflow-hidden">
-            <CardHeader className="p-4 md:p-6 pb-2">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-                <div>
-                  <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
-                    Liste Officielle des Licenciés du Club
-                  </CardTitle>
-                  <CardDescription className="text-xs md:text-sm text-muted-foreground">
-                    Classement complet de l'ensemble des 141 joueurs enregistrés à la Fédération.
-                  </CardDescription>
-                </div>
-
-                <div className="relative w-full sm:w-72">
-                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="text"
-                    placeholder="Filtrer la liste..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 bg-input border-clubPrimary/40 text-xs md:text-sm text-clubDark rounded-lg"
-                  />
-                </div>
-              </div>
-            </CardHeader>
-
-            <CardContent className="p-0 md:p-6 pt-2">
-              {loading ? (
-                <div className="flex flex-col items-center justify-center py-16">
-                  <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
-                  <p className="text-sm font-semibold text-clubDark">Chargement de la liste officielle...</p>
-                </div>
-              ) : (
-                <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
-                  <Table className="min-w-full">
-                    {renderTableHead()}
-                    <TableBody>
-                      {filteredPlayers.map((player, index) => renderPlayerRow(player, index))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* ==================================================================== */}
         {/* --- ONGLET 3 : PROGRESSION MENSUELLE --- */}
-        {/* ==================================================================== */}
         <TabsContent value="mensuelle" className="space-y-6 focus-visible:outline-none">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Calendar className="h-4 w-4 text-clubPrimary" /> Période
-                </CardDescription>
-                <CardTitle className="text-lg md:text-xl font-extrabold text-clubPrimary">
-                  Dernier Mois
-                </CardTitle>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Zap className="h-4 w-4 text-yellow-400" /> Bilan
-                </CardDescription>
-                <CardTitle className="text-lg md:text-xl font-bold text-white">
-                  Points Mensuels FFTT / Pingpocket
-                </CardTitle>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <BarChart3 className="h-4 w-4 text-emerald-400" /> Format
-                </CardDescription>
-                <CardTitle className="text-lg md:text-xl font-extrabold text-emerald-400">
-                  Tableau Natif
-                </CardTitle>
-              </CardHeader>
-            </Card>
-          </div>
-
           <Card className="bg-clubLight shadow-xl rounded-2xl border border-border overflow-hidden">
             <CardHeader className="p-4 md:p-6 pb-2">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-                <div>
-                  <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
-                    Classement par Progression Mensuelle
-                  </CardTitle>
-                  <CardDescription className="text-xs md:text-sm text-muted-foreground">
-                    Liste dynamique triée par la progression de points enregistrée sur le mois.
-                  </CardDescription>
-                </div>
-
-                <div className="relative w-full sm:w-72">
-                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="text"
-                    placeholder="Rechercher un joueur..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 bg-input border-clubPrimary/40 text-xs md:text-sm text-clubDark rounded-lg"
-                  />
-                </div>
-              </div>
+              <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
+                Classement par Progression Mensuelle
+              </CardTitle>
             </CardHeader>
-
             <CardContent className="p-0 md:p-6 pt-2">
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-16">
                   <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
-                  <p className="text-sm font-semibold text-clubDark">Chargement des progressions mensuelles...</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
@@ -512,75 +373,18 @@ const ClassementJoueurs = () => {
           </Card>
         </TabsContent>
 
-        {/* ==================================================================== */}
         {/* --- ONGLET 4 : PROGRESSION ANNUELLE --- */}
-        {/* ==================================================================== */}
         <TabsContent value="annuelle" className="space-y-6 focus-visible:outline-none">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <TrendingUp className="h-4 w-4 text-clubPrimary" /> Période
-                </CardDescription>
-                <CardTitle className="text-lg md:text-xl font-extrabold text-clubPrimary">
-                  Saison Annuelle
-                </CardTitle>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Trophy className="h-4 w-4 text-yellow-400" /> Objectif
-                </CardDescription>
-                <CardTitle className="text-lg md:text-xl font-bold text-white">
-                  Palmarès Annuel
-                </CardTitle>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Sparkles className="h-4 w-4 text-emerald-400" /> Format
-                </CardDescription>
-                <CardTitle className="text-lg md:text-xl font-extrabold text-emerald-400">
-                  Tableau Natif
-                </CardTitle>
-              </CardHeader>
-            </Card>
-          </div>
-
           <Card className="bg-clubLight shadow-xl rounded-2xl border border-border overflow-hidden">
             <CardHeader className="p-4 md:p-6 pb-2">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-                <div>
-                  <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
-                    Classement par Progression Annuelle
-                  </CardTitle>
-                  <CardDescription className="text-xs md:text-sm text-muted-foreground">
-                    Palmarès des plus fortes progressions accumulées sur toute la saison.
-                  </CardDescription>
-                </div>
-
-                <div className="relative w-full sm:w-72">
-                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="text"
-                    placeholder="Rechercher un joueur..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 bg-input border-clubPrimary/40 text-xs md:text-sm text-clubDark rounded-lg"
-                  />
-                </div>
-              </div>
+              <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
+                Classement par Progression Annuelle
+              </CardTitle>
             </CardHeader>
-
             <CardContent className="p-0 md:p-6 pt-2">
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-16">
                   <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
-                  <p className="text-sm font-semibold text-clubDark">Chargement des progressions annuelles...</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
@@ -596,79 +400,18 @@ const ClassementJoueurs = () => {
           </Card>
         </TabsContent>
 
-        {/* ==================================================================== */}
         {/* --- ONGLET 5 : PAR CATÉGORIE D'ÂGE --- */}
-        {/* ==================================================================== */}
         <TabsContent value="categorie" className="space-y-6 focus-visible:outline-none">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <UserCheck className="h-4 w-4 text-clubPrimary" /> Tranches d'Âge
-                </CardDescription>
-                <CardTitle className="text-lg md:text-xl font-extrabold text-clubPrimary">
-                  Jeunes & Séniors
-                </CardTitle>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Users className="h-4 w-4 text-yellow-400" /> Organisation
-                </CardDescription>
-                <CardTitle className="text-lg md:text-xl font-bold text-white">
-                  Groupes FFTT
-                </CardTitle>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-              <CardHeader className="p-4 pb-2">
-                <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Award className="h-4 w-4 text-emerald-400" /> Format
-                </CardDescription>
-                <CardTitle className="text-lg md:text-xl font-extrabold text-emerald-400">
-                  Tableau Natif
-                </CardTitle>
-              </CardHeader>
-            </Card>
-          </div>
-
           <Card className="bg-clubLight shadow-xl rounded-2xl border border-border overflow-hidden">
             <CardHeader className="p-4 md:p-6 pb-2">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-                <div>
-                  <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
-                    Licenciés par Catégorie d'Âge
-                  </CardTitle>
-                  <CardDescription className="text-xs md:text-sm text-muted-foreground">
-                    Consultez les effectifs regroupés par catégorie officielle FFTT.
-                  </CardDescription>
-                </div>
-
-                <div className="relative w-full sm:w-72">
-                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="text"
-                    placeholder="Filtrer par nom..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 bg-input border-clubPrimary/40 text-xs md:text-sm text-clubDark rounded-lg"
-                  />
-                </div>
-              </div>
+              <CardTitle className="text-xl md:text-2xl font-bold text-clubDark">
+                Licenciés par Catégorie d'Âge
+              </CardTitle>
             </CardHeader>
-
             <CardContent className="p-4 md:p-6 space-y-8">
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-16">
                   <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
-                  <p className="text-sm font-semibold text-clubDark">Chargement des catégories d'âge...</p>
-                </div>
-              ) : Object.keys(groupedByCat).length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground text-sm italic">
-                  Aucun joueur ne correspond à vos filtres.
                 </div>
               ) : (
                 Object.entries(groupedByCat).map(([catName, catPlayers]) => (

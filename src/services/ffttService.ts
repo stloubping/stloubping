@@ -1,3 +1,4 @@
+import { supabase } from '@/integrations/supabase/client';
 import { defaultPlayersData } from '@/data/playersData';
 
 export interface Player {
@@ -15,6 +16,14 @@ export interface Player {
 }
 
 export async function fetchClubPlayers(): Promise<Player[]> {
-  // Retour instantané des 141 licenciés sans blocage réseau ni CORS
+  try {
+    const { data, error } = await supabase.functions.invoke('get-club-players');
+    if (!error && data?.players && Array.isArray(data.players) && data.players.length > 0) {
+      return data.players;
+    }
+  } catch (err) {
+    console.warn("Edge function indisponible, bascule sur la liste de secours.", err);
+  }
+
   return defaultPlayersData;
 }
