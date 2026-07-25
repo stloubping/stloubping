@@ -42,16 +42,7 @@ const navItems: NavItem[] = [
       { name: "Critérium de Gironde", path: "/competitions-equipes/criterium-gironde", type: "link" },
     ],
   },
-  {
-    name: "Les Joueurs",
-    type: "dropdown",
-    children: [
-      { name: "Classement des Joueurs", path: "/classement-joueurs", type: "link" },
-      { name: "Progression Mensuelle", path: "/classement-joueurs/progression-mensuelle", type: "link" },
-      { name: "Progression Annuelle", path: "/classement-joueurs/progression-annuelle", type: "link" },
-      { name: "Par Catégorie d'Âge", path: "/classement-joueurs/par-categorie-age", type: "link" },
-    ],
-  },
+  { name: "Les Joueurs", path: "/classement-joueurs", type: "link" },
   { name: "Adhésions", path: "/adhesions", type: "link" },
   { name: "Boutique", path: "/boutique", type: "link" },
   { name: "Partenaires", path: "/partenaires", type: "link" },

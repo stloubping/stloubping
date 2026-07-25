@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ArrowDown,
   ArrowUp,
+  ArrowUpDown,
   CalendarDays,
   Minus,
   RefreshCw,
@@ -48,6 +49,10 @@ const ClassementJoueurs = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedGender, setSelectedGender] = useState("all");
+  const [sortConfig, setSortConfig] = useState<{
+    field: "points" | "progression";
+    direction: "desc" | "asc";
+  }>({ field: "points", direction: "desc" });
 
   const loadPlayers = async () => {
     setLoading(true);
@@ -93,6 +98,41 @@ const ClassementJoueurs = () => {
       return matchesSearch && matchesCategory && matchesGender;
     });
   }, [players, searchQuery, selectedCategory, selectedGender]);
+
+  const displayedPlayers = useMemo(
+    () =>
+      [...filteredPlayers].sort((a, b) => {
+        const firstValue =
+          sortConfig.field === "progression"
+            ? Number(a.progmens || 0)
+            : Number(a.points || 0);
+        const secondValue =
+          sortConfig.field === "progression"
+            ? Number(b.progmens || 0)
+            : Number(b.points || 0);
+        const valueDifference =
+          sortConfig.direction === "asc"
+            ? firstValue - secondValue
+            : secondValue - firstValue;
+
+        return (
+          valueDifference ||
+          a.nom.localeCompare(b.nom, "fr") ||
+          a.prenom.localeCompare(b.prenom, "fr")
+        );
+      }),
+    [filteredPlayers, sortConfig],
+  );
+
+  const toggleSort = (field: "points" | "progression") => {
+    setSortConfig((current) => ({
+      field,
+      direction:
+        current.field === field && current.direction === "desc"
+          ? "asc"
+          : "desc",
+    }));
+  };
 
   const rankByLicence = useMemo(
     () =>
@@ -198,7 +238,7 @@ const ClassementJoueurs = () => {
           </span>
         </header>
 
-        <div className="mb-4 grid gap-3 md:grid-cols-[1fr_220px_190px_auto]">
+        <div className="mb-4 grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(260px,1fr)_220px_190px_auto]">
           <label className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -283,13 +323,59 @@ const ClassementJoueurs = () => {
                     <th className="px-5 py-4">Catégorie</th>
                     <th className="px-5 py-4">Licence</th>
                     <th className="px-5 py-4 text-right">
-                      Évolution mensuelle
+                      <button
+                        type="button"
+                        onClick={() => toggleSort("progression")}
+                        className="ml-auto inline-flex items-center gap-1.5 font-semibold transition-colors hover:text-clubPrimary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clubPrimary/40"
+                        aria-label={`Trier par évolution mensuelle ${
+                          sortConfig.field === "progression" &&
+                          sortConfig.direction === "desc"
+                            ? "croissante"
+                            : "décroissante"
+                        }`}
+                        title="Trier par évolution mensuelle"
+                      >
+                        Évolution mensuelle
+                        {sortConfig.field === "progression" ? (
+                          sortConfig.direction === "desc" ? (
+                            <ArrowDown className="h-3.5 w-3.5 text-clubPrimary" />
+                          ) : (
+                            <ArrowUp className="h-3.5 w-3.5 text-clubPrimary" />
+                          )
+                        ) : (
+                          <ArrowUpDown className="h-3.5 w-3.5 text-slate-300" />
+                        )}
+                      </button>
                     </th>
-                    <th className="px-5 py-4 text-right">Points</th>
+                    <th className="px-5 py-4 text-right">
+                      <button
+                        type="button"
+                        onClick={() => toggleSort("points")}
+                        className="ml-auto inline-flex items-center gap-1.5 font-semibold transition-colors hover:text-clubPrimary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clubPrimary/40"
+                        aria-label={`Trier par points ${
+                          sortConfig.field === "points" &&
+                          sortConfig.direction === "desc"
+                            ? "croissants"
+                            : "décroissants"
+                        }`}
+                        title="Trier par points"
+                      >
+                        Points
+                        {sortConfig.field === "points" ? (
+                          sortConfig.direction === "desc" ? (
+                            <ArrowDown className="h-3.5 w-3.5 text-clubPrimary" />
+                          ) : (
+                            <ArrowUp className="h-3.5 w-3.5 text-clubPrimary" />
+                          )
+                        ) : (
+                          <ArrowUpDown className="h-3.5 w-3.5 text-slate-300" />
+                        )}
+                      </button>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredPlayers.map((player) => {
+                  {displayedPlayers.map((player) => {
                     const rank = rankByLicence.get(player.licence) || 0;
                     const monthly = Number(player.progmens || 0);
                     const isPositive = monthly > 0;
