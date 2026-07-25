@@ -33,6 +33,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { name: "Accueil", path: "/", type: "link" },
+  { name: "Actualités", path: "/actualites", type: "link" },
   { name: "Le Club", path: "/le-club", type: "link" },
   {
     name: "Équipes",
@@ -73,7 +74,6 @@ const navItems: NavItem[] = [
     ],
   },
   { name: "Contact", path: "/contact", type: "link" },
-  { name: "Actualités", path: "/actualites", type: "link" },
 ];
 
 const Navbar = () => {
