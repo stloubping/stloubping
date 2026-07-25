@@ -1,5 +1,3 @@
-import { supabase } from "@/integrations/supabase/client";
-
 export interface Player {
   idlicence?: string;
   licence: string;
@@ -34,12 +32,14 @@ function sortPlayers(players: Player[]): Player[] {
 
 export async function fetchClubPlayers(): Promise<Player[]> {
   try {
-    const { data, error } = await supabase.functions.invoke(
-      "get-club-players",
-      { body: {} },
-    );
+    const response = await fetch("/api/fftt/players", {
+      headers: { Accept: "application/json" },
+    });
+    const data = await response.json();
 
-    if (error) throw error;
+    if (!response.ok) {
+      throw new Error(data?.error || "Le service FFTT est indisponible.");
+    }
 
     const livePlayers = Array.isArray(data?.players)
       ? data.players.filter(isValidPlayer)
