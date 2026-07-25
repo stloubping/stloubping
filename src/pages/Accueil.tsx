@@ -10,11 +10,11 @@ import VideoCard from "@/components/VideoCard";
 import { allVideos } from '@/data/videos';
 import { allNewsItems } from '@/data/news';
 import CompetitionCalendar from '@/components/CompetitionCalendar';
-import { ArrowRight, Archive } from 'lucide-react';
+import { ArrowRight, Newspaper } from 'lucide-react';
 
 const Accueil = () => {
-  // Sélection des 6 articles les plus récents pour la page d'accueil
-  const homeNewsItems = allNewsItems.slice(0, 6);
+  // Les articles sont classés du plus récent au plus ancien dans la source.
+  const homeNewsItems = allNewsItems.slice(0, 3);
 
   const latestVideos = [...allVideos]
     .sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime())
@@ -29,7 +29,7 @@ const Accueil = () => {
         imageAlt="Joueurs de tennis de table en plein entraînement"
       />
       <div className="container mx-auto px-4 py-4 md:py-8">
-        {/* ---------- Dernières Actualités (6 articles) ---------- */}
+        {/* ---------- Les 3 dernières actualités ---------- */}
         <section className="mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-clubDark">
             Dernières Actualités
@@ -40,12 +40,12 @@ const Accueil = () => {
             ))}
           </div>
 
-          {/* Bouton vers les archives */}
+          {/* Bouton vers toutes les actualités */}
           <div className="text-center mt-8">
             <Button asChild variant="outline" className="border-2 border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white font-semibold rounded-full px-6 py-5">
               <Link to="/actualites" className="flex items-center gap-2">
-                <Archive className="h-4 w-4" />
-                Voir toutes les actualités (Archives)
+                <Newspaper className="h-4 w-4" />
+                Voir toutes les actualités
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>

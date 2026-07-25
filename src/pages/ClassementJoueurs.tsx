@@ -315,7 +315,7 @@ const ClassementJoueurs = () => {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[900px] border-collapse">
+              <table className="w-full border-collapse text-[11px] md:min-w-[900px] md:text-sm [&_td]:px-2 [&_td]:py-3 [&_th]:px-2 [&_th]:py-3 md:[&_td]:px-5 md:[&_td]:py-4 md:[&_th]:px-5 md:[&_th]:py-4 [&_td:nth-child(3)]:hidden [&_td:nth-child(4)]:hidden [&_th:nth-child(3)]:hidden [&_th:nth-child(4)]:hidden md:[&_td:nth-child(3)]:table-cell md:[&_td:nth-child(4)]:table-cell md:[&_th:nth-child(3)]:table-cell md:[&_th:nth-child(4)]:table-cell">
                 <thead>
                   <tr className="bg-slate-50 text-left text-[11px] uppercase tracking-wider text-slate-500">
                     <th className="px-5 py-4">Rang</th>
@@ -394,15 +394,15 @@ const ClassementJoueurs = () => {
                           {String(rank).padStart(2, "0")}
                         </td>
                         <td className="px-5 py-4">
-                          <div className="flex items-center gap-3">
-                            <span className="grid h-10 w-10 flex-none place-items-center rounded-full bg-clubDark text-xs font-extrabold text-white">
+                          <div className="flex items-center md:gap-3">
+                            <span className="hidden h-10 w-10 flex-none place-items-center rounded-full bg-clubDark text-xs font-extrabold text-white md:grid">
                               {initials(player)}
                             </span>
                             <span>
-                              <strong className="block text-sm text-clubDark">
+                              <strong className="block text-xs leading-tight text-clubDark md:text-sm">
                                 {playerName(player)}
                               </strong>
-                              <small className="text-muted-foreground">
+                              <small className="hidden text-muted-foreground md:block">
                                 {player.sexe === "F" ? "Joueuse" : "Joueur"} du
                                 club
                               </small>
@@ -419,7 +419,7 @@ const ClassementJoueurs = () => {
                         </td>
                         <td className="px-5 py-4 text-right">
                           <span
-                            className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-extrabold ${
+                            className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-1 text-xs font-extrabold md:gap-1 md:px-3 md:text-sm ${
                               isPositive
                                 ? "bg-emerald-50 text-emerald-700"
                                 : isNegative
@@ -441,9 +441,9 @@ const ClassementJoueurs = () => {
                             {formatPoints(monthly)} pts
                           </span>
                         </td>
-                        <td className="px-5 py-4 text-right text-lg font-extrabold text-clubPrimary">
+                        <td className="px-5 py-4 text-right text-sm font-extrabold text-clubPrimary md:text-lg">
                           {formatPoints(player.points)}{" "}
-                          <small className="text-xs font-medium text-slate-400">
+                          <small className="hidden text-xs font-medium text-slate-400 md:inline">
                             pts
                           </small>
                         </td>
