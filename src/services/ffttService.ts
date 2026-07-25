@@ -1,3 +1,4 @@
+import CryptoJS from 'crypto-js';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface Player {
@@ -14,9 +15,100 @@ export interface Player {
   progans?: number;
 }
 
-const CACHE_KEY = "stloub_club_players_v13";
-const CACHE_TIME_KEY = "stloub_club_players_time_v13";
+const CACHE_KEY = "stloub_club_players_v14";
+const CACHE_TIME_KEY = "stloub_club_players_time_v14";
 const CACHE_DURATION_MS = 1000 * 60 * 60 * 2; // 2 heures
+
+const APP_ID = "SX046";
+const APP_PASSWORD = "NQC2rNs85g";
+const CLUB_NUMBER = "10330022";
+const API_BASE_URL = "https://www.fftt.com/mobile/pxml";
+const SERIE = "STLBP2025MEMB1";
+
+function getTimestamp(): string {
+  const now = new Date();
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}000`;
+}
+
+function generateHash(tm: string): string {
+  const key = CryptoJS.MD5(APP_PASSWORD).toString();
+  return CryptoJS.HmacSHA1(tm, key).toString();
+}
+
+function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
+  const results: Record<string, string>[] = [];
+  const regex = new RegExp(`<${tagName}>([\\s\\S]*?)<\\/${tagName}>`, 'gi');
+  let match;
+
+  while ((match = regex.exec(xml)) !== null) {
+    const content = match[1];
+    const obj: Record<string, string> = {};
+    const openTagRegex = /<(\w+)>/g;
+    let tagMatch;
+    
+    while ((tagMatch = openTagRegex.exec(content)) !== null) {
+      const fieldName = tagMatch[1];
+      const afterOpenTag = tagMatch.index + tagMatch[0].length;
+      const closeTag = `</${fieldName}>`;
+      const closeIdx = content.indexOf(closeTag, afterOpenTag);
+      
+      if (closeIdx !== -1) {
+        obj[fieldName] = content.substring(afterOpenTag, closeIdx).trim();
+        openTagRegex.lastIndex = closeIdx + closeTag.length;
+      }
+    }
+    results.push(obj);
+  }
+  return results;
+}
+
+function decodeEntities(str: string): string {
+  return str
+    .replace(/&/g, '&')
+    .replace(/</g, '<')
+    .replace(/>/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&nbsp;/g, ' ');
+}
+
+async function fetchSmartpingXml(script: string, params: Record<string, string> = {}): Promise<string> {
+  const tm = getTimestamp();
+  const tmc = generateHash(tm);
+  const queryParams = new URLSearchParams({ id: APP_ID, serie: SERIE, tm, tmc, ...params });
+  const rawUrl = `${API_BASE_URL}/${script}?${queryParams.toString()}`;
+
+  // Direct fetch
+  try {
+    const res = await fetch(rawUrl);
+    if (res.ok) {
+      const text = await res.text();
+      if (text.includes('<')) return text;
+    }
+  } catch (e) {
+    // CORS handling fallback
+  }
+
+  // CORS proxies fallback
+  const proxies = [
+    `https://corsproxy.io/?${encodeURIComponent(rawUrl)}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(rawUrl)}`
+  ];
+
+  for (const proxyUrl of proxies) {
+    try {
+      const res = await fetch(proxyUrl);
+      if (res.ok) {
+        const text = await res.text();
+        if (text.includes('<')) return text;
+      }
+    } catch (e) {
+      continue;
+    }
+  }
+
+  return '';
+}
 
 export async function fetchClubPlayers(): Promise<Player[]> {
   // 1. Vérification du cache local
@@ -34,10 +126,10 @@ export async function fetchClubPlayers(): Promise<Player[]> {
       }
     }
   } catch (e) {
-    // Erreur de lecture du cache ignorée
+    // Cache error ignored
   }
 
-  // 2. Chargement depuis l'Edge Function Supabase
+  // 2. Chargement direct
   const freshMembers = await loadFreshData();
   if (freshMembers.length > 0) {
     saveToCache(freshMembers);
@@ -54,7 +146,7 @@ async function refreshInBackground() {
       saveToCache(freshMembers);
     }
   } catch (e) {
-    // Erreur ignorée
+    // Refresh error ignored
   }
 }
 
@@ -63,18 +155,66 @@ function saveToCache(members: Player[]) {
     localStorage.setItem(CACHE_KEY, JSON.stringify(members));
     localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
   } catch (e) {
-    // Erreur écriture ignorée
+    // Write error ignored
   }
 }
 
 async function loadFreshData(): Promise<Player[]> {
   try {
-    const { data, error } = await supabase.functions.invoke('get-club-players');
-    if (!error && data?.players && Array.isArray(data.players) && data.players.length > 0) {
+    // Attempt Supabase function first if existing/available
+    const { data } = await supabase.functions.invoke('get-club-players');
+    if (data?.players && Array.isArray(data.players) && data.players.length > 0) {
       return data.players;
     }
   } catch (e) {
-    console.error("Erreur lors de l'appel Edge Function get-club-players:", e);
+    // Fallback to client-side Smartping call
+  }
+
+  try {
+    await fetchSmartpingXml('xml_initialisation.php');
+
+    let playersXml = await fetchSmartpingXml('xml_joueur_b.php', { club: CLUB_NUMBER });
+    let rawPlayers = parseXmlList(playersXml, 'joueur');
+
+    if (rawPlayers.length === 0) {
+      playersXml = await fetchSmartpingXml('xml_licence_b.php', { club: CLUB_NUMBER });
+      rawPlayers = parseXmlList(playersXml, 'licence');
+    }
+
+    if (rawPlayers.length > 0) {
+      const processedPlayers: Player[] = rawPlayers.map((p) => {
+        const nom = decodeEntities(p.nom || '').toUpperCase();
+        const prenom = decodeEntities(p.prenom || '');
+        const licence = p.licence || p.numlic || '';
+        
+        const points = Math.round(parseFloat(p.point || p.pointm || '500') || 500);
+        const valinit = p.valinit ? Math.round(parseFloat(p.valinit)) : points;
+        const valmen = p.valmen ? Math.round(parseFloat(p.valmen)) : points;
+        const clast = p.clast || p.clst || Math.floor(points / 100).toString();
+        const cat = p.cat || p.categorie || '';
+
+        const progmens = Math.round((points - valmen) * 10) / 10;
+        const progans = Math.round((points - valinit) * 10) / 10;
+
+        return {
+          licence,
+          nom,
+          prenom,
+          points,
+          clast,
+          cat,
+          valinit,
+          valmen,
+          progmens,
+          progans,
+        };
+      });
+
+      processedPlayers.sort((a, b) => b.points - a.points);
+      return processedPlayers;
+    }
+  } catch (err) {
+    console.error("Erreur lors de la récupération directe FFTT:", err);
   }
 
   return [];
