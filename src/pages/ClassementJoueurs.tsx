@@ -48,6 +48,7 @@ const ClassementJoueurs = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedGender, setSelectedGender] = useState("all");
+  const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
 
   const loadPlayers = async () => {
     setLoading(true);
@@ -93,6 +94,23 @@ const ClassementJoueurs = () => {
       return matchesSearch && matchesCategory && matchesGender;
     });
   }, [players, searchQuery, selectedCategory, selectedGender]);
+
+  const displayedPlayers = useMemo(
+    () =>
+      [...filteredPlayers].sort((a, b) => {
+        const pointsDifference =
+          sortOrder === "asc"
+            ? Number(a.points || 0) - Number(b.points || 0)
+            : Number(b.points || 0) - Number(a.points || 0);
+
+        return (
+          pointsDifference ||
+          a.nom.localeCompare(b.nom, "fr") ||
+          a.prenom.localeCompare(b.prenom, "fr")
+        );
+      }),
+    [filteredPlayers, sortOrder],
+  );
 
   const rankByLicence = useMemo(
     () =>
@@ -198,7 +216,7 @@ const ClassementJoueurs = () => {
           </span>
         </header>
 
-        <div className="mb-4 grid gap-3 md:grid-cols-[1fr_220px_190px_auto]">
+        <div className="mb-4 grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(260px,1fr)_220px_190px_210px_auto]">
           <label className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -235,6 +253,24 @@ const ClassementJoueurs = () => {
               <SelectItem value="all">Tous les joueurs</SelectItem>
               <SelectItem value="M">Messieurs</SelectItem>
               <SelectItem value="F">Dames</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={sortOrder}
+            onValueChange={(value) =>
+              setSortOrder(value as "desc" | "asc")
+            }
+          >
+            <SelectTrigger
+              className="h-12 rounded-md border-slate-200"
+              aria-label="Trier le classement par points"
+            >
+              <SelectValue placeholder="Trier par points" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="desc">Points décroissants</SelectItem>
+              <SelectItem value="asc">Points croissants</SelectItem>
             </SelectContent>
           </Select>
 
@@ -289,7 +325,7 @@ const ClassementJoueurs = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredPlayers.map((player) => {
+                  {displayedPlayers.map((player) => {
                     const rank = rankByLicence.get(player.licence) || 0;
                     const monthly = Number(player.progmens || 0);
                     const isPositive = monthly > 0;
