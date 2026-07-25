@@ -7,17 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { 
   Calendar as CalendarIcon, 
   Search, 
   Filter, 
   Download, 
-  ExternalLink, 
   MapPin, 
   CalendarPlus, 
   Clock,
-  FileText,
   Sparkles,
   ChevronDown,
   ChevronUp
@@ -128,32 +125,16 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
         </CardHeader>
 
         <CardContent className="p-4 md:p-6">
-          <Tabs defaultValue="interactive" className="w-full">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-              <TabsList className="bg-clubSection p-1 rounded-xl">
-                <TabsTrigger value="interactive" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-medium text-xs md:text-sm">
-                  <CalendarIcon className="mr-2 h-4 w-4" /> Tableau Interactif
-                </TabsTrigger>
-                <TabsTrigger value="pdf" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-medium text-xs md:text-sm">
-                  <FileText className="mr-2 h-4 w-4" /> Vue PDF Officielle
-                </TabsTrigger>
-              </TabsList>
+          <div className="mb-6 flex justify-end">
+            <Button asChild size="sm" className="bg-clubPrimary text-xs text-white hover:bg-clubPrimary/90">
+              <a href={pdfPath} download="Competitions-2026-2027.pdf">
+                <Download className="mr-1.5 h-3.5 w-3.5" />
+                Télécharger PDF
+              </a>
+            </Button>
+          </div>
 
-              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                <Button asChild variant="outline" size="sm" className="border-clubPrimary text-clubPrimary hover:bg-clubPrimary/10 text-xs">
-                  <a href={pdfPath} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="mr-1.5 h-3.5 w-3.5" /> PDF Plein écran
-                  </a>
-                </Button>
-                <Button asChild size="sm" className="bg-clubPrimary hover:bg-clubPrimary/90 text-white text-xs">
-                  <a href={pdfPath} download="Competitions-2026-2027.pdf">
-                    <Download className="mr-1.5 h-3.5 w-3.5" /> Télécharger PDF
-                  </a>
-                </Button>
-              </div>
-            </div>
-
-            <TabsContent value="interactive" className="space-y-6 focus-visible:outline-none">
+          <div className="space-y-6">
               {/* --- Barre de filtres --- */}
               <div className="p-4 bg-clubSection/60 rounded-xl border border-border/80 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -290,7 +271,12 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
                                   )}
                                 </div>
                                 <div className="sm:hidden flex flex-wrap items-center gap-1.5 mt-1">
-                                  <Badge className={`text-[9px] px-1.5 py-0 ${cat.color}`}>{cat.label}</Badge>
+                                  <span
+                                    className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[9px] font-semibold leading-none ${cat.mobileColor}`}
+                                  >
+                                    <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${cat.dotColor}`} />
+                                    {cat.mobileLabel}
+                                  </span>
                                   {event.location && (
                                     <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
                                       <MapPin className="h-3 w-3 text-clubPrimary" /> {event.location}
@@ -365,7 +351,7 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
                     variant="outline"
                     className="border-clubPrimary text-clubPrimary hover:bg-clubPrimary/10 font-medium text-xs md:text-sm px-6 py-2 rounded-full"
                   >
-                    Réduire aux 10 premières dates
+                    Réduire aux {initialLimit} premières dates
                     <ChevronUp className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
@@ -374,19 +360,7 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
               <div className="text-center text-xs text-muted-foreground pt-1">
                 Affichage de {displayedCompetitions.length} compétition(s) sur un total de {competitions20262027.length}.
               </div>
-            </TabsContent>
-
-            {/* --- Onglet Vue PDF --- */}
-            <TabsContent value="pdf" className="space-y-4 focus-visible:outline-none">
-              <div className="w-full h-[650px] border border-border rounded-xl overflow-hidden shadow-inner">
-                <iframe
-                  src={`${pdfPath}#toolbar=0`}
-                  title="Calendrier des Compétitions 2026-2027"
-                  className="w-full h-full border-0"
-                />
-              </div>
-            </TabsContent>
-          </Tabs>
+          </div>
         </CardContent>
       </Card>
     </section>

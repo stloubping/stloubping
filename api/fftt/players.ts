@@ -83,7 +83,15 @@ async function callSmartping(
       },
     },
   );
-  const body = await response.text();
+  const bytes = await response.arrayBuffer();
+  const utf8Body = new TextDecoder("utf-8").decode(bytes);
+
+  // Smartping mélange selon les réponses UTF-8 et Windows-1252.
+  // On conserve UTF-8 quand il est valide et on répare uniquement les
+  // réponses contenant le caractère de remplacement Unicode.
+  const body = utf8Body.includes("\uFFFD")
+    ? new TextDecoder("windows-1252").decode(bytes)
+    : utf8Body;
 
   if (!response.ok) {
     throw new Error(`Erreur FFTT ${response.status} sur ${script}`);
