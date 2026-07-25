@@ -1,5 +1,6 @@
 import CryptoJS from 'crypto-js';
 import { supabase } from '@/integrations/supabase/client';
+import { defaultPlayersData } from '@/data/playersData';
 
 export interface Player {
   licence: string;
@@ -15,8 +16,8 @@ export interface Player {
   progans?: number;
 }
 
-const CACHE_KEY = "stloub_club_players_v14";
-const CACHE_TIME_KEY = "stloub_club_players_time_v14";
+const CACHE_KEY = "stloub_club_players_v15";
+const CACHE_TIME_KEY = "stloub_club_players_time_v15";
 const CACHE_DURATION_MS = 1000 * 60 * 60 * 2; // 2 heures
 
 const APP_ID = "SX046";
@@ -72,24 +73,37 @@ function decodeEntities(str: string): string {
     .replace(/&nbsp;/g, ' ');
 }
 
+async function fetchWithTimeout(url: string, timeoutMs: number = 2000): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
+  }
+}
+
 async function fetchSmartpingXml(script: string, params: Record<string, string> = {}): Promise<string> {
   const tm = getTimestamp();
   const tmc = generateHash(tm);
   const queryParams = new URLSearchParams({ id: APP_ID, serie: SERIE, tm, tmc, ...params });
   const rawUrl = `${API_BASE_URL}/${script}?${queryParams.toString()}`;
 
-  // Direct fetch
+  // 1. Essai direct
   try {
-    const res = await fetch(rawUrl);
+    const res = await fetchWithTimeout(rawUrl, 1500);
     if (res.ok) {
       const text = await res.text();
       if (text.includes('<')) return text;
     }
   } catch (e) {
-    // CORS handling fallback
+    // Erreur de timeout ou CORS
   }
 
-  // CORS proxies fallback
+  // 2. Proxies CORS rapides avec timeout de 2s
   const proxies = [
     `https://corsproxy.io/?${encodeURIComponent(rawUrl)}`,
     `https://api.allorigins.win/raw?url=${encodeURIComponent(rawUrl)}`
@@ -97,7 +111,7 @@ async function fetchSmartpingXml(script: string, params: Record<string, string> 
 
   for (const proxyUrl of proxies) {
     try {
-      const res = await fetch(proxyUrl);
+      const res = await fetchWithTimeout(proxyUrl, 2000);
       if (res.ok) {
         const text = await res.text();
         if (text.includes('<')) return text;
@@ -126,17 +140,18 @@ export async function fetchClubPlayers(): Promise<Player[]> {
       }
     }
   } catch (e) {
-    // Cache error ignored
+    // Cache indisponible
   }
 
-  // 2. Chargement direct
+  // 2. Chargement des données fraîches avec secours immédiat
   const freshMembers = await loadFreshData();
   if (freshMembers.length > 0) {
     saveToCache(freshMembers);
     return freshMembers;
   }
 
-  return [];
+  // 3. Secours garanti
+  return defaultPlayersData;
 }
 
 async function refreshInBackground() {
@@ -146,7 +161,7 @@ async function refreshInBackground() {
       saveToCache(freshMembers);
     }
   } catch (e) {
-    // Refresh error ignored
+    // Ignorer en arrière-plan
   }
 }
 
@@ -155,19 +170,18 @@ function saveToCache(members: Player[]) {
     localStorage.setItem(CACHE_KEY, JSON.stringify(members));
     localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
   } catch (e) {
-    // Write error ignored
+    // Ecriture cache impossible
   }
 }
 
 async function loadFreshData(): Promise<Player[]> {
   try {
-    // Attempt Supabase function first if existing/available
     const { data } = await supabase.functions.invoke('get-club-players');
     if (data?.players && Array.isArray(data.players) && data.players.length > 0) {
       return data.players;
     }
   } catch (e) {
-    // Fallback to client-side Smartping call
+    // Supabase Edge Function indisponible, bascule Smartping direct
   }
 
   try {
@@ -214,8 +228,8 @@ async function loadFreshData(): Promise<Player[]> {
       return processedPlayers;
     }
   } catch (err) {
-    console.error("Erreur lors de la récupération directe FFTT:", err);
+    console.warn("Utilisation du secours local pour les licenciés.");
   }
 
-  return [];
+  return defaultPlayersData;
 }
