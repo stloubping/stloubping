@@ -6,11 +6,11 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const APP_ID = "SX046";
-const APP_PASSWORD = "NQC2rNs85g";
-const CLUB_NUMBER = "10330022";
+const APP_ID = Deno.env.get('FFTT_APP_ID') || "SX046";
+const APP_PASSWORD = Deno.env.get('FFTT_APP_PASSWORD') || "NQC2rNs85g";
+const CLUB_NUMBER = Deno.env.get('FFTT_CLUB_NUMBER') || "10330022";
 const API_BASE_URL = "https://www.fftt.com/mobile/pxml";
-const SERIE = "STLBP2025MEMB1";
+const SERIE = Deno.env.get('FFTT_SERIAL') || "STLBP2025MEMB1";
 
 function getTimestamp(): string {
   const now = new Date();
