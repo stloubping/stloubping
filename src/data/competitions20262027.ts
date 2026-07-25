@@ -9,14 +9,67 @@ export interface CompetitionEvent {
   details?: string;
 }
 
-export const categoryLabels: Record<CompetitionEvent['category'], { label: string; color: string }> = {
-  teams: { label: "Championnat par Équipes", color: "bg-blue-600 text-white" },
-  criterium: { label: "Critérium Fédéral", color: "bg-purple-600 text-white" },
-  criteriumGironde: { label: "Critérium de Gironde", color: "bg-indigo-600 text-white" },
-  individual: { label: "Finales par Classement", color: "bg-amber-600 text-white" },
-  youth: { label: "Compétitions Jeunes", color: "bg-emerald-600 text-white" },
-  leisure: { label: "Loisirs", color: "bg-teal-600 text-white" },
-  club: { label: "Événements Club", color: "bg-clubPrimary text-white" },
+type CategoryPresentation = {
+  label: string;
+  color: string;
+  mobileLabel: string;
+  mobileColor: string;
+  dotColor: string;
+};
+
+export const categoryLabels: Record<
+  CompetitionEvent["category"],
+  CategoryPresentation
+> = {
+  teams: {
+    label: "Championnat par Équipes",
+    color: "bg-blue-600 text-white",
+    mobileLabel: "Équipes",
+    mobileColor: "border-blue-200 bg-blue-50 text-blue-700",
+    dotColor: "bg-blue-500",
+  },
+  criterium: {
+    label: "Critérium Fédéral",
+    color: "bg-purple-600 text-white",
+    mobileLabel: "Fédéral",
+    mobileColor: "border-purple-200 bg-purple-50 text-purple-700",
+    dotColor: "bg-purple-500",
+  },
+  criteriumGironde: {
+    label: "Critérium de Gironde",
+    color: "bg-indigo-600 text-white",
+    mobileLabel: "Gironde",
+    mobileColor: "border-indigo-200 bg-indigo-50 text-indigo-700",
+    dotColor: "bg-indigo-500",
+  },
+  individual: {
+    label: "Finales par Classement",
+    color: "bg-amber-600 text-white",
+    mobileLabel: "Classement",
+    mobileColor: "border-amber-200 bg-amber-50 text-amber-700",
+    dotColor: "bg-amber-500",
+  },
+  youth: {
+    label: "Compétitions Jeunes",
+    color: "bg-emerald-600 text-white",
+    mobileLabel: "Jeunes",
+    mobileColor: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    dotColor: "bg-emerald-500",
+  },
+  leisure: {
+    label: "Loisirs",
+    color: "bg-teal-600 text-white",
+    mobileLabel: "Loisirs",
+    mobileColor: "border-teal-200 bg-teal-50 text-teal-700",
+    dotColor: "bg-teal-500",
+  },
+  club: {
+    label: "Événements Club",
+    color: "bg-clubPrimary text-white",
+    mobileLabel: "Club",
+    mobileColor: "border-red-200 bg-red-50 text-red-700",
+    dotColor: "bg-clubPrimary",
+  },
 };
 
 export const competitions20262027: CompetitionEvent[] = [

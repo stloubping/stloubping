@@ -271,7 +271,12 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
                                   )}
                                 </div>
                                 <div className="sm:hidden flex flex-wrap items-center gap-1.5 mt-1">
-                                  <Badge className={`text-[9px] px-1.5 py-0 ${cat.color}`}>{cat.label}</Badge>
+                                  <span
+                                    className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[9px] font-semibold leading-none ${cat.mobileColor}`}
+                                  >
+                                    <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${cat.dotColor}`} />
+                                    {cat.mobileLabel}
+                                  </span>
                                   {event.location && (
                                     <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
                                       <MapPin className="h-3 w-3 text-clubPrimary" /> {event.location}
