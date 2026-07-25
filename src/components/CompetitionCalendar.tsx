@@ -365,7 +365,7 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
                     variant="outline"
                     className="border-clubPrimary text-clubPrimary hover:bg-clubPrimary/10 font-medium text-xs md:text-sm px-6 py-2 rounded-full"
                   >
-                    Réduire aux 10 premières dates
+                    Réduire aux {initialLimit} premières dates
                     <ChevronUp className="ml-2 h-4 w-4" />
                   </Button>
                 </div>

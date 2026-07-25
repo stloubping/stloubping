@@ -52,8 +52,8 @@ const Accueil = () => {
           </div>
         </section>
 
-        {/* ---------- Calendrier des compétitions (limité aux 10 premières dates) ---------- */}
-        <CompetitionCalendar initialLimit={10} />
+        {/* ---------- Calendrier des compétitions (limité aux 6 premières dates) ---------- */}
+        <CompetitionCalendar initialLimit={6} />
 
         {/* ---------- Facebook ---------- */}
         <section className="text-center mb-12">
