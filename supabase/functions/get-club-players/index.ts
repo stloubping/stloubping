@@ -1,126 +1,243 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts"
-import CryptoJS from "https://esm.sh/crypto-js@4.1.1"
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import CryptoJS from "https://esm.sh/crypto-js@4.1.1";
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+};
 
-const APP_ID = Deno.env.get('FFTT_APP_ID') || "SX046";
-const APP_PASSWORD = Deno.env.get('FFTT_APP_PASSWORD') || "NQC2rNs85g";
-const CLUB_NUMBER = Deno.env.get('FFTT_CLUB_NUMBER') || "10330022";
 const API_BASE_URL = "https://www.fftt.com/mobile/pxml";
-const SERIE = Deno.env.get('FFTT_SERIAL') || "STLBP2025MEMB1";
 
-function getTimestamp(): string {
-  const now = new Date();
-  return `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}${String(now.getMilliseconds()).padStart(3,'0')}`;
+type XmlNode = {
+  name: string;
+  children: XmlNode[];
+  text: string;
+};
+
+function requiredSecret(name: string): string {
+  const value = Deno.env.get(name);
+  if (!value) throw new Error(`Secret Supabase manquant : ${name}`);
+  return value;
 }
 
-function generateHash(tm: string): string {
-  const key = CryptoJS.MD5(APP_PASSWORD).toString();
-  return CryptoJS.HmacSHA1(tm, key).toString();
+function getConfiguration() {
+  return {
+    appId: requiredSecret("FFTT_APP_ID"),
+    password: requiredSecret("FFTT_APP_PASSWORD"),
+    serial: requiredSecret("FFTT_SERIAL"),
+    clubNumber: Deno.env.get("FFTT_CLUB_NUMBER") || "10330022",
+  };
 }
 
-async function callSmartping(script: string, params: Record<string, string> = {}): Promise<string> {
+function getTimestamp(date = new Date()): string {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("fr-FR", {
+      timeZone: "Europe/Paris",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23",
+    })
+      .formatToParts(date)
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, part.value]),
+  );
+
+  return `${parts.year}${parts.month}${parts.day}${parts.hour}${parts.minute}${parts.second}${String(
+    date.getMilliseconds(),
+  ).padStart(3, "0")}`;
+}
+
+function generateHash(timestamp: string, password: string): string {
+  const key = CryptoJS.MD5(password).toString();
+  return CryptoJS.HmacSHA1(timestamp, key).toString();
+}
+
+async function callSmartping(
+  script: string,
+  params: Record<string, string> = {},
+): Promise<string> {
+  const config = getConfiguration();
   const tm = getTimestamp();
-  const tmc = generateHash(tm);
-  const queryParams = new URLSearchParams({ id: APP_ID, serie: SERIE, tm, tmc, ...params });
-  const url = `${API_BASE_URL}/${script}?${queryParams.toString()}`;
-  console.log(`[get-club-players] Appel: ${script}`, params);
-  const res = await fetch(url);
-  return await res.text();
-}
+  const queryParams = new URLSearchParams({
+    id: config.appId,
+    serie: config.serial,
+    tm,
+    tmc: generateHash(tm, config.password),
+    ...params,
+  });
 
-function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
-  const results: Record<string, string>[] = [];
-  const regex = new RegExp(`<${tagName}>([\\s\\S]*?)<\\/${tagName}>`, 'gi');
-  let match;
+  const response = await fetch(
+    `${API_BASE_URL}/${script}.php?${queryParams.toString()}`,
+    { headers: { Accept: "application/xml, text/xml" } },
+  );
+  const body = await response.text();
 
-  while ((match = regex.exec(xml)) !== null) {
-    const content = match[1];
-    const obj: Record<string, string> = {};
-    const openTagRegex = /<(\w+)>/g;
-    let tagMatch;
-    
-    while ((tagMatch = openTagRegex.exec(content)) !== null) {
-      const fieldName = tagMatch[1];
-      const afterOpenTag = tagMatch.index + tagMatch[0].length;
-      const closeTag = `</${fieldName}>`;
-      const closeIdx = content.indexOf(closeTag, afterOpenTag);
-      
-      if (closeIdx !== -1) {
-        obj[fieldName] = content.substring(afterOpenTag, closeIdx).trim();
-        openTagRegex.lastIndex = closeIdx + closeTag.length;
-      }
-    }
-    results.push(obj);
+  if (!response.ok) {
+    throw new Error(`Erreur FFTT ${response.status} sur ${script}`);
   }
-  return results;
+
+  return body;
 }
 
-function decodeEntities(str: string): string {
-  return str
-    .replace(/&/g, '&')
-    .replace(/</g, '<')
-    .replace(/>/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&nbsp;/g, ' ');
+function decodeXml(value = ""): string {
+  return value
+    .replace(/^<!\[CDATA\[([\s\S]*)\]\]>$/, "$1")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("&quot;", '"')
+    .replaceAll("&apos;", "'")
+    .replaceAll("&nbsp;", " ")
+    .replaceAll("&amp;", "&")
+    .trim();
 }
 
-serve(async (req) => {
-  if (req.method === 'OPTIONS') {
+/**
+ * Smartping renvoie un enregistrement <licence> qui contient lui-même
+ * un champ <licence>. Une regex s'arrête donc au mauvais </licence>.
+ */
+function parseXmlRecords(xml: string): Record<string, string>[] {
+  const documentNode: XmlNode = {
+    name: "#document",
+    children: [],
+    text: "",
+  };
+  const stack: XmlNode[] = [documentNode];
+  const tokens =
+    xml.replace(/<\?xml[\s\S]*?\?>/gi, "").match(/<[^>]+>|[^<]+/g) || [];
+
+  for (const token of tokens) {
+    if (token.startsWith("<!--") || token.startsWith("<!DOCTYPE")) continue;
+
+    if (token.startsWith("</")) {
+      if (stack.length > 1) stack.pop();
+      continue;
+    }
+
+    if (token.startsWith("<")) {
+      const name = token.match(/^<\s*([^\s/>]+)/)?.[1];
+      if (!name) continue;
+
+      const node: XmlNode = { name, children: [], text: "" };
+      stack.at(-1)?.children.push(node);
+      if (!/\/>$/.test(token)) stack.push(node);
+      continue;
+    }
+
+    const current = stack.at(-1);
+    if (current) current.text += token;
+  }
+
+  const root = documentNode.children[0];
+  if (!root) return [];
+
+  const toObject = (node: XmlNode): Record<string, string> =>
+    Object.fromEntries(
+      node.children.map((child) => [
+        child.name,
+        child.children.length
+          ? JSON.stringify(toObject(child))
+          : decodeXml(child.text),
+      ]),
+    );
+
+  if (!root.children.some((child) => child.children.length)) {
+    return [toObject(root)];
+  }
+
+  return root.children.map(toObject);
+}
+
+function numberValue(value?: string): number {
+  const parsed = Number(String(value || "0").replace(",", "."));
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function rounded(value: number): number {
+  return Math.round(value * 100) / 100;
+}
+
+serve(async (request) => {
+  if (request.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
+  if (request.method !== "POST") {
+    return new Response(JSON.stringify({ error: "Méthode non autorisée" }), {
+      status: 405,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   try {
-    await callSmartping('xml_initialisation.php');
+    const config = getConfiguration();
+    const initialization = parseXmlRecords(
+      await callSmartping("xml_initialisation"),
+    );
 
-    let playersXml = await callSmartping('xml_licence_b.php', { club: CLUB_NUMBER, numclu: CLUB_NUMBER });
-    let rawPlayers = parseXmlList(playersXml, 'licence');
-
-    if (rawPlayers.length === 0) {
-      playersXml = await callSmartping('xml_joueur_b.php', { club: CLUB_NUMBER, numclu: CLUB_NUMBER });
-      rawPlayers = parseXmlList(playersXml, 'joueur');
+    if (initialization[0]?.appli !== "1") {
+      throw new Error("Accès Smartping refusé");
     }
 
-    const processedPlayers = rawPlayers.map((p) => {
-      const nom = decodeEntities(p.nom || '').toUpperCase();
-      const prenom = decodeEntities(p.prenom || '');
-      const licence = p.licence || p.numlic || '';
-      
-      const points = Math.round(parseFloat(p.point || p.pointm || '500') || 500);
-      const valinit = p.valinit ? Math.round(parseFloat(p.valinit)) : points;
-      const valmen = p.valmen ? Math.round(parseFloat(p.valmen)) : points;
-      const clast = p.clast || p.clst || Math.floor(points / 100).toString();
-      const cat = p.cat || p.categorie || '';
+    const rawPlayers = parseXmlRecords(
+      await callSmartping("xml_licence_b", { club: config.clubNumber }),
+    );
 
-      const progmens = Math.round((points - valmen) * 10) / 10;
-      const progans = Math.round((points - valinit) * 10) / 10;
+    const players = rawPlayers
+      .map((player) => {
+        const points = numberValue(player.pointm || player.point);
+        const previousMonthly = numberValue(player.apointm);
+        const initialSeason = numberValue(player.initm);
 
-      return {
-        licence,
-        nom,
-        prenom,
-        points,
-        clast,
-        cat,
-        valinit,
-        valmen,
-        progmens,
-        progans,
-      };
-    });
+        return {
+          idlicence: player.idlicence || "",
+          licence: player.licence || "",
+          nom: decodeXml(player.nom || "").toUpperCase(),
+          prenom: decodeXml(player.prenom || ""),
+          sexe: player.sexe || "",
+          points: rounded(points),
+          clast: Math.floor(points / 100).toString(),
+          cat: player.cat || "",
+          valinit: rounded(initialSeason),
+          valmen: rounded(previousMonthly),
+          progmens: rounded(points - previousMonthly),
+          progans: rounded(points - initialSeason),
+        };
+      })
+      .filter((player) => player.nom && player.prenom)
+      .sort((a, b) => b.points - a.points || a.nom.localeCompare(b.nom));
 
-    processedPlayers.sort((a, b) => b.points - a.points);
-
-    return new Response(JSON.stringify({ players: processedPlayers }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-
+    return new Response(
+      JSON.stringify({
+        players,
+        updatedAt: new Date().toISOString(),
+      }),
+      {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+          "Cache-Control": "public, max-age=300",
+        },
+      },
+    );
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message, players: [] }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    console.error("[get-club-players]", error);
+    return new Response(
+      JSON.stringify({
+        error:
+          error instanceof Error
+            ? error.message
+            : "Erreur interne du service FFTT",
+        players: [],
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
   }
 });

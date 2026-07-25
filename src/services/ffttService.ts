@@ -1,9 +1,11 @@
 import { supabase } from "@/integrations/supabase/client";
 
 export interface Player {
+  idlicence?: string;
   licence: string;
   nom: string;
   prenom: string;
+  sexe?: string;
   points: number;
   clast: string;
   cat: string;
@@ -14,36 +16,58 @@ export interface Player {
   progans?: number;
 }
 
-const CACHE_KEY = "stloub_club_players_official_v1";
+const CACHE_KEY = "stloub_club_players_official_v2";
+
+function isValidPlayer(value: unknown): value is Player {
+  if (!value || typeof value !== "object") return false;
+  const player = value as Partial<Player>;
+  return Boolean(player.nom && player.prenom && player.licence);
+}
+
+function sortPlayers(players: Player[]): Player[] {
+  return [...players].sort(
+    (a, b) =>
+      Number(b.points || 0) - Number(a.points || 0) ||
+      a.nom.localeCompare(b.nom, "fr"),
+  );
+}
 
 export async function fetchClubPlayers(): Promise<Player[]> {
-  // 1. Tenter la récupération en direct depuis la fonction Edge Supabase (Serveur FFTT)
   try {
-    const { data, error } = await supabase.functions.invoke('get-club-players');
+    const { data, error } = await supabase.functions.invoke(
+      "get-club-players",
+      { body: {} },
+    );
 
-    if (!error && data?.players && Array.isArray(data.players) && data.players.length > 0) {
-      const livePlayers: Player[] = data.players;
-      try {
-        localStorage.setItem(CACHE_KEY, JSON.stringify(livePlayers));
-      } catch (e) {}
-      return livePlayers;
-    } else if (error) {
-      console.error("[ffttService] Erreur lors de l'appel Supabase get-club-players:", error);
+    if (error) throw error;
+
+    const livePlayers = Array.isArray(data?.players)
+      ? data.players.filter(isValidPlayer)
+      : [];
+
+    if (livePlayers.length > 0) {
+      const sortedPlayers = sortPlayers(livePlayers);
+      localStorage.setItem(CACHE_KEY, JSON.stringify(sortedPlayers));
+      return sortedPlayers;
     }
-  } catch (err) {
-    console.error("[ffttService] Exception lors de la connexion FFTT via Supabase:", err);
-  }
 
-  // 2. Si problème réseau intermittent, charger la dernière sauvegarde valide en cache
-  try {
-    const cached = localStorage.getItem(CACHE_KEY);
-    if (cached) {
-      const parsed = JSON.parse(cached);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+    throw new Error("La FFTT n'a renvoyé aucun joueur.");
+  } catch (error) {
+    console.error("[ffttService] Données FFTT indisponibles :", error);
+
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const players = JSON.parse(cached);
+        if (Array.isArray(players)) {
+          const validPlayers = players.filter(isValidPlayer);
+          if (validPlayers.length > 0) return sortPlayers(validPlayers);
+        }
       }
+    } catch (cacheError) {
+      console.error("[ffttService] Cache FFTT invalide :", cacheError);
     }
-  } catch (e) {}
 
-  return [];
+    throw error;
+  }
 }
