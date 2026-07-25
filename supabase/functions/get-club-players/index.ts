@@ -27,6 +27,7 @@ async function callSmartping(script: string, params: Record<string, string> = {}
   const tmc = generateHash(tm);
   const queryParams = new URLSearchParams({ id: APP_ID, serie: SERIE, tm, tmc, ...params });
   const url = `${API_BASE_URL}/${script}?${queryParams.toString()}`;
+  console.log(`[get-club-players] Appel: ${script}`, params);
   const res = await fetch(url);
   return await res.text();
 }
@@ -75,12 +76,12 @@ serve(async (req) => {
   try {
     await callSmartping('xml_initialisation.php');
 
-    let playersXml = await callSmartping('xml_joueur_b.php', { club: CLUB_NUMBER });
-    let rawPlayers = parseXmlList(playersXml, 'joueur');
+    let playersXml = await callSmartping('xml_licence_b.php', { club: CLUB_NUMBER, numclu: CLUB_NUMBER });
+    let rawPlayers = parseXmlList(playersXml, 'licence');
 
     if (rawPlayers.length === 0) {
-      playersXml = await callSmartping('xml_licence_b.php', { club: CLUB_NUMBER });
-      rawPlayers = parseXmlList(playersXml, 'licence');
+      playersXml = await callSmartping('xml_joueur_b.php', { club: CLUB_NUMBER, numclu: CLUB_NUMBER });
+      rawPlayers = parseXmlList(playersXml, 'joueur');
     }
 
     const processedPlayers = rawPlayers.map((p) => {
