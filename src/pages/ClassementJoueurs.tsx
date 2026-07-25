@@ -9,9 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { fetchClubPlayers, Player } from "@/services/ffttService";
+import { defaultPlayersData } from "@/data/playersData";
 import PingpocketIframe from "@/components/PingpocketIframe";
 import { 
-  Loader2, 
   Search, 
   Trophy, 
   Users, 
@@ -23,16 +23,16 @@ import {
   Award,
   Calendar,
   UserCheck,
-  Zap,
-  Sparkles,
-  BarChart3,
   ArrowUpRight,
   TrendingDown
 } from 'lucide-react';
 
 const ClassementJoueurs = () => {
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Initialisation directe avec les données pour un rendu instantané
+  const [players, setPlayers] = useState<Player[]>(() => 
+    [...defaultPlayersData].sort((a, b) => b.points - a.points)
+  );
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
@@ -199,15 +199,15 @@ const ClassementJoueurs = () => {
         </p>
       </div>
 
-      <Tabs defaultValue="pingpocket" className="w-full">
+      <Tabs defaultValue="live" className="w-full">
         {/* Navigation par Onglets */}
         <div className="flex justify-center mb-8 overflow-x-auto">
           <TabsList className="bg-clubSection p-1.5 rounded-2xl flex flex-wrap justify-center gap-1.5 h-auto shadow-inner border border-border">
+            <TabsTrigger value="live" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-semibold text-xs md:text-sm py-2 px-4 rounded-xl transition-all">
+              <TableIcon className="mr-2 h-4 w-4" /> Tableau des Joueurs
+            </TabsTrigger>
             <TabsTrigger value="pingpocket" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-semibold text-xs md:text-sm py-2 px-4 rounded-xl transition-all">
               <Globe className="mr-2 h-4 w-4" /> Vue Directe Pingpocket
-            </TabsTrigger>
-            <TabsTrigger value="live" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-semibold text-xs md:text-sm py-2 px-4 rounded-xl transition-all">
-              <TableIcon className="mr-2 h-4 w-4" /> Tableau Filtres FFTT
             </TabsTrigger>
             <TabsTrigger value="mensuelle" className="data-[state=active]:bg-clubPrimary data-[state=active]:text-white font-semibold text-xs md:text-sm py-2 px-4 rounded-xl transition-all">
               <Calendar className="mr-2 h-4 w-4" /> Progression Mensuelle
@@ -221,18 +221,13 @@ const ClassementJoueurs = () => {
           </TabsList>
         </div>
 
-        {/* --- ONGLET 1 : PINGPOCKET DIRECT --- */}
-        <TabsContent value="pingpocket" className="space-y-6 focus-visible:outline-none">
-          <PingpocketIframe title="Classements & Joueurs du Club St Loub Ping (Pingpocket)" type="joueurs" />
-        </TabsContent>
-
-        {/* --- ONGLET 2 : TABLEAU INTERACTIF FFTT --- */}
+        {/* --- ONGLET 1 : TABLEAU DES JOUEURS (CHARGEMENT INSTANTANÉ) --- */}
         <TabsContent value="live" className="space-y-6 focus-visible:outline-none">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
               <CardHeader className="p-4 pb-2">
                 <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Users className="h-4 w-4 text-clubPrimary" /> Licenciés Chargés
+                  <Users className="h-4 w-4 text-clubPrimary" /> Licenciés Enregistrés
                 </CardDescription>
                 <CardTitle className="text-2xl md:text-3xl font-extrabold text-clubPrimary">
                   {totalPlayers}
@@ -249,7 +244,7 @@ const ClassementJoueurs = () => {
                   {bestPlayer ? (
                     <span>{bestPlayer.nom} {bestPlayer.prenom} <span className="text-clubPrimary font-extrabold">({bestPlayer.points} pts)</span></span>
                   ) : (
-                    "Chargement..."
+                    "-"
                   )}
                 </CardTitle>
               </CardHeader>
@@ -274,7 +269,7 @@ const ClassementJoueurs = () => {
                   <CardTitle className="text-xl md:text-2xl font-bold text-clubDark flex items-center gap-2">
                     Tableau Interactif des Joueurs
                     <Badge variant="outline" className="text-[10px] border-clubPrimary text-clubPrimary bg-clubPrimary/10">
-                      <Award className="h-3 w-3 mr-1" /> API FFTT
+                      <Award className="h-3 w-3 mr-1" /> FFTT
                     </Badge>
                   </CardTitle>
                   <CardDescription className="text-xs md:text-sm text-muted-foreground">
@@ -323,12 +318,7 @@ const ClassementJoueurs = () => {
             </CardHeader>
 
             <CardContent className="p-0 md:p-6 pt-2">
-              {loading ? (
-                <div className="flex flex-col items-center justify-center py-16">
-                  <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
-                  <p className="text-sm font-semibold text-clubDark">Chargement des données FFTT...</p>
-                </div>
-              ) : filteredPlayers.length === 0 ? (
+              {filteredPlayers.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground text-sm italic">
                   Aucun joueur ne correspond à votre recherche.
                 </div>
@@ -346,6 +336,11 @@ const ClassementJoueurs = () => {
           </Card>
         </TabsContent>
 
+        {/* --- ONGLET 2 : PINGPOCKET DIRECT --- */}
+        <TabsContent value="pingpocket" className="space-y-6 focus-visible:outline-none">
+          <PingpocketIframe title="Classements & Joueurs du Club St Loub Ping (Pingpocket)" type="joueurs" />
+        </TabsContent>
+
         {/* --- ONGLET 3 : PROGRESSION MENSUELLE --- */}
         <TabsContent value="mensuelle" className="space-y-6 focus-visible:outline-none">
           <Card className="bg-clubLight shadow-xl rounded-2xl border border-border overflow-hidden">
@@ -355,20 +350,14 @@ const ClassementJoueurs = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0 md:p-6 pt-2">
-              {loading ? (
-                <div className="flex flex-col items-center justify-center py-16">
-                  <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
-                </div>
-              ) : (
-                <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
-                  <Table className="min-w-full">
-                    {renderTableHead('mens')}
-                    <TableBody>
-                      {monthlySortedPlayers.map((player, index) => renderPlayerRow(player, index, 'mens'))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
+              <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
+                <Table className="min-w-full">
+                  {renderTableHead('mens')}
+                  <TableBody>
+                    {monthlySortedPlayers.map((player, index) => renderPlayerRow(player, index, 'mens'))}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -382,20 +371,14 @@ const ClassementJoueurs = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0 md:p-6 pt-2">
-              {loading ? (
-                <div className="flex flex-col items-center justify-center py-16">
-                  <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
-                </div>
-              ) : (
-                <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
-                  <Table className="min-w-full">
-                    {renderTableHead('ans')}
-                    <TableBody>
-                      {annualSortedPlayers.map((player, index) => renderPlayerRow(player, index, 'ans'))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
+              <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
+                <Table className="min-w-full">
+                  {renderTableHead('ans')}
+                  <TableBody>
+                    {annualSortedPlayers.map((player, index) => renderPlayerRow(player, index, 'ans'))}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -409,33 +392,27 @@ const ClassementJoueurs = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 md:p-6 space-y-8">
-              {loading ? (
-                <div className="flex flex-col items-center justify-center py-16">
-                  <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
-                </div>
-              ) : (
-                Object.entries(groupedByCat).map(([catName, catPlayers]) => (
-                  <div key={catName} className="space-y-3">
-                    <div className="flex items-center gap-3 bg-clubSection p-3 rounded-xl border border-border">
-                      <Badge className="bg-clubPrimary text-white font-bold text-xs px-3 py-1">
-                        Catégorie {catName}
-                      </Badge>
-                      <span className="text-xs font-semibold text-clubDark">
-                        {catPlayers.length} joueur(s)
-                      </span>
-                    </div>
-
-                    <div className="overflow-x-auto border border-border rounded-xl shadow-sm">
-                      <Table className="min-w-full">
-                        {renderTableHead()}
-                        <TableBody>
-                          {catPlayers.map((player, index) => renderPlayerRow(player, index))}
-                        </TableBody>
-                      </Table>
-                    </div>
+              {Object.entries(groupedByCat).map(([catName, catPlayers]) => (
+                <div key={catName} className="space-y-3">
+                  <div className="flex items-center gap-3 bg-clubSection p-3 rounded-xl border border-border">
+                    <Badge className="bg-clubPrimary text-white font-bold text-xs px-3 py-1">
+                      Catégorie {catName}
+                    </Badge>
+                    <span className="text-xs font-semibold text-clubDark">
+                      {catPlayers.length} joueur(s)
+                    </span>
                   </div>
-                ))
-              )}
+
+                  <div className="overflow-x-auto border border-border rounded-xl shadow-sm">
+                    <Table className="min-w-full">
+                      {renderTableHead()}
+                      <TableBody>
+                        {catPlayers.map((player, index) => renderPlayerRow(player, index))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              ))}
             </CardContent>
           </Card>
         </TabsContent>
