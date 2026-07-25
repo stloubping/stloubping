@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { fetchClubPlayers, Player } from "@/services/ffttService";
-import { defaultPlayersData } from "@/data/playersData";
 import PingpocketIframe from "@/components/PingpocketIframe";
 import { 
   Search, 
@@ -24,15 +23,13 @@ import {
   Calendar,
   UserCheck,
   ArrowUpRight,
-  TrendingDown
+  TrendingDown,
+  Loader2
 } from 'lucide-react';
 
 const ClassementJoueurs = () => {
-  // Initialisation directe avec les données pour un rendu instantané
-  const [players, setPlayers] = useState<Player[]>(() => 
-    [...defaultPlayersData].sort((a, b) => b.points - a.points)
-  );
-  const [loading, setLoading] = useState(false);
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
@@ -192,10 +189,10 @@ const ClassementJoueurs = () => {
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-5xl font-extrabold text-clubDark mb-3 flex items-center justify-center gap-3">
           <Trophy className="h-8 w-8 md:h-10 md:w-10 text-clubPrimary" />
-          Classement des Joueurs
+          Classement Officiel FFTT
         </h1>
         <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto">
-          Consultez les licenciés du St Loub Ping (Club N° 10330022), leurs classements officiels FFTT et leurs progressions.
+          Données en direct des serveurs FFTT pour le St Loub Ping (Club N° 10330022).
         </p>
       </div>
 
@@ -221,16 +218,16 @@ const ClassementJoueurs = () => {
           </TabsList>
         </div>
 
-        {/* --- ONGLET 1 : TABLEAU DES JOUEURS (CHARGEMENT INSTANTANÉ) --- */}
+        {/* --- ONGLET 1 : TABLEAU DES JOUEURS --- */}
         <TabsContent value="live" className="space-y-6 focus-visible:outline-none">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
               <CardHeader className="p-4 pb-2">
                 <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-                  <Users className="h-4 w-4 text-clubPrimary" /> Licenciés Enregistrés
+                  <Users className="h-4 w-4 text-clubPrimary" /> Licenciés FFTT
                 </CardDescription>
                 <CardTitle className="text-2xl md:text-3xl font-extrabold text-clubPrimary">
-                  {totalPlayers}
+                  {loading ? <Loader2 className="h-6 w-6 animate-spin" /> : totalPlayers}
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -241,7 +238,9 @@ const ClassementJoueurs = () => {
                   <Medal className="h-4 w-4 text-yellow-500" /> N°1 du Club
                 </CardDescription>
                 <CardTitle className="text-lg md:text-xl font-bold truncate text-white">
-                  {bestPlayer ? (
+                  {loading ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : bestPlayer ? (
                     <span>{bestPlayer.nom} {bestPlayer.prenom} <span className="text-clubPrimary font-extrabold">({bestPlayer.points} pts)</span></span>
                   ) : (
                     "-"
@@ -256,7 +255,7 @@ const ClassementJoueurs = () => {
                   <TrendingUp className="h-4 w-4 text-emerald-400" /> Moyenne Points
                 </CardDescription>
                 <CardTitle className="text-2xl md:text-3xl font-extrabold text-emerald-400">
-                  {avgPoints > 0 ? `${avgPoints} pts` : "-"}
+                  {loading ? <Loader2 className="h-6 w-6 animate-spin" /> : avgPoints > 0 ? `${avgPoints} pts` : "-"}
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -267,9 +266,9 @@ const ClassementJoueurs = () => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
                 <div>
                   <CardTitle className="text-xl md:text-2xl font-bold text-clubDark flex items-center gap-2">
-                    Tableau Interactif des Joueurs
+                    Tableau des Licenciés
                     <Badge variant="outline" className="text-[10px] border-clubPrimary text-clubPrimary bg-clubPrimary/10">
-                      <Award className="h-3 w-3 mr-1" /> FFTT
+                      <Award className="h-3 w-3 mr-1" /> Serveur FFTT
                     </Badge>
                   </CardTitle>
                   <CardDescription className="text-xs md:text-sm text-muted-foreground">
@@ -318,9 +317,14 @@ const ClassementJoueurs = () => {
             </CardHeader>
 
             <CardContent className="p-0 md:p-6 pt-2">
-              {filteredPlayers.length === 0 ? (
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-16">
+                  <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
+                  <p className="text-sm font-semibold text-clubDark">Interrogation en direct des serveurs FFTT (10330022)...</p>
+                </div>
+              ) : filteredPlayers.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground text-sm italic">
-                  Aucun joueur ne correspond à votre recherche.
+                  Aucun joueur trouvé.
                 </div>
               ) : (
                 <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
@@ -350,14 +354,18 @@ const ClassementJoueurs = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0 md:p-6 pt-2">
-              <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
-                <Table className="min-w-full">
-                  {renderTableHead('mens')}
-                  <TableBody>
-                    {monthlySortedPlayers.map((player, index) => renderPlayerRow(player, index, 'mens'))}
-                  </TableBody>
-                </Table>
-              </div>
+              {loading ? (
+                <div className="flex items-center justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div>
+              ) : (
+                <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
+                  <Table className="min-w-full">
+                    {renderTableHead('mens')}
+                    <TableBody>
+                      {monthlySortedPlayers.map((player, index) => renderPlayerRow(player, index, 'mens'))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -371,14 +379,18 @@ const ClassementJoueurs = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0 md:p-6 pt-2">
-              <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
-                <Table className="min-w-full">
-                  {renderTableHead('ans')}
-                  <TableBody>
-                    {annualSortedPlayers.map((player, index) => renderPlayerRow(player, index, 'ans'))}
-                  </TableBody>
-                </Table>
-              </div>
+              {loading ? (
+                <div className="flex items-center justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div>
+              ) : (
+                <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
+                  <Table className="min-w-full">
+                    {renderTableHead('ans')}
+                    <TableBody>
+                      {annualSortedPlayers.map((player, index) => renderPlayerRow(player, index, 'ans'))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -392,27 +404,31 @@ const ClassementJoueurs = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 md:p-6 space-y-8">
-              {Object.entries(groupedByCat).map(([catName, catPlayers]) => (
-                <div key={catName} className="space-y-3">
-                  <div className="flex items-center gap-3 bg-clubSection p-3 rounded-xl border border-border">
-                    <Badge className="bg-clubPrimary text-white font-bold text-xs px-3 py-1">
-                      Catégorie {catName}
-                    </Badge>
-                    <span className="text-xs font-semibold text-clubDark">
-                      {catPlayers.length} joueur(s)
-                    </span>
-                  </div>
+              {loading ? (
+                <div className="flex items-center justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div>
+              ) : (
+                Object.entries(groupedByCat).map(([catName, catPlayers]) => (
+                  <div key={catName} className="space-y-3">
+                    <div className="flex items-center gap-3 bg-clubSection p-3 rounded-xl border border-border">
+                      <Badge className="bg-clubPrimary text-white font-bold text-xs px-3 py-1">
+                        Catégorie {catName}
+                      </Badge>
+                      <span className="text-xs font-semibold text-clubDark">
+                        {catPlayers.length} joueur(s)
+                      </span>
+                    </div>
 
-                  <div className="overflow-x-auto border border-border rounded-xl shadow-sm">
-                    <Table className="min-w-full">
-                      {renderTableHead()}
-                      <TableBody>
-                        {catPlayers.map((player, index) => renderPlayerRow(player, index))}
-                      </TableBody>
-                    </Table>
+                    <div className="overflow-x-auto border border-border rounded-xl shadow-sm">
+                      <Table className="min-w-full">
+                        {renderTableHead()}
+                        <TableBody>
+                          {catPlayers.map((player, index) => renderPlayerRow(player, index))}
+                        </TableBody>
+                      </Table>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </CardContent>
           </Card>
         </TabsContent>
