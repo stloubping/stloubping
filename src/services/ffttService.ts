@@ -15,19 +15,21 @@ export interface Player {
   progans?: number;
 }
 
-const APP_ID = "SX046";
-const APP_PASSWORD = "NQC2rNs85g";
-const CLUB_NUMBER = "10330022";
+// Variables d'environnement avec valeurs par défaut
+const APP_ID = import.meta.env.VITE_FFTT_APP_ID || "SX046";
+const APP_PASSWORD = import.meta.env.VITE_FFTT_APP_PASSWORD || "NQC2rNs85g";
+const SERIAL = import.meta.env.VITE_FFTT_SERIAL || "STLBP2025MEMB1";
+const CLUB_NUMBER = import.meta.env.VITE_FFTT_CLUB_NUMBER || "10330022";
 const API_BASE_URL = "https://www.fftt.com/mobile/pxml";
-const SERIE = "STLBP2025MEMB1";
 
-const CACHE_KEY = "stloub_club_players_v20";
-const CACHE_TIME_KEY = "stloub_club_players_time_v20";
+const CACHE_KEY = "stloub_club_players_v21";
+const CACHE_TIME_KEY = "stloub_club_players_time_v21";
 const CACHE_DURATION_MS = 1000 * 60 * 60 * 2; // 2 heures
 
 function getTimestamp(): string {
   const now = new Date();
-  return `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}${String(now.getMilliseconds()).padStart(3,'0')}`;
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}000`;
 }
 
 function generateHash(tm: string): string {
@@ -71,37 +73,48 @@ function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
   return results;
 }
 
+async function fetchWithTimeout(url: string, timeoutMs = 3000): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { signal: controller.signal, headers: { 'Accept': 'text/xml, application/xml, text/plain' } });
+    clearTimeout(timeoutId);
+    return response;
+  } catch (err) {
+    clearTimeout(timeoutId);
+    throw err;
+  }
+}
+
 async function fetchSmartpingXml(script: string, params: Record<string, string> = {}): Promise<string> {
   const tm = getTimestamp();
   const tmc = generateHash(tm);
-  const queryParams = new URLSearchParams({ id: APP_ID, serie: SERIE, tm, tmc, ...params });
+  const queryParams = new URLSearchParams({ id: APP_ID, serie: SERIAL, tm, tmc, ...params });
   const rawUrl = `${API_BASE_URL}/${script}?${queryParams.toString()}`;
 
-  // Utilisation de proxies CORS pour les requêtes client directes vers l'API FFTT
   const proxies = [
     `https://api.allorigins.win/raw?url=${encodeURIComponent(rawUrl)}`,
     `https://corsproxy.io/?${encodeURIComponent(rawUrl)}`,
-    rawUrl
   ];
 
   for (const proxyUrl of proxies) {
     try {
-      const res = await fetch(proxyUrl, { headers: { 'Accept': 'text/xml, application/xml, text/plain' } });
+      const res = await fetchWithTimeout(proxyUrl, 2500);
       if (res.ok) {
         const text = await res.text();
-        if (text && text.includes("xml")) {
+        if (text && (text.includes("xml") || text.includes("<licence>") || text.includes("<joueur>"))) {
           return text;
         }
       }
     } catch (e) {
-      // essayer le proxy suivant
+      // Ignorer l'erreur et essayer le proxy suivant
     }
   }
   return "";
 }
 
 export async function fetchClubPlayers(): Promise<Player[]> {
-  // 1. Vérification du cache local
+  // 1. Vérification du cache local récent
   try {
     const cached = localStorage.getItem(CACHE_KEY);
     const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
@@ -114,7 +127,7 @@ export async function fetchClubPlayers(): Promise<Player[]> {
     }
   } catch (e) {}
 
-  // 2. Appel Smartping FFTT
+  // 2. Tentative de récupération en direct auprès de l'API FFTT
   try {
     let playersXml = await fetchSmartpingXml('xml_licence_b.php', { club: CLUB_NUMBER, numclu: CLUB_NUMBER });
     let rawPlayers = parseXmlList(playersXml, 'licence');
@@ -158,20 +171,10 @@ export async function fetchClubPlayers(): Promise<Player[]> {
       return processedPlayers;
     }
   } catch (err) {
-    console.warn("Erreur chargement Smartping client:", err);
+    console.warn("API FFTT inaccessible, bascule sur les données locales:", err);
   }
 
-  // 3. Fallback cache / données par défaut
-  try {
-    const cached = localStorage.getItem(CACHE_KEY);
-    if (cached) {
-      const parsed = JSON.parse(cached);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
-      }
-    }
-  } catch (e) {}
-
+  // 3. Secours garanti : Données enregistrées des 48 joueurs du club
   return defaultPlayersData;
 }
 
