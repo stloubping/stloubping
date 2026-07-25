@@ -73,7 +73,7 @@ const navItems: NavItem[] = [
     ],
   },
   { name: "Contact", path: "/contact", type: "link" },
-  { name: "Archives", path: "/actualites", type: "link" },
+  { name: "Actualités", path: "/actualites", type: "link" },
 ];
 
 const Navbar = () => {
