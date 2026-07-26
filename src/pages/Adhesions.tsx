@@ -74,6 +74,28 @@ const scheduleToneClasses: Record<ScheduleTone, string> = {
   adultes: "border-rose-300 bg-rose-50 text-rose-950",
 };
 
+const scheduleGridStart = 10 * 60;
+const scheduleGridStep = 30;
+
+const parseScheduleTime = (value: string) => {
+  const [hours, minutes] = value.trim().split("h").map(Number);
+  return hours * 60 + (minutes || 0);
+};
+
+const getScheduleGridPosition = (time: string) => {
+  const [startValue, endValue] = time.split("–");
+  const start = parseScheduleTime(startValue);
+  let end = parseScheduleTime(endValue);
+
+  if (end === 0) {
+    end = 24 * 60;
+  }
+
+  return {
+    gridRow: `${Math.floor((start - scheduleGridStart) / scheduleGridStep) + 1} / span ${Math.max(1, Math.ceil((end - start) / scheduleGridStep))}`,
+  };
+};
+
 const faqItems = [
   {
     question: "Puis-je effectuer des séances d'essai gratuites avant de m'inscrire ?",
@@ -227,13 +249,14 @@ const Adhesions = () => {
                   <h3 className="border-b border-clubPrimary/20 bg-clubPrimary/10 px-4 py-3 text-center text-base font-extrabold uppercase tracking-wide text-clubDark">
                     {day}
                   </h3>
-                  <div className="space-y-3 p-3">
+                  <div className="space-y-3 p-3 lg:grid lg:h-[840px] lg:grid-rows-[repeat(28,minmax(0,1fr))] lg:space-y-0 lg:p-1">
                     {slots.map((slot) => (
                       <div
                         key={`${day}-${slot.time}`}
-                        className={`rounded-lg border-l-4 p-3 ${scheduleToneClasses[slot.tone]}`}
+                        className={`rounded-lg border-l-4 p-3 lg:m-1 lg:flex lg:flex-col lg:justify-center lg:overflow-hidden lg:px-2 lg:py-1 ${scheduleToneClasses[slot.tone]}`}
+                        style={getScheduleGridPosition(slot.time)}
                       >
-                        <p className="font-bold leading-tight">{slot.label}</p>
+                        <p className="font-bold leading-tight lg:text-sm">{slot.label}</p>
                         <p className="mt-2 flex items-center gap-1.5 text-sm font-semibold">
                           <Clock3 className="h-4 w-4 shrink-0" aria-hidden="true" />
                           <time>{slot.time}</time>
