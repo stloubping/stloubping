@@ -6,7 +6,7 @@ import {
   ArrowUpDown,
   RefreshCw,
   Search,
-  Sparkles,
+  Medal,
   TrendingDown,
   TrendingUp,
   Trophy,
@@ -51,6 +51,9 @@ const isNewRegistration = (player: Player) =>
 
 const annualEvolution = (player: Player) =>
   isNewRegistration(player) ? 0 : Number(player.progans || 0);
+
+const isYouthPlayer = (player: Player) =>
+  /^(P|B|M|C|J)/i.test(String(player.cat || "").trim());
 
 const ProgressionAnnuelle = () => {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -157,15 +160,24 @@ const ProgressionAnnuelle = () => {
     [filteredPlayers, sortConfig],
   );
 
-  const positivePlayers = useMemo(
-    () => players.filter((player) => annualEvolution(player) > 0),
-    [players],
-  );
-
   const seasonPodium = useMemo(
     () =>
       [...players]
         .filter((player) => annualEvolution(player) > 0)
+        .sort(
+          (a, b) => annualEvolution(b) - annualEvolution(a),
+        )
+        .slice(0, 3),
+    [players],
+  );
+
+  const youthSeasonPodium = useMemo(
+    () =>
+      [...players]
+        .filter(
+          (player) =>
+            isYouthPlayer(player) && annualEvolution(player) > 0,
+        )
         .sort(
           (a, b) => annualEvolution(b) - annualEvolution(a),
         )
@@ -281,15 +293,43 @@ const ProgressionAnnuelle = () => {
 
         <article className="bg-white p-5 md:p-6">
           <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-clubPrimary">
-            <Sparkles className="h-4 w-4" />
-            Progressions positives
+            <Medal className="h-4 w-4" />
+            Podium jeunes
           </div>
-          <strong className="mt-2 block text-3xl text-clubDark">
-            {loading ? "—" : positivePlayers.length}
-          </strong>
-          <span className="text-sm text-muted-foreground">
-            joueurs en progression
-          </span>
+          {loading ? (
+            <strong className="mt-2 block text-3xl text-clubDark">—</strong>
+          ) : youthSeasonPodium.length > 0 ? (
+            <ol className="mt-3 space-y-2">
+              {youthSeasonPodium.map((player, index) => (
+                <li
+                  key={player.idlicence || player.licence}
+                  className="flex min-w-0 items-center gap-2 text-sm"
+                >
+                  <span
+                    className={`grid h-6 w-6 flex-none place-items-center rounded-full text-xs font-black ${
+                      index === 0
+                        ? "bg-amber-100 text-amber-800"
+                        : index === 1
+                          ? "bg-slate-200 text-slate-700"
+                          : "bg-orange-100 text-orange-800"
+                    }`}
+                  >
+                    {index + 1}
+                  </span>
+                  <strong className="min-w-0 flex-1 truncate text-clubDark">
+                    {playerName(player)}
+                  </strong>
+                  <span className="flex-none font-extrabold text-emerald-700">
+                    +{formatPoints(annualEvolution(player))} pts
+                  </span>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <span className="mt-2 block text-sm text-muted-foreground">
+              Aucune progression jeune positive
+            </span>
+          )}
         </article>
 
         <article className="bg-white p-5 md:p-6">
