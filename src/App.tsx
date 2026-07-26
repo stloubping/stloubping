@@ -37,6 +37,10 @@ import React from "react";
 
 const queryClient = new QueryClient();
 
+const StatistiquesJoueurs = React.lazy(
+  () => import("./pages/StatistiquesJoueurs"),
+);
+
 const App = () => (
   <div className="app-root">
     <QueryClientProvider client={queryClient}>
@@ -54,6 +58,20 @@ const App = () => (
                 <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
                 <Route path="/classement-joueurs/progression-mensuelle" element={<ProgressionMensuelle />} />
                 <Route path="/classement-joueurs/progression-annuelle" element={<ProgressionAnnuelle />} />
+                <Route
+                  path="/classement-joueurs/statistiques"
+                  element={
+                    <React.Suspense
+                      fallback={
+                        <div className="flex min-h-[60vh] items-center justify-center text-muted-foreground">
+                          Chargement des statistiques…
+                        </div>
+                      }
+                    >
+                      <StatistiquesJoueurs />
+                    </React.Suspense>
+                  }
+                />
                 <Route path="/classement-joueurs/par-categorie-age" element={<ProgressionParCategorieAge />} />
                 <Route path="/adhesions" element={<Adhesions />} />
                 <Route path="/boutique" element={<Boutique />} />
