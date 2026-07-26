@@ -25,6 +25,7 @@ import CriteriumGironde from "./pages/CriteriumGironde";
 import WTTVideos from "./pages/WTTVideos";
 import LesLegendes from "./pages/LesLegendes";
 import Tutos from "./pages/Tutos";
+import Reportages from "./pages/Reportages";
 import Actualites from "./pages/Actualites";
 import NotFound from "./pages/NotFound";
 import MentionsLegales from "./pages/MentionsLegales";
@@ -84,6 +85,7 @@ const App = () => (
                 <Route path="/videos/wtt" element={<WTTVideos />} />
                 <Route path="/videos/tutos" element={<Tutos />} />
                 <Route path="/videos/les-legendes" element={<LesLegendes />} />
+                <Route path="/videos/reportages" element={<Reportages />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/mentions-legales" element={<MentionsLegales />} />
                 <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />

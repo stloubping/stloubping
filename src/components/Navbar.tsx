@@ -78,6 +78,7 @@ const navItems: NavItem[] = [
     children: [
       { name: "WTT", path: "/videos/wtt", type: "link" },
       { name: "Tutos", path: "/videos/tutos", type: "link" },
+      { name: "Reportages", path: "/videos/reportages", type: "link" },
       { name: "Les Légendes", path: "/videos/les-legendes", type: "link" },
     ],
   },

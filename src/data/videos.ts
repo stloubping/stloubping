@@ -3,7 +3,7 @@ export interface VideoItem {
   title: string;
   description: string;
   youtubeId: string;
-  category: 'wtt' | 'tutos' | 'legends';
+  category: 'wtt' | 'tutos' | 'legends' | 'reportages';
   dateAdded: string;
 }
 
@@ -71,6 +71,15 @@ export const allVideos: VideoItem[] = [
     description: "Le quart de finale simple messieurs entre Patrick Franziska et Alexis Lebrun au WTT São José 2026.",
     youtubeId: "Ozt-MfocifY",
     category: 'wtt',
+    dateAdded: "2026-07-26",
+  },
+  // Reportages
+  {
+    id: 'reportage-1',
+    title: "Tuto : Comment battre le numéro 1 mondial au Tennis de Table",
+    description: "Découvrez ce reportage proposé par LOY Sport autour du tennis de table de haut niveau.",
+    youtubeId: "CRqYGFft16Y",
+    category: 'reportages',
     dateAdded: "2026-07-26",
   },
   // Vidéos Tutos
