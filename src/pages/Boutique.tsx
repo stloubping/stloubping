@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
 import { Shirt, Ruler, DollarSign, Mail, User, FileText } from 'lucide-react'; // Ajout d'icônes pour les méthodes de commande
+import ShopPreorders from '@/components/ShopPreorders';
 
 const Boutique = () => {
   const { openLightbox } = useLightbox(); // Use the lightbox hook
@@ -95,6 +96,8 @@ const Boutique = () => {
           </div>
         </Card>
       </section>
+
+      <ShopPreorders productName={jerseyDetails.name} unitPrice={35} />
     </div>
   );
 };
