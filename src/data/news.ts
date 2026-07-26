@@ -9,7 +9,17 @@ export interface NewsItem {
 }
 
 export const allNewsItems: NewsItem[] = [
-  // 1️⃣ Annonce de la nouvelle saison 2026-2027 (Toujours en première position)
+  // 1️⃣ Précommandes du maillot officiel
+  {
+    id: 1001,
+    title: "Précommandez votre maillot officiel St Loub Ping !",
+    date: "26 Juillet 2026",
+    location: "Boutique du Club",
+    description: "Les précommandes du maillot officiel St Loub Ping sont ouvertes ! Choisissez votre taille, indiquez la quantité souhaitée et envoyez directement votre demande depuis notre nouvelle page Boutique. Le maillot est disponible du 2 ans au 10XL au tarif de 35 €. Après votre précommande, le club vous contactera pour confirmer les modalités de règlement et de remise. Portez fièrement les couleurs du St Loub Ping à l’entraînement comme en compétition !",
+    link: "/boutique#precommande",
+    image: "/images/boutique/maillot-club-officiel.png",
+  },
+  // 2️⃣ Annonce de la nouvelle saison 2026-2027
   {
     id: 701,
     title: "Saison 2026-2027 : Ouverture des Inscriptions & Adhésions !",
