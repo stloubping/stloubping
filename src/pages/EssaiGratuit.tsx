@@ -335,7 +335,7 @@ const EssaiGratuit = () => {
       <section className="relative overflow-hidden bg-clubDark text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(225,29,72,0.32),transparent_40%)]" />
         <div className="container relative mx-auto px-4 py-14 md:py-20">
-          <div className="max-w-3xl">
+          <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold">
               <Sparkles className="h-4 w-4 text-clubPrimary" />
               Deux séances d’essai offertes
@@ -345,18 +345,9 @@ const EssaiGratuit = () => {
               <span className="block text-clubPrimary">commence ici.</span>
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/80 md:text-xl">
-              Choisissez votre profil et un créneau. Nous vous accueillons à Saint-Loubès,
-              quel que soit votre niveau.
+              Choisissez votre profil et un créneau. Nous vous accueillons à
+              Saint-Loubès, quel que soit votre niveau.
             </p>
-            <Button
-              asChild
-              className="mt-8 h-auto rounded-full bg-clubPrimary px-7 py-4 text-base font-bold text-white shadow-xl hover:bg-clubPrimary/90 md:text-lg"
-            >
-              <a href="#reservation">
-                Réserver une séance d’essai gratuite
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </a>
-            </Button>
           </div>
         </div>
       </section>
