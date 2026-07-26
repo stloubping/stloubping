@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   ArrowDown,
   ArrowUp,
@@ -236,9 +237,13 @@ const ClassementJoueurs = () => {
                   >
                     {index + 1}
                   </span>
-                  <strong className="min-w-0 flex-1 truncate text-clubDark">
+                  <Link
+                    to={`/classement-joueurs/${player.licence}`}
+                    className="min-w-0 flex-1 truncate font-bold text-clubDark transition hover:text-clubPrimary hover:underline"
+                    aria-label={`Voir la fiche de ${playerName(player)}`}
+                  >
                     {playerName(player)}
-                  </strong>
+                  </Link>
                   <span className="flex-none font-extrabold text-clubPrimary">
                     {formatPoints(player.points)} pts
                   </span>
@@ -277,9 +282,13 @@ const ClassementJoueurs = () => {
                   >
                     {index + 1}
                   </span>
-                  <strong className="min-w-0 flex-1 truncate text-clubDark">
+                  <Link
+                    to={`/classement-joueurs/${player.licence}`}
+                    className="min-w-0 flex-1 truncate font-bold text-clubDark transition hover:text-clubPrimary hover:underline"
+                    aria-label={`Voir la fiche de ${playerName(player)}`}
+                  >
                     {playerName(player)}
-                  </strong>
+                  </Link>
                   <span className="flex-none font-extrabold text-emerald-700">
                     +{formatMonthlyEvolution(monthlyEvolution(player))} pts
                   </span>
@@ -479,9 +488,13 @@ const ClassementJoueurs = () => {
                               {initials(player)}
                             </span>
                             <span>
-                              <strong className="block text-xs leading-tight text-clubDark md:text-sm">
+                              <Link
+                                to={`/classement-joueurs/${player.licence}`}
+                                className="block text-xs font-bold leading-tight text-clubDark transition hover:text-clubPrimary hover:underline md:text-sm"
+                                aria-label={`Voir la fiche de ${playerName(player)}`}
+                              >
                                 {playerName(player)}
-                              </strong>
+                              </Link>
                               <small className="hidden text-muted-foreground md:block">
                                 {player.sexe === "F" ? "Joueuse" : "Joueur"} du
                                 club

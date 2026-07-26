@@ -18,6 +18,7 @@ import TournamentLiveRegistrations from "./pages/TournamentLiveRegistrations";
 import TournamentResults2026 from "./pages/TournamentResults2026";
 import TournamentPhotos2026 from "./pages/TournamentPhotos2026";
 import ClassementJoueurs from "./pages/ClassementJoueurs";
+import FicheJoueur from "./pages/FicheJoueur";
 import ProgressionMensuelle from "./pages/ProgressionMensuelle";
 import ProgressionAnnuelle from "./pages/ProgressionAnnuelle";
 import ProgressionParCategorieAge from "./pages/ProgressionParCategorieAge";
@@ -57,6 +58,7 @@ const App = () => (
                 <Route path="/essai-gratuit" element={<EssaiGratuit />} />
                 <Route path="/competitions-equipes/criterium-gironde" element={<CriteriumGironde />} />
                 <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
+                <Route path="/classement-joueurs/:licence" element={<FicheJoueur />} />
                 <Route path="/classement-joueurs/progression-mensuelle" element={<ProgressionMensuelle />} />
                 <Route path="/classement-joueurs/progression-annuelle" element={<ProgressionAnnuelle />} />
                 <Route
