@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
-import { Shirt, Ruler, DollarSign, Mail, User, FileText } from 'lucide-react'; // Ajout d'icônes pour les méthodes de commande
+import { Shirt, Ruler, DollarSign, Mail, User, FileText, Globe } from 'lucide-react'; // Ajout d'icônes pour les méthodes de commande
 import ShopPreorders from '@/components/ShopPreorders';
 
 const Boutique = () => {
@@ -78,6 +78,12 @@ const Boutique = () => {
               <div className="mt-6 p-4 bg-clubSection rounded-md border border-clubPrimary/30">
                 <h4 className="text-lg font-semibold text-clubDark mb-3">Comment commander :</h4>
                 <ul className="space-y-2 text-clubLight-foreground">
+                  <li>
+                    <a href="#precommande" className="flex items-center font-semibold text-clubPrimary hover:underline">
+                      <Globe className="mr-2 h-4 w-4" />
+                      Sur le site
+                    </a>
+                  </li>
                   <li className="flex items-center">
                     <Mail className="mr-2 h-4 w-4 text-clubPrimary" />
                     Par retour de mail
