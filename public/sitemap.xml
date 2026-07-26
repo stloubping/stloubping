@@ -1,135 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://stloubping.fr/</loc>
-    <lastmod>2024-08-01</lastmod>
+    <loc>https://www.saintloubping.fr/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://stloubping.fr/essai-gratuit</loc>
-    <lastmod>2026-07-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://stloubping.fr/le-club</loc>
-    <lastmod>2024-08-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://stloubping.fr/competitions-equipes</loc>
-    <lastmod>2024-08-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://stloubping.fr/competitions-equipes/criterium-gironde</loc>
-    <lastmod>2024-08-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://stloubping.fr/classement-joueurs</loc>
-    <lastmod>2024-08-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://stloubping.fr/classement-joueurs/progression-mensuelle</loc>
-    <lastmod>2024-08-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://stloubping.fr/classement-joueurs/progression-annuelle</loc>
-    <lastmod>2024-08-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://stloubping.fr/classement-joueurs/par-categorie-age</loc>
-    <lastmod>2024-08-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://stloubping.fr/adhesions</loc>
-    <lastmod>2024-08-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://stloubping.fr/boutique</loc>
-    <lastmod>2024-08-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://stloubping.fr/partenaires</loc>
-    <lastmod>2024-08-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://stloubping.fr/tournoi-inscription</loc>
-    <lastmod>2024-08-01</lastmod>
+    <loc>https://www.saintloubping.fr/actualites</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://stloubping.fr/tournoi-inscriptions-liste</loc>
-    <lastmod>2024-08-01</lastmod>
+    <loc>https://www.saintloubping.fr/essai-gratuit</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.saintloubping.fr/le-club</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.saintloubping.fr/competitions-equipes</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.saintloubping.fr/competitions-equipes/criterium-gironde</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.saintloubping.fr/classement-joueurs</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.saintloubping.fr/classement-joueurs/progression-annuelle</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.saintloubping.fr/classement-joueurs/statistiques</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.saintloubping.fr/adhesions</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.saintloubping.fr/boutique</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.saintloubping.fr/partenaires</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.saintloubping.fr/tournoi-inscription</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.saintloubping.fr/tournoi/inscrits-live</loc>
     <changefreq>daily</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://stloubping.fr/videos/wtt</loc>
-    <lastmod>2024-08-01</lastmod>
+    <loc>https://www.saintloubping.fr/tournoi/2026/resultats</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.saintloubping.fr/tournoi/2026/photos</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.saintloubping.fr/videos/wtt</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://stloubping.fr/videos/tutos</loc>
-    <lastmod>2024-08-01</lastmod>
+    <loc>https://www.saintloubping.fr/videos/tutos</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://stloubping.fr/videos/les-legendes</loc>
-    <lastmod>2024-08-01</lastmod>
+    <loc>https://www.saintloubping.fr/videos/les-legendes</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://stloubping.fr/contact</loc>
-    <lastmod>2024-08-01</lastmod>
+    <loc>https://www.saintloubping.fr/videos/reportages</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://stloubping.fr/mentions-legales</loc>
-    <lastmod>2024-08-01</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <loc>https://www.saintloubping.fr/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://stloubping.fr/politique-confidentialite</loc>
-    <lastmod>2024-08-01</lastmod>
+    <loc>https://www.saintloubping.fr/mentions-legales</loc>
     <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://stloubping.fr/politique-cookies</loc>
-    <lastmod>2024-08-01</lastmod>
+    <loc>https://www.saintloubping.fr/politique-confidentialite</loc>
     <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://stloubping.fr/demande-donnees</loc>
-    <lastmod>2024-08-01</lastmod>
+    <loc>https://www.saintloubping.fr/politique-cookies</loc>
     <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.saintloubping.fr/demande-donnees</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>
