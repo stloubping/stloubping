@@ -7,6 +7,7 @@ import Layout from "./components/Layout";
 import Accueil from "./pages/Accueil";
 import LeClub from "./pages/LeClub";
 import CompetitionsEquipes from "./pages/CompetitionsEquipes";
+import EssaiGratuit from "./pages/EssaiGratuit";
 import Adhesions from "./pages/Adhesions";
 import Boutique from "./pages/Boutique";
 import Partenaires from "./pages/Partenaires";
@@ -48,6 +49,7 @@ const App = () => (
                 <Route path="/actualites" element={<Actualites />} />
                 <Route path="/le-club" element={<LeClub />} />
                 <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
+                <Route path="/essai-gratuit" element={<EssaiGratuit />} />
                 <Route path="/competitions-equipes/criterium-gironde" element={<CriteriumGironde />} />
                 <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
                 <Route path="/classement-joueurs/progression-mensuelle" element={<ProgressionMensuelle />} />
