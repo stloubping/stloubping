@@ -43,7 +43,14 @@ const navItems: NavItem[] = [
       { name: "Critérium de Gironde", path: "/competitions-equipes/criterium-gironde", type: "link" },
     ],
   },
-  { name: "Les Joueurs", path: "/classement-joueurs", type: "link" },
+  {
+    name: "Les Joueurs",
+    type: "dropdown",
+    children: [
+      { name: "Classement des joueurs", path: "/classement-joueurs", type: "link" },
+      { name: "Progression annuelle", path: "/classement-joueurs/progression-annuelle", type: "link" },
+    ],
+  },
   { name: "Adhésions", path: "/adhesions", type: "link" },
   { name: "Boutique", path: "/boutique", type: "link" },
   { name: "Partenaires", path: "/partenaires", type: "link" },

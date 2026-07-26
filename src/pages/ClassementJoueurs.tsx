@@ -51,6 +51,9 @@ const playerName = (player: Player) =>
       letter.toLocaleUpperCase("fr-FR"),
     );
 
+const isYouthPlayer = (player: Player) =>
+  /^(P|B|M|C|J)/i.test(String(player.cat || "").trim());
+
 const initials = (player: Player) =>
   `${player.prenom?.[0] || ""}${player.nom?.[0] || ""}`.toUpperCase();
 
@@ -154,7 +157,14 @@ const ClassementJoueurs = () => {
     [players],
   );
 
-  const bestPlayer = players[0];
+  const youthPodium = useMemo(
+    () =>
+      [...players]
+        .filter(isYouthPlayer)
+        .sort((a, b) => Number(b.points || 0) - Number(a.points || 0))
+        .slice(0, 3),
+    [players],
+  );
   const monthlyPodium = useMemo(
     () =>
       [...players]
@@ -210,12 +220,42 @@ const ClassementJoueurs = () => {
         <article className="border-b p-6 sm:border-b-0 sm:border-r">
           <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-clubPrimary">
             <Trophy className="h-4 w-4" />
-            Meilleur classement
+            Podium jeunes
           </div>
-          <strong className="mt-2 block text-3xl text-clubDark">
-            {bestPlayer ? formatPoints(bestPlayer.points) : "—"}
-          </strong>
-          <span className="text-sm text-muted-foreground">points FFTT</span>
+          {loading ? (
+            <strong className="mt-2 block text-3xl text-clubDark">—</strong>
+          ) : youthPodium.length > 0 ? (
+            <ol className="mt-3 space-y-2">
+              {youthPodium.map((player, index) => (
+                <li
+                  key={player.idlicence || player.licence}
+                  className="flex min-w-0 items-center gap-2 text-sm"
+                >
+                  <span
+                    className={`grid h-6 w-6 flex-none place-items-center rounded-full text-xs font-black ${
+                      index === 0
+                        ? "bg-amber-100 text-amber-800"
+                        : index === 1
+                          ? "bg-slate-200 text-slate-700"
+                          : "bg-orange-100 text-orange-800"
+                    }`}
+                  >
+                    {index + 1}
+                  </span>
+                  <strong className="min-w-0 flex-1 truncate text-clubDark">
+                    {playerName(player)}
+                  </strong>
+                  <span className="flex-none font-extrabold text-clubPrimary">
+                    {formatPoints(player.points)} pts
+                  </span>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <span className="mt-2 block text-sm text-muted-foreground">
+              Aucun jeune dans les données FFTT
+            </span>
+          )}
         </article>
 
         <article className="p-6">

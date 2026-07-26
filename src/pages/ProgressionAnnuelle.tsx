@@ -1,250 +1,504 @@
-"use client";
-
-import React, { useEffect, useState, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
+import { useEffect, useMemo, useState } from "react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowUp,
+  ArrowUpDown,
+  RefreshCw,
+  Search,
+  Sparkles,
+  TrendingDown,
+  TrendingUp,
+  Trophy,
+  Users,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { fetchClubPlayers, Player } from "@/services/ffttService";
-import { 
-  Loader2, 
-  Search, 
-  TrendingUp, 
-  TrendingDown, 
-  Trophy, 
-  RefreshCw, 
-  ArrowUpRight,
-  Medal,
-  Award,
-  Sparkles
-} from 'lucide-react';
+
+type SortField = "progression" | "points" | "name";
+type SortDirection = "asc" | "desc";
+type ProgressionFilter = "all" | "positive" | "stable" | "negative";
+
+const normalize = (value = "") =>
+  value
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLocaleLowerCase("fr-FR");
+
+const playerName = (player: Player) =>
+  `${player.prenom} ${player.nom}`
+    .toLocaleLowerCase("fr-FR")
+    .replace(/(^|[\s'-])\p{L}/gu, (letter) =>
+      letter.toLocaleUpperCase("fr-FR"),
+    );
+
+const formatPoints = (value: number) =>
+  Number(value || 0).toLocaleString("fr-FR", {
+    maximumFractionDigits: 1,
+  });
+
+const isNewRegistration = (player: Player) =>
+  Number(player.valinit || 0) === 0 && Number(player.points || 0) === 500;
+
+const annualEvolution = (player: Player) =>
+  isNewRegistration(player) ? 0 : Number(player.progans || 0);
 
 const ProgressionAnnuelle = () => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedGender, setSelectedGender] = useState("all");
+  const [progressionFilter, setProgressionFilter] =
+    useState<ProgressionFilter>("all");
+  const [sortConfig, setSortConfig] = useState<{
+    field: SortField;
+    direction: SortDirection;
+  }>({ field: "progression", direction: "desc" });
 
-  const loadData = async () => {
+  const loadPlayers = async () => {
     setLoading(true);
-    const data = await fetchClubPlayers();
-    setPlayers(data);
-    setLoading(false);
+    setError("");
+
+    try {
+      setPlayers(await fetchClubPlayers());
+    } catch {
+      setError(
+        "Les progressions FFTT sont momentanément indisponibles. Réessayez dans quelques instants.",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    loadData();
+    loadPlayers();
   }, []);
 
-  // Tri par progression annuelle décroissante
-  const sortedPlayers = useMemo(() => {
-    return [...players]
-      .filter(p => {
-        const query = searchQuery.toLowerCase().trim();
-        return !query || 
-          p.nom.toLowerCase().includes(query) ||
-          p.prenom.toLowerCase().includes(query) ||
-          p.licence.toLowerCase().includes(query);
-      })
-      .sort((a, b) => (b.progans || 0) - (a.progans || 0));
-  }, [players, searchQuery]);
+  const categories = useMemo(
+    () =>
+      [...new Set(players.map((player) => player.cat).filter(Boolean))].sort(
+        (a, b) => a.localeCompare(b, "fr"),
+      ),
+    [players],
+  );
 
-  // Statistiques clés
-  const topAnnualPlayer = sortedPlayers.length > 0 ? sortedPlayers[0] : null;
-  const positiveGainsCount = players.filter(p => (p.progans || 0) > 0).length;
-  const maxGain = topAnnualPlayer?.progans || 0;
+  const filteredPlayers = useMemo(() => {
+    const query = normalize(searchQuery.trim());
+
+    return players.filter((player) => {
+      const progression = annualEvolution(player);
+      const matchesSearch =
+        !query ||
+        normalize(`${player.prenom} ${player.nom} ${player.licence}`).includes(
+          query,
+        );
+      const matchesCategory =
+        selectedCategory === "all" || player.cat === selectedCategory;
+      const matchesGender =
+        selectedGender === "all" || player.sexe === selectedGender;
+      const matchesProgression =
+        progressionFilter === "all" ||
+        (progressionFilter === "positive" && progression > 0) ||
+        (progressionFilter === "stable" && progression === 0) ||
+        (progressionFilter === "negative" && progression < 0);
+
+      return (
+        matchesSearch &&
+        matchesCategory &&
+        matchesGender &&
+        matchesProgression
+      );
+    });
+  }, [
+    players,
+    progressionFilter,
+    searchQuery,
+    selectedCategory,
+    selectedGender,
+  ]);
+
+  const displayedPlayers = useMemo(
+    () =>
+      [...filteredPlayers].sort((a, b) => {
+        if (sortConfig.field === "name") {
+          const comparison = playerName(a).localeCompare(
+            playerName(b),
+            "fr",
+          );
+          return sortConfig.direction === "asc" ? comparison : -comparison;
+        }
+
+        const firstValue =
+          sortConfig.field === "progression"
+            ? annualEvolution(a)
+            : Number(a.points || 0);
+        const secondValue =
+          sortConfig.field === "progression"
+            ? annualEvolution(b)
+            : Number(b.points || 0);
+        const difference =
+          sortConfig.direction === "asc"
+            ? firstValue - secondValue
+            : secondValue - firstValue;
+
+        return difference || playerName(a).localeCompare(playerName(b), "fr");
+      }),
+    [filteredPlayers, sortConfig],
+  );
+
+  const positivePlayers = useMemo(
+    () => players.filter((player) => annualEvolution(player) > 0),
+    [players],
+  );
+
+  const seasonLeader = useMemo(
+    () =>
+      [...players].sort(
+        (a, b) => annualEvolution(b) - annualEvolution(a),
+      )[0],
+    [players],
+  );
+
+  const averageProgression = useMemo(() => {
+    if (!players.length) return 0;
+    return (
+      players.reduce(
+        (total, player) => total + annualEvolution(player),
+        0,
+      ) / players.length
+    );
+  }, [players]);
+
+  const toggleSort = (field: SortField) => {
+    setSortConfig((current) => ({
+      field,
+      direction:
+        current.field === field && current.direction === "desc"
+          ? "asc"
+          : "desc",
+    }));
+  };
+
+  const resetFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory("all");
+    setSelectedGender("all");
+    setProgressionFilter("all");
+  };
+
+  const sortIcon = (field: SortField) => {
+    if (sortConfig.field !== field) {
+      return <ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />;
+    }
+
+    return sortConfig.direction === "desc" ? (
+      <ArrowDown className="h-3.5 w-3.5 text-clubPrimary" />
+    ) : (
+      <ArrowUp className="h-3.5 w-3.5 text-clubPrimary" />
+    );
+  };
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-clubLight text-clubLight-foreground">
-      {/* En-tête */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl md:text-5xl font-extrabold text-clubDark mb-3 flex items-center justify-center gap-3">
-          <TrendingUp className="h-8 w-8 md:h-10 md:w-10 text-clubPrimary" />
-          Progression Annuelle
-        </h1>
-        <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto">
-          Découvrez les joueurs ayant réalisé les plus fortes progressions de points sur l'ensemble de la saison.
-        </p>
-      </div>
+    <div className="min-h-screen bg-slate-50 text-clubDark">
+      <section className="relative overflow-hidden bg-clubDark text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(225,29,72,0.35),transparent_42%)]" />
+        <div className="container relative px-4 py-14 md:px-6 md:py-20">
+          <Link
+            to="/classement-joueurs"
+            className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-white/75 transition hover:text-white"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Retour au classement
+          </Link>
+          <span className="block text-xs font-extrabold uppercase tracking-[0.18em] text-clubPrimary">
+            Saison en cours
+          </span>
+          <h1 className="mt-3 text-4xl font-extrabold tracking-tight md:text-6xl">
+            Progression annuelle
+          </h1>
+          <p className="mt-4 max-w-2xl text-base text-white/75 md:text-lg">
+            Suivez l’évolution des points FFTT depuis le début de la saison et
+            comparez les parcours des joueurs du club.
+          </p>
+        </div>
+      </section>
 
-      {/* Cartes KPI */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-          <CardHeader className="p-4 pb-2">
-            <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-              <Trophy className="h-4 w-4 text-yellow-400" /> N°1 de la Saison
-            </CardDescription>
-            <CardTitle className="text-lg md:text-xl font-bold truncate text-white">
-              {topAnnualPlayer ? (
-                <span>{topAnnualPlayer.nom} {topAnnualPlayer.prenom} <span className="text-emerald-400 font-extrabold">(+{maxGain} pts)</span></span>
-              ) : (
-                "Chargement..."
-              )}
-            </CardTitle>
-          </CardHeader>
-        </Card>
+      <section className="container relative z-10 -mt-7 grid gap-px overflow-hidden rounded-xl border bg-slate-200 shadow-xl sm:grid-cols-3">
+        <article className="bg-white p-5 md:p-6">
+          <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-clubPrimary">
+            <Trophy className="h-4 w-4" />
+            Leader de la saison
+          </div>
+          <strong className="mt-2 block truncate text-xl text-clubDark">
+            {loading || !seasonLeader ? "—" : playerName(seasonLeader)}
+          </strong>
+          <span className="text-sm font-bold text-emerald-700">
+            {seasonLeader && annualEvolution(seasonLeader) > 0 ? "+" : ""}
+            {seasonLeader ? formatPoints(annualEvolution(seasonLeader)) : "—"} pts
+          </span>
+        </article>
 
-        <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-          <CardHeader className="p-4 pb-2">
-            <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-              <Sparkles className="h-4 w-4 text-emerald-400" /> Prog. Positives
-            </CardDescription>
-            <CardTitle className="text-2xl md:text-3xl font-extrabold text-emerald-400">
-              {positiveGainsCount} joueurs
-            </CardTitle>
-          </CardHeader>
-        </Card>
+        <article className="bg-white p-5 md:p-6">
+          <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-clubPrimary">
+            <Sparkles className="h-4 w-4" />
+            Progressions positives
+          </div>
+          <strong className="mt-2 block text-3xl text-clubDark">
+            {loading ? "—" : positivePlayers.length}
+          </strong>
+          <span className="text-sm text-muted-foreground">
+            joueurs en progression
+          </span>
+        </article>
 
-        <Card className="bg-clubDark text-white shadow-xl border-none rounded-xl">
-          <CardHeader className="p-4 pb-2">
-            <CardDescription className="text-gray-300 text-xs flex items-center gap-1.5 font-medium">
-              <Medal className="h-4 w-4 text-clubPrimary" /> Record du Club
-            </CardDescription>
-            <CardTitle className="text-2xl md:text-3xl font-extrabold text-clubPrimary">
-              +{maxGain} pts
-            </CardTitle>
-          </CardHeader>
-        </Card>
-      </div>
+        <article className="bg-white p-5 md:p-6">
+          <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-clubPrimary">
+            <Users className="h-4 w-4" />
+            Moyenne du club
+          </div>
+          <strong className="mt-2 block text-3xl text-clubDark">
+            {loading
+              ? "—"
+              : `${averageProgression > 0 ? "+" : ""}${formatPoints(
+                  averageProgression,
+                )}`}
+          </strong>
+          <span className="text-sm text-muted-foreground">points par joueur</span>
+        </article>
+      </section>
 
-      {/* Carte Principale du Tableau */}
-      <Card className="bg-clubLight shadow-xl rounded-2xl border border-border overflow-hidden">
-        <CardHeader className="p-4 md:p-6 pb-2">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-            <div>
-              <CardTitle className="text-xl md:text-2xl font-bold text-clubDark flex items-center gap-2">
-                Palmarès de la Progression Annuelle
-                <Badge variant="outline" className="text-[10px] border-clubPrimary text-clubPrimary bg-clubPrimary/10">
-                  <Award className="h-3 w-3 mr-1" /> Saison Bilan
-                </Badge>
-              </CardTitle>
-              <CardDescription className="text-xs md:text-sm text-muted-foreground">
-                Trié automatiquement par le gain accumulé de points sur la saison.
-              </CardDescription>
+      <main className="container px-4 py-14 md:px-6 md:py-20">
+        <header className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-clubPrimary">
+              Données officielles FFTT
+            </span>
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight md:text-5xl">
+              Tableau des progressions
+            </h2>
+          </div>
+          <span className="w-fit rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm">
+            {filteredPlayers.length} joueur
+            {filteredPlayers.length > 1 ? "s" : ""} affiché
+            {filteredPlayers.length > 1 ? "s" : ""}
+          </span>
+        </header>
+
+        <div className="mb-4 grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(230px,1fr)_180px_160px_190px_auto]">
+          <label className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Rechercher un joueur…"
+              className="h-12 bg-white pl-10 focus-visible:ring-clubPrimary"
+              aria-label="Rechercher un joueur"
+            />
+          </label>
+
+          <Select
+            value={selectedCategory}
+            onValueChange={setSelectedCategory}
+          >
+            <SelectTrigger className="h-12 bg-white">
+              <SelectValue placeholder="Toutes les catégories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Toutes les catégories</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category} value={category}>
+                  {category}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={selectedGender} onValueChange={setSelectedGender}>
+            <SelectTrigger className="h-12 bg-white">
+              <SelectValue placeholder="Tous les joueurs" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tous les joueurs</SelectItem>
+              <SelectItem value="M">Messieurs</SelectItem>
+              <SelectItem value="F">Dames</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={progressionFilter}
+            onValueChange={(value) =>
+              setProgressionFilter(value as ProgressionFilter)
+            }
+          >
+            <SelectTrigger className="h-12 bg-white">
+              <SelectValue placeholder="Toutes les évolutions" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Toutes les évolutions</SelectItem>
+              <SelectItem value="positive">En progression</SelectItem>
+              <SelectItem value="stable">Stable</SelectItem>
+              <SelectItem value="negative">En baisse</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Button
+            type="button"
+            onClick={loadPlayers}
+            disabled={loading}
+            variant="outline"
+            className="h-12 bg-white"
+          >
+            <RefreshCw
+              className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`}
+            />
+            Actualiser
+          </Button>
+        </div>
+
+        {(searchQuery ||
+          selectedCategory !== "all" ||
+          selectedGender !== "all" ||
+          progressionFilter !== "all") && (
+          <button
+            type="button"
+            onClick={resetFilters}
+            className="mb-4 text-sm font-semibold text-clubPrimary hover:underline"
+          >
+            Effacer tous les filtres
+          </button>
+        )}
+
+        <div className="min-h-72 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          {loading ? (
+            <div className="flex min-h-72 flex-col items-center justify-center text-muted-foreground">
+              <RefreshCw className="mb-4 h-8 w-8 animate-spin text-clubPrimary" />
+              <p>Récupération des progressions FFTT…</p>
             </div>
-
-            <div className="flex items-center gap-3">
-              <Button 
-                onClick={loadData} 
-                variant="ghost" 
-                size="sm" 
-                disabled={loading}
-                className="text-xs text-clubPrimary hover:bg-clubPrimary/10 rounded-lg"
+          ) : error ? (
+            <div className="flex min-h-72 flex-col items-center justify-center px-6 text-center">
+              <p className="max-w-lg text-muted-foreground">{error}</p>
+              <Button
+                type="button"
+                onClick={loadPlayers}
+                className="mt-5 rounded-full bg-clubPrimary text-white hover:bg-red-600"
               >
-                <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${loading ? 'animate-spin' : ''}`} />
-                Actualiser
+                Réessayer
               </Button>
             </div>
-          </div>
-
-          {/* Recherche */}
-          <div className="relative pt-2">
-            <Search className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Rechercher un joueur..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-input border-clubPrimary/40 text-xs md:text-sm text-clubDark rounded-lg"
-            />
-          </div>
-        </CardHeader>
-
-        <CardContent className="p-0 md:p-6 pt-2">
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-16">
-              <Loader2 className="h-10 w-10 animate-spin text-clubPrimary mb-3" />
-              <p className="text-sm font-semibold text-clubDark">Chargement des progressions annuelles...</p>
-            </div>
-          ) : sortedPlayers.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground text-sm italic">
-              Aucun joueur trouvé pour "{searchQuery}".
+          ) : displayedPlayers.length === 0 ? (
+            <div className="flex min-h-72 flex-col items-center justify-center px-6 text-center text-muted-foreground">
+              <p>Aucun joueur ne correspond à ces filtres.</p>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="mt-3 font-semibold text-clubPrimary hover:underline"
+              >
+                Réinitialiser les filtres
+              </button>
             </div>
           ) : (
-            <div className="overflow-x-auto border-t sm:border border-border sm:rounded-xl shadow-sm">
-              <Table className="min-w-full">
-                <TableHeader>
-                  <TableRow className="bg-clubDark hover:bg-clubDark">
-                    <TableHead className="text-white font-bold text-center w-[60px] text-xs">Rang</TableHead>
-                    <TableHead className="text-white font-bold text-xs">Joueur</TableHead>
-                    <TableHead className="text-white font-bold text-center text-xs">Points Actuels</TableHead>
-                    <TableHead className="text-white font-bold text-center text-xs">Gain Saison</TableHead>
-                    <TableHead className="text-white font-bold text-center text-xs hidden sm:table-cell">Clast Officiel</TableHead>
-                    <TableHead className="text-white font-bold text-center text-xs hidden md:table-cell">Catégorie</TableHead>
-                    <TableHead className="text-white font-bold text-center text-xs hidden lg:table-cell">N° Licence</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {sortedPlayers.map((player, index) => {
-                    const gainVal = player.progans || 0;
-                    const isTop3 = index < 3 && gainVal > 0;
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse text-xs md:min-w-[800px] md:text-sm">
+                <thead>
+                  <tr className="bg-clubDark text-left text-[11px] uppercase tracking-wider text-white/70">
+                    <th className="px-3 py-4 text-center md:px-5">Rang</th>
+                    <th className="px-3 py-4 md:px-5">
+                      <button
+                        type="button"
+                        onClick={() => toggleSort("name")}
+                        className="inline-flex items-center gap-1.5 font-semibold text-white transition hover:text-clubPrimary"
+                      >
+                        Joueur
+                        {sortIcon("name")}
+                      </button>
+                    </th>
+                    <th className="hidden px-5 py-4 text-center md:table-cell">
+                      Catégorie
+                    </th>
+                    <th className="px-3 py-4 text-right md:px-5">
+                      <button
+                        type="button"
+                        onClick={() => toggleSort("progression")}
+                        className="ml-auto inline-flex items-center gap-1.5 font-semibold text-white transition hover:text-clubPrimary"
+                      >
+                        Progression
+                        {sortIcon("progression")}
+                      </button>
+                    </th>
+                    <th className="px-3 py-4 text-right md:px-5">
+                      <button
+                        type="button"
+                        onClick={() => toggleSort("points")}
+                        className="ml-auto inline-flex items-center gap-1.5 font-semibold text-white transition hover:text-clubPrimary"
+                      >
+                        Points
+                        {sortIcon("points")}
+                      </button>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {displayedPlayers.map((player, index) => {
+                    const progression = annualEvolution(player);
 
                     return (
-                      <TableRow 
-                        key={player.licence || index} 
-                        className={`hover:bg-clubSection/50 transition-colors ${
-                          isTop3 ? "bg-clubPrimary/5 font-semibold" : "even:bg-clubSection/20 odd:bg-white"
-                        }`}
+                      <tr
+                        key={player.idlicence || player.licence}
+                        className="border-t border-slate-200 transition hover:bg-red-50/40"
                       >
-                        <TableCell className="text-center font-bold text-xs md:text-sm">
-                          {index === 0 && gainVal > 0 ? (
-                            <span className="inline-flex items-center justify-center bg-yellow-400 text-black font-extrabold h-6 w-6 rounded-full text-xs shadow-sm">1</span>
-                          ) : index === 1 && gainVal > 0 ? (
-                            <span className="inline-flex items-center justify-center bg-gray-300 text-black font-extrabold h-6 w-6 rounded-full text-xs shadow-sm">2</span>
-                          ) : index === 2 && gainVal > 0 ? (
-                            <span className="inline-flex items-center justify-center bg-amber-600 text-white font-extrabold h-6 w-6 rounded-full text-xs shadow-sm">3</span>
-                          ) : (
-                            <span className="text-muted-foreground">{index + 1}</span>
-                          )}
-                        </TableCell>
-
-                        <TableCell className="text-xs md:text-sm font-semibold text-clubDark uppercase">
-                          {player.nom} <span className="capitalize font-normal text-clubDark/90">{player.prenom}</span>
-                        </TableCell>
-
-                        <TableCell className="text-center text-xs md:text-sm font-extrabold text-clubPrimary">
-                          {player.points} pts
-                        </TableCell>
-
-                        <TableCell className="text-center text-xs md:text-sm font-bold">
-                          <span className={`inline-flex items-center justify-center gap-0.5 px-2.5 py-0.5 rounded-full border ${
-                            gainVal > 0 
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-200" 
-                              : gainVal < 0
-                              ? "bg-red-50 text-red-700 border-red-200"
-                              : "bg-gray-50 text-gray-600 border-gray-200"
-                          }`}>
-                            {gainVal > 0 ? <ArrowUpRight className="h-3 w-3" /> : gainVal < 0 ? <TrendingDown className="h-3 w-3" /> : null}
-                            {gainVal > 0 ? `+${gainVal}` : gainVal} pts
+                        <td className="px-3 py-4 text-center font-bold text-slate-500 md:px-5">
+                          {String(index + 1).padStart(2, "0")}
+                        </td>
+                        <td className="px-3 py-4 font-semibold text-clubDark md:px-5">
+                          {playerName(player)}
+                        </td>
+                        <td className="hidden px-5 py-4 text-center md:table-cell">
+                          <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-bold text-red-800">
+                            {player.cat || "—"}
                           </span>
-                        </TableCell>
-
-                        <TableCell className="text-center text-xs md:text-sm font-medium hidden sm:table-cell">
-                          <Badge variant="outline" className="border-clubPrimary/40 text-clubDark bg-white">
-                            {player.clast || Math.floor(player.points / 100)}
-                          </Badge>
-                        </TableCell>
-
-                        <TableCell className="text-center text-xs font-medium text-muted-foreground hidden md:table-cell">
-                          {player.cat ? (
-                            <Badge className="bg-clubDark text-white text-[10px]">
-                              {player.cat}
-                            </Badge>
-                          ) : "-"}
-                        </TableCell>
-
-                        <TableCell className="text-center text-xs font-mono text-muted-foreground hidden lg:table-cell">
-                          {player.licence}
-                        </TableCell>
-                      </TableRow>
+                        </td>
+                        <td className="px-3 py-4 text-right md:px-5">
+                          <span
+                            className={`inline-flex items-center gap-1 rounded-full px-2 py-1 font-extrabold ${
+                              progression > 0
+                                ? "bg-emerald-50 text-emerald-700"
+                                : progression < 0
+                                  ? "bg-red-50 text-red-700"
+                                  : "bg-slate-100 text-slate-600"
+                            }`}
+                          >
+                            {progression > 0 ? (
+                              <TrendingUp className="h-3.5 w-3.5" />
+                            ) : progression < 0 ? (
+                              <TrendingDown className="h-3.5 w-3.5" />
+                            ) : null}
+                            {progression > 0 ? "+" : ""}
+                            {formatPoints(progression)}
+                          </span>
+                        </td>
+                        <td className="px-3 py-4 text-right font-extrabold text-clubPrimary md:px-5">
+                          {formatPoints(player.points)}
+                        </td>
+                      </tr>
                     );
                   })}
-                </TableBody>
-              </Table>
+                </tbody>
+              </table>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </main>
     </div>
   );
 };
