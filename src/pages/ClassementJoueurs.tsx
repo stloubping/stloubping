@@ -26,6 +26,12 @@ const formatPoints = (value: number) =>
     maximumFractionDigits: 2,
   });
 
+const formatMonthlyEvolution = (value: number) =>
+  Number(value || 0).toLocaleString("fr-FR", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+
 const normalize = (value = "") =>
   value
     .normalize("NFD")
@@ -143,9 +149,14 @@ const ClassementJoueurs = () => {
   );
 
   const bestPlayer = players[0];
-  const positiveEvolutions = players.filter(
-    (player) => Number(player.progmens || 0) > 0,
-  ).length;
+  const monthlyPodium = useMemo(
+    () =>
+      [...players]
+        .filter((player) => Number(player.progmens || 0) > 0)
+        .sort((a, b) => Number(b.progmens || 0) - Number(a.progmens || 0))
+        .slice(0, 3),
+    [players],
+  );
 
   return (
     <div className="min-h-screen bg-white text-clubDark">
@@ -206,12 +217,40 @@ const ClassementJoueurs = () => {
             <CalendarDays className="h-4 w-4" />
             Progressions du mois
           </div>
-          <strong className="mt-2 block text-3xl text-clubDark">
-            {loading ? "—" : positiveEvolutions}
-          </strong>
-          <span className="text-sm text-muted-foreground">
-            joueurs en progression
-          </span>
+          {loading ? (
+            <strong className="mt-2 block text-3xl text-clubDark">—</strong>
+          ) : monthlyPodium.length > 0 ? (
+            <ol className="mt-3 space-y-2">
+              {monthlyPodium.map((player, index) => (
+                <li
+                  key={player.idlicence || player.licence}
+                  className="flex min-w-0 items-center gap-2 text-sm"
+                >
+                  <span
+                    className={`grid h-6 w-6 flex-none place-items-center rounded-full text-xs font-black ${
+                      index === 0
+                        ? "bg-amber-100 text-amber-800"
+                        : index === 1
+                          ? "bg-slate-200 text-slate-700"
+                          : "bg-orange-100 text-orange-800"
+                    }`}
+                  >
+                    {index + 1}
+                  </span>
+                  <strong className="min-w-0 flex-1 truncate text-clubDark">
+                    {playerName(player)}
+                  </strong>
+                  <span className="flex-none font-extrabold text-emerald-700">
+                    +{formatMonthlyEvolution(Number(player.progmens || 0))} pts
+                  </span>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <span className="mt-2 block text-sm text-muted-foreground">
+              Aucune progression ce mois-ci
+            </span>
+          )}
         </article>
       </section>
 
@@ -438,7 +477,7 @@ const ClassementJoueurs = () => {
                               <Minus className="h-3.5 w-3.5" />
                             )}
                             {isPositive ? "+" : ""}
-                            {formatPoints(monthly)} pts
+                            {formatMonthlyEvolution(monthly)} pts
                           </span>
                         </td>
                         <td className="px-5 py-4 text-right text-sm font-extrabold text-clubPrimary md:text-lg">
