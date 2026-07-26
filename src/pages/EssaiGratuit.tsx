@@ -272,6 +272,23 @@ const EssaiGratuit = () => {
         setTrialState("error");
         return;
       }
+
+      const { error: emailError } = await supabase.functions.invoke("trial-request-email", {
+        body: {
+          request_type: "trial",
+          first_name: trialForm.firstName.trim(),
+          age: Number(trialForm.age),
+          profile: trialForm.profile,
+          level: trialForm.level,
+          phone: trialForm.phone.trim(),
+          email: trialForm.email.trim().toLowerCase(),
+          slot_label: `${selectedSlot.day} ${selectedSlot.time} — ${selectedSlot.label}`,
+        },
+      });
+
+      if (emailError) {
+        console.error("[essai-gratuit-email]", emailError);
+      }
     }
 
     setConfirmedTrial({ ...trialForm });
@@ -324,6 +341,23 @@ const EssaiGratuit = () => {
         );
         setPreRegistrationState("error");
         return;
+      }
+
+      const { error: emailError } = await supabase.functions.invoke("trial-request-email", {
+        body: {
+          request_type: "pre_registration",
+          first_name: preRegistration.firstName.trim(),
+          age: Number(preRegistration.age),
+          profile: preRegistration.profile,
+          level: confirmedTrial?.level || "Non renseigné",
+          phone: preRegistration.phone.trim(),
+          email: preRegistration.email.trim().toLowerCase(),
+          licence_type: preRegistration.licenceType,
+        },
+      });
+
+      if (emailError) {
+        console.error("[preinscription-email]", emailError);
       }
     }
 
