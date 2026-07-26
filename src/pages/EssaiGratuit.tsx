@@ -212,6 +212,10 @@ const initialPreRegistration: PreRegistrationForm = {
 };
 
 const EssaiGratuit = () => {
+  const isBranchPreview =
+    typeof window !== "undefined" &&
+    window.location.hostname.includes("-git-") &&
+    window.location.hostname.endsWith(".vercel.app");
   const [trialForm, setTrialForm] = useState<TrialForm>(initialTrialForm);
   const [trialState, setTrialState] = useState<RequestState>("idle");
   const [trialError, setTrialError] = useState("");
@@ -246,26 +250,28 @@ const EssaiGratuit = () => {
     setTrialState("sending");
     setTrialError("");
 
-    const { error } = await supabase.from("trial_requests").insert({
-      request_type: "trial",
-      first_name: trialForm.firstName.trim(),
-      age: Number(trialForm.age),
-      profile: trialForm.profile,
-      level: trialForm.level,
-      phone: trialForm.phone.trim(),
-      email: trialForm.email.trim().toLowerCase(),
-      slot_id: selectedSlot.id,
-      slot_label: `${selectedSlot.day} ${selectedSlot.time} — ${selectedSlot.label}`,
-      consent: trialForm.consent,
-    });
+    if (!isBranchPreview) {
+      const { error } = await supabase.from("trial_requests").insert({
+        request_type: "trial",
+        first_name: trialForm.firstName.trim(),
+        age: Number(trialForm.age),
+        profile: trialForm.profile,
+        level: trialForm.level,
+        phone: trialForm.phone.trim(),
+        email: trialForm.email.trim().toLowerCase(),
+        slot_id: selectedSlot.id,
+        slot_label: `${selectedSlot.day} ${selectedSlot.time} — ${selectedSlot.label}`,
+        consent: trialForm.consent,
+      });
 
-    if (error) {
-      console.error("[essai-gratuit]", error);
-      setTrialError(
-        "La réservation n’a pas pu être enregistrée. Réessayez dans quelques instants ou contactez le club.",
-      );
-      setTrialState("error");
-      return;
+      if (error) {
+        console.error("[essai-gratuit]", error);
+        setTrialError(
+          "La réservation n’a pas pu être enregistrée. Réessayez dans quelques instants ou contactez le club.",
+        );
+        setTrialState("error");
+        return;
+      }
     }
 
     setConfirmedTrial({ ...trialForm });
@@ -298,25 +304,27 @@ const EssaiGratuit = () => {
     setPreRegistrationState("sending");
     setPreRegistrationError("");
 
-    const { error } = await supabase.from("trial_requests").insert({
-      request_type: "pre_registration",
-      first_name: preRegistration.firstName.trim(),
-      age: Number(preRegistration.age),
-      profile: preRegistration.profile,
-      level: confirmedTrial?.level || "Non renseigné",
-      phone: preRegistration.phone.trim(),
-      email: preRegistration.email.trim().toLowerCase(),
-      licence_type: preRegistration.licenceType,
-      consent: preRegistration.consent,
-    });
+    if (!isBranchPreview) {
+      const { error } = await supabase.from("trial_requests").insert({
+        request_type: "pre_registration",
+        first_name: preRegistration.firstName.trim(),
+        age: Number(preRegistration.age),
+        profile: preRegistration.profile,
+        level: confirmedTrial?.level || "Non renseigné",
+        phone: preRegistration.phone.trim(),
+        email: preRegistration.email.trim().toLowerCase(),
+        licence_type: preRegistration.licenceType,
+        consent: preRegistration.consent,
+      });
 
-    if (error) {
-      console.error("[preinscription]", error);
-      setPreRegistrationError(
-        "La préinscription n’a pas pu être envoyée. Réessayez ou contactez directement le club.",
-      );
-      setPreRegistrationState("error");
-      return;
+      if (error) {
+        console.error("[preinscription]", error);
+        setPreRegistrationError(
+          "La préinscription n’a pas pu être envoyée. Réessayez ou contactez directement le club.",
+        );
+        setPreRegistrationState("error");
+        return;
+      }
     }
 
     setPreRegistrationState("success");
@@ -366,6 +374,12 @@ const EssaiGratuit = () => {
               La sélection du profil affiche uniquement les entraînements adaptés.
             </p>
           </div>
+
+          {isBranchPreview && (
+            <div className="mx-auto mb-6 max-w-5xl rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+              <strong>Mode aperçu :</strong> vous pouvez tester tout le parcours ; aucune donnée personnelle n’est envoyée depuis ce Preview.
+            </div>
+          )}
 
           <form onSubmit={handleTrialSubmit} className="mx-auto max-w-5xl space-y-8">
             <fieldset>
