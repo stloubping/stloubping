@@ -7,6 +7,8 @@ import {
   Award,
   CalendarDays,
   ChartNoAxesColumnIncreasing,
+  ChevronDown,
+  ChevronUp,
   CircleEqual,
   RefreshCw,
   ShieldCheck,
@@ -66,14 +68,6 @@ const resultLabel = (match: PlayerMatch) =>
         ? "Défaite"
         : "Résultat";
 
-const eventLabel = (match: PlayerMatch) => {
-  if (!match.event) return "Épreuve non renseignée";
-  if (match.championshipCode && match.event === match.championshipCode) {
-    return `Code FFTT : ${match.championshipCode}`;
-  }
-  return match.event;
-};
-
 const ResultBadge = ({ match }: { match: PlayerMatch }) => (
   <span
     className={`inline-flex min-w-20 items-center justify-center rounded-full px-3 py-1 text-xs font-extrabold ${
@@ -114,6 +108,7 @@ const FicheJoueur = () => {
   const [details, setDetails] = useState<PlayerDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isMatchesOpen, setIsMatchesOpen] = useState(false);
 
   const loadDetails = useCallback(async () => {
     setLoading(true);
@@ -289,104 +284,7 @@ const FicheJoueur = () => {
           </article>
         </section>
 
-        <section className="mt-8 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-          <article className="overflow-hidden rounded-xl border bg-white shadow-sm">
-            <header className="border-b p-5 md:p-6">
-              <span className="text-xs font-extrabold uppercase tracking-[0.14em] text-clubPrimary">
-                Saison en cours
-              </span>
-              <h2 className="mt-2 text-2xl font-extrabold md:text-3xl">
-                Rencontres individuelles
-              </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {summary.matches} partie{summary.matches > 1 ? "s" : ""}{" "}
-                enregistrée{summary.matches > 1 ? "s" : ""} par la FFTT.
-              </p>
-            </header>
-
-            {matches.length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground">
-                Aucune rencontre disponible pour ce joueur.
-              </div>
-            ) : (
-              <>
-                <div className="divide-y md:hidden">
-                  {matches.map((match) => (
-                    <article key={match.id} className="p-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <strong className="block break-words text-sm">
-                            {match.opponentName || "Adversaire non renseigné"}
-                          </strong>
-                          <span className="mt-1 block text-xs text-muted-foreground">
-                            {formatDate(match.date)}
-                            {match.opponentRanking
-                              ? ` · classé ${formatPoints(match.opponentRanking, 0)}`
-                              : ""}
-                          </span>
-                        </div>
-                        <ResultBadge match={match} />
-                      </div>
-                      <div className="mt-3 flex items-end justify-between gap-3">
-                        <span className="min-w-0 text-xs text-slate-600">
-                          {eventLabel(match)}
-                        </span>
-                        <ProgressValue value={match.pointsDelta} />
-                      </div>
-                    </article>
-                  ))}
-                </div>
-
-                <div className="hidden overflow-x-auto md:block">
-                  <table className="w-full min-w-[760px] text-sm">
-                    <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
-                      <tr>
-                        <th className="px-5 py-4">Date</th>
-                        <th className="px-5 py-4">Résultat</th>
-                        <th className="px-5 py-4">Adversaire</th>
-                        <th className="px-5 py-4">Épreuve</th>
-                        <th className="px-5 py-4 text-right">Points</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {matches.map((match) => (
-                        <tr
-                          key={match.id}
-                          className="border-t transition hover:bg-red-50/30"
-                        >
-                          <td className="whitespace-nowrap px-5 py-4 text-slate-600">
-                            {formatDate(match.date)}
-                          </td>
-                          <td className="px-5 py-4">
-                            <ResultBadge match={match} />
-                          </td>
-                          <td className="px-5 py-4">
-                            <strong className="block">
-                              {match.opponentName ||
-                                "Adversaire non renseigné"}
-                            </strong>
-                            {match.opponentRanking > 0 && (
-                              <small className="text-muted-foreground">
-                                Classé {formatPoints(match.opponentRanking, 0)}
-                              </small>
-                            )}
-                          </td>
-                          <td className="max-w-56 px-5 py-4 text-slate-600">
-                            {eventLabel(match)}
-                          </td>
-                          <td className="px-5 py-4 text-right">
-                            <ProgressValue value={match.pointsDelta} />
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            )}
-          </article>
-
-          <div className="space-y-6">
+        <section className="mt-8 grid gap-6 lg:grid-cols-2">
             <article className="rounded-xl border bg-white p-5 shadow-sm md:p-6">
               <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-clubPrimary">
                 <Award className="h-4 w-4" />
@@ -451,7 +349,117 @@ const FicheJoueur = () => {
                 )}
               </dl>
             </article>
-          </div>
+        </section>
+
+        <section className="mt-8 overflow-hidden rounded-xl border bg-white shadow-sm">
+          <button
+            type="button"
+            onClick={() => setIsMatchesOpen((current) => !current)}
+            aria-expanded={isMatchesOpen}
+            aria-controls="player-matches"
+            className="flex w-full items-center justify-between gap-4 p-5 text-left transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-clubPrimary md:p-6"
+          >
+            <span>
+              <span className="block text-xs font-extrabold uppercase tracking-[0.14em] text-clubPrimary">
+                Saison en cours
+              </span>
+              <span className="mt-2 block text-2xl font-extrabold md:text-3xl">
+                Rencontres individuelles
+              </span>
+              <span className="mt-1 block text-sm text-muted-foreground">
+                {summary.matches} partie{summary.matches > 1 ? "s" : ""}{" "}
+                enregistrée{summary.matches > 1 ? "s" : ""} par la FFTT.
+              </span>
+            </span>
+            <span className="inline-flex flex-none items-center gap-2 rounded-full bg-slate-100 px-3 py-2 text-xs font-bold text-slate-700 md:px-4 md:text-sm">
+              {isMatchesOpen ? "Replier" : "Afficher"}
+              {isMatchesOpen ? (
+                <ChevronUp className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
+              )}
+            </span>
+          </button>
+
+          {isMatchesOpen && (
+            <div id="player-matches" className="border-t">
+              {matches.length === 0 ? (
+                <div className="p-8 text-center text-muted-foreground">
+                  Aucune rencontre disponible pour ce joueur.
+                </div>
+              ) : (
+                <>
+                  <div className="divide-y md:hidden">
+                    {matches.map((match) => (
+                      <article key={match.id} className="p-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <strong className="block break-words text-sm">
+                              {match.opponentName ||
+                                "Adversaire non renseigné"}
+                            </strong>
+                            <span className="mt-1 block text-xs text-muted-foreground">
+                              {formatDate(match.date)}
+                              {match.opponentRanking
+                                ? ` · classé ${formatPoints(match.opponentRanking, 0)}`
+                                : ""}
+                            </span>
+                          </div>
+                          <ResultBadge match={match} />
+                        </div>
+                        <div className="mt-3 flex justify-end">
+                          <ProgressValue value={match.pointsDelta} />
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+
+                  <div className="hidden overflow-x-auto md:block">
+                    <table className="w-full min-w-[620px] text-sm">
+                      <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+                        <tr>
+                          <th className="px-5 py-4">Date</th>
+                          <th className="px-5 py-4">Résultat</th>
+                          <th className="px-5 py-4">Adversaire</th>
+                          <th className="px-5 py-4 text-right">Points</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {matches.map((match) => (
+                          <tr
+                            key={match.id}
+                            className="border-t transition hover:bg-red-50/30"
+                          >
+                            <td className="whitespace-nowrap px-5 py-4 text-slate-600">
+                              {formatDate(match.date)}
+                            </td>
+                            <td className="px-5 py-4">
+                              <ResultBadge match={match} />
+                            </td>
+                            <td className="px-5 py-4">
+                              <strong className="block">
+                                {match.opponentName ||
+                                  "Adversaire non renseigné"}
+                              </strong>
+                              {match.opponentRanking > 0 && (
+                                <small className="text-muted-foreground">
+                                  Classé{" "}
+                                  {formatPoints(match.opponentRanking, 0)}
+                                </small>
+                              )}
+                            </td>
+                            <td className="px-5 py-4 text-right">
+                              <ProgressValue value={match.pointsDelta} />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </section>
 
         <section className="mt-8 overflow-hidden rounded-xl border bg-white shadow-sm">
