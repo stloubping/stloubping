@@ -39,7 +39,7 @@ const faqItems = [
   },
   {
     question: "Le certificat médical est-il obligatoire ?",
-    answer: "Pour les mineurs, le questionnaire de santé annuel suffit dans la majorité des cas. Pour les majeurs, la présentation d'un certificat médical est requise lors de la première souscription d'une licence compétition ou en cas de réponse positive au questionnaire de santé officiel."
+    answer: "Pour les mineurs, le questionnaire de santé annuel suffit dans la majorité des cas. Pour les majeurs, la présentation d'un certificat médical est requise lors de la première souscription d'une licence compétition, d'une reprise d'activité ou en cas de réponse positive au questionnaire de santé officiel."
   }
 ];
 
