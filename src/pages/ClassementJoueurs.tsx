@@ -26,6 +26,18 @@ const formatPoints = (value: number) =>
     maximumFractionDigits: 2,
   });
 
+const formatMonthlyEvolution = (value: number) =>
+  Number(value || 0).toLocaleString("fr-FR", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+
+const isNewRegistration = (player: Player) =>
+  Number(player.valmen || 0) === 0 && Number(player.points || 0) === 500;
+
+const monthlyEvolution = (player: Player) =>
+  isNewRegistration(player) ? 0 : Number(player.progmens || 0);
+
 const normalize = (value = "") =>
   value
     .normalize("NFD")
@@ -104,11 +116,11 @@ const ClassementJoueurs = () => {
       [...filteredPlayers].sort((a, b) => {
         const firstValue =
           sortConfig.field === "progression"
-            ? Number(a.progmens || 0)
+            ? monthlyEvolution(a)
             : Number(a.points || 0);
         const secondValue =
           sortConfig.field === "progression"
-            ? Number(b.progmens || 0)
+            ? monthlyEvolution(b)
             : Number(b.points || 0);
         const valueDifference =
           sortConfig.direction === "asc"
@@ -143,9 +155,14 @@ const ClassementJoueurs = () => {
   );
 
   const bestPlayer = players[0];
-  const positiveEvolutions = players.filter(
-    (player) => Number(player.progmens || 0) > 0,
-  ).length;
+  const monthlyPodium = useMemo(
+    () =>
+      [...players]
+        .filter((player) => monthlyEvolution(player) > 0)
+        .sort((a, b) => monthlyEvolution(b) - monthlyEvolution(a))
+        .slice(0, 3),
+    [players],
+  );
 
   return (
     <div className="min-h-screen bg-white text-clubDark">
@@ -206,12 +223,40 @@ const ClassementJoueurs = () => {
             <CalendarDays className="h-4 w-4" />
             Progressions du mois
           </div>
-          <strong className="mt-2 block text-3xl text-clubDark">
-            {loading ? "—" : positiveEvolutions}
-          </strong>
-          <span className="text-sm text-muted-foreground">
-            joueurs en progression
-          </span>
+          {loading ? (
+            <strong className="mt-2 block text-3xl text-clubDark">—</strong>
+          ) : monthlyPodium.length > 0 ? (
+            <ol className="mt-3 space-y-2">
+              {monthlyPodium.map((player, index) => (
+                <li
+                  key={player.idlicence || player.licence}
+                  className="flex min-w-0 items-center gap-2 text-sm"
+                >
+                  <span
+                    className={`grid h-6 w-6 flex-none place-items-center rounded-full text-xs font-black ${
+                      index === 0
+                        ? "bg-amber-100 text-amber-800"
+                        : index === 1
+                          ? "bg-slate-200 text-slate-700"
+                          : "bg-orange-100 text-orange-800"
+                    }`}
+                  >
+                    {index + 1}
+                  </span>
+                  <strong className="min-w-0 flex-1 truncate text-clubDark">
+                    {playerName(player)}
+                  </strong>
+                  <span className="flex-none font-extrabold text-emerald-700">
+                    +{formatMonthlyEvolution(monthlyEvolution(player))} pts
+                  </span>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <span className="mt-2 block text-sm text-muted-foreground">
+              Aucune progression ce mois-ci
+            </span>
+          )}
         </article>
       </section>
 
@@ -377,7 +422,8 @@ const ClassementJoueurs = () => {
                 <tbody>
                   {displayedPlayers.map((player) => {
                     const rank = rankByLicence.get(player.licence) || 0;
-                    const monthly = Number(player.progmens || 0);
+                    const newRegistration = isNewRegistration(player);
+                    const monthly = monthlyEvolution(player);
                     const isPositive = monthly > 0;
                     const isNegative = monthly < 0;
 
@@ -420,25 +466,37 @@ const ClassementJoueurs = () => {
                         <td className="px-5 py-4 text-right">
                           <span
                             className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-1 text-xs font-extrabold md:gap-1 md:px-3 md:text-sm ${
-                              isPositive
+                              newRegistration
+                                ? "bg-sky-50 text-sky-700"
+                                : isPositive
                                 ? "bg-emerald-50 text-emerald-700"
                                 : isNegative
                                   ? "bg-red-50 text-red-700"
                                   : "bg-slate-100 text-slate-500"
                             }`}
-                            title={`Points du mois précédent : ${formatPoints(
-                              Number(player.valmen || 0),
-                            )}`}
+                            title={
+                              newRegistration
+                                ? "Nouveau licencié : points initiaux FFTT"
+                                : `Points du mois précédent : ${formatPoints(
+                                    Number(player.valmen || 0),
+                                  )}`
+                            }
                           >
-                            {isPositive ? (
-                              <ArrowUp className="h-3.5 w-3.5" />
-                            ) : isNegative ? (
-                              <ArrowDown className="h-3.5 w-3.5" />
+                            {newRegistration ? (
+                              "Nouveau"
                             ) : (
-                              <Minus className="h-3.5 w-3.5" />
+                              <>
+                                {isPositive ? (
+                                  <ArrowUp className="h-3.5 w-3.5" />
+                                ) : isNegative ? (
+                                  <ArrowDown className="h-3.5 w-3.5" />
+                                ) : (
+                                  <Minus className="h-3.5 w-3.5" />
+                                )}
+                                {isPositive ? "+" : ""}
+                                {formatMonthlyEvolution(monthly)} pts
+                              </>
                             )}
-                            {isPositive ? "+" : ""}
-                            {formatPoints(monthly)} pts
                           </span>
                         </td>
                         <td className="px-5 py-4 text-right text-sm font-extrabold text-clubPrimary md:text-lg">
