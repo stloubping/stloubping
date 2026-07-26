@@ -66,6 +66,14 @@ const resultLabel = (match: PlayerMatch) =>
         ? "Défaite"
         : "Résultat";
 
+const eventLabel = (match: PlayerMatch) => {
+  if (!match.event) return "Épreuve non renseignée";
+  if (match.championshipCode && match.event === match.championshipCode) {
+    return `Code FFTT : ${match.championshipCode}`;
+  }
+  return match.event;
+};
+
 const ResultBadge = ({ match }: { match: PlayerMatch }) => (
   <span
     className={`inline-flex min-w-20 items-center justify-center rounded-full px-3 py-1 text-xs font-extrabold ${
@@ -313,7 +321,7 @@ const FicheJoueur = () => {
                           <span className="mt-1 block text-xs text-muted-foreground">
                             {formatDate(match.date)}
                             {match.opponentRanking
-                              ? ` · ${formatPoints(match.opponentRanking)} pts`
+                              ? ` · classé ${formatPoints(match.opponentRanking, 0)}`
                               : ""}
                           </span>
                         </div>
@@ -321,7 +329,7 @@ const FicheJoueur = () => {
                       </div>
                       <div className="mt-3 flex items-end justify-between gap-3">
                         <span className="min-w-0 text-xs text-slate-600">
-                          {match.event || "Épreuve non renseignée"}
+                          {eventLabel(match)}
                         </span>
                         <ProgressValue value={match.pointsDelta} />
                       </div>
@@ -359,12 +367,12 @@ const FicheJoueur = () => {
                             </strong>
                             {match.opponentRanking > 0 && (
                               <small className="text-muted-foreground">
-                                {formatPoints(match.opponentRanking)} pts
+                                Classé {formatPoints(match.opponentRanking, 0)}
                               </small>
                             )}
                           </td>
                           <td className="max-w-56 px-5 py-4 text-slate-600">
-                            {match.event || "—"}
+                            {eventLabel(match)}
                           </td>
                           <td className="px-5 py-4 text-right">
                             <ProgressValue value={match.pointsDelta} />
@@ -413,7 +421,7 @@ const FicheJoueur = () => {
                     {summary.bestWin.opponentName}
                   </strong>
                   <span className="text-xs text-amber-900/70">
-                    {formatPoints(summary.bestWin.opponentRanking)} pts ·{" "}
+                    Classé {formatPoints(summary.bestWin.opponentRanking, 0)} ·{" "}
                     {formatDate(summary.bestWin.date)}
                   </span>
                 </div>
@@ -468,7 +476,7 @@ const FicheJoueur = () => {
                   className="bg-white p-5"
                 >
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                    Saison {item.season || "—"} · Phase {item.phase || "—"}
+                    {item.season || "Saison non renseignée"} · Phase {item.phase || "—"}
                   </span>
                   <strong className="mt-2 block text-2xl text-clubPrimary">
                     {formatPoints(item.points)} pts
