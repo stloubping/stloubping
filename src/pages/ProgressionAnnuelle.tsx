@@ -162,11 +162,14 @@ const ProgressionAnnuelle = () => {
     [players],
   );
 
-  const seasonLeader = useMemo(
+  const seasonPodium = useMemo(
     () =>
-      [...players].sort(
-        (a, b) => annualEvolution(b) - annualEvolution(a),
-      )[0],
+      [...players]
+        .filter((player) => annualEvolution(player) > 0)
+        .sort(
+          (a, b) => annualEvolution(b) - annualEvolution(a),
+        )
+        .slice(0, 3),
     [players],
   );
 
@@ -238,15 +241,42 @@ const ProgressionAnnuelle = () => {
         <article className="bg-white p-5 md:p-6">
           <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-clubPrimary">
             <Trophy className="h-4 w-4" />
-            Leader de la saison
+            Podium de la saison
           </div>
-          <strong className="mt-2 block truncate text-xl text-clubDark">
-            {loading || !seasonLeader ? "—" : playerName(seasonLeader)}
-          </strong>
-          <span className="text-sm font-bold text-emerald-700">
-            {seasonLeader && annualEvolution(seasonLeader) > 0 ? "+" : ""}
-            {seasonLeader ? formatPoints(annualEvolution(seasonLeader)) : "—"} pts
-          </span>
+          {loading ? (
+            <strong className="mt-2 block text-3xl text-clubDark">—</strong>
+          ) : seasonPodium.length > 0 ? (
+            <ol className="mt-3 space-y-2">
+              {seasonPodium.map((player, index) => (
+                <li
+                  key={player.idlicence || player.licence}
+                  className="flex min-w-0 items-center gap-2 text-sm"
+                >
+                  <span
+                    className={`grid h-6 w-6 flex-none place-items-center rounded-full text-xs font-black ${
+                      index === 0
+                        ? "bg-amber-100 text-amber-800"
+                        : index === 1
+                          ? "bg-slate-200 text-slate-700"
+                          : "bg-orange-100 text-orange-800"
+                    }`}
+                  >
+                    {index + 1}
+                  </span>
+                  <strong className="min-w-0 flex-1 truncate text-clubDark">
+                    {playerName(player)}
+                  </strong>
+                  <span className="flex-none font-extrabold text-emerald-700">
+                    +{formatPoints(annualEvolution(player))} pts
+                  </span>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <span className="mt-2 block text-sm text-muted-foreground">
+              Aucune progression positive
+            </span>
+          )}
         </article>
 
         <article className="bg-white p-5 md:p-6">

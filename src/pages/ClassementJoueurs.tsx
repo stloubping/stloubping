@@ -194,12 +194,6 @@ const ClassementJoueurs = () => {
             Les points officiels et l’évolution mensuelle des licenciés du St
             Loub Ping, synchronisés avec la FFTT.
           </p>
-          <a
-            href="#classement"
-            className="mt-7 rounded-full bg-clubPrimary px-7 py-3 font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-red-600"
-          >
-            Voir le classement
-          </a>
         </div>
       </section>
 
