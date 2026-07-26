@@ -164,6 +164,19 @@ const StatistiquesJoueurs = () => {
       .sort((a, b) => categorySort(a.categorie, b.categorie));
   }, [players]);
 
+  const maxCategoryCount = Math.max(
+    1,
+    ...categoryData.map((item) => item.joueurs),
+  );
+  const maxRankingBandCount = Math.max(
+    1,
+    ...rankingBandData.map((item) => item.joueurs),
+  );
+  const maxCategoryRanking = Math.max(
+    1,
+    ...categoryRankingData.map((item) => item.meilleur),
+  );
+
   const averageRanking = useMemo(() => {
     if (!players.length) return 0;
     const averagePoints =
@@ -295,10 +308,33 @@ const StatistiquesJoueurs = () => {
               <p className="mt-1 text-sm text-muted-foreground">
                 Répartition des licenciés selon leur catégorie d’âge FFTT.
               </p>
-              <div className="mt-6 overflow-x-auto">
+              <div className="mt-6 space-y-3 md:hidden">
+                {categoryData.map((item) => (
+                  <div key={item.categorie}>
+                    <div className="mb-1.5 flex items-center justify-between gap-3 text-sm">
+                      <strong>{item.categorie}</strong>
+                      <span className="font-extrabold text-clubPrimary">
+                        {item.joueurs}
+                      </span>
+                    </div>
+                    <div className="h-2.5 overflow-hidden rounded-full bg-rose-100">
+                      <div
+                        className="h-full rounded-full bg-clubPrimary"
+                        style={{
+                          width: `${Math.max(
+                            5,
+                            (item.joueurs / maxCategoryCount) * 100,
+                          )}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 hidden md:block">
                 <ChartContainer
                   config={categoryChartConfig}
-                  className="h-[340px] min-w-[720px] w-full"
+                  className="h-[340px] w-full"
                 >
                   <BarChart
                     accessibilityLayer
@@ -337,10 +373,44 @@ const StatistiquesJoueurs = () => {
               <p className="mt-1 text-sm text-muted-foreground">
                 Exemple : un joueur à 1 000 points appartient à la tranche 10.
               </p>
-              <div className="mt-6 overflow-x-auto">
+              <div className="mt-6 grid grid-cols-2 gap-3 md:hidden">
+                {rankingBandData.map((item) => (
+                  <div
+                    key={item.classement}
+                    className="overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-3"
+                  >
+                    <div className="flex items-end justify-between gap-2">
+                      <div>
+                        <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                          Classement
+                        </span>
+                        <strong className="text-xl text-clubDark">
+                          {item.classement}
+                        </strong>
+                      </div>
+                      <span className="text-right text-xs font-bold text-slate-600">
+                        {item.joueurs} joueur
+                        {item.joueurs > 1 ? "s" : ""}
+                      </span>
+                    </div>
+                    <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-200">
+                      <div
+                        className="h-full rounded-full bg-clubDark"
+                        style={{
+                          width: `${Math.max(
+                            8,
+                            (item.joueurs / maxRankingBandCount) * 100,
+                          )}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 hidden md:block">
                 <ChartContainer
                   config={rankingChartConfig}
-                  className="h-[340px] min-w-[680px] w-full"
+                  className="h-[340px] w-full"
                 >
                   <BarChart
                     accessibilityLayer
@@ -381,10 +451,58 @@ const StatistiquesJoueurs = () => {
                 chaque catégorie. L’échelle est simplifiée : 500 points = 5,
                 1 000 points = 10.
               </p>
-              <div className="mt-6 overflow-x-auto">
+              <div className="mt-6 divide-y divide-slate-100 md:hidden">
+                {categoryRankingData.map((item) => (
+                  <div
+                    key={item.categorie}
+                    className="grid grid-cols-[42px_1fr] gap-3 py-3 first:pt-0 last:pb-0"
+                  >
+                    <strong className="grid h-9 w-9 place-items-center rounded-lg bg-rose-50 text-xs text-clubPrimary">
+                      {item.categorie}
+                    </strong>
+                    <div className="min-w-0">
+                      <div className="mb-2 flex items-center justify-between gap-3 text-xs">
+                        <span className="text-slate-500">
+                          Moy.{" "}
+                          <b className="text-clubPrimary">{item.moyenne}</b>
+                        </span>
+                        <span className="text-slate-500">
+                          Meilleur{" "}
+                          <b className="text-clubDark">{item.meilleur}</b>
+                        </span>
+                      </div>
+                      <div className="space-y-1.5">
+                        <div className="h-2 overflow-hidden rounded-full bg-rose-100">
+                          <div
+                            className="h-full rounded-full bg-clubPrimary"
+                            style={{
+                              width: `${Math.max(
+                                5,
+                                (item.moyenne / maxCategoryRanking) * 100,
+                              )}%`,
+                            }}
+                          />
+                        </div>
+                        <div className="h-2 overflow-hidden rounded-full bg-slate-200">
+                          <div
+                            className="h-full rounded-full bg-clubDark"
+                            style={{
+                              width: `${Math.max(
+                                5,
+                                (item.meilleur / maxCategoryRanking) * 100,
+                              )}%`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 hidden md:block">
                 <ChartContainer
                   config={categoryRankingChartConfig}
-                  className="h-[380px] min-w-[760px] w-full"
+                  className="h-[380px] w-full"
                 >
                   <BarChart
                     accessibilityLayer
