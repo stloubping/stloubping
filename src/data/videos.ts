@@ -65,6 +65,14 @@ export const allVideos: VideoItem[] = [
     category: 'wtt',
     dateAdded: "2025-01-01",
   },
+  {
+    id: 'wtt-8',
+    title: "Patrick Franziska vs Alexis Lebrun | MS QF | #WTTSaoJose 2026",
+    description: "Le quart de finale simple messieurs entre Patrick Franziska et Alexis Lebrun au WTT São José 2026.",
+    youtubeId: "Ozt-MfocifY",
+    category: 'wtt',
+    dateAdded: "2026-07-26",
+  },
   // Vidéos Tutos
   {
     id: 'tuto-1',
