@@ -82,11 +82,22 @@ const parseScheduleTime = (value: string) => {
 };
 
 const getScheduleGridPosition = (time: string) => {
-  const [startValue] = time.split("–");
+  const [startValue, endValue] = time.split("–");
   const start = parseScheduleTime(startValue);
+  let end = parseScheduleTime(endValue);
+
+  if (end === 0) {
+    end = 24 * 60;
+  }
+
+  const startRow = scheduleStartRows.indexOf(start) + 1;
+  const nextStartAtOrAfterEnd = scheduleStartRows.findIndex((rowStart) => rowStart >= end);
+  const endRow = nextStartAtOrAfterEnd === -1
+    ? scheduleStartRows.length + 1
+    : nextStartAtOrAfterEnd + 1;
 
   return {
-    gridRow: scheduleStartRows.indexOf(start) + 1,
+    gridRow: `${startRow} / ${endRow}`,
   };
 };
 
