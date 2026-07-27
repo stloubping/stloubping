@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /api/
 
-Sitemap: https://stloubping.fr/sitemap.xml
+Sitemap: https://www.saintloubping.fr/sitemap.xml
