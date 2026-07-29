@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
-import { ClipboardList, Clock3, Loader2, LogOut, PackageCheck, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
+import { ClipboardList, Clock3, Download, Loader2, LogOut, PackageCheck, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -54,7 +54,7 @@ const equipmentStatusLabels: Record<string, string> = {
   received: "Reçue",
   confirmed: "Confirmée",
   ordered: "Commandée au fournisseur",
-  available: "Disponible au club",
+  available: "Arrivée au club",
   delivered: "Remise",
   cancelled: "Annulée",
 };
@@ -79,6 +79,8 @@ const itemDetails = (item: EquipmentItem) => [
   item.shoe_size && `Pointure : ${item.shoe_size}`,
   item.option,
 ].filter(Boolean);
+
+const escapeCsvCell = (value: string | number) => `"${String(value).replaceAll("\"", "\"\"")}"`;
 
 type ClubOrdersDashboardProps = {
   session: Session;
@@ -146,6 +148,67 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
     } else {
       toast.success("Statut de la commande maillot mis à jour.");
     }
+  };
+
+  const downloadArrivedEquipmentOrders = () => {
+    const arrivedOrders = equipmentOrders.filter((order) => order.status === "available");
+
+    if (arrivedOrders.length === 0) {
+      toast.info("Aucune commande n’est actuellement arrivée au club.");
+      return;
+    }
+
+    const headers = [
+      "N° commande",
+      "Date",
+      "Joueur",
+      "E-mail",
+      "Téléphone",
+      "Articles",
+      "Quantité totale",
+      "Sous-total",
+      "Remise club 20 %",
+      "Total indicatif",
+      "Remarque",
+    ];
+
+    const rows = arrivedOrders.map((order) => {
+      const subtotal = order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity, 0);
+      const discountAmount = subtotal * 0.2;
+      const indicativeTotal = subtotal - discountAmount;
+      const articles = order.items
+        .map((item) => {
+          const details = itemDetails(item);
+          return `${item.designation} (réf. ${item.reference}, x${item.quantity}${details.length > 0 ? `, ${details.join(", ")}` : ""})`;
+        })
+        .join(" | ");
+
+      return [
+        shortOrderId(order.id),
+        formatOrderDate(order.created_at),
+        `${order.first_name} ${order.last_name}`,
+        order.email,
+        order.phone,
+        articles,
+        order.items.reduce((sum, item) => sum + item.quantity, 0),
+        subtotal.toFixed(2).replace(".", ","),
+        discountAmount.toFixed(2).replace(".", ","),
+        indicativeTotal.toFixed(2).replace(".", ","),
+        order.notes ?? "",
+      ];
+    });
+
+    const csv = [headers, ...rows].map((row) => row.map(escapeCsvCell).join(";")).join("\r\n");
+    const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `commandes-arrivees-au-club-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    toast.success(`${arrivedOrders.length} commande${arrivedOrders.length > 1 ? "s" : ""} téléchargée${arrivedOrders.length > 1 ? "s" : ""}.`);
   };
 
   const equipmentPending = equipmentOrders.filter((order) => order.status === "received").length;
@@ -221,9 +284,14 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                 <h2 className="text-3xl font-black text-clubDark">Commandes de matériel</h2>
                 <p className="mt-1 text-sm text-muted-foreground">Articles Wack Sport, options demandées et suivi de traitement.</p>
               </div>
-              <Button asChild className="bg-clubDark font-bold hover:bg-clubDark/90">
-                <Link to="/administration/bordereau-commande"><ClipboardList className="mr-2 h-4 w-4" /> Bordereau de commande</Link>
-              </Button>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <Button variant="outline" onClick={downloadArrivedEquipmentOrders} className="font-bold">
+                  <Download className="mr-2 h-4 w-4" /> Télécharger les commandes arrivées
+                </Button>
+                <Button asChild className="bg-clubDark font-bold hover:bg-clubDark/90">
+                  <Link to="/administration/bordereau-commande"><ClipboardList className="mr-2 h-4 w-4" /> Bordereau de commande</Link>
+                </Button>
+              </div>
             </div>
             {isLoading ? (
               <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div>
