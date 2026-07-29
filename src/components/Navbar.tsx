@@ -53,7 +53,14 @@ const navItems: NavItem[] = [
     ],
   },
   { name: "Adhésions", path: "/adhesions", type: "link" },
-  { name: "Boutique", path: "/boutique", type: "link" },
+  {
+    name: "Boutique",
+    type: "dropdown",
+    children: [
+      { name: "Maillots du club", path: "/boutique", type: "link" },
+      { name: "Matériels", path: "/boutique/materiels", type: "link" },
+    ],
+  },
   { name: "Partenaires", path: "/partenaires", type: "link" },
   {
     name: "Tournoi",

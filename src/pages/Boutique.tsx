@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
-import { Shirt, Ruler, DollarSign, Mail, User, FileText, Globe } from 'lucide-react'; // Ajout d'icônes pour les méthodes de commande
+import { Shirt, Ruler, DollarSign, Mail, User, FileText, Globe, PackageSearch, ArrowRight } from 'lucide-react'; // Ajout d'icônes pour les méthodes de commande
 import ShopPreorders from '@/components/ShopPreorders';
 
 const Boutique = () => {
@@ -34,6 +34,27 @@ const Boutique = () => {
               Soutenez votre club en portant fièrement nos couleurs !
               Retrouvez une sélection de maillots, textiles et accessoires à l'effigie de notre club.
             </p>
+          </CardContent>
+        </Card>
+      </section>
+
+      <section className="mb-12">
+        <Card className="mx-auto max-w-4xl overflow-hidden border-clubPrimary/30 bg-clubDark text-white shadow-lg">
+          <CardContent className="flex flex-col items-center gap-5 p-6 text-center sm:flex-row sm:text-left">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-clubPrimary/15">
+              <PackageSearch className="h-7 w-7 text-clubPrimary" />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold">Commander du matériel</h2>
+              <p className="mt-1 text-sm text-white/70">
+                Bois, revêtements, balles, chaussures ou accessoires : transmettez au club vos références Wack Sport.
+              </p>
+            </div>
+            <Button asChild className="w-full bg-clubPrimary font-bold text-white sm:w-auto">
+              <Link to="/boutique/materiels">
+                Page Matériels <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </CardContent>
         </Card>
       </section>

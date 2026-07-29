@@ -10,6 +10,7 @@ import CompetitionsEquipes from "./pages/CompetitionsEquipes";
 import EssaiGratuit from "./pages/EssaiGratuit";
 import Adhesions from "./pages/Adhesions";
 import Boutique from "./pages/Boutique";
+import Materiels from "./pages/Materiels";
 import Partenaires from "./pages/Partenaires";
 import Contact from "./pages/Contact";
 import TournamentRegistration from "./pages/TournamentRegistration";
@@ -78,6 +79,7 @@ const App = () => (
                 <Route path="/classement-joueurs/par-categorie-age" element={<ProgressionParCategorieAge />} />
                 <Route path="/adhesions" element={<Adhesions />} />
                 <Route path="/boutique" element={<Boutique />} />
+                <Route path="/boutique/materiels" element={<Materiels />} />
                 <Route path="/partenaires" element={<Partenaires />} />
                 <Route path="/tournoi-inscription" element={<TournamentRegistration />} />
                 <Route path="/tournoi/inscrits-live" element={<TournamentLiveRegistrations />} />
