@@ -168,7 +168,9 @@ const Materiels = () => {
         : null,
     }));
 
+    const orderId = crypto.randomUUID();
     const { error } = await supabase.from("equipment_orders").insert({
+      id: orderId,
       first_name: values.first_name,
       last_name: values.last_name,
       email: values.email,
@@ -183,7 +185,23 @@ const Materiels = () => {
       console.error(error);
       toast.error("La commande n’a pas pu être enregistrée. Réessayez dans un instant.");
     } else {
-      toast.success("Commande transmise ! Le club vous recontactera pour la confirmer.");
+      const { error: emailError } = await supabase.functions.invoke(
+        "equipment-order-email",
+        {
+          body: { order_id: orderId },
+        },
+      );
+
+      if (emailError) {
+        console.error("Commande enregistrée, mais e-mail non envoyé :", emailError);
+        toast.warning(
+          "Commande enregistrée, mais l’e-mail de confirmation n’a pas pu être envoyé.",
+        );
+      } else {
+        toast.success(
+          "Commande transmise ! Un e-mail de confirmation vient de vous être envoyé.",
+        );
+      }
       form.reset({
         first_name: "",
         last_name: "",
