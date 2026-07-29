@@ -97,6 +97,8 @@ const App = () => (
                 <Route path="/politique-cookies" element={<PolitiqueCookies />} />
                 <Route path="/demande-donnees" element={<DemandeDonnees />} />
                 <Route path="/administration" element={<Administration />} />
+                <Route path="/administration/bordereau-commande" element={<Administration />} />
+                <Route path="/administration/bordereau-maillots" element={<Administration />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>
