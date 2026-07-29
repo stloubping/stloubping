@@ -44,6 +44,7 @@ const Footer = () => {
               <li><Link to="/politique-confidentialite" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Politique de confidentialité</Link></li>
               <li><Link to="/politique-cookies" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Politique de cookies</Link></li>
               <li><Link to="/demande-donnees" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Demande de données</Link></li>
+              <li><Link to="/administration" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Administration</Link></li>
             </ul>
           </div>
 
