@@ -4,6 +4,7 @@ import { ArrowLeft, Loader2, Printer, Shirt } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import AdminHelpBubble from "@/components/admin/AdminHelpBubble";
 import { supabase } from "@/integrations/supabase/client";
 
 type ConfirmedShirtOrder = {
@@ -108,7 +109,15 @@ const ShirtOrderSlip = ({ session }: ShirtOrderSlipProps) => {
         <section id="shirt-order-slip" className="overflow-hidden rounded-2xl bg-white shadow-xl print:rounded-none print:shadow-none">
           <header className="bg-clubDark px-6 py-8 text-white md:px-10">
             <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-clubPrimary">Saint Loub Ping</p>
-            <h1 className="mt-2 text-3xl font-black md:text-4xl">Bordereau de commande maillots</h1>
+            <div className="mt-2 flex items-center gap-3">
+              <h1 className="text-3xl font-black md:text-4xl">Bordereau de commande maillots</h1>
+              <AdminHelpBubble
+                label="Contenu du bordereau"
+                text="Ce document reprend uniquement les commandes au statut « Confirmée ». Les maillots sont regroupés par modèle et par taille avant impression."
+                className="border-white/30 bg-white/10 text-white hover:bg-white hover:text-clubDark print:hidden"
+                side="bottom"
+              />
+            </div>
             <p className="mt-2 text-sm text-white/65">Commandes confirmées · généré le {generatedAt}</p>
           </header>
 

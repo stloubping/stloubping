@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import AdminHelpBubble from "@/components/admin/AdminHelpBubble";
 import { supabase } from "@/integrations/supabase/client";
 
 type EquipmentItem = {
@@ -272,7 +273,15 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
         <div className="container mx-auto flex flex-col justify-between gap-5 md:flex-row md:items-center">
           <div>
             <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-clubPrimary">Espace privé</p>
-            <h1 className="mt-2 text-4xl font-black">Tableau de bord du club</h1>
+            <div className="mt-2 flex items-center gap-3">
+              <h1 className="text-4xl font-black">Tableau de bord du club</h1>
+              <AdminHelpBubble
+                label="Tableau de bord"
+                text="Cet espace privé centralise les commandes de matériel et de maillots. Utilisez les onglets pour passer d’un type de commande à l’autre."
+                className="border-white/30 bg-white/10 text-white hover:bg-white hover:text-clubDark"
+                side="bottom"
+              />
+            </div>
             <p className="mt-2 text-white/65">{session.user.email}</p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -331,7 +340,10 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
           <TabsContent value="equipment" className="mt-0">
             <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <h2 className="text-3xl font-black text-clubDark">Commandes de matériel</h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-3xl font-black text-clubDark">Commandes de matériel</h2>
+                  <AdminHelpBubble label="Suivi du matériel" text="Faites évoluer chaque commande de « Reçue » à « Confirmée », puis « Commandée au fournisseur », « Arrivée au club » et enfin « Remise ». Le bordereau utilise les commandes confirmées ; le PDF de distribution utilise les commandes arrivées au club." />
+                </div>
                 <p className="mt-1 text-sm text-muted-foreground">Articles Wack Sport, options demandées et suivi de traitement.</p>
               </div>
               <div className="flex flex-col gap-2 sm:flex-row">
@@ -379,7 +391,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                         <div className="space-y-2 border-t pt-4">
                           <div className="flex justify-between text-sm text-muted-foreground"><span>Sous-total</span><span>{formatPrice(subtotal)}</span></div>
                           <div className="flex justify-between text-sm font-bold text-clubPrimary"><span>Remise club (20 %)</span><span>− {formatPrice(discountAmount)}</span></div>
-                          <div className="flex justify-between border-t pt-2 text-lg font-black"><span>Total indicatif</span><span>{formatPrice(indicativeTotal)}</span></div>
+                          <div className="flex justify-between border-t pt-2 text-lg font-black"><span className="flex items-center gap-2">Total indicatif <AdminHelpBubble label="Total indicatif" text="Sous-total diminué de la remise club de 20 %. Ce montant reste indicatif jusqu’à la validation du fournisseur." /></span><span>{formatPrice(indicativeTotal)}</span></div>
                         </div>
                         {order.notes && <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900"><strong>Remarque :</strong> {order.notes}</p>}
                       </CardContent>
@@ -393,7 +405,10 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
           <TabsContent value="shirts" className="mt-0">
             <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <h2 className="text-3xl font-black text-clubDark">Commandes de maillots</h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-3xl font-black text-clubDark">Commandes de maillots</h2>
+                  <AdminHelpBubble label="Suivi des maillots" text="Faites évoluer chaque précommande de « Reçue » à « Confirmée », puis « Disponible au club » et enfin « Remise ». Seules les commandes confirmées alimentent le bordereau." />
+                </div>
                 <p className="mt-1 text-sm text-muted-foreground">Tailles, quantités, coordonnées et suivi des précommandes du club.</p>
               </div>
               <Button asChild className="bg-clubDark font-bold hover:bg-clubDark/90">
