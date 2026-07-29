@@ -391,9 +391,14 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
           </TabsContent>
 
           <TabsContent value="shirts" className="mt-0">
-            <div className="mb-6">
-              <h2 className="text-3xl font-black text-clubDark">Commandes de maillots</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Tailles, quantités, coordonnées et suivi des précommandes du club.</p>
+            <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <h2 className="text-3xl font-black text-clubDark">Commandes de maillots</h2>
+                <p className="mt-1 text-sm text-muted-foreground">Tailles, quantités, coordonnées et suivi des précommandes du club.</p>
+              </div>
+              <Button asChild className="bg-clubDark font-bold hover:bg-clubDark/90">
+                <Link to="/administration/bordereau-maillots"><ClipboardList className="mr-2 h-4 w-4" /> Bordereau des maillots</Link>
+              </Button>
             </div>
             {isLoading ? (
               <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div>
