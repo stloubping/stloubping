@@ -80,7 +80,6 @@ const itemDetails = (item: EquipmentItem) => [
   item.option,
 ].filter(Boolean);
 
-const escapeCsvCell = (value: string | number) => `"${String(value).replaceAll("\"", "\"\"")}"`;
 
 type ClubOrdersDashboardProps = {
   session: Session;
@@ -150,7 +149,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
     }
   };
 
-  const downloadArrivedEquipmentOrders = () => {
+  const downloadArrivedEquipmentOrders = async () => {
     const arrivedOrders = equipmentOrders.filter((order) => order.status === "available");
 
     if (arrivedOrders.length === 0) {
@@ -158,59 +157,110 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
       return;
     }
 
-    const headers = [
-      "N° commande",
-      "Date",
-      "Joueur",
-      "E-mail",
-      "Téléphone",
-      "Articles",
-      "Quantité totale",
-      "Sous-total",
-      "Remise club 20 %",
-      "Total indicatif",
-      "Remarque",
-    ];
+    try {
+      const [{ jsPDF }, { default: autoTable }] = await Promise.all([
+        import("jspdf"),
+        import("jspdf-autotable"),
+      ]);
+      const document = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+      const pageWidth = document.internal.pageSize.getWidth();
+      const pageHeight = document.internal.pageSize.getHeight();
+      const margin = 12;
+      let cursorY = 29;
 
-    const rows = arrivedOrders.map((order) => {
-      const subtotal = order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity, 0);
-      const discountAmount = subtotal * 0.2;
-      const indicativeTotal = subtotal - discountAmount;
-      const articles = order.items
-        .map((item) => {
-          const details = itemDetails(item);
-          return `${item.designation} (réf. ${item.reference}, x${item.quantity}${details.length > 0 ? `, ${details.join(", ")}` : ""})`;
-        })
-        .join(" | ");
+      document.setFillColor(24, 24, 27);
+      document.rect(0, 0, pageWidth, 22, "F");
+      document.setTextColor(239, 68, 68);
+      document.setFont("helvetica", "bold");
+      document.setFontSize(15);
+      document.text("SAINT LOUB PING", margin, 10);
+      document.setTextColor(255, 255, 255);
+      document.setFontSize(11);
+      document.text("Commandes de matériel arrivées au club", margin, 17);
+      document.setTextColor(80, 80, 80);
+      document.setFont("helvetica", "normal");
+      document.setFontSize(8);
+      document.text(`Généré le ${new Date().toLocaleString("fr-FR")} · ${arrivedOrders.length} commande${arrivedOrders.length > 1 ? "s" : ""}`, pageWidth - margin, 17, { align: "right" });
 
-      return [
-        shortOrderId(order.id),
-        formatOrderDate(order.created_at),
-        `${order.first_name} ${order.last_name}`,
-        order.email,
-        order.phone,
-        articles,
-        order.items.reduce((sum, item) => sum + item.quantity, 0),
-        subtotal.toFixed(2).replace(".", ","),
-        discountAmount.toFixed(2).replace(".", ","),
-        indicativeTotal.toFixed(2).replace(".", ","),
-        order.notes ?? "",
-      ];
-    });
+      arrivedOrders.forEach((order, orderIndex) => {
+        if (cursorY > pageHeight - 60) {
+          document.addPage();
+          cursorY = 18;
+        }
 
-    const csv = [headers, ...rows].map((row) => row.map(escapeCsvCell).join(";")).join("\r\n");
-    const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `commandes-arrivees-au-club-${new Date().toISOString().slice(0, 10)}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
-    toast.success(`${arrivedOrders.length} commande${arrivedOrders.length > 1 ? "s" : ""} téléchargée${arrivedOrders.length > 1 ? "s" : ""}.`);
+        const subtotal = order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity, 0);
+        const discountAmount = subtotal * 0.2;
+        const indicativeTotal = subtotal - discountAmount;
+
+        document.setTextColor(24, 24, 27);
+        document.setFont("helvetica", "bold");
+        document.setFontSize(11);
+        document.text(`${order.first_name} ${order.last_name} · commande n° ${shortOrderId(order.id)}`, margin, cursorY);
+        document.setFont("helvetica", "normal");
+        document.setFontSize(8);
+        document.setTextColor(90, 90, 90);
+        document.text(`${order.email} · ${order.phone} · ${formatOrderDate(order.created_at)}`, margin, cursorY + 5);
+
+        autoTable(document, {
+          startY: cursorY + 8,
+          margin: { left: margin, right: margin },
+          theme: "grid",
+          head: [["Référence / article", "Options", "Qté", "Prix unitaire", "Total"]],
+          body: order.items.map((item) => [
+            `${item.designation}\nRéf. ${item.reference}`,
+            itemDetails(item).join(" · ") || "-",
+            String(item.quantity),
+            formatPrice(item.unit_price ?? 0),
+            formatPrice((item.unit_price ?? 0) * item.quantity),
+          ]),
+          headStyles: { fillColor: [24, 24, 27], textColor: [255, 255, 255], fontStyle: "bold" },
+          styles: { font: "helvetica", fontSize: 8, cellPadding: 2.2, overflow: "linebreak" },
+          columnStyles: {
+            0: { cellWidth: 82 },
+            1: { cellWidth: 92 },
+            2: { cellWidth: 16, halign: "center" },
+            3: { cellWidth: 29, halign: "right" },
+            4: { cellWidth: 29, halign: "right", fontStyle: "bold" },
+          },
+        });
+
+        cursorY = document.lastAutoTable.finalY + 5;
+        document.setFontSize(8);
+        document.setTextColor(80, 80, 80);
+        document.text(`Sous-total : ${formatPrice(subtotal)}   ·   Remise club 20 % : - ${formatPrice(discountAmount)}`, pageWidth - margin, cursorY, { align: "right" });
+        document.setFont("helvetica", "bold");
+        document.setFontSize(10);
+        document.setTextColor(239, 68, 68);
+        document.text(`Total indicatif : ${formatPrice(indicativeTotal)}`, pageWidth - margin, cursorY + 5, { align: "right" });
+
+        if (order.notes) {
+          document.setFont("helvetica", "normal");
+          document.setFontSize(8);
+          document.setTextColor(80, 80, 80);
+          const noteLines = document.splitTextToSize(`Remarque : ${order.notes}`, pageWidth - (margin * 2));
+          document.text(noteLines, margin, cursorY + 5);
+          cursorY += Math.max(8, noteLines.length * 4);
+        }
+
+        cursorY += orderIndex === arrivedOrders.length - 1 ? 0 : 12;
+      });
+
+      const pageCount = document.getNumberOfPages();
+      for (let page = 1; page <= pageCount; page += 1) {
+        document.setPage(page);
+        document.setFont("helvetica", "normal");
+        document.setFontSize(7);
+        document.setTextColor(120, 120, 120);
+        document.text(`Saint Loub Ping · Page ${page}/${pageCount}`, pageWidth - margin, pageHeight - 7, { align: "right" });
+      }
+
+      document.save(`commandes-arrivees-au-club-${new Date().toISOString().slice(0, 10)}.pdf`);
+      toast.success(`${arrivedOrders.length} commande${arrivedOrders.length > 1 ? "s" : ""} exportée${arrivedOrders.length > 1 ? "s" : ""} en PDF.`);
+    } catch (error) {
+      console.error(error);
+      toast.error("Le PDF n’a pas pu être généré.");
+    }
   };
-
   const equipmentPending = equipmentOrders.filter((order) => order.status === "received").length;
   const shirtsPending = shirtOrders.filter((order) => order.status === "received").length;
   const totalOrders = equipmentOrders.length + shirtOrders.length;
@@ -286,7 +336,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
               </div>
               <div className="flex flex-col gap-2 sm:flex-row">
                 <Button variant="outline" onClick={downloadArrivedEquipmentOrders} className="font-bold">
-                  <Download className="mr-2 h-4 w-4" /> Télécharger les commandes arrivées
+                  <Download className="mr-2 h-4 w-4" /> Télécharger les arrivées (PDF)
                 </Button>
                 <Button asChild className="bg-clubDark font-bold hover:bg-clubDark/90">
                   <Link to="/administration/bordereau-commande"><ClipboardList className="mr-2 h-4 w-4" /> Bordereau de commande</Link>
