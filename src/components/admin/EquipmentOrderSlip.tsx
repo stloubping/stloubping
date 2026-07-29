@@ -4,6 +4,7 @@ import { ArrowLeft, Loader2, PackageCheck, Printer } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import AdminHelpBubble from "@/components/admin/AdminHelpBubble";
 import { Card, CardContent } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -132,7 +133,15 @@ const EquipmentOrderSlip = ({ session }: EquipmentOrderSlipProps) => {
             <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
               <div>
                 <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-clubPrimary">Saint Loub Ping</p>
-                <h1 className="mt-2 text-3xl font-black md:text-4xl">Bordereau de commande matériel</h1>
+                <div className="mt-2 flex items-center gap-3">
+                  <h1 className="text-3xl font-black md:text-4xl">Bordereau de commande matériel</h1>
+                  <AdminHelpBubble
+                    label="Contenu du bordereau"
+                    text="Ce document reprend uniquement les commandes au statut « Confirmée ». Les références et options identiques sont regroupées avant impression."
+                    className="border-white/30 bg-white/10 text-white hover:bg-white hover:text-clubDark print:hidden"
+                    side="bottom"
+                  />
+                </div>
                 <p className="mt-2 text-sm text-white/65">Commandes confirmées · généré le {generatedAt}</p>
               </div>
             </div>
