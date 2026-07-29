@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
-import { ArrowLeft, Loader2, PackageCheck, Percent, Printer } from "lucide-react";
+import { ArrowLeft, Loader2, PackageCheck, Printer } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -29,12 +29,8 @@ type ConfirmedOrder = {
 
 type AggregatedItem = EquipmentItem & {
   customers: string[];
-  grossTotal: number;
-  discountAmount: number;
-  netTotal: number;
+  lineTotal: number;
 };
-
-const DISCOUNT_RATE = 0.2;
 
 const formatPrice = (value: number) => value.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
 
@@ -111,24 +107,16 @@ const EquipmentOrderSlip = ({ session }: EquipmentOrderSlipProps) => {
     });
 
     return Array.from(grouped.values())
-      .map((item) => {
-        const grossTotal = (item.unit_price ?? 0) * item.quantity;
-        const discountAmount = grossTotal * DISCOUNT_RATE;
-        return {
-          ...item,
-          customers: Array.from(item.customers).sort((a, b) => a.localeCompare(b, "fr")),
-          grossTotal,
-          discountAmount,
-          netTotal: grossTotal - discountAmount,
-        };
-      })
+      .map((item) => ({
+        ...item,
+        customers: Array.from(item.customers).sort((a, b) => a.localeCompare(b, "fr")),
+        lineTotal: (item.unit_price ?? 0) * item.quantity,
+      }))
       .sort((a, b) => a.designation.localeCompare(b.designation, "fr"));
   }, [orders]);
 
   const totalQuantity = aggregatedItems.reduce((sum, item) => sum + item.quantity, 0);
-  const grossTotal = aggregatedItems.reduce((sum, item) => sum + item.grossTotal, 0);
-  const discountAmount = aggregatedItems.reduce((sum, item) => sum + item.discountAmount, 0);
-  const netTotal = grossTotal - discountAmount;
+  const orderTotal = aggregatedItems.reduce((sum, item) => sum + item.lineTotal, 0);
   const generatedAt = new Date().toLocaleString("fr-FR", { dateStyle: "long", timeStyle: "short" });
 
   return (
@@ -147,11 +135,6 @@ const EquipmentOrderSlip = ({ session }: EquipmentOrderSlipProps) => {
                 <h1 className="mt-2 text-3xl font-black md:text-4xl">Bordereau de commande matériel</h1>
                 <p className="mt-2 text-sm text-white/65">Commandes confirmées · généré le {generatedAt}</p>
               </div>
-              <div className="rounded-xl border border-clubPrimary/40 bg-clubPrimary/10 px-5 py-4 text-center">
-                <Percent className="mx-auto h-6 w-6 text-clubPrimary" />
-                <p className="mt-1 text-2xl font-black text-clubPrimary">20 %</p>
-                <p className="text-xs text-white/70">remise club appliquée</p>
-              </div>
             </div>
           </header>
 
@@ -165,11 +148,10 @@ const EquipmentOrderSlip = ({ session }: EquipmentOrderSlipProps) => {
             </div>
           ) : (
             <>
-              <div className="grid gap-4 border-b bg-clubSection/20 p-6 sm:grid-cols-2 lg:grid-cols-4 md:px-10">
+              <div className="grid gap-4 border-b bg-clubSection/20 p-6 sm:grid-cols-3 md:px-10">
                 <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Commandes</p><p className="mt-1 text-2xl font-black">{orders.length}</p></div>
                 <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Articles</p><p className="mt-1 text-2xl font-black">{totalQuantity}</p></div>
-                <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Total brut</p><p className="mt-1 text-2xl font-black">{formatPrice(grossTotal)}</p></div>
-                <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Total après remise</p><p className="mt-1 text-2xl font-black text-clubPrimary">{formatPrice(netTotal)}</p></div>
+                <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Total du bordereau</p><p className="mt-1 text-2xl font-black">{formatPrice(orderTotal)}</p></div>
               </div>
 
               <div className="hidden overflow-x-auto md:block">
@@ -181,8 +163,7 @@ const EquipmentOrderSlip = ({ session }: EquipmentOrderSlipProps) => {
                       <th className="px-5 py-4">Joueurs</th>
                       <th className="px-5 py-4 text-center">Qté</th>
                       <th className="px-5 py-4 text-right">Prix unitaire</th>
-                      <th className="px-5 py-4 text-right">Brut</th>
-                      <th className="px-5 py-4 text-right">Net -20 %</th>
+                      <th className="px-5 py-4 text-right">Total</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -193,8 +174,7 @@ const EquipmentOrderSlip = ({ session }: EquipmentOrderSlipProps) => {
                         <td className="px-5 py-4 text-muted-foreground">{item.customers.join(", ")}</td>
                         <td className="px-5 py-4 text-center font-black">{item.quantity}</td>
                         <td className="px-5 py-4 text-right">{formatPrice(item.unit_price ?? 0)}</td>
-                        <td className="px-5 py-4 text-right">{formatPrice(item.grossTotal)}</td>
-                        <td className="px-5 py-4 text-right font-black text-clubPrimary">{formatPrice(item.netTotal)}</td>
+                        <td className="px-5 py-4 text-right font-black text-clubPrimary">{formatPrice(item.lineTotal)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -207,16 +187,14 @@ const EquipmentOrderSlip = ({ session }: EquipmentOrderSlipProps) => {
                     <div className="flex justify-between gap-4"><div><p className="font-bold text-clubDark">{item.designation}</p><p className="text-xs text-muted-foreground">Réf. {item.reference}</p></div><p className="text-lg font-black">× {item.quantity}</p></div>
                     {optionDetails(item).length > 0 && <p className="mt-3 text-sm text-muted-foreground">{optionDetails(item).join(" · ")}</p>}
                     <p className="mt-2 text-sm text-muted-foreground"><strong>Joueurs :</strong> {item.customers.join(", ")}</p>
-                    <div className="mt-4 flex justify-between border-t pt-3"><span className="text-sm text-muted-foreground">Brut {formatPrice(item.grossTotal)}</span><span className="font-black text-clubPrimary">Net {formatPrice(item.netTotal)}</span></div>
+                    <div className="mt-4 flex justify-between border-t pt-3"><span className="text-sm text-muted-foreground">Total de la ligne</span><span className="font-black text-clubPrimary">{formatPrice(item.lineTotal)}</span></div>
                   </div>
                 ))}
               </div>
 
               <footer className="border-t-2 border-clubDark bg-clubSection/25 p-6 md:px-10">
                 <div className="ml-auto max-w-md space-y-3">
-                  <div className="flex justify-between"><span>Total brut</span><span className="font-bold">{formatPrice(grossTotal)}</span></div>
-                  <div className="flex justify-between text-clubPrimary"><span>Remise partenaire (20 %)</span><span className="font-bold">− {formatPrice(discountAmount)}</span></div>
-                  <div className="flex justify-between border-t-2 border-clubDark pt-3 text-2xl font-black"><span>Total net</span><span>{formatPrice(netTotal)}</span></div>
+                  <div className="flex justify-between border-t-2 border-clubDark pt-3 text-2xl font-black"><span>Total du bordereau</span><span>{formatPrice(orderTotal)}</span></div>
                 </div>
                 <p className="mt-8 text-xs text-muted-foreground">Bordereau réservé à la gestion du club · {session.user.email}</p>
               </footer>

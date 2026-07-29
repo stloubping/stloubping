@@ -232,7 +232,9 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
             ) : (
               <div className="space-y-5">
                 {equipmentOrders.map((order) => {
-                  const total = order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity, 0);
+                  const subtotal = order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity, 0);
+                  const discountAmount = subtotal * 0.2;
+                  const indicativeTotal = subtotal - discountAmount;
                   return (
                     <Card key={order.id} className="overflow-hidden border-l-4 border-l-blue-500">
                       <CardHeader className="gap-4 bg-white md:flex-row md:items-start md:justify-between">
@@ -256,7 +258,11 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                             {itemDetails(item).length > 0 && <p className="mt-3 text-sm text-muted-foreground">{itemDetails(item).join(" · ")}</p>}
                           </div>
                         ))}
-                        <div className="flex justify-between border-t pt-4 text-lg font-black"><span>Total indicatif</span><span>{formatPrice(total)}</span></div>
+                        <div className="space-y-2 border-t pt-4">
+                          <div className="flex justify-between text-sm text-muted-foreground"><span>Sous-total</span><span>{formatPrice(subtotal)}</span></div>
+                          <div className="flex justify-between text-sm font-bold text-clubPrimary"><span>Remise club (20 %)</span><span>− {formatPrice(discountAmount)}</span></div>
+                          <div className="flex justify-between border-t pt-2 text-lg font-black"><span>Total indicatif</span><span>{formatPrice(indicativeTotal)}</span></div>
+                        </div>
                         {order.notes && <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900"><strong>Remarque :</strong> {order.notes}</p>}
                       </CardContent>
                     </Card>
