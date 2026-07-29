@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import * as z from "zod";
 import {
   ArrowUpRight,
@@ -37,6 +37,11 @@ const orderItemSchema = z.object({
     .regex(/^(\d{7}|\d{10})$/, "La référence doit contenir 7 ou 10 chiffres."),
   designation: z.string().trim().min(2, "Indiquez le nom du produit.").max(150),
   quantity: z.number().int().min(1).max(20),
+  color: z.string().trim().max(80).optional(),
+  thickness: z.string().trim().max(80).optional(),
+  handle: z.string().trim().max(80).optional(),
+  size: z.string().trim().max(80).optional(),
+  shoe_size: z.string().trim().max(80).optional(),
   option: z.string().trim().max(150).optional(),
   unit_price: z
     .string()
@@ -81,6 +86,11 @@ const emptyItem = {
   reference: "",
   designation: "",
   quantity: 1,
+  color: "",
+  thickness: "",
+  handle: "",
+  size: "",
+  shoe_size: "",
   option: "",
   unit_price: "",
 };
@@ -108,15 +118,18 @@ const Materiels = () => {
     name: "items",
   });
 
-  const watchedItems = form.watch("items");
-  const estimatedTotal = useMemo(
-    () =>
-      watchedItems.reduce((total, item) => {
-        const price = Number((item.unit_price || "0").replace(",", "."));
-        return total + (Number.isFinite(price) ? price * item.quantity : 0);
-      }, 0),
-    [watchedItems],
-  );
+  const watchedItems = useWatch({
+    control: form.control,
+    name: "items",
+  }) ?? [];
+  const estimatedTotal = watchedItems.reduce((total, item) => {
+    const normalizedPrice = (item.unit_price || "0")
+      .replace(/\s/g, "")
+      .replace(",", ".");
+    const price = Number(normalizedPrice);
+    const quantity = Number(item.quantity) || 0;
+    return total + (Number.isFinite(price) ? price * quantity : 0);
+  }, 0);
 
   const fetchOrders = useCallback(async () => {
     setIsLoading(true);
@@ -144,13 +157,20 @@ const Materiels = () => {
       reference: item.reference,
       designation: item.designation,
       quantity: item.quantity,
+      color: item.color || null,
+      thickness: item.thickness || null,
+      handle: item.handle || null,
+      size: item.size || null,
+      shoe_size: item.shoe_size || null,
       option: item.option || null,
       unit_price: item.unit_price
         ? Number(item.unit_price.replace(",", "."))
         : null,
     }));
 
+    const orderId = crypto.randomUUID();
     const { error } = await supabase.from("equipment_orders").insert({
+      id: orderId,
       first_name: values.first_name,
       last_name: values.last_name,
       email: values.email,
@@ -165,7 +185,23 @@ const Materiels = () => {
       console.error(error);
       toast.error("La commande n’a pas pu être enregistrée. Réessayez dans un instant.");
     } else {
-      toast.success("Commande transmise ! Le club vous recontactera pour la confirmer.");
+      const { error: emailError } = await supabase.functions.invoke(
+        "equipment-order-email",
+        {
+          body: { order_id: orderId },
+        },
+      );
+
+      if (emailError) {
+        console.error("Commande enregistrée, mais e-mail non envoyé :", emailError);
+        toast.warning(
+          "Commande enregistrée, mais l’e-mail de confirmation n’a pas pu être envoyé.",
+        );
+      } else {
+        toast.success(
+          "Commande transmise ! Un e-mail de confirmation vient de vous être envoyé.",
+        );
+      }
       form.reset({
         first_name: "",
         last_name: "",
@@ -349,11 +385,46 @@ const Materiels = () => {
                               <FormMessage />
                             </FormItem>
                           )} />
+                          <FormField control={form.control} name={`items.${index}.color`} render={({ field }) => (
+                            <FormItem className="lg:col-span-3">
+                              <FormLabel>Couleur <span className="font-normal text-muted-foreground">(facultatif)</span></FormLabel>
+                              <FormControl><Input placeholder="Ex. rouge" {...field} /></FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )} />
+                          <FormField control={form.control} name={`items.${index}.thickness`} render={({ field }) => (
+                            <FormItem className="lg:col-span-3">
+                              <FormLabel>&Eacute;paisseur <span className="font-normal text-muted-foreground">(facultatif)</span></FormLabel>
+                              <FormControl><Input placeholder="Ex. 2,0 mm" {...field} /></FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )} />
+                          <FormField control={form.control} name={`items.${index}.handle`} render={({ field }) => (
+                            <FormItem className="lg:col-span-3">
+                              <FormLabel>Manche <span className="font-normal text-muted-foreground">(facultatif)</span></FormLabel>
+                              <FormControl><Input placeholder="Ex. concave" {...field} /></FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )} />
+                          <FormField control={form.control} name={`items.${index}.size`} render={({ field }) => (
+                            <FormItem className="lg:col-span-3">
+                              <FormLabel>Taille <span className="font-normal text-muted-foreground">(facultatif)</span></FormLabel>
+                              <FormControl><Input placeholder="Ex. M" {...field} /></FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )} />
+                          <FormField control={form.control} name={`items.${index}.shoe_size`} render={({ field }) => (
+                            <FormItem className="lg:col-span-3">
+                              <FormLabel>Pointure <span className="font-normal text-muted-foreground">(facultatif)</span></FormLabel>
+                              <FormControl><Input inputMode="decimal" placeholder="Ex. 43" {...field} /></FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )} />
                           <FormField control={form.control} name={`items.${index}.option`} render={({ field }) => (
-                            <FormItem className="md:col-span-2 lg:col-span-12">
-                              <FormLabel>Taille, couleur, épaisseur ou autre option</FormLabel>
+                            <FormItem className="md:col-span-2 lg:col-span-9">
+                              <FormLabel>Autre pr&eacute;cision <span className="font-normal text-muted-foreground">(facultatif)</span></FormLabel>
                               <FormControl>
-                                <Input placeholder="Ex. rouge, 2,0 mm, pointure 43…" {...field} />
+                                <Input placeholder="Ex. montage souhait&eacute; ou autre d&eacute;tail" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
