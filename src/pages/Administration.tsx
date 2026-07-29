@@ -1,14 +1,17 @@
 import { type FormEvent, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
 import { Eye, EyeOff, KeyRound, Loader2, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ClubOrdersDashboard from "@/components/admin/ClubOrdersDashboard";
+import EquipmentOrderSlip from "@/components/admin/EquipmentOrderSlip";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 
 const Administration = () => {
+  const location = useLocation();
   const [session, setSession] = useState<Session | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -175,6 +178,10 @@ const Administration = () => {
         </Card>
       </section>
     );
+  }
+
+  if (location.pathname === "/administration/bordereau-commande") {
+    return <EquipmentOrderSlip session={session} />;
   }
 
   return <ClubOrdersDashboard session={session} onSignOut={() => supabase.auth.signOut()} />;

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
-import { Clock3, Loader2, LogOut, PackageCheck, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
+import { ClipboardList, Clock3, Loader2, LogOut, PackageCheck, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -215,9 +216,14 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
           </TabsList>
 
           <TabsContent value="equipment" className="mt-0">
-            <div className="mb-6">
-              <h2 className="text-3xl font-black text-clubDark">Commandes de matériel</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Articles Wack Sport, options demandées et suivi de traitement.</p>
+            <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <h2 className="text-3xl font-black text-clubDark">Commandes de matériel</h2>
+                <p className="mt-1 text-sm text-muted-foreground">Articles Wack Sport, options demandées et suivi de traitement.</p>
+              </div>
+              <Button asChild className="bg-clubDark font-bold hover:bg-clubDark/90">
+                <Link to="/administration/bordereau-commande"><ClipboardList className="mr-2 h-4 w-4" /> Bordereau de commande</Link>
+              </Button>
             </div>
             {isLoading ? (
               <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div>

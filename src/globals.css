@@ -116,3 +116,19 @@
     @apply bg-background text-foreground;
   }
 }
+@media print {
+  body.equipment-order-slip-page * {
+    visibility: hidden;
+  }
+
+  body.equipment-order-slip-page #equipment-order-slip,
+  body.equipment-order-slip-page #equipment-order-slip * {
+    visibility: visible;
+  }
+
+  body.equipment-order-slip-page #equipment-order-slip {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+  }
+}
