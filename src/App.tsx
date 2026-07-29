@@ -34,6 +34,7 @@ import MentionsLegales from "./pages/MentionsLegales";
 import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
 import PolitiqueCookies from "./pages/PolitiqueCookies";
 import DemandeDonnees from "./pages/DemandeDonnees";
+import Administration from "./pages/Administration";
 import { LightboxProvider } from "./context/LightboxContext";
 import CookieConsentBanner from "./components/CookieConsentBanner";
 import React from "react";
@@ -95,6 +96,7 @@ const App = () => (
                 <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
                 <Route path="/politique-cookies" element={<PolitiqueCookies />} />
                 <Route path="/demande-donnees" element={<DemandeDonnees />} />
+                <Route path="/administration" element={<Administration />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>
