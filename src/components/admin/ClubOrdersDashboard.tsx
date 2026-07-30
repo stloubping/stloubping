@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AdminHelpBubble from "@/components/admin/AdminHelpBubble";
+import EquipmentOrderEditor, { type EditableEquipmentOrder } from "@/components/admin/EquipmentOrderEditor";
 import { supabase } from "@/integrations/supabase/client";
 
 type EquipmentItem = {
@@ -136,6 +137,12 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
     } else {
       toast.success("Statut de la commande matériel mis à jour.");
     }
+  };
+
+  const applyEquipmentOrderUpdate = (updatedOrder: EditableEquipmentOrder) => {
+    setEquipmentOrders((current) => current.map((order) => (
+      order.id === updatedOrder.id ? { ...order, ...updatedOrder } : order
+    )));
   };
 
   const updateShirtStatus = async (orderId: string, status: string) => {
@@ -373,10 +380,13 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                           <p className="mt-2 text-sm text-muted-foreground">{order.email} · {order.phone}</p>
                           <p className="mt-1 text-xs text-muted-foreground">{formatOrderDate(order.created_at)} · n° {shortOrderId(order.id)}</p>
                         </div>
-                        <Select value={order.status} onValueChange={(status) => updateEquipmentStatus(order.id, status)}>
-                          <SelectTrigger className="w-full md:w-56"><SelectValue /></SelectTrigger>
-                          <SelectContent>{Object.entries(equipmentStatusLabels).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectContent>
-                        </Select>
+                        <div className="flex w-full flex-col gap-2 sm:flex-row md:w-auto">
+                          <EquipmentOrderEditor order={order} onSaved={applyEquipmentOrderUpdate} />
+                          <Select value={order.status} onValueChange={(status) => updateEquipmentStatus(order.id, status)}>
+                            <SelectTrigger className="w-full md:w-56"><SelectValue /></SelectTrigger>
+                            <SelectContent>{Object.entries(equipmentStatusLabels).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectContent>
+                          </Select>
+                        </div>
                       </CardHeader>
                       <CardContent className="space-y-4 p-5">
                         {order.items.map((item, index) => (
