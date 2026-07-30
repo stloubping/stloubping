@@ -18,7 +18,7 @@ const previousStatus: Record<string, { value: string; label: string }> = {
 };
 const money = (value: number) => value.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
 const numberOf = (order: Order) => order.items[0]?.supplier_order_number || order.id.split("-")[0].toUpperCase();
-const totalOf = (order: Order) => order.items[0]?.supplier_total ?? order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity, 0) * .8;
+const totalOf = (order: Order) => order.items[0]?.supplier_total ?? order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity * (1 - (item.discount_rate ?? 20) / 100), 0);
 
 const EquipmentOrdersRecap = () => {
   const [orders, setOrders] = useState<Order[]>([]);

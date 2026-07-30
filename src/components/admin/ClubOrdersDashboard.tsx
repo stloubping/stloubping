@@ -23,6 +23,7 @@ type EquipmentItem = {
   size?: string | null;
   shoe_size?: string | null;
   option?: string | null;
+  discount_rate?: number | null;
 };
 
 type EquipmentOrder = {
@@ -81,6 +82,7 @@ const itemDetails = (item: EquipmentItem) => [
   item.size && `Taille : ${item.size}`,
   item.shoe_size && `Pointure : ${item.shoe_size}`,
   item.option,
+  (item.discount_rate ?? 20) === 0 ? "Sans remise club" : "Remise club 20 %",
 ].filter(Boolean);
 
 
@@ -204,7 +206,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
         }
 
         const subtotal = order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity, 0);
-        const discountAmount = subtotal * 0.2;
+        const discountAmount = order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity * ((item.discount_rate ?? 20) / 100), 0);
         const indicativeTotal = subtotal - discountAmount;
 
         document.setTextColor(24, 24, 27);
@@ -225,8 +227,8 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
             `${item.designation}\nRéf. ${item.reference}`,
             itemDetails(item).join(" · ") || "-",
             String(item.quantity),
-            formatPrice(item.unit_price ?? 0),
-            formatPrice((item.unit_price ?? 0) * item.quantity),
+            formatPrice((item.unit_price ?? 0) * (1 - (item.discount_rate ?? 20) / 100)),
+            formatPrice((item.unit_price ?? 0) * item.quantity * (1 - (item.discount_rate ?? 20) / 100)),
           ]),
           headStyles: { fillColor: [24, 24, 27], textColor: [255, 255, 255], fontStyle: "bold" },
           styles: { font: "helvetica", fontSize: 8, cellPadding: 2.2, overflow: "linebreak" },
@@ -242,7 +244,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
         cursorY = document.lastAutoTable.finalY + 5;
         document.setFontSize(8);
         document.setTextColor(80, 80, 80);
-        document.text(`Sous-total : ${formatPrice(subtotal)}   ·   Remise club 20 % : - ${formatPrice(discountAmount)}`, pageWidth - margin, cursorY, { align: "right" });
+        document.text(`Sous-total : ${formatPrice(subtotal)}   ·   Remises appliquées par article : - ${formatPrice(discountAmount)}`, pageWidth - margin, cursorY, { align: "right" });
         document.setFont("helvetica", "bold");
         document.setFontSize(10);
         document.setTextColor(239, 68, 68);
@@ -386,7 +388,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
               <div className="space-y-5">
                 {activeEquipmentOrders.map((order) => {
                   const subtotal = order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity, 0);
-                  const discountAmount = subtotal * 0.2;
+                  const discountAmount = order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity * ((item.discount_rate ?? 20) / 100), 0);
                   const indicativeTotal = subtotal - discountAmount;
                   return (
                     <Card key={order.id} className="overflow-hidden border-l-4 border-l-blue-500">
@@ -409,14 +411,14 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                           <div key={`${order.id}-${item.reference}-${index}`} className="rounded-xl bg-clubSection/30 p-4">
                             <div className="flex flex-col justify-between gap-2 sm:flex-row">
                               <div><p className="font-bold">{item.designation}</p><p className="text-sm text-muted-foreground">Réf. {item.reference} · Quantité {item.quantity}</p></div>
-                              <p className="font-black text-clubPrimary">{formatPrice((item.unit_price ?? 0) * item.quantity)}</p>
+                              <p className="font-black text-clubPrimary">{formatPrice((item.unit_price ?? 0) * item.quantity * (1 - (item.discount_rate ?? 20) / 100))}</p>
                             </div>
                             {itemDetails(item).length > 0 && <p className="mt-3 text-sm text-muted-foreground">{itemDetails(item).join(" · ")}</p>}
                           </div>
                         ))}
                         <div className="space-y-2 border-t pt-4">
                           <div className="flex justify-between text-sm text-muted-foreground"><span>Sous-total</span><span>{formatPrice(subtotal)}</span></div>
-                          <div className="flex justify-between text-sm font-bold text-clubPrimary"><span>Remise club (20 %)</span><span>− {formatPrice(discountAmount)}</span></div>
+                          <div className="flex justify-between text-sm font-bold text-clubPrimary"><span>Remises appliquées par article</span><span>− {formatPrice(discountAmount)}</span></div>
                           <div className="flex justify-between border-t pt-2 text-lg font-black"><span className="flex items-center gap-2">Total indicatif <AdminHelpBubble label="Total indicatif" text="Sous-total diminué de la remise club de 20 %. Ce montant reste indicatif jusqu’à la validation du fournisseur." /></span><span>{formatPrice(indicativeTotal)}</span></div>
                         </div>
                         {order.notes && <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900"><strong>Remarque :</strong> {order.notes}</p>}

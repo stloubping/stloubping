@@ -19,6 +19,7 @@ type EquipmentItem = {
   size?: string | null;
   shoe_size?: string | null;
   option?: string | null;
+  discount_rate?: number | null;
 };
 
 type ConfirmedOrder = {
@@ -42,12 +43,14 @@ const optionDetails = (item: EquipmentItem) => [
   item.size && `Taille : ${item.size}`,
   item.shoe_size && `Pointure : ${item.shoe_size}`,
   item.option,
+  (item.discount_rate ?? 20) === 0 ? "Sans remise club" : "Remise club 20 %",
 ].filter(Boolean);
 
 const itemGroupingKey = (item: EquipmentItem) => JSON.stringify([
   item.reference,
   item.designation,
   item.unit_price,
+  item.discount_rate ?? 20,
   item.color,
   item.thickness,
   item.handle,
@@ -111,7 +114,7 @@ const EquipmentOrderSlip = ({ session }: EquipmentOrderSlipProps) => {
       .map((item) => ({
         ...item,
         customers: Array.from(item.customers).sort((a, b) => a.localeCompare(b, "fr")),
-        lineTotal: (item.unit_price ?? 0) * item.quantity,
+        lineTotal: (item.unit_price ?? 0) * item.quantity * (1 - (item.discount_rate ?? 20) / 100),
       }))
       .sort((a, b) => a.designation.localeCompare(b.designation, "fr"));
   }, [orders]);
@@ -182,7 +185,7 @@ const EquipmentOrderSlip = ({ session }: EquipmentOrderSlipProps) => {
                         <td className="px-5 py-4 text-muted-foreground">{optionDetails(item).join(" · ") || "—"}</td>
                         <td className="px-5 py-4 text-muted-foreground">{item.customers.join(", ")}</td>
                         <td className="px-5 py-4 text-center font-black">{item.quantity}</td>
-                        <td className="px-5 py-4 text-right">{formatPrice(item.unit_price ?? 0)}</td>
+                        <td className="px-5 py-4 text-right">{formatPrice((item.unit_price ?? 0) * (1 - (item.discount_rate ?? 20) / 100))}</td>
                         <td className="px-5 py-4 text-right font-black text-clubPrimary">{formatPrice(item.lineTotal)}</td>
                       </tr>
                     ))}
