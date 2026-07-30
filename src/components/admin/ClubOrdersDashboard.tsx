@@ -430,15 +430,40 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                         </div>
                       </CardHeader>
                       <CardContent className="space-y-4 p-5">
-                        {order.items.map((item, index) => (
-                          <div key={`${order.id}-${item.reference}-${index}`} className="rounded-xl bg-clubSection/30 p-4">
-                            <div className="flex flex-col justify-between gap-2 sm:flex-row">
-                              <div><p className="font-bold">{item.designation}</p><p className="text-sm text-muted-foreground">Réf. {item.reference} · Quantité {item.quantity}</p></div>
-                              <p className="font-black text-clubPrimary">{formatPrice((item.unit_price ?? 0) * item.quantity * (1 - (item.discount_rate ?? 20) / 100))}</p>
+                        {order.items.map((item, index) => {
+                          const grossPrice = (item.unit_price ?? 0) * item.quantity;
+                          const discountRate = item.discount_rate ?? 20;
+                          const discount = grossPrice * (discountRate / 100);
+                          const netPrice = grossPrice - discount;
+
+                          return (
+                            <div key={`${order.id}-${item.reference}-${index}`} className="rounded-xl bg-clubSection/30 p-4">
+                              <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+                                <div>
+                                  <p className="font-bold">{item.designation}</p>
+                                  <p className="text-sm text-muted-foreground">Réf. {item.reference} · Quantité {item.quantity}</p>
+                                </div>
+                                <div className="min-w-52 rounded-lg border bg-white px-3 py-2 text-sm">
+                                  <div className="flex justify-between gap-6 text-muted-foreground">
+                                    <span>Avant remise</span>
+                                    <span>{formatPrice(grossPrice)}</span>
+                                  </div>
+                                  {discountRate > 0 && (
+                                    <div className="mt-1 flex justify-between gap-6 text-clubPrimary">
+                                      <span>Remise {discountRate} %</span>
+                                      <span>− {formatPrice(discount)}</span>
+                                    </div>
+                                  )}
+                                  <div className="mt-2 flex justify-between gap-6 border-t pt-2 font-black">
+                                    <span>Après remise</span>
+                                    <span className="text-clubPrimary">{formatPrice(netPrice)}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              {itemDetails(item).length > 0 && <p className="mt-3 text-sm text-muted-foreground">{itemDetails(item).join(" · ")}</p>}
                             </div>
-                            {itemDetails(item).length > 0 && <p className="mt-3 text-sm text-muted-foreground">{itemDetails(item).join(" · ")}</p>}
-                          </div>
-                        ))}
+                          );
+                        })}
                         <div className="space-y-2 border-t pt-4">
                           <div className="flex justify-between text-sm text-muted-foreground"><span>Sous-total</span><span>{formatPrice(subtotal)}</span></div>
                           <div className="flex justify-between text-sm font-bold text-clubPrimary"><span>Remises appliquées par article</span><span>− {formatPrice(discountAmount)}</span></div>
