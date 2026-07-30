@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ArrowLeft, Loader2, Pencil, RotateCcw, Save, X } from "lucide-react";
+import { ArrowLeft, Loader2, PackageCheck, Pencil, RotateCcw, Save, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,7 @@ const EquipmentOrdersRecap = () => {
   const [draft, setDraft] = useState<Draft | null>(null);
   const [saving, setSaving] = useState(false);
   const [revertingId, setRevertingId] = useState<string | null>(null);
+  const [arrivingId, setArrivingId] = useState<string | null>(null);
   const fetchOrders = useCallback(async () => {
     setLoading(true);
     const { data, error } = await supabase.from("equipment_orders").select("id, created_at, first_name, last_name, items, status").in("status", statuses).order("created_at", { ascending: false });
@@ -50,6 +51,16 @@ const EquipmentOrdersRecap = () => {
     setSaving(false);
   };
 
+  const markAsArrived = async (order: Order) => {
+    setArrivingId(order.id);
+    const { error } = await supabase.from("equipment_orders").update({ status: "available" }).eq("id", order.id);
+    if (error) { console.error(error); toast.error("La commande n’a pas pu être marquée comme arrivée au club."); }
+    else {
+      setOrders((current) => current.map((entry) => entry.id === order.id ? { ...entry, status: "available" } : entry));
+      toast.success("Commande marquée « Arrivée au club ».");
+    }
+    setArrivingId(null);
+  };
   const revertStatus = async (order: Order) => {
     const previous = previousStatus[order.status];
     if (!previous) return;
@@ -69,7 +80,7 @@ const EquipmentOrdersRecap = () => {
       <div className="hidden grid-cols-[1fr_1fr_1fr_1fr_auto] gap-4 bg-clubDark px-5 py-4 text-sm font-bold text-white md:grid"><span>Nom</span><span>Prénom</span><span>Somme</span><span>N° de commande</span><span>Action</span></div>
       <div className="divide-y">{orders.map((order) => { const editingDraft = editingId === order.id ? draft : null; return <div key={order.id} className="grid gap-4 p-5 md:grid-cols-[1fr_1fr_1fr_1fr_auto] md:items-center">{editingDraft ? <>
         <Input aria-label="Nom" value={editingDraft.last_name} onChange={(e) => setDraft({ ...editingDraft, last_name: e.target.value })} /><Input aria-label="Prénom" value={editingDraft.first_name} onChange={(e) => setDraft({ ...editingDraft, first_name: e.target.value })} /><Input aria-label="Somme" type="number" min={0} step="0.01" value={editingDraft.total} onChange={(e) => setDraft({ ...editingDraft, total: e.target.value })} /><Input aria-label="Numéro de commande" value={editingDraft.order_number} onChange={(e) => setDraft({ ...editingDraft, order_number: e.target.value })} /><div className="flex gap-2"><Button size="icon" onClick={() => save(order)} disabled={saving} aria-label="Enregistrer">{saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}</Button><Button size="icon" variant="outline" onClick={() => { setEditingId(null); setDraft(null); }} disabled={saving} aria-label="Annuler"><X className="h-4 w-4" /></Button></div>
-      </> : <><p><Label text="Nom" /><strong>{order.last_name}</strong></p><p><Label text="Prénom" />{order.first_name}</p><p className="font-black text-clubPrimary"><Label text="Somme" />{money(totalOf(order))}</p><p className="font-mono font-bold"><Label text="N°" />{numberOf(order)}</p><div className="flex flex-col gap-2 sm:flex-row md:flex-col xl:flex-row"><Button variant="outline" size="sm" onClick={() => edit(order)}><Pencil className="mr-2 h-4 w-4" /> Modifier</Button><Button variant="outline" size="sm" onClick={() => revertStatus(order)} disabled={revertingId === order.id} className="whitespace-nowrap">{revertingId === order.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RotateCcw className="mr-2 h-4 w-4" />} Revenir à « {previousStatus[order.status]?.label} »</Button></div></>}</div>; })}</div>
+      </> : <><p><Label text="Nom" /><strong>{order.last_name}</strong></p><p><Label text="Prénom" />{order.first_name}</p><p className="font-black text-clubPrimary"><Label text="Somme" />{money(totalOf(order))}</p><p className="font-mono font-bold"><Label text="N°" />{numberOf(order)}</p><div className="flex flex-col gap-2 sm:flex-row md:flex-col xl:flex-row"><Button variant="outline" size="sm" onClick={() => edit(order)}><Pencil className="mr-2 h-4 w-4" /> Modifier</Button>{order.status === "ordered" && <Button size="sm" onClick={() => markAsArrived(order)} disabled={arrivingId === order.id} className="whitespace-nowrap bg-clubPrimary font-bold hover:bg-clubPrimary/90">{arrivingId === order.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PackageCheck className="mr-2 h-4 w-4" />} Arrivée au club</Button>}<Button variant="outline" size="sm" onClick={() => revertStatus(order)} disabled={revertingId === order.id} className="whitespace-nowrap">{revertingId === order.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RotateCcw className="mr-2 h-4 w-4" />} Revenir à « {previousStatus[order.status]?.label} »</Button></div></>}</div>; })}</div>
     </Card>}</main>
   </div>;
 };
