@@ -101,6 +101,7 @@ const App = () => (
                 <Route path="/administration/bordereau-maillots" element={<Administration />} />
                 <Route path="/administration/nouvelle-commande-materiel" element={<Administration />} />
                 <Route path="/administration/recap-commandes-materiel" element={<Administration />} />
+                <Route path="/administration/wacksport" element={<Administration />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>

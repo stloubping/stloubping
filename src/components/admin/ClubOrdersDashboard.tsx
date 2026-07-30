@@ -372,6 +372,9 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                 <Button asChild variant="outline" className="font-bold">
                   <Link to="/administration/recap-commandes-materiel"><FileSpreadsheet className="mr-2 h-4 w-4" /> Récapitulatif ({supplierEquipmentCount})</Link>
                 </Button>
+                <Button asChild variant="outline" className="font-bold">
+                  <Link to="/administration/wacksport"><ShoppingBag className="mr-2 h-4 w-4" /> Wack Sport</Link>
+                </Button>
                 <Button variant="outline" onClick={downloadArrivedEquipmentOrders} className="font-bold">
                   <Download className="mr-2 h-4 w-4" /> Télécharger les arrivées (PDF)
                 </Button>
