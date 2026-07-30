@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
-import { CircleEuro, ClipboardList, Clock3, Download, FileSpreadsheet, Loader2, LogOut, PackageCheck, Plus, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
+import { ClipboardList, Clock3, Download, FileSpreadsheet, Loader2, LogOut, PackageCheck, Plus, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -345,7 +345,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
           </Card>
           <Card>
             <CardContent className="flex items-center gap-4 p-5">
-              <CircleEuro className="h-8 w-8 text-emerald-600" />
+              <ShoppingBag className="h-8 w-8 text-emerald-600" />
               <div><p className="text-2xl font-black">{formatPrice(seasonEquipmentTotal)}</p><p className="text-sm text-muted-foreground">matériel · saison {seasonLabel}</p></div>
             </CardContent>
           </Card>          <button type="button" className="text-left" onClick={() => setActiveSection("equipment")}>
