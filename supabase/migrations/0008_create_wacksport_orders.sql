@@ -1,12 +1,16 @@
-﻿CREATE TABLE IF NOT EXISTS public.wacksport_orders (
+CREATE TABLE IF NOT EXISTS public.wacksport_orders (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
   order_number TEXT NOT NULL UNIQUE CHECK (char_length(order_number) BETWEEN 1 AND 80),
   ordered_at DATE NOT NULL,
   received_at DATE,
   paid_at DATE,
-  players_due_at DATE
+  players_due_at DATE,
+  amount NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (amount >= 0)
 );
+
+ALTER TABLE public.wacksport_orders
+ADD COLUMN IF NOT EXISTS amount NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (amount >= 0);
 
 ALTER TABLE public.wacksport_orders ENABLE ROW LEVEL SECURITY;
 
