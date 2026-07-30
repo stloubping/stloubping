@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
-import { ClipboardList, Clock3, Download, Loader2, LogOut, PackageCheck, Plus, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
+import { ClipboardList, Clock3, Download, FileSpreadsheet, Loader2, LogOut, PackageCheck, Plus, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -280,6 +280,9 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
   const shirtsPending = shirtOrders.filter((order) => order.status === "received").length;
   const totalOrders = equipmentOrders.length + shirtOrders.length;
   const totalPending = equipmentPending + shirtsPending;
+  const supplierStatuses = new Set(["ordered", "available", "delivered"]);
+  const activeEquipmentOrders = equipmentOrders.filter((order) => !supplierStatuses.has(order.status));
+  const supplierEquipmentCount = equipmentOrders.length - activeEquipmentOrders.length;
 
   return (
     <div className="min-h-screen bg-clubLight">
@@ -364,6 +367,9 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                 <Button asChild className="bg-clubPrimary font-bold hover:bg-clubPrimary/90">
                   <Link to="/administration/nouvelle-commande-materiel"><Plus className="mr-2 h-4 w-4" /> Nouvelle commande</Link>
                 </Button>
+                <Button asChild variant="outline" className="font-bold">
+                  <Link to="/administration/recap-commandes-materiel"><FileSpreadsheet className="mr-2 h-4 w-4" /> Récapitulatif ({supplierEquipmentCount})</Link>
+                </Button>
                 <Button variant="outline" onClick={downloadArrivedEquipmentOrders} className="font-bold">
                   <Download className="mr-2 h-4 w-4" /> Télécharger les arrivées (PDF)
                 </Button>
@@ -374,11 +380,11 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
             </div>
             {isLoading ? (
               <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div>
-            ) : equipmentOrders.length === 0 ? (
+            ) : activeEquipmentOrders.length === 0 ? (
               <Card><CardContent className="p-10 text-center text-muted-foreground">Aucune commande de matériel enregistrée.</CardContent></Card>
             ) : (
               <div className="space-y-5">
-                {equipmentOrders.map((order) => {
+                {activeEquipmentOrders.map((order) => {
                   const subtotal = order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity, 0);
                   const discountAmount = subtotal * 0.2;
                   const indicativeTotal = subtotal - discountAmount;

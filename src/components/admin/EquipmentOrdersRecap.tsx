@@ -1,0 +1,58 @@
+import { useCallback, useEffect, useState } from "react";
+import { ArrowLeft, Loader2, Pencil, Save, X } from "lucide-react";
+import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { supabase } from "@/integrations/supabase/client";
+import type { EditableEquipmentItem } from "@/components/admin/EquipmentOrderEditor";
+
+type Order = { id: string; created_at: string; first_name: string; last_name: string; items: EditableEquipmentItem[]; status: string };
+type Draft = { first_name: string; last_name: string; order_number: string; total: string };
+const statuses = ["ordered", "available", "delivered"];
+const money = (value: number) => value.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
+const numberOf = (order: Order) => order.items[0]?.supplier_order_number || order.id.split("-")[0].toUpperCase();
+const totalOf = (order: Order) => order.items[0]?.supplier_total ?? order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity, 0) * .8;
+
+const EquipmentOrdersRecap = () => {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [draft, setDraft] = useState<Draft | null>(null);
+  const [saving, setSaving] = useState(false);
+  const fetchOrders = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase.from("equipment_orders").select("id, created_at, first_name, last_name, items, status").in("status", statuses).order("created_at", { ascending: false });
+    if (error) { console.error(error); toast.error("Le récapitulatif n’a pas pu être chargé."); } else setOrders((data ?? []) as Order[]);
+    setLoading(false);
+  }, []);
+  useEffect(() => { fetchOrders(); }, [fetchOrders]);
+
+  const edit = (order: Order) => { setEditingId(order.id); setDraft({ first_name: order.first_name, last_name: order.last_name, order_number: numberOf(order), total: totalOf(order).toFixed(2) }); };
+  const save = async (order: Order) => {
+    if (!draft) return;
+    const total = Number(draft.total.replace(",", "."));
+    if (!draft.first_name.trim() || !draft.last_name.trim() || !draft.order_number.trim()) { toast.error("Le nom, le prénom et le numéro sont obligatoires."); return; }
+    if (!Number.isFinite(total) || total < 0) { toast.error("Saisissez un montant valide."); return; }
+    if (orders.some((entry) => entry.id !== order.id && numberOf(entry).toLowerCase() === draft.order_number.trim().toLowerCase())) { toast.error("Ce numéro de commande est déjà utilisé."); return; }
+    const items = order.items.map((item, index) => index === 0 ? { ...item, supplier_order_number: draft.order_number.trim(), supplier_total: total } : item);
+    setSaving(true);
+    const { error } = await supabase.from("equipment_orders").update({ first_name: draft.first_name.trim(), last_name: draft.last_name.trim(), items }).eq("id", order.id);
+    if (error) { console.error(error); toast.error("Les modifications n’ont pas pu être enregistrées."); }
+    else { setOrders((current) => current.map((entry) => entry.id === order.id ? { ...entry, first_name: draft.first_name.trim(), last_name: draft.last_name.trim(), items } : entry)); setEditingId(null); setDraft(null); toast.success("Récapitulatif mis à jour."); }
+    setSaving(false);
+  };
+
+  return <div className="min-h-screen bg-clubLight">
+    <section className="bg-clubDark px-4 py-8 text-white"><div className="container mx-auto"><Button asChild variant="ghost" className="mb-4 -ml-4 text-white hover:bg-white/10 hover:text-white"><Link to="/administration"><ArrowLeft className="mr-2 h-4 w-4" /> Retour aux commandes</Link></Button><p className="text-sm font-extrabold uppercase tracking-[0.18em] text-clubPrimary">Commandes fournisseur</p><h1 className="mt-2 text-3xl font-black md:text-4xl">Récapitulatif des commandes</h1><p className="mt-2 text-white/65">Commandes transmises au fournisseur, arrivées au club ou déjà remises.</p></div></section>
+    <main className="container mx-auto px-4 py-8">{loading ? <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div> : orders.length === 0 ? <Card><CardContent className="py-14 text-center text-muted-foreground">Aucune commande transmise au fournisseur.</CardContent></Card> : <Card className="overflow-hidden">
+      <div className="hidden grid-cols-[1fr_1fr_1fr_1fr_auto] gap-4 bg-clubDark px-5 py-4 text-sm font-bold text-white md:grid"><span>Nom</span><span>Prénom</span><span>Somme</span><span>N° de commande</span><span>Action</span></div>
+      <div className="divide-y">{orders.map((order) => { const editingDraft = editingId === order.id ? draft : null; return <div key={order.id} className="grid gap-4 p-5 md:grid-cols-[1fr_1fr_1fr_1fr_auto] md:items-center">{editingDraft ? <>
+        <Input aria-label="Nom" value={editingDraft.last_name} onChange={(e) => setDraft({ ...editingDraft, last_name: e.target.value })} /><Input aria-label="Prénom" value={editingDraft.first_name} onChange={(e) => setDraft({ ...editingDraft, first_name: e.target.value })} /><Input aria-label="Somme" type="number" min={0} step="0.01" value={editingDraft.total} onChange={(e) => setDraft({ ...editingDraft, total: e.target.value })} /><Input aria-label="Numéro de commande" value={editingDraft.order_number} onChange={(e) => setDraft({ ...editingDraft, order_number: e.target.value })} /><div className="flex gap-2"><Button size="icon" onClick={() => save(order)} disabled={saving} aria-label="Enregistrer">{saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}</Button><Button size="icon" variant="outline" onClick={() => { setEditingId(null); setDraft(null); }} disabled={saving} aria-label="Annuler"><X className="h-4 w-4" /></Button></div>
+      </> : <><p><Label text="Nom" /><strong>{order.last_name}</strong></p><p><Label text="Prénom" />{order.first_name}</p><p className="font-black text-clubPrimary"><Label text="Somme" />{money(totalOf(order))}</p><p className="font-mono font-bold"><Label text="N°" />{numberOf(order)}</p><Button variant="outline" size="sm" onClick={() => edit(order)}><Pencil className="mr-2 h-4 w-4" /> Modifier</Button></>}</div>; })}</div>
+    </Card>}</main>
+  </div>;
+};
+const Label = ({ text }: { text: string }) => <span className="mr-2 text-xs font-bold uppercase text-muted-foreground md:hidden">{text}</span>;
+export default EquipmentOrdersRecap;

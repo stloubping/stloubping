@@ -9,6 +9,7 @@ import ClubOrdersDashboard from "@/components/admin/ClubOrdersDashboard";
 import EquipmentOrderSlip from "@/components/admin/EquipmentOrderSlip";
 import ShirtOrderSlip from "@/components/admin/ShirtOrderSlip";
 import NewEquipmentOrder from "@/components/admin/NewEquipmentOrder";
+import EquipmentOrdersRecap from "@/components/admin/EquipmentOrdersRecap";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -192,6 +193,10 @@ const Administration = () => {
 
   if (location.pathname === "/administration/nouvelle-commande-materiel") {
     return <NewEquipmentOrder />;
+  }
+
+  if (location.pathname === "/administration/recap-commandes-materiel") {
+    return <EquipmentOrdersRecap />;
   }
 
   return <ClubOrdersDashboard session={session} onSignOut={() => supabase.auth.signOut()} />;

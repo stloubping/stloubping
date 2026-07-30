@@ -26,6 +26,8 @@ export type EditableEquipmentItem = {
   size?: string | null;
   shoe_size?: string | null;
   option?: string | null;
+  supplier_order_number?: string | null;
+  supplier_total?: number | null;
 };
 
 export type EditableEquipmentOrder = {
@@ -140,6 +142,8 @@ const EquipmentOrderEditor = ({ order, onSaved }: EquipmentOrderEditorProps) => 
       size: optionalValue(item.size ?? ""),
       shoe_size: optionalValue(item.shoe_size ?? ""),
       option: optionalValue(item.option ?? ""),
+      supplier_order_number: item.supplier_order_number ?? null,
+      supplier_total: item.supplier_total ?? null,
     }));
 
     const updatedOrder: EditableEquipmentOrder = {
