@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
-import { ClipboardList, Clock3, Download, FileSpreadsheet, Loader2, LogOut, PackageCheck, Plus, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
+import { CircleEuro, ClipboardList, Clock3, Download, FileSpreadsheet, Loader2, LogOut, PackageCheck, Plus, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,6 +24,7 @@ type EquipmentItem = {
   shoe_size?: string | null;
   option?: string | null;
   discount_rate?: number | null;
+  supplier_total?: number | null;
 };
 
 type EquipmentOrder = {
@@ -285,6 +286,20 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
   const supplierStatuses = new Set(["ordered", "available", "delivered"]);
   const activeEquipmentOrders = equipmentOrders.filter((order) => !supplierStatuses.has(order.status));
   const supplierEquipmentCount = equipmentOrders.length - activeEquipmentOrders.length;
+  const today = new Date();
+  const seasonStartYear = today.getMonth() >= 6 ? today.getFullYear() : today.getFullYear() - 1;
+  const seasonStart = new Date(seasonStartYear, 6, 1);
+  const seasonEnd = new Date(seasonStartYear + 1, 6, 1);
+  const seasonEquipmentTotal = equipmentOrders
+    .filter((order) => {
+      const createdAt = new Date(order.created_at);
+      return order.status !== "cancelled" && createdAt >= seasonStart && createdAt < seasonEnd;
+    })
+    .reduce((sum, order) => sum + (
+      order.items[0]?.supplier_total
+      ?? order.items.reduce((orderSum, item) => orderSum + (item.unit_price ?? 0) * item.quantity * (1 - (item.discount_rate ?? 20) / 100), 0)
+    ), 0);
+  const seasonLabel = `${seasonStartYear}-${seasonStartYear + 1}`;
 
   return (
     <div className="min-h-screen bg-clubLight">
@@ -315,7 +330,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
       </section>
 
       <main className="container mx-auto px-4 py-8 md:py-10">
-        <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
           <Card>
             <CardContent className="flex items-center gap-4 p-5">
               <ShoppingBag className="h-8 w-8 text-clubPrimary" />
@@ -328,7 +343,12 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
               <div><p className="text-3xl font-black">{totalPending}</p><p className="text-sm text-muted-foreground">commandes à traiter</p></div>
             </CardContent>
           </Card>
-          <button type="button" className="text-left" onClick={() => setActiveSection("equipment")}>
+          <Card>
+            <CardContent className="flex items-center gap-4 p-5">
+              <CircleEuro className="h-8 w-8 text-emerald-600" />
+              <div><p className="text-2xl font-black">{formatPrice(seasonEquipmentTotal)}</p><p className="text-sm text-muted-foreground">matériel · saison {seasonLabel}</p></div>
+            </CardContent>
+          </Card>          <button type="button" className="text-left" onClick={() => setActiveSection("equipment")}>
             <Card className={`h-full transition ${activeSection === "equipment" ? "border-clubPrimary ring-2 ring-clubPrimary/20" : "hover:border-clubPrimary/40"}`}>
               <CardContent className="flex items-center gap-4 p-5">
                 <PackageCheck className="h-8 w-8 text-blue-600" />
