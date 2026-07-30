@@ -8,6 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ClubOrdersDashboard from "@/components/admin/ClubOrdersDashboard";
 import EquipmentOrderSlip from "@/components/admin/EquipmentOrderSlip";
 import ShirtOrderSlip from "@/components/admin/ShirtOrderSlip";
+import NewEquipmentOrder from "@/components/admin/NewEquipmentOrder";
+import EquipmentOrdersRecap from "@/components/admin/EquipmentOrdersRecap";
+import WackSportOrders from "@/components/admin/WackSportOrders";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -187,6 +190,18 @@ const Administration = () => {
 
   if (location.pathname === "/administration/bordereau-maillots") {
     return <ShirtOrderSlip session={session} />;
+  }
+
+  if (location.pathname === "/administration/nouvelle-commande-materiel") {
+    return <NewEquipmentOrder />;
+  }
+
+  if (location.pathname === "/administration/recap-commandes-materiel") {
+    return <EquipmentOrdersRecap />;
+  }
+
+  if (location.pathname === "/administration/wacksport") {
+    return <WackSportOrders />;
   }
 
   return <ClubOrdersDashboard session={session} onSignOut={() => supabase.auth.signOut()} />;

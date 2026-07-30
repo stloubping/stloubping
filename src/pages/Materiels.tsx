@@ -43,6 +43,7 @@ const orderItemSchema = z.object({
   size: z.string().trim().max(80).optional(),
   shoe_size: z.string().trim().max(80).optional(),
   option: z.string().trim().max(150).optional(),
+  discount_applied: z.boolean(),
   unit_price: z
     .string()
     .trim()
@@ -93,6 +94,7 @@ const emptyItem = {
   shoe_size: "",
   option: "",
   unit_price: "",
+  discount_applied: true,
 };
 
 const Materiels = () => {
@@ -128,7 +130,7 @@ const Materiels = () => {
       .replace(",", ".");
     const price = Number(normalizedPrice);
     const quantity = Number(item.quantity) || 0;
-    return total + (Number.isFinite(price) ? price * quantity : 0);
+    return total + (Number.isFinite(price) ? price * quantity * (item.discount_applied ? 0.8 : 1) : 0);
   }, 0);
 
   const fetchOrders = useCallback(async () => {
@@ -163,6 +165,7 @@ const Materiels = () => {
       size: item.size || null,
       shoe_size: item.shoe_size || null,
       option: item.option || null,
+      discount_rate: item.discount_applied ? 20 : 0,
       unit_price: item.unit_price
         ? Number(item.unit_price.replace(",", "."))
         : null,
@@ -385,7 +388,12 @@ const Materiels = () => {
                               <FormMessage />
                             </FormItem>
                           )} />
-                          <FormField control={form.control} name={`items.${index}.color`} render={({ field }) => (
+                          <FormField control={form.control} name={`items.${index}.discount_applied`} render={({ field }) => (
+                            <FormItem className="flex items-center gap-3 rounded-lg border p-3 lg:col-span-2">
+                              <FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                              <FormLabel className="!mt-0 cursor-pointer">Appliquer la remise club de 20 %</FormLabel>
+                            </FormItem>
+                          )} />                          <FormField control={form.control} name={`items.${index}.color`} render={({ field }) => (
                             <FormItem className="lg:col-span-3">
                               <FormLabel>Couleur <span className="font-normal text-muted-foreground">(facultatif)</span></FormLabel>
                               <FormControl><Input placeholder="Ex. rouge" {...field} /></FormControl>

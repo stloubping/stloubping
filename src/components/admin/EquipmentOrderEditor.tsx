@@ -26,6 +26,9 @@ export type EditableEquipmentItem = {
   size?: string | null;
   shoe_size?: string | null;
   option?: string | null;
+  discount_rate?: number | null;
+  supplier_order_number?: string | null;
+  supplier_total?: number | null;
 };
 
 export type EditableEquipmentOrder = {
@@ -58,6 +61,7 @@ const emptyItem: EditableEquipmentItem = {
   size: null,
   shoe_size: null,
   option: null,
+  discount_rate: 20,
 };
 
 const createDraft = (order: EditableEquipmentOrder): EquipmentOrderDraft => ({
@@ -140,6 +144,9 @@ const EquipmentOrderEditor = ({ order, onSaved }: EquipmentOrderEditorProps) => 
       size: optionalValue(item.size ?? ""),
       shoe_size: optionalValue(item.shoe_size ?? ""),
       option: optionalValue(item.option ?? ""),
+      discount_rate: item.discount_rate ?? 20,
+      supplier_order_number: item.supplier_order_number ?? null,
+      supplier_total: item.supplier_total ?? null,
     }));
 
     const updatedOrder: EditableEquipmentOrder = {
@@ -230,7 +237,7 @@ const EquipmentOrderEditor = ({ order, onSaved }: EquipmentOrderEditorProps) => 
                 <label className="space-y-2 text-sm font-bold">Référence<Input value={item.reference} onChange={(event) => updateItem(index, "reference", event.target.value)} /></label>
                 <label className="space-y-2 text-sm font-bold sm:col-span-2">Désignation<Input value={item.designation} onChange={(event) => updateItem(index, "designation", event.target.value)} /></label>
                 <label className="space-y-2 text-sm font-bold">Quantité<Input type="number" min={1} max={99} value={item.quantity} onChange={(event) => updateItem(index, "quantity", Number(event.target.value))} /></label>
-                <label className="space-y-2 text-sm font-bold">Prix unitaire (€)<Input type="number" min={0} step="0.01" value={item.unit_price ?? ""} onChange={(event) => updateItem(index, "unit_price", event.target.value === "" ? null : Number(event.target.value))} /></label>
+                <label className="space-y-2 text-sm font-bold">Prix unitaire (€)<Input type="number" min={0} step="0.01" value={item.unit_price ?? ""} onChange={(event) => updateItem(index, "unit_price", event.target.value === "" ? null : Number(event.target.value))} /></label><label className="flex items-center gap-3 rounded-lg border p-3 text-sm font-bold"><input type="checkbox" checked={(item.discount_rate ?? 20) === 20} onChange={(event) => updateItem(index, "discount_rate", event.target.checked ? 20 : 0)} className="h-4 w-4 accent-clubPrimary" /> Remise club de 20 %</label>
                 <label className="space-y-2 text-sm font-bold">Couleur<Input value={item.color ?? ""} onChange={(event) => updateItem(index, "color", event.target.value)} /></label>
                 <label className="space-y-2 text-sm font-bold">Épaisseur<Input value={item.thickness ?? ""} onChange={(event) => updateItem(index, "thickness", event.target.value)} /></label>
                 <label className="space-y-2 text-sm font-bold">Manche<Input value={item.handle ?? ""} onChange={(event) => updateItem(index, "handle", event.target.value)} /></label>

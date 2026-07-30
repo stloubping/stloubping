@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
-import { ClipboardList, Clock3, Download, Loader2, LogOut, PackageCheck, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
+import { ClipboardList, Clock3, Download, FileSpreadsheet, Loader2, LogOut, PackageCheck, Plus, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,6 +23,8 @@ type EquipmentItem = {
   size?: string | null;
   shoe_size?: string | null;
   option?: string | null;
+  discount_rate?: number | null;
+  supplier_total?: number | null;
 };
 
 type EquipmentOrder = {
@@ -81,6 +83,7 @@ const itemDetails = (item: EquipmentItem) => [
   item.size && `Taille : ${item.size}`,
   item.shoe_size && `Pointure : ${item.shoe_size}`,
   item.option,
+  (item.discount_rate ?? 20) === 0 ? "Sans remise club" : "Remise club 20 %",
 ].filter(Boolean);
 
 
@@ -204,7 +207,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
         }
 
         const subtotal = order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity, 0);
-        const discountAmount = subtotal * 0.2;
+        const discountAmount = order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity * ((item.discount_rate ?? 20) / 100), 0);
         const indicativeTotal = subtotal - discountAmount;
 
         document.setTextColor(24, 24, 27);
@@ -225,8 +228,8 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
             `${item.designation}\nRéf. ${item.reference}`,
             itemDetails(item).join(" · ") || "-",
             String(item.quantity),
-            formatPrice(item.unit_price ?? 0),
-            formatPrice((item.unit_price ?? 0) * item.quantity),
+            formatPrice((item.unit_price ?? 0) * (1 - (item.discount_rate ?? 20) / 100)),
+            formatPrice((item.unit_price ?? 0) * item.quantity * (1 - (item.discount_rate ?? 20) / 100)),
           ]),
           headStyles: { fillColor: [24, 24, 27], textColor: [255, 255, 255], fontStyle: "bold" },
           styles: { font: "helvetica", fontSize: 8, cellPadding: 2.2, overflow: "linebreak" },
@@ -242,7 +245,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
         cursorY = document.lastAutoTable.finalY + 5;
         document.setFontSize(8);
         document.setTextColor(80, 80, 80);
-        document.text(`Sous-total : ${formatPrice(subtotal)}   ·   Remise club 20 % : - ${formatPrice(discountAmount)}`, pageWidth - margin, cursorY, { align: "right" });
+        document.text(`Sous-total : ${formatPrice(subtotal)}   ·   Remises appliquées par article : - ${formatPrice(discountAmount)}`, pageWidth - margin, cursorY, { align: "right" });
         document.setFont("helvetica", "bold");
         document.setFontSize(10);
         document.setTextColor(239, 68, 68);
@@ -280,6 +283,23 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
   const shirtsPending = shirtOrders.filter((order) => order.status === "received").length;
   const totalOrders = equipmentOrders.length + shirtOrders.length;
   const totalPending = equipmentPending + shirtsPending;
+  const supplierStatuses = new Set(["ordered", "available", "delivered"]);
+  const activeEquipmentOrders = equipmentOrders.filter((order) => !supplierStatuses.has(order.status));
+  const supplierEquipmentCount = equipmentOrders.length - activeEquipmentOrders.length;
+  const today = new Date();
+  const seasonStartYear = today.getMonth() >= 6 ? today.getFullYear() : today.getFullYear() - 1;
+  const seasonStart = new Date(seasonStartYear, 6, 1);
+  const seasonEnd = new Date(seasonStartYear + 1, 6, 1);
+  const seasonEquipmentTotal = equipmentOrders
+    .filter((order) => {
+      const createdAt = new Date(order.created_at);
+      return order.status !== "cancelled" && createdAt >= seasonStart && createdAt < seasonEnd;
+    })
+    .reduce((sum, order) => sum + (
+      order.items[0]?.supplier_total
+      ?? order.items.reduce((orderSum, item) => orderSum + (item.unit_price ?? 0) * item.quantity * (1 - (item.discount_rate ?? 20) / 100), 0)
+    ), 0);
+  const seasonLabel = `${seasonStartYear}-${seasonStartYear + 1}`;
 
   return (
     <div className="min-h-screen bg-clubLight">
@@ -310,7 +330,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
       </section>
 
       <main className="container mx-auto px-4 py-8 md:py-10">
-        <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
           <Card>
             <CardContent className="flex items-center gap-4 p-5">
               <ShoppingBag className="h-8 w-8 text-clubPrimary" />
@@ -323,7 +343,12 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
               <div><p className="text-3xl font-black">{totalPending}</p><p className="text-sm text-muted-foreground">commandes à traiter</p></div>
             </CardContent>
           </Card>
-          <button type="button" className="text-left" onClick={() => setActiveSection("equipment")}>
+          <Card>
+            <CardContent className="flex items-center gap-4 p-5">
+              <ShoppingBag className="h-8 w-8 text-emerald-600" />
+              <div><p className="text-2xl font-black">{formatPrice(seasonEquipmentTotal)}</p><p className="text-sm text-muted-foreground">matériel · saison {seasonLabel}</p></div>
+            </CardContent>
+          </Card>          <button type="button" className="text-left" onClick={() => setActiveSection("equipment")}>
             <Card className={`h-full transition ${activeSection === "equipment" ? "border-clubPrimary ring-2 ring-clubPrimary/20" : "hover:border-clubPrimary/40"}`}>
               <CardContent className="flex items-center gap-4 p-5">
                 <PackageCheck className="h-8 w-8 text-blue-600" />
@@ -361,6 +386,15 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                 <p className="mt-1 text-sm text-muted-foreground">Articles Wack Sport, options demandées et suivi de traitement.</p>
               </div>
               <div className="flex flex-col gap-2 sm:flex-row">
+                <Button asChild className="bg-clubPrimary font-bold hover:bg-clubPrimary/90">
+                  <Link to="/administration/nouvelle-commande-materiel"><Plus className="mr-2 h-4 w-4" /> Nouvelle commande</Link>
+                </Button>
+                <Button asChild variant="outline" className="font-bold">
+                  <Link to="/administration/recap-commandes-materiel"><FileSpreadsheet className="mr-2 h-4 w-4" /> Récapitulatif ({supplierEquipmentCount})</Link>
+                </Button>
+                <Button asChild variant="outline" className="font-bold">
+                  <Link to="/administration/wacksport"><ShoppingBag className="mr-2 h-4 w-4" /> Wack Sport</Link>
+                </Button>
                 <Button variant="outline" onClick={downloadArrivedEquipmentOrders} className="font-bold">
                   <Download className="mr-2 h-4 w-4" /> Télécharger les arrivées (PDF)
                 </Button>
@@ -371,13 +405,13 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
             </div>
             {isLoading ? (
               <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div>
-            ) : equipmentOrders.length === 0 ? (
+            ) : activeEquipmentOrders.length === 0 ? (
               <Card><CardContent className="p-10 text-center text-muted-foreground">Aucune commande de matériel enregistrée.</CardContent></Card>
             ) : (
               <div className="space-y-5">
-                {equipmentOrders.map((order) => {
+                {activeEquipmentOrders.map((order) => {
                   const subtotal = order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity, 0);
-                  const discountAmount = subtotal * 0.2;
+                  const discountAmount = order.items.reduce((sum, item) => sum + (item.unit_price ?? 0) * item.quantity * ((item.discount_rate ?? 20) / 100), 0);
                   const indicativeTotal = subtotal - discountAmount;
                   return (
                     <Card key={order.id} className="overflow-hidden border-l-4 border-l-blue-500">
@@ -400,14 +434,14 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                           <div key={`${order.id}-${item.reference}-${index}`} className="rounded-xl bg-clubSection/30 p-4">
                             <div className="flex flex-col justify-between gap-2 sm:flex-row">
                               <div><p className="font-bold">{item.designation}</p><p className="text-sm text-muted-foreground">Réf. {item.reference} · Quantité {item.quantity}</p></div>
-                              <p className="font-black text-clubPrimary">{formatPrice((item.unit_price ?? 0) * item.quantity)}</p>
+                              <p className="font-black text-clubPrimary">{formatPrice((item.unit_price ?? 0) * item.quantity * (1 - (item.discount_rate ?? 20) / 100))}</p>
                             </div>
                             {itemDetails(item).length > 0 && <p className="mt-3 text-sm text-muted-foreground">{itemDetails(item).join(" · ")}</p>}
                           </div>
                         ))}
                         <div className="space-y-2 border-t pt-4">
                           <div className="flex justify-between text-sm text-muted-foreground"><span>Sous-total</span><span>{formatPrice(subtotal)}</span></div>
-                          <div className="flex justify-between text-sm font-bold text-clubPrimary"><span>Remise club (20 %)</span><span>− {formatPrice(discountAmount)}</span></div>
+                          <div className="flex justify-between text-sm font-bold text-clubPrimary"><span>Remises appliquées par article</span><span>− {formatPrice(discountAmount)}</span></div>
                           <div className="flex justify-between border-t pt-2 text-lg font-black"><span className="flex items-center gap-2">Total indicatif <AdminHelpBubble label="Total indicatif" text="Sous-total diminué de la remise club de 20 %. Ce montant reste indicatif jusqu’à la validation du fournisseur." /></span><span>{formatPrice(indicativeTotal)}</span></div>
                         </div>
                         {order.notes && <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900"><strong>Remarque :</strong> {order.notes}</p>}
