@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
-import { ClipboardList, Clock3, Download, Loader2, LogOut, PackageCheck, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
+import { ClipboardList, Clock3, Download, Loader2, LogOut, PackageCheck, Plus, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -361,6 +361,9 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                 <p className="mt-1 text-sm text-muted-foreground">Articles Wack Sport, options demandées et suivi de traitement.</p>
               </div>
               <div className="flex flex-col gap-2 sm:flex-row">
+                <Button asChild className="bg-clubPrimary font-bold hover:bg-clubPrimary/90">
+                  <Link to="/administration/nouvelle-commande-materiel"><Plus className="mr-2 h-4 w-4" /> Nouvelle commande</Link>
+                </Button>
                 <Button variant="outline" onClick={downloadArrivedEquipmentOrders} className="font-bold">
                   <Download className="mr-2 h-4 w-4" /> Télécharger les arrivées (PDF)
                 </Button>

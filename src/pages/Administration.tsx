@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ClubOrdersDashboard from "@/components/admin/ClubOrdersDashboard";
 import EquipmentOrderSlip from "@/components/admin/EquipmentOrderSlip";
 import ShirtOrderSlip from "@/components/admin/ShirtOrderSlip";
+import NewEquipmentOrder from "@/components/admin/NewEquipmentOrder";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -187,6 +188,10 @@ const Administration = () => {
 
   if (location.pathname === "/administration/bordereau-maillots") {
     return <ShirtOrderSlip session={session} />;
+  }
+
+  if (location.pathname === "/administration/nouvelle-commande-materiel") {
+    return <NewEquipmentOrder />;
   }
 
   return <ClubOrdersDashboard session={session} onSignOut={() => supabase.auth.signOut()} />;
