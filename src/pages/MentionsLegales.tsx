@@ -28,7 +28,7 @@ const MentionsLegales = () => {
           <div>
             <h3 className="font-semibold text-clubDark">Contact :</h3>
             <p>Email : saintloubping@laposte.net</p>
-            <p>Téléphone : 07 62 27 56 96</p>
+            <p>Téléphone : 06 88 46 68 59</p>
           </div>
           <div>
             <h3 className="font-semibold text-clubDark">Date de Création :</h3>
@@ -36,7 +36,7 @@ const MentionsLegales = () => {
           </div>
           <div>
             <h3 className="font-semibold text-clubDark">Directeur de la Publication :</h3>
-            <p>Philippe Roux (Président)</p>
+            <p>Yves Mounede (Président)</p>
           </div>
         </CardContent>
       </Card>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Check, KeyRound, Loader2, LockKeyhole, Users, X } from "lucide-react";
+import { Check, Clock3, KeyRound, Loader2, LockKeyhole, Users, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -92,7 +92,8 @@ const WeeklyRoomAttendance = () => {
         const hasKeys = keyDays.has(day.dateKey);
         const busy = submitting === day.dateKey;
         return <article key={day.dateKey} className={`rounded-xl border p-3 text-center ${value.is_open ? "border-clubPrimary/25 bg-clubPrimary/5" : "bg-muted/40"}`}>
-          <p className="font-bold text-clubDark">{day.label}</p><p className="mb-3 text-xs text-muted-foreground">{day.shortDate}</p>
+          <p className="font-bold text-clubDark">{day.label}</p><p className="text-xs text-muted-foreground">{day.shortDate}</p>
+          <p className="mb-3 mt-1 flex items-center justify-center gap-1 text-xs font-bold text-clubPrimary"><Clock3 className="h-3.5 w-3.5" />{day.timeLabel}</p>
           <div className="flex items-center justify-center gap-1.5 font-bold"><Users className="h-4 w-4 text-clubPrimary" />{loading ? "-" : value.player_count}</div>
           <p className="mb-3 mt-1 text-[11px] text-muted-foreground"><KeyRound className="mr-1 inline h-3 w-3" />{value.key_holder_count} avec les cl&eacute;s</p>
           <Button size="sm" className="min-h-9 h-auto w-full whitespace-normal px-2 text-xs" variant={attending ? "outline" : "default"} disabled={loading || busy || (!value.is_open && !attending)} onClick={() => void saveChoice(day.dateKey, !attending, false)}>

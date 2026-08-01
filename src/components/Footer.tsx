@@ -54,7 +54,7 @@ const Footer = () => {
             <ul className="space-y-2 text-sm text-clubDark-foreground/80">
               <li className="flex items-center justify-center md:justify-start"><MapPin size={16} className="mr-2 text-clubPrimary" /> Imp. Max Linder, 33450 Saint-Loubès, France</li>
               <li className="flex items-center justify-center md:justify-start"><Mail size={16} className="mr-2 text-clubPrimary" /> <span className="font-semibold">saintloubping@laposte.net</span></li>
-              <li className="flex items-center justify-center md:justify-start"><Phone size={16} className="mr-2 text-clubPrimary" /> <span className="font-semibold">07 62 27 56 96</span></li>
+              <li className="flex items-center justify-center md:justify-start"><Phone size={16} className="mr-2 text-clubPrimary" /> <a href="tel:+33688466859" className="font-semibold hover:text-clubPrimary">06 88 46 68 59</a></li>
             </ul>
           </div>
         </div>

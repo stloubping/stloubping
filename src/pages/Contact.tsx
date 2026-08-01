@@ -29,7 +29,7 @@ const Contact = () => {
               <Phone className="mr-3 h-5 w-5 text-clubPrimary" />
               <div>
                 <p className="font-semibold">Téléphone :</p>
-                <p><span className="font-semibold">07 62 27 56 96</span></p>
+                <p><a href="tel:+33688466859" className="font-semibold hover:text-clubPrimary">06 88 46 68 59</a></p>
               </div>
             </div>
             <div className="flex items-center">

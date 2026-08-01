@@ -56,7 +56,7 @@ const WeeklyRoomAttendanceAdmin = () => {
           const value = days[day.dateKey] || { is_open: false, player_count: 0, key_holder_count: 0 };
           const busy = saving === day.dateKey || saving === "all";
           return <div key={day.dateKey} className="flex items-center justify-between rounded-xl border bg-white p-4">
-            <div><p className="font-bold text-clubDark">{day.label} <span className="font-normal text-muted-foreground">{day.shortDate}</span></p>
+            <div><p className="font-bold text-clubDark">{day.label} <span className="font-normal text-muted-foreground">{day.shortDate} &middot; {day.timeLabel}</span></p>
               <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground"><Users className="h-4 w-4" />{value.player_count} joueur{value.player_count > 1 ? "s" : ""} &middot; {value.key_holder_count} avec les cl&eacute;s</p></div>
             <div className="flex items-center gap-3"><span className={`text-sm font-semibold ${value.is_open ? "text-emerald-600" : "text-muted-foreground"}`}>{value.is_open ? "Ouvert" : "Fermé"}</span>
               {busy ? <Loader2 className="h-5 w-5 animate-spin" /> : <Switch checked={value.is_open} disabled={loading || saving !== null} onCheckedChange={(checked) => void save([day.dateKey], checked)} aria-label={`${value.is_open ? "Fermer" : "Ouvrir"} le ${day.label}`} />}</div>

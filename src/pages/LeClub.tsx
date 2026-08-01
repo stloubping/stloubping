@@ -46,10 +46,10 @@ const LeClub = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                 <div className="p-4 bg-clubSection rounded-lg shadow-sm">
                   <h3 className="text-xl font-semibold text-clubDark">Licenciés</h3>
-                  <p className="text-3xl font-bold text-clubPrimary">129</p>
+                  <p className="text-3xl font-bold text-clubPrimary">141</p>
                   <p className="text-sm text-clubLight-foreground">35% compétiteurs</p>
-                  <p className="text-sm text-clubLight-foreground">50% jeunes</p>
-                  <p className="text-sm text-clubLight-foreground">6 féminines</p>
+                  <p className="text-sm text-clubLight-foreground">51% jeunes</p>
+                  <p className="text-sm text-clubLight-foreground">7 f&eacute;minines</p>
                 </div>
                 <div className="p-4 bg-clubSection rounded-lg shadow-sm">
                   <h3 className="text-xl font-semibold text-clubDark">Équipes Adultes</h3>
@@ -176,25 +176,36 @@ const LeClub = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img loading="lazy" decoding="async"
-                    src="/images/team/philippe-roux.jpg"
-                    alt="Président"
-                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
-                    onClick={() => openLightbox("/images/team/philippe-roux.jpg")}
-                  />
-                  <h4 className="font-semibold text-lg text-clubDark">Philippe Roux</h4>
-                  <p className="text-sm text-muted-foreground">Président</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Visionnaire et pilier du club, il assure la direction générale.</p>
-                </div>
-                <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img loading="lazy" decoding="async"
                     src="/images/team/yves-mounede.jpg"
-                    alt="Vice-Président"
+                    alt="Yves Mounede, président"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
                     onClick={() => openLightbox("/images/team/yves-mounede.jpg")}
                   />
                   <h4 className="font-semibold text-lg text-clubDark">Yves Mounede</h4>
-                  <p className="text-sm text-muted-foreground">Vice-Président</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Soutient le président et participe à la gestion du club.</p>
+                  <p className="text-sm text-muted-foreground">Pr&eacute;sident</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Assure la direction g&eacute;n&eacute;rale et repr&eacute;sente le club.</p>
+                </div>
+                <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
+                  <img loading="lazy" decoding="async"
+                    src="/images/team/yann.jpg"
+                    alt="Yann Stolarsky, vice-président"
+                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
+                    onClick={() => openLightbox("/images/team/yann.jpg")}
+                  />
+                  <h4 className="font-semibold text-lg text-clubDark">Yann Stolarsky</h4>
+                  <p className="text-sm text-muted-foreground">Vice-pr&eacute;sident</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Participe &agrave; la gestion du club et seconde le pr&eacute;sident.</p>
+                </div>
+                <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
+                  <img loading="lazy" decoding="async"
+                    src="/images/team/nicolas-vendramini.jpg"
+                    alt="Nicolas Vendramini, vice-president"
+                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
+                    onClick={() => openLightbox("/images/team/nicolas-vendramini.jpg")}
+                  />
+                  <h4 className="font-semibold text-lg text-clubDark">Nicolas Vendramini</h4>
+                  <p className="text-sm text-muted-foreground">Vice-pr&eacute;sident</p>
+                  <p className="text-xs text-clubLight-foreground mt-2">Participe &agrave; la gestion du club et seconde le pr&eacute;sident.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img loading="lazy" decoding="async"
@@ -283,17 +294,6 @@ const LeClub = () => {
                   <h4 className="font-semibold text-lg text-clubDark">Michel</h4>
                   <p className="text-sm text-muted-foreground">Membre du bureau</p>
                   <p className="text-xs text-clubLight-foreground mt-2">Ancien trésorier et président du club, gère la logistique des événements internes et du Club House.</p>
-                </div>
-                <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img loading="lazy" decoding="async"
-                    src="/images/team/yann.jpg"
-                    alt="Membre du bureau"
-                    className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
-                    onClick={() => openLightbox("/images/team/yann.jpg")}
-                  />
-                  <h4 className="font-semibold text-lg text-clubDark">Yann</h4>
-                  <p className="text-sm text-muted-foreground">Membre du bureau</p>
-                  <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
                   <img loading="lazy" decoding="async"

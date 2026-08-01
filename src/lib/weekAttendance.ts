@@ -22,6 +22,7 @@ export const getCurrentWeekDays = (reference = new Date()) => {
       date,
       dateKey: toLocalDateKey(date),
       shortDate: new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit" }).format(date),
+      timeLabel: index < 5 ? "18 h" : "10 h",
     };
   });
 };
