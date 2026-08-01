@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
-import { getCurrentWeekDays, getCurrentWeekLabel } from "@/lib/weekAttendance";
+import { getCurrentWeekLabel, getRoomAttendanceWeekDays } from "@/lib/weekAttendance";
 
 type AttendanceDay = { is_open: boolean; player_count: number; key_holder_count: number };
 
 const WeeklyRoomAttendanceAdmin = () => {
-  const week = useMemo(() => getCurrentWeekDays(), []);
+  const week = useMemo(() => getRoomAttendanceWeekDays(), []);
   const [days, setDays] = useState<Record<string, AttendanceDay>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
