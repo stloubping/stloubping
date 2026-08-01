@@ -47,7 +47,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
   return (
     <Card className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full">
       <div className="relative h-40 md:h-48 overflow-hidden">
-        <img
+        <img loading="lazy" decoding="async"
           src={news.image}
           alt={news.title}
           className="w-full h-full object-cover cursor-zoom-in hover:scale-105 transition-transform duration-500"

@@ -64,7 +64,7 @@ const TournamentPhotos2026 = () => {
                   className="relative aspect-video overflow-hidden rounded-lg shadow-md group cursor-zoom-in"
                   onClick={() => openLightbox(photo.url)}
                 >
-                  <img 
+                  <img loading="lazy" decoding="async" 
                     src={photo.url} 
                     alt={photo.alt} 
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"

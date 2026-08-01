@@ -48,6 +48,7 @@ const formSchema = z.object({
   quantity: z.coerce.number().int().min(1).max(10),
   notes: z.string().trim().max(500, "Maximum 500 caractères.").optional(),
   consent: z.boolean().refine(Boolean, "Votre accord est obligatoire."),
+  website: z.string().max(0).optional(),
 });
 
 type PreorderForm = z.infer<typeof formSchema>;
@@ -84,6 +85,7 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
       quantity: 1,
       notes: "",
       consent: false,
+      website: "",
     },
   });
 
@@ -144,7 +146,8 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="relative space-y-6">
+                <input type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute left-[-10000px] h-px w-px opacity-0" {...form.register("website")} />
                 <div className="grid gap-5 md:grid-cols-2">
                   <FormField control={form.control} name="first_name" render={({ field }) => (
                     <FormItem>
@@ -201,7 +204,7 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
                   <FormItem>
                     <FormLabel>Précision éventuelle</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Ex. coupe, remise à un entraîneur…" rows={3} {...field} />
+                      <Textarea placeholder="Ex. coupe, remise à un entraîneurâ€¦" rows={3} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -224,7 +227,7 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
                 <div className="flex flex-col items-center justify-between gap-4 rounded-xl bg-clubDark p-5 text-white sm:flex-row">
                   <div>
                     <p className="text-sm text-white/70">Total estimé</p>
-                    <p className="text-3xl font-black text-clubPrimary">{totalPrice} €</p>
+                    <p className="text-3xl font-black text-clubPrimary">{totalPrice} â‚¬</p>
                   </div>
                   <Button
                     type="submit"
@@ -232,7 +235,7 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
                     className="w-full bg-clubPrimary px-8 py-6 text-lg font-bold text-white sm:w-auto"
                   >
                     {isSubmitting ? (
-                      <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Enregistrement…</>
+                      <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Enregistrementâ€¦</>
                     ) : (
                       <><PackageCheck className="mr-2 h-5 w-5" />Précommander</>
                     )}
@@ -273,7 +276,7 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
                   <p className="font-semibold text-clubDark">{preorder.first_name} {preorder.last_name_initial}</p>
                   <p className="text-sm">{preorder.product_name}</p>
                   <p className="text-sm">
-                    <span className="sm:hidden">Taille / quantité : </span>{preorder.size} · {preorder.quantity}
+                    <span className="sm:hidden">Taille / quantité : </span>{preorder.size} Â· {preorder.quantity}
                   </p>
                   <div>
                     <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-800">

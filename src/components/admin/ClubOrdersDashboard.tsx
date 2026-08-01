@@ -198,7 +198,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
       document.setTextColor(80, 80, 80);
       document.setFont("helvetica", "normal");
       document.setFontSize(8);
-      document.text(`Généré le ${new Date().toLocaleString("fr-FR")} · ${arrivedOrders.length} commande${arrivedOrders.length > 1 ? "s" : ""}`, pageWidth - margin, 17, { align: "right" });
+      document.text(`Généré le ${new Date().toLocaleString("fr-FR")} Â· ${arrivedOrders.length} commande${arrivedOrders.length > 1 ? "s" : ""}`, pageWidth - margin, 17, { align: "right" });
 
       arrivedOrders.forEach((order, orderIndex) => {
         if (cursorY > pageHeight - 60) {
@@ -213,11 +213,11 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
         document.setTextColor(24, 24, 27);
         document.setFont("helvetica", "bold");
         document.setFontSize(11);
-        document.text(`${order.first_name} ${order.last_name} · commande n° ${shortOrderId(order.id)}`, margin, cursorY);
+        document.text(`${order.first_name} ${order.last_name} Â· commande nÂ° ${shortOrderId(order.id)}`, margin, cursorY);
         document.setFont("helvetica", "normal");
         document.setFontSize(8);
         document.setTextColor(90, 90, 90);
-        document.text(`${order.email} · ${order.phone} · ${formatOrderDate(order.created_at)}`, margin, cursorY + 5);
+        document.text(`${order.email} Â· ${order.phone} Â· ${formatOrderDate(order.created_at)}`, margin, cursorY + 5);
 
         autoTable(document, {
           startY: cursorY + 8,
@@ -226,7 +226,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
           head: [["Référence / article", "Options", "Qté", "Prix unitaire", "Total"]],
           body: order.items.map((item) => [
             `${item.designation}\nRéf. ${item.reference}`,
-            itemDetails(item).join(" · ") || "-",
+            itemDetails(item).join(" Â· ") || "-",
             String(item.quantity),
             formatPrice((item.unit_price ?? 0) * (1 - (item.discount_rate ?? 20) / 100)),
             formatPrice((item.unit_price ?? 0) * item.quantity * (1 - (item.discount_rate ?? 20) / 100)),
@@ -242,10 +242,10 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
           },
         });
 
-        cursorY = document.lastAutoTable.finalY + 5;
+        cursorY = (document as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 5;
         document.setFontSize(8);
         document.setTextColor(80, 80, 80);
-        document.text(`Sous-total : ${formatPrice(subtotal)}   ·   Remises appliquées par article : - ${formatPrice(discountAmount)}`, pageWidth - margin, cursorY, { align: "right" });
+        document.text(`Sous-total : ${formatPrice(subtotal)}   Â·   Remises appliquées par article : - ${formatPrice(discountAmount)}`, pageWidth - margin, cursorY, { align: "right" });
         document.setFont("helvetica", "bold");
         document.setFontSize(10);
         document.setTextColor(239, 68, 68);
@@ -269,7 +269,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
         document.setFont("helvetica", "normal");
         document.setFontSize(7);
         document.setTextColor(120, 120, 120);
-        document.text(`Saint Loub Ping · Page ${page}/${pageCount}`, pageWidth - margin, pageHeight - 7, { align: "right" });
+        document.text(`Saint Loub Ping Â· Page ${page}/${pageCount}`, pageWidth - margin, pageHeight - 7, { align: "right" });
       }
 
       document.save(`commandes-arrivees-au-club-${new Date().toISOString().slice(0, 10)}.pdf`);
@@ -346,13 +346,13 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
           <Card>
             <CardContent className="flex items-center gap-4 p-5">
               <ShoppingBag className="h-8 w-8 text-emerald-600" />
-              <div><p className="text-2xl font-black">{formatPrice(seasonEquipmentTotal)}</p><p className="text-sm text-muted-foreground">matériel · saison {seasonLabel}</p></div>
+              <div><p className="text-2xl font-black">{formatPrice(seasonEquipmentTotal)}</p><p className="text-sm text-muted-foreground">matériel Â· saison {seasonLabel}</p></div>
             </CardContent>
           </Card>          <button type="button" className="text-left" onClick={() => setActiveSection("equipment")}>
             <Card className={`h-full transition ${activeSection === "equipment" ? "border-clubPrimary ring-2 ring-clubPrimary/20" : "hover:border-clubPrimary/40"}`}>
               <CardContent className="flex items-center gap-4 p-5">
                 <PackageCheck className="h-8 w-8 text-blue-600" />
-                <div><p className="text-3xl font-black">{equipmentOrders.length}</p><p className="text-sm text-muted-foreground">commandes matériel · {equipmentPending} à traiter</p></div>
+                <div><p className="text-3xl font-black">{equipmentOrders.length}</p><p className="text-sm text-muted-foreground">commandes matériel Â· {equipmentPending} à traiter</p></div>
               </CardContent>
             </Card>
           </button>
@@ -360,7 +360,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
             <Card className={`h-full transition ${activeSection === "shirts" ? "border-clubPrimary ring-2 ring-clubPrimary/20" : "hover:border-clubPrimary/40"}`}>
               <CardContent className="flex items-center gap-4 p-5">
                 <Shirt className="h-8 w-8 text-clubPrimary" />
-                <div><p className="text-3xl font-black">{shirtOrders.length}</p><p className="text-sm text-muted-foreground">commandes maillots · {shirtsPending} à traiter</p></div>
+                <div><p className="text-3xl font-black">{shirtOrders.length}</p><p className="text-sm text-muted-foreground">commandes maillots Â· {shirtsPending} à traiter</p></div>
               </CardContent>
             </Card>
           </button>
@@ -381,7 +381,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-3xl font-black text-clubDark">Commandes de matériel</h2>
-                  <AdminHelpBubble label="Suivi du matériel" text="Faites évoluer chaque commande de « Reçue » à « Confirmée », puis « Commandée au fournisseur », « Arrivée au club » et enfin « Remise ». Le bordereau utilise les commandes confirmées ; le PDF de distribution utilise les commandes arrivées au club." />
+                  <AdminHelpBubble label="Suivi du matériel" text="Faites évoluer chaque commande de Â« Reçue Â» à Â« Confirmée Â», puis Â« Commandée au fournisseur Â», Â« Arrivée au club Â» et enfin Â« Remise Â». Le bordereau utilise les commandes confirmées ; le PDF de distribution utilise les commandes arrivées au club." />
                 </div>
                 <p className="mt-1 text-sm text-muted-foreground">Articles Wack Sport, options demandées et suivi de traitement.</p>
               </div>
@@ -418,8 +418,8 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                       <CardHeader className="gap-4 bg-white md:flex-row md:items-start md:justify-between">
                         <div>
                           <CardTitle>{order.first_name} {order.last_name}</CardTitle>
-                          <p className="mt-2 text-sm text-muted-foreground">{order.email} · {order.phone}</p>
-                          <p className="mt-1 text-xs text-muted-foreground">{formatOrderDate(order.created_at)} · n° {shortOrderId(order.id)}</p>
+                          <p className="mt-2 text-sm text-muted-foreground">{order.email} Â· {order.phone}</p>
+                          <p className="mt-1 text-xs text-muted-foreground">{formatOrderDate(order.created_at)} Â· nÂ° {shortOrderId(order.id)}</p>
                         </div>
                         <div className="flex w-full flex-col gap-2 sm:flex-row md:w-auto">
                           <EquipmentOrderEditor order={order} onSaved={applyEquipmentOrderUpdate} />
@@ -441,7 +441,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                               <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
                                 <div>
                                   <p className="font-bold">{item.designation}</p>
-                                  <p className="text-sm text-muted-foreground">Réf. {item.reference} · Quantité {item.quantity}</p>
+                                  <p className="text-sm text-muted-foreground">Réf. {item.reference} Â· Quantité {item.quantity}</p>
                                 </div>
                                 <div className="min-w-52 rounded-lg border bg-white px-3 py-2 text-sm">
                                   <div className="flex justify-between gap-6 text-muted-foreground">
@@ -451,7 +451,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                                   {discountRate > 0 && (
                                     <div className="mt-1 flex justify-between gap-6 text-clubPrimary">
                                       <span>Remise {discountRate} %</span>
-                                      <span>− {formatPrice(discount)}</span>
+                                      <span>âˆ’ {formatPrice(discount)}</span>
                                     </div>
                                   )}
                                   <div className="mt-2 flex justify-between gap-6 border-t pt-2 font-black">
@@ -460,13 +460,13 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                                   </div>
                                 </div>
                               </div>
-                              {itemDetails(item).length > 0 && <p className="mt-3 text-sm text-muted-foreground">{itemDetails(item).join(" · ")}</p>}
+                              {itemDetails(item).length > 0 && <p className="mt-3 text-sm text-muted-foreground">{itemDetails(item).join(" Â· ")}</p>}
                             </div>
                           );
                         })}
                         <div className="space-y-2 border-t pt-4">
                           <div className="flex justify-between text-sm text-muted-foreground"><span>Sous-total</span><span>{formatPrice(subtotal)}</span></div>
-                          <div className="flex justify-between text-sm font-bold text-clubPrimary"><span>Remises appliquées par article</span><span>− {formatPrice(discountAmount)}</span></div>
+                          <div className="flex justify-between text-sm font-bold text-clubPrimary"><span>Remises appliquées par article</span><span>âˆ’ {formatPrice(discountAmount)}</span></div>
                           <div className="flex justify-between border-t pt-2 text-lg font-black"><span className="flex items-center gap-2">Total indicatif <AdminHelpBubble label="Total indicatif" text="Sous-total diminué de la remise club de 20 %. Ce montant reste indicatif jusqu’à la validation du fournisseur." /></span><span>{formatPrice(indicativeTotal)}</span></div>
                         </div>
                         {order.notes && <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900"><strong>Remarque :</strong> {order.notes}</p>}
@@ -483,7 +483,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-3xl font-black text-clubDark">Commandes de maillots</h2>
-                  <AdminHelpBubble label="Suivi des maillots" text="Faites évoluer chaque précommande de « Reçue » à « Confirmée », puis « Disponible au club » et enfin « Remise ». Seules les commandes confirmées alimentent le bordereau." />
+                  <AdminHelpBubble label="Suivi des maillots" text="Faites évoluer chaque précommande de Â« Reçue Â» à Â« Confirmée Â», puis Â« Disponible au club Â» et enfin Â« Remise Â». Seules les commandes confirmées alimentent le bordereau." />
                 </div>
                 <p className="mt-1 text-sm text-muted-foreground">Tailles, quantités, coordonnées et suivi des précommandes du club.</p>
               </div>
@@ -502,8 +502,8 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                     <CardHeader className="gap-4 bg-white md:flex-row md:items-start md:justify-between">
                       <div>
                         <CardTitle>{order.first_name} {order.last_name}</CardTitle>
-                        <p className="mt-2 text-sm text-muted-foreground">{order.email} · {order.phone}</p>
-                        <p className="mt-1 text-xs text-muted-foreground">{formatOrderDate(order.created_at)} · n° {shortOrderId(order.id)}</p>
+                        <p className="mt-2 text-sm text-muted-foreground">{order.email} Â· {order.phone}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">{formatOrderDate(order.created_at)} Â· nÂ° {shortOrderId(order.id)}</p>
                       </div>
                       <div className="flex w-full flex-col gap-2 sm:flex-row md:w-auto">
                         <ShirtOrderEditor order={order} onSaved={applyShirtOrderUpdate} />

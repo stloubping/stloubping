@@ -27,42 +27,42 @@ type ScheduleSlot = {
 const trainingSchedule: { day: string; slots: ScheduleSlot[] }[] = [
   {
     day: "Lundi",
-    slots: [{ time: "18h00 – 20h00", label: "Entraînement libre", tone: "libre" }],
+    slots: [{ time: "18h00 â€“ 20h00", label: "Entraînement libre", tone: "libre" }],
   },
   {
     day: "Mardi",
-    slots: [{ time: "18h00 – 20h00", label: "Entraînement libre", tone: "libre" }],
+    slots: [{ time: "18h00 â€“ 20h00", label: "Entraînement libre", tone: "libre" }],
   },
   {
     day: "Mercredi",
     slots: [
-      { time: "15h30 – 16h30", label: "Loisirs 7–10 ans", tone: "jeunes" },
-      { time: "16h30 – 18h00", label: "Loisirs 11–16 ans", tone: "jeunes" },
-      { time: "18h00 – 19h30", label: "Jeunes compétitions", tone: "jeunes" },
-      { time: "19h30 – 21h00", label: "Adultes compétitions", tone: "adultes" },
+      { time: "15h30 â€“ 16h30", label: "Loisirs 7â€“10 ans", tone: "jeunes" },
+      { time: "16h30 â€“ 18h00", label: "Loisirs 11â€“16 ans", tone: "jeunes" },
+      { time: "18h00 â€“ 19h30", label: "Jeunes compétitions", tone: "jeunes" },
+      { time: "19h30 â€“ 21h00", label: "Adultes compétitions", tone: "adultes" },
     ],
   },
   {
     day: "Jeudi",
     slots: [
-      { time: "17h00 – 18h00", label: "Jeunes perfectionnement", tone: "jeunes" },
-      { time: "18h00 – 19h30", label: "Loisirs 11–16 ans", tone: "jeunes" },
-      { time: "19h30 – 21h00", label: "Adultes loisirs", tone: "adultes" },
+      { time: "17h00 â€“ 18h00", label: "Jeunes perfectionnement", tone: "jeunes" },
+      { time: "18h00 â€“ 19h30", label: "Loisirs 11â€“16 ans", tone: "jeunes" },
+      { time: "19h30 â€“ 21h00", label: "Adultes loisirs", tone: "adultes" },
     ],
   },
   {
     day: "Vendredi",
     slots: [
-      { time: "17h00 – 18h00", label: "Jeunes perfectionnement", tone: "jeunes" },
-      { time: "18h00 – 20h00", label: "Jeunes compétitions", tone: "jeunes" },
-      { time: "20h00 – 00h00", label: "Critérium Gironde", tone: "competition" },
+      { time: "17h00 â€“ 18h00", label: "Jeunes perfectionnement", tone: "jeunes" },
+      { time: "18h00 â€“ 20h00", label: "Jeunes compétitions", tone: "jeunes" },
+      { time: "20h00 â€“ 00h00", label: "Critérium Gironde", tone: "competition" },
     ],
   },
   {
     day: "Samedi",
     slots: [
-      { time: "10h00 – 11h30", label: "Loisirs 7–10 ans", tone: "jeunes" },
-      { time: "14h00 – 21h00", label: "Championnat par équipe", tone: "competition" },
+      { time: "10h00 â€“ 11h30", label: "Loisirs 7â€“10 ans", tone: "jeunes" },
+      { time: "14h00 â€“ 21h00", label: "Championnat par équipe", tone: "competition" },
     ],
   },
 ];
@@ -82,7 +82,7 @@ const parseScheduleTime = (value: string) => {
 };
 
 const getScheduleGridPosition = (time: string) => {
-  const [startValue, endValue] = time.split("–");
+  const [startValue, endValue] = time.split("â€“");
   const start = parseScheduleTime(startValue);
   let end = parseScheduleTime(endValue);
 
@@ -111,7 +111,7 @@ const faqItems = [
     answer: "La licence Loisir vous donne accès aux entraînements (libres ou dirigés) et aux compétitions amicales ou départementales d'animation. La licence Compétition vous permet en plus de participer aux championnats officiels FFTT par équipes le week-end, ainsi qu'aux tournois individuels régionaux et au Critérium Fédéral."
   },
   {
-    question: "À partir de quel âge mon enfant peut-il s'inscrire ?",
+    question: "Ã€ partir de quel âge mon enfant peut-il s'inscrire ?",
     answer: "Nous accueillons les enfants dès l'âge de 6 ans (section Jeunes Débutants / Loisirs Primaire). Des groupes de niveau sont ensuite constitués pour garantir une progression ludique et adaptée."
   },
   {
@@ -162,7 +162,7 @@ const Adhesions = () => {
           </CardHeader>
           <CardContent>
             <div className="max-w-2xl mx-auto">
-              <img
+              <img loading="lazy" decoding="async"
                 src="/images/adhesions/tarifs-2026-2027.jpg"
                 alt="Tarifs des inscriptions saison 2026-2027"
                 className="w-full h-auto object-contain rounded-lg shadow-md cursor-zoom-in hover:opacity-90 transition-opacity"
@@ -233,7 +233,7 @@ const Adhesions = () => {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="mb-1 text-sm font-bold uppercase tracking-[0.18em] text-clubPrimary">
-                  Saison 2026–2027
+                  Saison 2026â€“2027
                 </p>
                 <CardTitle id="training-schedule-title" className="text-2xl text-white md:text-3xl">
                   Planning des entraînements

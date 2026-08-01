@@ -5,42 +5,43 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Accueil from "./pages/Accueil";
-import LeClub from "./pages/LeClub";
-import CompetitionsEquipes from "./pages/CompetitionsEquipes";
-import EssaiGratuit from "./pages/EssaiGratuit";
-import Adhesions from "./pages/Adhesions";
-import Boutique from "./pages/Boutique";
-import Materiels from "./pages/Materiels";
-import Partenaires from "./pages/Partenaires";
-import Contact from "./pages/Contact";
-import TournamentRegistration from "./pages/TournamentRegistration";
-import TournamentRegistrationsList from "./pages/TournamentRegistrationsList";
-import TournamentLiveRegistrations from "./pages/TournamentLiveRegistrations";
-import TournamentResults2026 from "./pages/TournamentResults2026";
-import TournamentPhotos2026 from "./pages/TournamentPhotos2026";
-import ClassementJoueurs from "./pages/ClassementJoueurs";
-import FicheJoueur from "./pages/FicheJoueur";
-import ProgressionMensuelle from "./pages/ProgressionMensuelle";
-import ProgressionAnnuelle from "./pages/ProgressionAnnuelle";
-import ProgressionParCategorieAge from "./pages/ProgressionParCategorieAge";
-import CriteriumGironde from "./pages/CriteriumGironde";
-import WTTVideos from "./pages/WTTVideos";
-import LesLegendes from "./pages/LesLegendes";
-import Tutos from "./pages/Tutos";
-import Reportages from "./pages/Reportages";
-import Actualites from "./pages/Actualites";
 import NotFound from "./pages/NotFound";
-import MentionsLegales from "./pages/MentionsLegales";
-import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
-import PolitiqueCookies from "./pages/PolitiqueCookies";
-import DemandeDonnees from "./pages/DemandeDonnees";
-import Administration from "./pages/Administration";
 import { LightboxProvider } from "./context/LightboxContext";
 import CookieConsentBanner from "./components/CookieConsentBanner";
 import React from "react";
 import RouteMetadata from "./components/RouteMetadata";
 
 const queryClient = new QueryClient();
+
+const LeClub = React.lazy(() => import("./pages/LeClub"));
+const CompetitionsEquipes = React.lazy(() => import("./pages/CompetitionsEquipes"));
+const EssaiGratuit = React.lazy(() => import("./pages/EssaiGratuit"));
+const Adhesions = React.lazy(() => import("./pages/Adhesions"));
+const Boutique = React.lazy(() => import("./pages/Boutique"));
+const Materiels = React.lazy(() => import("./pages/Materiels"));
+const Partenaires = React.lazy(() => import("./pages/Partenaires"));
+const Contact = React.lazy(() => import("./pages/Contact"));
+const TournamentRegistration = React.lazy(() => import("./pages/TournamentRegistration"));
+const TournamentRegistrationsList = React.lazy(() => import("./pages/TournamentRegistrationsList"));
+const TournamentLiveRegistrations = React.lazy(() => import("./pages/TournamentLiveRegistrations"));
+const TournamentResults2026 = React.lazy(() => import("./pages/TournamentResults2026"));
+const TournamentPhotos2026 = React.lazy(() => import("./pages/TournamentPhotos2026"));
+const ClassementJoueurs = React.lazy(() => import("./pages/ClassementJoueurs"));
+const FicheJoueur = React.lazy(() => import("./pages/FicheJoueur"));
+const ProgressionMensuelle = React.lazy(() => import("./pages/ProgressionMensuelle"));
+const ProgressionAnnuelle = React.lazy(() => import("./pages/ProgressionAnnuelle"));
+const ProgressionParCategorieAge = React.lazy(() => import("./pages/ProgressionParCategorieAge"));
+const CriteriumGironde = React.lazy(() => import("./pages/CriteriumGironde"));
+const WTTVideos = React.lazy(() => import("./pages/WTTVideos"));
+const LesLegendes = React.lazy(() => import("./pages/LesLegendes"));
+const Tutos = React.lazy(() => import("./pages/Tutos"));
+const Reportages = React.lazy(() => import("./pages/Reportages"));
+const Actualites = React.lazy(() => import("./pages/Actualites"));
+const MentionsLegales = React.lazy(() => import("./pages/MentionsLegales"));
+const PolitiqueConfidentialite = React.lazy(() => import("./pages/PolitiqueConfidentialite"));
+const PolitiqueCookies = React.lazy(() => import("./pages/PolitiqueCookies"));
+const DemandeDonnees = React.lazy(() => import("./pages/DemandeDonnees"));
+const Administration = React.lazy(() => import("./pages/Administration"));
 
 const StatistiquesJoueurs = React.lazy(
   () => import("./pages/StatistiquesJoueurs"),
@@ -54,7 +55,8 @@ const App = () => (
           <RouteMetadata />
           <LightboxProvider>
             <Layout>
-              <Routes>
+              <React.Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center text-muted-foreground">Chargementâ€¦</div>}>
+                <Routes>
                 <Route path="/" element={<Accueil />} />
                 <Route path="/actualites" element={<Actualites />} />
                 <Route path="/le-club" element={<LeClub />} />
@@ -71,7 +73,7 @@ const App = () => (
                     <React.Suspense
                       fallback={
                         <div className="flex min-h-[60vh] items-center justify-center text-muted-foreground">
-                          Chargement des statistiques…
+                          Chargement des statistiquesâ€¦
                         </div>
                       }
                     >
@@ -105,7 +107,8 @@ const App = () => (
                 <Route path="/administration/recap-commandes-materiel" element={<Administration />} />
                 <Route path="/administration/wacksport" element={<Administration />} />
                 <Route path="*" element={<NotFound />} />
-              </Routes>
+                </Routes>
+              </React.Suspense>
             </Layout>
             <CookieConsentBanner />
           </LightboxProvider>

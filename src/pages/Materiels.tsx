@@ -62,6 +62,7 @@ const equipmentOrderSchema = z.object({
   items: z.array(orderItemSchema).min(1).max(20),
   notes: z.string().trim().max(1000, "Maximum 1 000 caractères.").optional(),
   consent: z.boolean().refine(Boolean, "Votre accord est obligatoire."),
+  website: z.string().max(0).optional(),
 });
 
 type EquipmentOrderForm = z.infer<typeof equipmentOrderSchema>;
@@ -112,6 +113,7 @@ const Materiels = () => {
       items: [{ ...emptyItem }],
       notes: "",
       consent: false,
+      website: "",
     },
   });
 
@@ -181,6 +183,7 @@ const Materiels = () => {
       items,
       notes: values.notes || null,
       consent: values.consent,
+      website: values.website?.trim() || "",
       status: "received",
     });
 
@@ -213,6 +216,7 @@ const Materiels = () => {
         items: [{ ...emptyItem }],
         notes: "",
         consent: false,
+        website: "",
       });
       await fetchOrders();
     }
@@ -225,7 +229,7 @@ const Materiels = () => {
         <div className="container mx-auto grid items-center gap-8 lg:grid-cols-[1.2fr_.8fr]">
           <div>
             <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-clubPrimary">
-              Boutique · Matériels
+              Boutique Â· Matériels
             </p>
             <h1 className="mt-3 text-4xl font-black md:text-5xl">
               Commande groupée Wack Sport
@@ -281,7 +285,8 @@ const Materiels = () => {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="relative space-y-8">
+              <input type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute left-[-10000px] h-px w-px opacity-0" {...form.register("website")} />
                 <div className="grid gap-5 md:grid-cols-2">
                   <FormField control={form.control} name="first_name" render={({ field }) => (
                     <FormItem>
@@ -362,7 +367,7 @@ const Materiels = () => {
                           <FormField control={form.control} name={`items.${index}.designation`} render={({ field }) => (
                             <FormItem className="lg:col-span-5">
                               <FormLabel>Désignation</FormLabel>
-                              <FormControl><Input placeholder="Ex. Revêtement, bois, chaussures…" {...field} /></FormControl>
+                              <FormControl><Input placeholder="Ex. Revêtement, bois, chaussuresâ€¦" {...field} /></FormControl>
                               <FormMessage />
                             </FormItem>
                           )} />
@@ -384,7 +389,7 @@ const Materiels = () => {
                           <FormField control={form.control} name={`items.${index}.unit_price`} render={({ field }) => (
                             <FormItem className="lg:col-span-2">
                               <FormLabel>Prix indicatif</FormLabel>
-                              <FormControl><Input inputMode="decimal" placeholder="0,00 €" {...field} /></FormControl>
+                              <FormControl><Input inputMode="decimal" placeholder="0,00 â‚¬" {...field} /></FormControl>
                               <FormMessage />
                             </FormItem>
                           )} />
@@ -449,7 +454,7 @@ const Materiels = () => {
                     <FormControl>
                       <Textarea
                         rows={3}
-                        placeholder="Montage de raquette, délai souhaité ou autre précision…"
+                        placeholder="Montage de raquette, délai souhaité ou autre précisionâ€¦"
                         {...field}
                       />
                     </FormControl>
@@ -475,7 +480,7 @@ const Materiels = () => {
                   <div>
                     <p className="text-sm text-white/70">Total indicatif saisi</p>
                     <p className="text-3xl font-black text-clubPrimary">
-                      {estimatedTotal.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+                      {estimatedTotal.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} â‚¬
                     </p>
                     <p className="mt-1 text-xs text-white/60">Le montant définitif sera confirmé par le club.</p>
                   </div>
@@ -485,7 +490,7 @@ const Materiels = () => {
                     className="w-full bg-clubPrimary px-8 py-6 text-lg font-bold text-white sm:w-auto"
                   >
                     {isSubmitting ? (
-                      <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Envoi…</>
+                      <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Envoiâ€¦</>
                     ) : (
                       <><PackageCheck className="mr-2 h-5 w-5" />Transmettre la commande</>
                     )}
