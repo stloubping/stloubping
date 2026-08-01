@@ -11,6 +11,7 @@ import ShirtOrderSlip from "@/components/admin/ShirtOrderSlip";
 import NewEquipmentOrder from "@/components/admin/NewEquipmentOrder";
 import EquipmentOrdersRecap from "@/components/admin/EquipmentOrdersRecap";
 import WackSportOrders from "@/components/admin/WackSportOrders";
+import WeeklyRoomAttendanceAdmin from "@/components/admin/WeeklyRoomAttendanceAdmin";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -202,6 +203,10 @@ const Administration = () => {
 
   if (location.pathname === "/administration/wacksport") {
     return <WackSportOrders />;
+  }
+
+  if (location.pathname === "/administration/presences-salle") {
+    return <WeeklyRoomAttendanceAdmin />;
   }
 
   return <ClubOrdersDashboard session={session} onSignOut={() => supabase.auth.signOut()} />;
