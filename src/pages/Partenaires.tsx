@@ -65,7 +65,7 @@ const Partenaires = () => {
               >
                 <CardContent className="p-0 flex flex-col items-center justify-center flex-grow">
                   <div className="w-full h-20 flex items-center justify-center bg-clubSection/50 rounded-md mb-4 p-2">
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={sponsor.logo}
                       alt={sponsor.name}
                       className="max-w-full max-h-full object-contain cursor-pointer"

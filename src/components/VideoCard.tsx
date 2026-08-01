@@ -35,7 +35,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
   return (
     <Card className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
       <div className="relative w-full h-64 bg-black flex items-center justify-center">
-        <img
+        <img loading="lazy" decoding="async"
           src={youtubeThumbnailUrl}
           alt={videoTitle}
           className="w-full h-full object-cover cursor-zoom-in opacity-80 hover:opacity-100 transition-opacity duration-200"

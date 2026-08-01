@@ -55,8 +55,8 @@ L'application utilise Supabase pour gérer les inscriptions au tournoi.
 
 Le client Supabase est configuré dans `src/integrations/supabase/client.ts` en utilisant les variables d'environnement (ou les valeurs par défaut si non définies) :
 
-*   **URL du projet:** `https://svwsqioytvvpqbxpekwm.supabase.co`
-*   **Anon Key:** `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2d3NxaW95dHZ2cHFieHBla3dtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMTk2MzEsImV4cCI6MjA3Njg5NTYzMX0.JTl37y_D_tr3bnPlCQyPZxOZqVzJHC79rFYYxT3ZXHg`
+*   **URL du projet:** `https://YOUR_PROJECT.supabase.co`
+*   **Anon Key:** `<VITE_SUPABASE_ANON_KEY>`
 
 ### 5.2. Schéma de Base de Données
 

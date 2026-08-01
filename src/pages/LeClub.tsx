@@ -132,7 +132,7 @@ const LeClub = () => {
                 <li><span className="font-semibold">2 créneaux d'entraînement libres</span>.</li>
                 <li><span className="font-semibold">1 entraîneur à 17h00 / semaine annualisé</span>.</li>
               </ul>
-              <img
+              <img loading="lazy" decoding="async"
                 src="/images/club/FB_IMG_1759672880255.jpg"
                 alt="Infrastructure du club"
                 className="mt-6 rounded-lg shadow-md w-full object-cover cursor-zoom-in"
@@ -175,7 +175,7 @@ const LeClub = () => {
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src="/images/team/philippe-roux.jpg"
                     alt="Président"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
@@ -186,7 +186,7 @@ const LeClub = () => {
                   <p className="text-xs text-clubLight-foreground mt-2">Visionnaire et pilier du club, il assure la direction générale.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src="/images/team/yves-mounede.jpg"
                     alt="Vice-Président"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
@@ -197,7 +197,7 @@ const LeClub = () => {
                   <p className="text-xs text-clubLight-foreground mt-2">Soutient le président et participe à la gestion du club.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src="/images/team/patrice-gigaud.jpg"
                     alt="Trésorier"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
@@ -208,7 +208,7 @@ const LeClub = () => {
                   <p className="text-xs text-clubLight-foreground mt-2">Responsable des finances et de la gestion budgétaire.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src="/images/team/sandra-thuault.jpg"
                     alt="Trésorier adjoint"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
@@ -219,7 +219,7 @@ const LeClub = () => {
                   <p className="text-xs text-clubLight-foreground mt-2">Assiste le trésorier dans ses fonctions.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src="/images/team/olivier-goix.jpg"
                     alt="Secrétaire"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
@@ -230,7 +230,7 @@ const LeClub = () => {
                   <p className="text-xs text-clubLight-foreground mt-2">Gère l'administratif, l'informatique et la communication du club.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src="/images/team/jeremie-monteignies.jpg"
                     alt="Secrétaire adjoint"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
@@ -241,7 +241,7 @@ const LeClub = () => {
                   <p className="text-xs text-clubLight-foreground mt-2">Assiste le secrétaire dans ses tâches.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src="/images/team/dominique.jpg"
                     alt="Membre du bureau"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
@@ -252,7 +252,7 @@ const LeClub = () => {
                   <p className="text-xs text-clubLight-foreground mt-2">Gère de main de maître les repas du criterium de Gironde ainsi que l'approvisionnement du tournoi régional.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src="/images/team/pierre.jpg"
                     alt="Membre du bureau"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
@@ -263,7 +263,7 @@ const LeClub = () => {
                   <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src="/images/team/vincent.jpg"
                     alt="Membre du bureau"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
@@ -274,7 +274,7 @@ const LeClub = () => {
                   <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src="/images/team/michel.jpg"
                     alt="Membre du bureau"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
@@ -285,7 +285,7 @@ const LeClub = () => {
                   <p className="text-xs text-clubLight-foreground mt-2">Ancien trésorier et président du club, gère la logistique des événements internes et du Club House.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src="/images/team/yann.jpg"
                     alt="Membre du bureau"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"
@@ -296,7 +296,7 @@ const LeClub = () => {
                   <p className="text-xs text-clubLight-foreground mt-2">Contribue activement à la vie du club.</p>
                 </div>
                 <div className="text-center p-4 bg-clubSection rounded-lg shadow-sm">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src="/images/team/antoine.jpg"
                     alt="Membre du bureau"
                     className="rounded-full mx-auto mb-3 w-28 h-28 object-cover border-2 border-clubPrimary cursor-zoom-in"

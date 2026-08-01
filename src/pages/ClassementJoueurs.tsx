@@ -178,7 +178,7 @@ const ClassementJoueurs = () => {
   return (
     <div className="min-h-screen bg-white text-clubDark">
       <section className="relative isolate h-[430px] overflow-hidden text-white">
-        <img
+        <img loading="lazy" decoding="async"
           src="/images/hero/club-training.jpg"
           alt="Joueurs du St Loub Ping en entraînement"
           className="absolute inset-0 h-full w-full object-cover object-center"
@@ -186,7 +186,7 @@ const ClassementJoueurs = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/20" />
         <div className="container relative flex h-full flex-col items-start justify-center px-4 md:px-6">
           <span className="mb-4 rounded-full border border-white/30 bg-black/30 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em]">
-            Saison en cours · Club n° 10330022
+            Saison en cours Â· Club nÂ° 10330022
           </span>
           <h1 className="max-w-4xl text-4xl font-extrabold tracking-tight sm:text-5xl md:text-7xl">
             Classement des joueurs
@@ -205,7 +205,7 @@ const ClassementJoueurs = () => {
             Licenciés
           </div>
           <strong className="mt-2 block text-3xl text-clubDark">
-            {loading ? "—" : players.length}
+            {loading ? "â€”" : players.length}
           </strong>
           <span className="text-sm text-muted-foreground">
             joueurs et joueuses
@@ -218,7 +218,7 @@ const ClassementJoueurs = () => {
             Podium jeunes
           </div>
           {loading ? (
-            <strong className="mt-2 block text-3xl text-clubDark">—</strong>
+            <strong className="mt-2 block text-3xl text-clubDark">â€”</strong>
           ) : youthPodium.length > 0 ? (
             <ol className="mt-3 space-y-2">
               {youthPodium.map((player, index) => (
@@ -263,7 +263,7 @@ const ClassementJoueurs = () => {
             Progressions du mois
           </div>
           {loading ? (
-            <strong className="mt-2 block text-3xl text-clubDark">—</strong>
+            <strong className="mt-2 block text-3xl text-clubDark">â€”</strong>
           ) : monthlyPodium.length > 0 ? (
             <ol className="mt-3 space-y-2">
               {monthlyPodium.map((player, index) => (
@@ -332,7 +332,7 @@ const ClassementJoueurs = () => {
             <Input
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder="Rechercher un joueur…"
+              placeholder="Rechercher un joueurâ€¦"
               className="h-12 rounded-md border-slate-200 bg-white pl-10 focus-visible:ring-clubPrimary"
               aria-label="Rechercher un joueur"
             />
@@ -384,7 +384,7 @@ const ClassementJoueurs = () => {
           {loading ? (
             <div className="flex min-h-72 flex-col items-center justify-center text-muted-foreground">
               <RefreshCw className="mb-4 h-8 w-8 animate-spin text-clubPrimary" />
-              <p>Récupération du classement FFTT…</p>
+              <p>Récupération du classement FFTTâ€¦</p>
             </div>
           ) : error ? (
             <div className="flex min-h-72 flex-col items-center justify-center px-6 text-center">
@@ -504,7 +504,7 @@ const ClassementJoueurs = () => {
                         </td>
                         <td className="px-5 py-4">
                           <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-800">
-                            {player.cat || "—"}
+                            {player.cat || "â€”"}
                           </span>
                         </td>
                         <td className="px-5 py-4 font-mono text-sm text-slate-500">

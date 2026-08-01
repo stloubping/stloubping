@@ -61,6 +61,7 @@ const formSchema = z.object({
     }),
   doubles_partner: z.string().optional(),
   consent: z.boolean().refine(val => val === true, { message: "Obligatoire." }),
+  website: z.string().max(0).optional(),
 });
 
 const TournamentRegistration = () => {
@@ -76,7 +77,7 @@ const TournamentRegistration = () => {
     defaultValues: {
       first_name: "", last_name: "", email: "", phone: "",
       licence_number: "", points: "", club: "",
-      selected_tableaux: [], doubles_partner: "", consent: false,
+      selected_tableaux: [], doubles_partner: "", consent: false, website: "",
     },
   });
 
@@ -89,7 +90,7 @@ const TournamentRegistration = () => {
         .select('*');
         
       if (!error && data) {
-        const countsMap = data.reduce((acc: any, curr: any) => {
+        const countsMap = (data as Array<{ tableau_id: string; current_registrations: number }>).reduce<Record<string, number>>((acc, curr) => {
           acc[curr.tableau_id] = curr.current_registrations;
           return acc;
         }, {});
@@ -136,7 +137,7 @@ const TournamentRegistration = () => {
     <div className="container mx-auto py-8 px-4">
       <Card className="max-w-3xl mx-auto bg-clubLight shadow-lg border-clubPrimary/20 overflow-hidden">
         <div className="relative w-full h-64 md:h-80 bg-clubSection/50 flex items-center justify-center overflow-hidden">
-          <img 
+          <img loading="lazy" decoding="async" 
             src={posterUrl} 
             alt="Affiche du Tournoi Régional 2026" 
             className="w-full h-full object-contain cursor-zoom-in hover:scale-105 transition-transform duration-300"
@@ -154,6 +155,7 @@ const TournamentRegistration = () => {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <input type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute left-[-10000px] h-px w-px opacity-0" {...form.register("website")} />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField control={form.control} name="last_name" render={({ field }) => (
                   <FormItem>
@@ -287,7 +289,7 @@ const TournamentRegistration = () => {
 
               <div className="p-6 bg-clubDark text-white rounded-xl text-center shadow-inner">
                 <p className="text-sm opacity-80 mb-1">Montant total estimé</p>
-                <p className="text-4xl font-black text-clubPrimary">{totalPrice}€</p>
+                <p className="text-4xl font-black text-clubPrimary">{totalPrice}â‚¬</p>
               </div>
 
               <Button 

@@ -12,7 +12,7 @@ const Boutique = () => {
   const jerseyDetails = {
     name: "Maillot Officiel du Club",
     image: "/images/boutique/maillot-club-officiel.png",
-    price: "35€",
+    price: "35â‚¬",
     description: "Le maillot officiel de notre club, arborant fièrement le logo du club et un design dynamique. Idéal pour représenter le St Loub Ping en compétition ou à l'entraînement.",
     features: [
       "100% polyester technique",
@@ -65,7 +65,7 @@ const Boutique = () => {
           <div className="grid grid-cols-1 md:grid-cols-2">
             {/* Image Section */}
             <div className="p-4 flex items-center justify-center bg-clubSection/50">
-              <img
+              <img loading="lazy" decoding="async"
                 src={jerseyDetails.image}
                 alt={jerseyDetails.name}
                 className="w-full h-auto object-contain max-h-96 rounded-md cursor-zoom-in shadow-md"
