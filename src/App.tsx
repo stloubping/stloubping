@@ -38,6 +38,7 @@ import Administration from "./pages/Administration";
 import { LightboxProvider } from "./context/LightboxContext";
 import CookieConsentBanner from "./components/CookieConsentBanner";
 import React from "react";
+import RouteMetadata from "./components/RouteMetadata";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,7 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <BrowserRouter>
+          <RouteMetadata />
           <LightboxProvider>
             <Layout>
               <Routes>
