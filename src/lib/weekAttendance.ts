@@ -7,8 +7,8 @@ export const toLocalDateKey = (date: Date) => {
   return `${year}-${month}-${day}`;
 };
 
-export const getCurrentWeekDays = () => {
-  const today = new Date();
+export const getCurrentWeekDays = (reference = new Date()) => {
+  const today = new Date(reference);
   const monday = new Date(today);
   const weekday = today.getDay() || 7;
   monday.setDate(today.getDate() - weekday + 1);
@@ -26,8 +26,15 @@ export const getCurrentWeekDays = () => {
   });
 };
 
-export const getCurrentWeekLabel = () => {
-  const days = getCurrentWeekDays();
+export const getCurrentWeekLabel = (days = getCurrentWeekDays()) => {
   const formatter = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long" });
   return `Du ${formatter.format(days[0].date)} au ${formatter.format(days[6].date)}`;
+};
+
+export const getRoomAttendanceWeekDays = () => {
+  const reference = new Date();
+  if (reference.getDay() === 1 && reference.getHours() < 1) {
+    reference.setDate(reference.getDate() - 1);
+  }
+  return getCurrentWeekDays(reference);
 };
