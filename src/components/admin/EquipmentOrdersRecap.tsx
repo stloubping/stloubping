@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ArrowLeft, Loader2, PackageCheck, Pencil, RotateCcw, Save, X } from "lucide-react";
+import { ArrowLeft, Loader2, Archive, CheckCircle2, PackageCheck, Pencil, RotateCcw, Save, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ const EquipmentOrdersRecap = () => {
   const [saving, setSaving] = useState(false);
   const [revertingId, setRevertingId] = useState<string | null>(null);
   const [arrivingId, setArrivingId] = useState<string | null>(null);
+  const [finishingId, setFinishingId] = useState<string | null>(null);
   const ordersTotal = orders.reduce((sum, order) => sum + totalOf(order), 0);
   const fetchOrders = useCallback(async () => {
     setLoading(true);
@@ -75,8 +76,14 @@ const EquipmentOrdersRecap = () => {
     }
     setRevertingId(null);
   };
-  return <div className="min-h-screen bg-clubLight">
-    <section className="bg-clubDark px-4 py-8 text-white"><div className="container mx-auto"><Button asChild variant="ghost" className="mb-4 -ml-4 text-white hover:bg-white/10 hover:text-white"><Link to="/administration"><ArrowLeft className="mr-2 h-4 w-4" />Retour aux commandes</Link></Button><p className="text-sm font-extrabold uppercase tracking-[0.18em] text-clubPrimary">Commandes fournisseur</p><h1 className="mt-2 text-3xl font-black md:text-4xl">Récapitulatif des commandes</h1><p className="mt-2 text-white/65">Commandes transmises au fournisseur, arrivées au club ou déjà remises.</p></div></section>
+  const markAsCompleted = async (order: Order) => {
+    setFinishingId(order.id);
+    const { error } = await supabase.from("equipment_orders").update({ status: "completed", status_before_completed: order.status }).eq("id", order.id);
+    if (error) { console.error(error); toast.error("La commande n’a pas pu être terminée."); }
+    else { setOrders((current) => current.filter((entry) => entry.id !== order.id)); toast.success("Commande déplacée dans « Terminées »."); }
+    setFinishingId(null);
+  };  return <div className="min-h-screen bg-clubLight">
+    <section className="bg-clubDark px-4 py-8 text-white"><div className="container mx-auto"><Button asChild variant="ghost" className="mb-4 -ml-4 text-white hover:bg-white/10 hover:text-white"><Link to="/administration"><ArrowLeft className="mr-2 h-4 w-4" />Retour aux commandes</Link></Button><Button asChild variant="outline" className="ml-2 border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white"><Link to="/administration/commandes-terminees"><Archive className="mr-2 h-4 w-4" />Terminées</Link></Button><p className="text-sm font-extrabold uppercase tracking-[0.18em] text-clubPrimary">Commandes fournisseur</p><h1 className="mt-2 text-3xl font-black md:text-4xl">Récapitulatif des commandes</h1><p className="mt-2 text-white/65">Commandes transmises au fournisseur, arrivées au club ou déjà remises.</p></div></section>
     <main className="container mx-auto px-4 py-8">{loading ? <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div> : orders.length === 0 ? <Card><CardContent className="py-14 text-center text-muted-foreground">Aucune commande transmise au fournisseur.</CardContent></Card> : <div className="space-y-4">
       <Card className="border-clubPrimary/30 bg-clubPrimary/5"><CardContent className="flex flex-col gap-1 p-5 sm:flex-row sm:items-center sm:justify-between"><div><p className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Total des commandes</p><p className="text-sm text-muted-foreground">{orders.length} commande{orders.length > 1 ? "s" : ""} dans le récapitulatif</p></div><p className="text-3xl font-black text-clubPrimary">{money(ordersTotal)}</p></CardContent></Card>
       <Card className="overflow-hidden"><div className="overflow-x-auto">
@@ -95,7 +102,7 @@ const EquipmentOrdersRecap = () => {
           <p><Label text="Payé le" />{order.paid_at ? new Date(`${order.paid_at}T12:00:00`).toLocaleDateString("fr-FR") : "—"}</p>
           <p><Label text="Donné le" />{order.handed_over_at ? new Date(`${order.handed_over_at}T12:00:00`).toLocaleDateString("fr-FR") : "—"}</p>
           <p><Label text="Donné par" />{order.handed_over_by || "—"}</p>
-          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap"><Button variant="outline" size="sm" onClick={() => edit(order)}><Pencil className="mr-2 h-4 w-4" />Modifier</Button>{order.status === "ordered" && <Button size="sm" onClick={() => markAsArrived(order)} disabled={arrivingId === order.id} className="whitespace-nowrap bg-clubPrimary font-bold hover:bg-clubPrimary/90">{arrivingId === order.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PackageCheck className="mr-2 h-4 w-4" />}Arrivée au club</Button>}<Button variant="outline" size="sm" onClick={() => revertStatus(order)} disabled={revertingId === order.id} className="whitespace-nowrap">{revertingId === order.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RotateCcw className="mr-2 h-4 w-4" />}Revenir à « {previousStatus[order.status]?.label} »</Button></div>
+          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap"><Button variant="outline" size="sm" onClick={() => edit(order)}><Pencil className="mr-2 h-4 w-4" />Modifier</Button>{order.status === "ordered" && <Button size="sm" onClick={() => markAsArrived(order)} disabled={arrivingId === order.id} className="whitespace-nowrap bg-clubPrimary font-bold hover:bg-clubPrimary/90">{arrivingId === order.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PackageCheck className="mr-2 h-4 w-4" />}Arrivée au club</Button>}<Button variant="outline" size="sm" onClick={() => revertStatus(order)} disabled={revertingId === order.id} className="whitespace-nowrap">{revertingId === order.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RotateCcw className="mr-2 h-4 w-4" />}Revenir à « {previousStatus[order.status]?.label} »</Button><Button size="sm" onClick={() => markAsCompleted(order)} disabled={finishingId === order.id} className="whitespace-nowrap bg-emerald-600 font-bold hover:bg-emerald-700">{finishingId === order.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}Terminé</Button></div>
         </>}</div>; })}</div>
       </div></Card>
     </div>}</main>

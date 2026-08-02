@@ -40,6 +40,7 @@ const navItems: NavItem[] = [
     type: "dropdown",
     children: [
       { name: "Championnat par Équipe", path: "/competitions-equipes", type: "link" },
+      { name: "Calendrier des compétitions", path: "/competitions-equipes/calendrier", type: "link" },
       { name: "Critérium de Gironde", path: "/competitions-equipes/criterium-gironde", type: "link" },
     ],
   },

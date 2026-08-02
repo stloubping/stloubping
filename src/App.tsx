@@ -15,6 +15,7 @@ const queryClient = new QueryClient();
 
 const LeClub = React.lazy(() => import("./pages/LeClub"));
 const CompetitionsEquipes = React.lazy(() => import("./pages/CompetitionsEquipes"));
+const CalendrierCompetitions = React.lazy(() => import("./pages/CalendrierCompetitions"));
 const EssaiGratuit = React.lazy(() => import("./pages/EssaiGratuit"));
 const Adhesions = React.lazy(() => import("./pages/Adhesions"));
 const Boutique = React.lazy(() => import("./pages/Boutique"));
@@ -61,6 +62,7 @@ const App = () => (
                 <Route path="/actualites" element={<Actualites />} />
                 <Route path="/le-club" element={<LeClub />} />
                 <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
+                <Route path="/competitions-equipes/calendrier" element={<CalendrierCompetitions />} />
                 <Route path="/essai-gratuit" element={<EssaiGratuit />} />
                 <Route path="/competitions-equipes/criterium-gironde" element={<CriteriumGironde />} />
                 <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
@@ -105,6 +107,7 @@ const App = () => (
                 <Route path="/administration/bordereau-maillots" element={<Administration />} />
                 <Route path="/administration/nouvelle-commande-materiel" element={<Administration />} />
                 <Route path="/administration/recap-commandes-materiel" element={<Administration />} />
+                <Route path="/administration/commandes-terminees" element={<Administration />} />
                 <Route path="/administration/wacksport" element={<Administration />} />
                 <Route path="/administration/presences-salle" element={<Administration />} />
                 <Route path="/administration/espace-capitaine" element={<Administration />} />

@@ -10,6 +10,7 @@ import EquipmentOrderSlip from "@/components/admin/EquipmentOrderSlip";
 import ShirtOrderSlip from "@/components/admin/ShirtOrderSlip";
 import NewEquipmentOrder from "@/components/admin/NewEquipmentOrder";
 import EquipmentOrdersRecap from "@/components/admin/EquipmentOrdersRecap";
+import CompletedEquipmentOrders from "@/components/admin/CompletedEquipmentOrders";
 import WackSportOrders from "@/components/admin/WackSportOrders";
 import WeeklyRoomAttendanceAdmin from "@/components/admin/WeeklyRoomAttendanceAdmin";
 import CaptainSpace from "@/components/admin/CaptainSpace";
@@ -200,6 +201,10 @@ const Administration = () => {
 
   if (location.pathname === "/administration/recap-commandes-materiel") {
     return <EquipmentOrdersRecap />;
+  }
+
+  if (location.pathname === "/administration/commandes-terminees") {
+    return <CompletedEquipmentOrders />;
   }
 
   if (location.pathname === "/administration/wacksport") {
