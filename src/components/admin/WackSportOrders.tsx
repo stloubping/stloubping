@@ -37,8 +37,17 @@ const WackSportOrders = () => {
     setSaving(true);
     const payload = { order_number: draft.order_number.trim(), ordered_at: draft.ordered_at, received_at: draft.received_at, paid_at: draft.paid_at, players_due_at: draft.players_due_at, amount: draft.amount };
     const result = editId ? await supabase.from("wacksport_orders").update(payload).eq("id", editId) : await supabase.from("wacksport_orders").insert(payload);
-    if (result.error) { console.error(result.error); toast.error(result.error.code === "23505" ? "Ce numéro de commande existe déjà." : "L’enregistrement a échoué."); }
-    else { toast.success(editId ? "Suivi Wack Sport modifié." : "Commande Wack Sport ajoutée."); reset(); await fetchOrders(); }
+    if (result.error) {
+      console.error("Erreur Wack Sport", result.error);
+      const message = result.error.code === "23505"
+        ? "Ce numéro de commande existe déjà."
+        : result.error.code === "42501"
+          ? "Accès refusé par Supabase. Vérifiez les droits du compte administrateur."
+          : result.error.code === "PGRST204"
+            ? "La structure de la table Wack Sport doit être mise à jour dans Supabase."
+            : `Enregistrement impossible : ${result.error.message}`;
+      toast.error(message);
+    } else { toast.success(editId ? "Suivi Wack Sport modifié." : "Commande Wack Sport ajoutée."); reset(); await fetchOrders(); }
     setSaving(false);
   };
 
