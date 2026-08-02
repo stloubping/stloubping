@@ -107,6 +107,7 @@ const App = () => (
                 <Route path="/administration/recap-commandes-materiel" element={<Administration />} />
                 <Route path="/administration/wacksport" element={<Administration />} />
                 <Route path="/administration/presences-salle" element={<Administration />} />
+                <Route path="/administration/espace-capitaine" element={<Administration />} />
                 <Route path="*" element={<NotFound />} />
                 </Routes>
               </React.Suspense>

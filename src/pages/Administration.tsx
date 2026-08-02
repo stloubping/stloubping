@@ -12,6 +12,7 @@ import NewEquipmentOrder from "@/components/admin/NewEquipmentOrder";
 import EquipmentOrdersRecap from "@/components/admin/EquipmentOrdersRecap";
 import WackSportOrders from "@/components/admin/WackSportOrders";
 import WeeklyRoomAttendanceAdmin from "@/components/admin/WeeklyRoomAttendanceAdmin";
+import CaptainSpace from "@/components/admin/CaptainSpace";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -207,6 +208,10 @@ const Administration = () => {
 
   if (location.pathname === "/administration/presences-salle") {
     return <WeeklyRoomAttendanceAdmin />;
+  }
+
+  if (location.pathname === "/administration/espace-capitaine") {
+    return <CaptainSpace />;
   }
 
   return <ClubOrdersDashboard session={session} onSignOut={() => supabase.auth.signOut()} />;
