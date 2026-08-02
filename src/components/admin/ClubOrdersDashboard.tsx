@@ -37,6 +37,7 @@ type EquipmentOrder = {
   items: EquipmentItem[];
   notes: string | null;
   status: string;
+  status_before_completed?: string | null;
 };
 
 type ShirtOrder = {
@@ -53,7 +54,7 @@ type ShirtOrder = {
   status: string;
 };
 
-type OrderSection = "equipment" | "shirts";
+type OrderSection = "equipment" | "completed" | "shirts";
 
 const equipmentStatusLabels: Record<string, string> = {
   received: "Reçue",
@@ -103,7 +104,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
     const [equipmentResult, shirtResult] = await Promise.all([
       supabase
         .from("equipment_orders")
-        .select("id, created_at, first_name, last_name, email, phone, items, notes, status")
+        .select("id, created_at, first_name, last_name, email, phone, items, notes, status, status_before_completed")
         .order("created_at", { ascending: false }),
       supabase
         .from("shop_preorders")
@@ -143,6 +144,15 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
     }
   };
 
+  const restoreCompletedOrder = async (order: EquipmentOrder) => {
+    const restoredStatus = order.status_before_completed || "delivered";
+    const { error } = await supabase.from("equipment_orders").update({ status: restoredStatus, status_before_completed: null }).eq("id", order.id);
+    if (error) { console.error(error); toast.error("La commande n’a pas pu revenir dans le suivi matériel."); }
+    else {
+      setEquipmentOrders((current) => current.map((entry) => entry.id === order.id ? { ...entry, status: restoredStatus, status_before_completed: null } : entry));
+      toast.success("Commande restaurée dans le suivi matériel.");
+    }
+  };
   const applyEquipmentOrderUpdate = (updatedOrder: EditableEquipmentOrder) => {
     setEquipmentOrders((current) => current.map((order) => (
       order.id === updatedOrder.id ? { ...order, ...updatedOrder } : order
@@ -284,8 +294,9 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
   const totalOrders = equipmentOrders.length + shirtOrders.length;
   const totalPending = equipmentPending + shirtsPending;
   const supplierStatuses = new Set(["ordered", "available", "delivered"]);
-  const activeEquipmentOrders = equipmentOrders.filter((order) => !supplierStatuses.has(order.status));
-  const supplierEquipmentCount = equipmentOrders.length - activeEquipmentOrders.length;
+  const completedEquipmentOrders = equipmentOrders.filter((order) => order.status === "completed");
+  const activeEquipmentOrders = equipmentOrders.filter((order) => !supplierStatuses.has(order.status) && order.status !== "completed");
+  const supplierEquipmentCount = equipmentOrders.filter((order) => supplierStatuses.has(order.status)).length;
   const today = new Date();
   const seasonStartYear = today.getMonth() >= 6 ? today.getFullYear() : today.getFullYear() - 1;
   const seasonStart = new Date(seasonStartYear, 6, 1);
@@ -373,11 +384,14 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
         </div>
 
         <Tabs value={activeSection} onValueChange={(value) => setActiveSection(value as OrderSection)}>
-          <TabsList className="mb-7 grid h-auto w-full grid-cols-2 rounded-xl bg-white p-1.5 shadow-sm md:max-w-xl">
+          <TabsList className="mb-7 grid h-auto w-full grid-cols-3 rounded-xl bg-white p-1.5 shadow-sm md:max-w-2xl">
             <TabsTrigger value="equipment" className="gap-2 py-3 text-sm font-bold sm:text-base">
-              <PackageCheck className="h-4 w-4" /> Matériel <span className="rounded-full bg-black/5 px-2 py-0.5 text-xs">{equipmentOrders.length}</span>
+              <PackageCheck className="h-4 w-4" /> Matériel <span className="rounded-full bg-black/5 px-2 py-0.5 text-xs">{activeEquipmentOrders.length}</span>
             </TabsTrigger>
-            <TabsTrigger value="shirts" className="gap-2 py-3 text-sm font-bold sm:text-base">
+                        <TabsTrigger value="completed" className="gap-2 py-3 text-sm font-bold sm:text-base">
+              <ClipboardList className="h-4 w-4" /> Terminées <span className="rounded-full bg-black/5 px-2 py-0.5 text-xs">{completedEquipmentOrders.length}</span>
+            </TabsTrigger>
+<TabsTrigger value="shirts" className="gap-2 py-3 text-sm font-bold sm:text-base">
               <Shirt className="h-4 w-4" /> Maillots <span className="rounded-full bg-black/5 px-2 py-0.5 text-xs">{shirtOrders.length}</span>
             </TabsTrigger>
           </TabsList>
@@ -484,7 +498,11 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
             )}
           </TabsContent>
 
-          <TabsContent value="shirts" className="mt-0">
+                    <TabsContent value="completed" className="mt-0">
+            <div className="mb-6"><h2 className="text-3xl font-black text-clubDark">Commandes de matériel terminées</h2><p className="mt-1 text-sm text-muted-foreground">Toutes les commandes déplacées ici depuis le récapitulatif avec le bouton « Terminé ».</p></div>
+            {isLoading ? <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div> : completedEquipmentOrders.length === 0 ? <Card><CardContent className="p-10 text-center text-muted-foreground">Aucune commande terminée.</CardContent></Card> : <div className="space-y-4">{completedEquipmentOrders.map((order) => <Card key={order.id} className="border-l-4 border-l-emerald-600"><CardContent className="flex flex-col justify-between gap-4 p-5 sm:flex-row sm:items-center"><div><p className="text-lg font-black text-clubDark">{order.first_name} {order.last_name}</p><p className="mt-1 text-sm text-muted-foreground">N° {shortOrderId(order.id)} · {order.items.length} article{order.items.length > 1 ? "s" : ""}</p></div><Button variant="outline" onClick={() => restoreCompletedOrder(order)}><RefreshCw className="mr-2 h-4 w-4" />Retour</Button></CardContent></Card>)}</div>}
+          </TabsContent>
+<TabsContent value="shirts" className="mt-0">
             <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
                 <div className="flex items-center gap-2">
