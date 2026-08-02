@@ -56,7 +56,7 @@ const App = () => (
           <RouteMetadata />
           <LightboxProvider>
             <Layout>
-              <React.Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center text-muted-foreground">Chargementâ€¦</div>}>
+              <React.Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center text-muted-foreground">Chargement…</div>}>
                 <Routes>
                 <Route path="/" element={<Accueil />} />
                 <Route path="/actualites" element={<Actualites />} />
@@ -75,7 +75,7 @@ const App = () => (
                     <React.Suspense
                       fallback={
                         <div className="flex min-h-[60vh] items-center justify-center text-muted-foreground">
-                          Chargement des statistiquesâ€¦
+                          Chargement des statistiques…
                         </div>
                       }
                     >

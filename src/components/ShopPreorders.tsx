@@ -204,7 +204,7 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
                   <FormItem>
                     <FormLabel>Précision éventuelle</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Ex. coupe, remise à un entraîneurâ€¦" rows={3} {...field} />
+                      <Textarea placeholder="Ex. coupe, remise à un entraîneur…" rows={3} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -227,7 +227,7 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
                 <div className="flex flex-col items-center justify-between gap-4 rounded-xl bg-clubDark p-5 text-white sm:flex-row">
                   <div>
                     <p className="text-sm text-white/70">Total estimé</p>
-                    <p className="text-3xl font-black text-clubPrimary">{totalPrice} â‚¬</p>
+                    <p className="text-3xl font-black text-clubPrimary">{totalPrice} €</p>
                   </div>
                   <Button
                     type="submit"
@@ -235,7 +235,7 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
                     className="w-full bg-clubPrimary px-8 py-6 text-lg font-bold text-white sm:w-auto"
                   >
                     {isSubmitting ? (
-                      <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Enregistrementâ€¦</>
+                      <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Enregistrement…</>
                     ) : (
                       <><PackageCheck className="mr-2 h-5 w-5" />Précommander</>
                     )}
@@ -276,7 +276,7 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
                   <p className="font-semibold text-clubDark">{preorder.first_name} {preorder.last_name_initial}</p>
                   <p className="text-sm">{preorder.product_name}</p>
                   <p className="text-sm">
-                    <span className="sm:hidden">Taille / quantité : </span>{preorder.size} Â· {preorder.quantity}
+                    <span className="sm:hidden">Taille / quantité : </span>{preorder.size} · {preorder.quantity}
                   </p>
                   <div>
                     <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-800">

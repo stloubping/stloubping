@@ -229,7 +229,7 @@ const Materiels = () => {
         <div className="container mx-auto grid items-center gap-8 lg:grid-cols-[1.2fr_.8fr]">
           <div>
             <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-clubPrimary">
-              Boutique Â· Matériels
+              Boutique · Matériels
             </p>
             <h1 className="mt-3 text-4xl font-black md:text-5xl">
               Commande groupée Wack Sport
@@ -367,7 +367,7 @@ const Materiels = () => {
                           <FormField control={form.control} name={`items.${index}.designation`} render={({ field }) => (
                             <FormItem className="lg:col-span-5">
                               <FormLabel>Désignation</FormLabel>
-                              <FormControl><Input placeholder="Ex. Revêtement, bois, chaussuresâ€¦" {...field} /></FormControl>
+                              <FormControl><Input placeholder="Ex. Revêtement, bois, chaussures…" {...field} /></FormControl>
                               <FormMessage />
                             </FormItem>
                           )} />
@@ -389,7 +389,7 @@ const Materiels = () => {
                           <FormField control={form.control} name={`items.${index}.unit_price`} render={({ field }) => (
                             <FormItem className="lg:col-span-2">
                               <FormLabel>Prix indicatif</FormLabel>
-                              <FormControl><Input inputMode="decimal" placeholder="0,00 â‚¬" {...field} /></FormControl>
+                              <FormControl><Input inputMode="decimal" placeholder="0,00 €" {...field} /></FormControl>
                               <FormMessage />
                             </FormItem>
                           )} />
@@ -454,7 +454,7 @@ const Materiels = () => {
                     <FormControl>
                       <Textarea
                         rows={3}
-                        placeholder="Montage de raquette, délai souhaité ou autre précisionâ€¦"
+                        placeholder="Montage de raquette, délai souhaité ou autre précision…"
                         {...field}
                       />
                     </FormControl>
@@ -480,7 +480,7 @@ const Materiels = () => {
                   <div>
                     <p className="text-sm text-white/70">Total indicatif saisi</p>
                     <p className="text-3xl font-black text-clubPrimary">
-                      {estimatedTotal.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} â‚¬
+                      {estimatedTotal.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                     </p>
                     <p className="mt-1 text-xs text-white/60">Le montant définitif sera confirmé par le club.</p>
                   </div>
@@ -490,7 +490,7 @@ const Materiels = () => {
                     className="w-full bg-clubPrimary px-8 py-6 text-lg font-bold text-white sm:w-auto"
                   >
                     {isSubmitting ? (
-                      <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Envoiâ€¦</>
+                      <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Envoi…</>
                     ) : (
                       <><PackageCheck className="mr-2 h-5 w-5" />Transmettre la commande</>
                     )}

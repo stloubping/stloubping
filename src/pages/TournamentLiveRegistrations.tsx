@@ -125,7 +125,7 @@ const TournamentLiveRegistrations = () => {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-clubDark hover:bg-clubDark">
-                    <TableHead className="text-clubDark-foreground w-[40px] md:w-[60px] text-center px-1 md:px-4 text-[10px] md:text-sm">NÂ°</TableHead>
+                    <TableHead className="text-clubDark-foreground w-[40px] md:w-[60px] text-center px-1 md:px-4 text-[10px] md:text-sm">N°</TableHead>
                     <TableHead className="text-clubDark-foreground px-2 md:px-4 text-[10px] md:text-sm">Joueur</TableHead>
                     <TableHead className="text-clubDark-foreground text-center px-1 md:px-4 text-[10px] md:text-sm">Pts</TableHead>
                     <TableHead className="text-clubDark-foreground px-2 md:px-4 text-[10px] md:text-sm">Club</TableHead>

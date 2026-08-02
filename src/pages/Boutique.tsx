@@ -12,7 +12,7 @@ const Boutique = () => {
   const jerseyDetails = {
     name: "Maillot Officiel du Club",
     image: "/images/boutique/maillot-club-officiel.png",
-    price: "35â‚¬",
+    price: "35€",
     description: "Le maillot officiel de notre club, arborant fièrement le logo du club et un design dynamique. Idéal pour représenter le St Loub Ping en compétition ou à l'entraînement.",
     features: [
       "100% polyester technique",

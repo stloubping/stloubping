@@ -85,104 +85,104 @@ const trialSlots: Array<{
   {
     id: "mercredi-1530",
     day: "Mercredi",
-    time: "15h30 â€“ 16h30",
-    label: "Loisirs 7â€“10 ans",
+    time: "15h30 – 16h30",
+    label: "Loisirs 7–10 ans",
     profiles: ["enfant"],
   },
   {
     id: "samedi-1000",
     day: "Samedi",
-    time: "10h00 â€“ 11h30",
-    label: "Loisirs 7â€“10 ans",
+    time: "10h00 – 11h30",
+    label: "Loisirs 7–10 ans",
     profiles: ["enfant"],
   },
   {
     id: "mercredi-1630",
     day: "Mercredi",
-    time: "16h30 â€“ 18h00",
-    label: "Loisirs 11â€“16 ans",
+    time: "16h30 – 18h00",
+    label: "Loisirs 11–16 ans",
     profiles: ["adolescent"],
   },
   {
     id: "jeudi-1700",
     day: "Jeudi",
-    time: "17h00 â€“ 18h00",
+    time: "17h00 – 18h00",
     label: "Jeunes perfectionnement",
     profiles: ["adolescent", "competiteur"],
   },
   {
     id: "jeudi-1800",
     day: "Jeudi",
-    time: "18h00 â€“ 19h30",
-    label: "Loisirs 11â€“16 ans",
+    time: "18h00 – 19h30",
+    label: "Loisirs 11–16 ans",
     profiles: ["adolescent"],
   },
   {
     id: "vendredi-1700",
     day: "Vendredi",
-    time: "17h00 â€“ 18h00",
+    time: "17h00 – 18h00",
     label: "Jeunes perfectionnement",
     profiles: ["adolescent", "competiteur"],
   },
   {
     id: "lundi-1800",
     day: "Lundi",
-    time: "18h00 â€“ 20h00",
+    time: "18h00 – 20h00",
     label: "Entraînement libre",
     profiles: ["adulte-loisir", "competiteur"],
   },
   {
     id: "mardi-1800",
     day: "Mardi",
-    time: "18h00 â€“ 20h00",
+    time: "18h00 – 20h00",
     label: "Entraînement libre",
     profiles: ["adulte-loisir", "competiteur"],
   },
   {
     id: "mercredi-1800",
     day: "Mercredi",
-    time: "18h00 â€“ 19h30",
+    time: "18h00 – 19h30",
     label: "Jeunes compétitions",
     profiles: ["competiteur"],
   },
   {
     id: "mercredi-1930",
     day: "Mercredi",
-    time: "19h30 â€“ 21h00",
+    time: "19h30 – 21h00",
     label: "Adultes compétitions",
     profiles: ["competiteur"],
   },
   {
     id: "jeudi-1930",
     day: "Jeudi",
-    time: "19h30 â€“ 21h00",
+    time: "19h30 – 21h00",
     label: "Adultes loisirs",
     profiles: ["adulte-loisir"],
   },
   {
     id: "vendredi-1800",
     day: "Vendredi",
-    time: "18h00 â€“ 20h00",
+    time: "18h00 – 20h00",
     label: "Jeunes compétitions",
     profiles: ["competiteur"],
   },
 ];
 
 const planning = [
-  { day: "Lundi", time: "18h00 â€“ 20h00", group: "Entraînement libre", tone: "libre" },
-  { day: "Mardi", time: "18h00 â€“ 20h00", group: "Entraînement libre", tone: "libre" },
-  { day: "Mercredi", time: "15h30 â€“ 16h30", group: "Loisirs 7â€“10 ans", tone: "jeunes" },
-  { day: "Mercredi", time: "16h30 â€“ 18h00", group: "Loisirs 11â€“16 ans", tone: "jeunes" },
-  { day: "Mercredi", time: "18h00 â€“ 19h30", group: "Jeunes compétitions", tone: "jeunes" },
-  { day: "Mercredi", time: "19h30 â€“ 21h00", group: "Adultes compétitions", tone: "adultes" },
-  { day: "Jeudi", time: "17h00 â€“ 18h00", group: "Jeunes perfectionnement", tone: "jeunes" },
-  { day: "Jeudi", time: "18h00 â€“ 19h30", group: "Loisirs 11â€“16 ans", tone: "jeunes" },
-  { day: "Jeudi", time: "19h30 â€“ 21h00", group: "Adultes loisirs", tone: "adultes" },
-  { day: "Vendredi", time: "17h00 â€“ 18h00", group: "Jeunes perfectionnement", tone: "jeunes" },
-  { day: "Vendredi", time: "18h00 â€“ 20h00", group: "Jeunes compétitions", tone: "jeunes" },
-  { day: "Vendredi", time: "20h00 â€“ 00h00", group: "Critérium Gironde", tone: "competition" },
-  { day: "Samedi", time: "10h00 â€“ 11h30", group: "Loisirs 7â€“10 ans", tone: "jeunes" },
-  { day: "Samedi", time: "14h00 â€“ 21h00", group: "Championnat par équipe", tone: "competition" },
+  { day: "Lundi", time: "18h00 – 20h00", group: "Entraînement libre", tone: "libre" },
+  { day: "Mardi", time: "18h00 – 20h00", group: "Entraînement libre", tone: "libre" },
+  { day: "Mercredi", time: "15h30 – 16h30", group: "Loisirs 7–10 ans", tone: "jeunes" },
+  { day: "Mercredi", time: "16h30 – 18h00", group: "Loisirs 11–16 ans", tone: "jeunes" },
+  { day: "Mercredi", time: "18h00 – 19h30", group: "Jeunes compétitions", tone: "jeunes" },
+  { day: "Mercredi", time: "19h30 – 21h00", group: "Adultes compétitions", tone: "adultes" },
+  { day: "Jeudi", time: "17h00 – 18h00", group: "Jeunes perfectionnement", tone: "jeunes" },
+  { day: "Jeudi", time: "18h00 – 19h30", group: "Loisirs 11–16 ans", tone: "jeunes" },
+  { day: "Jeudi", time: "19h30 – 21h00", group: "Adultes loisirs", tone: "adultes" },
+  { day: "Vendredi", time: "17h00 – 18h00", group: "Jeunes perfectionnement", tone: "jeunes" },
+  { day: "Vendredi", time: "18h00 – 20h00", group: "Jeunes compétitions", tone: "jeunes" },
+  { day: "Vendredi", time: "20h00 – 00h00", group: "Critérium Gironde", tone: "competition" },
+  { day: "Samedi", time: "10h00 – 11h30", group: "Loisirs 7–10 ans", tone: "jeunes" },
+  { day: "Samedi", time: "14h00 – 21h00", group: "Championnat par équipe", tone: "competition" },
 ];
 
 const toneClasses: Record<string, string> = {
@@ -264,7 +264,7 @@ const EssaiGratuit = () => {
         phone: trialForm.phone.trim(),
         email: trialForm.email.trim().toLowerCase(),
         slot_id: selectedSlot.id,
-        slot_label: `${selectedSlot.day} ${selectedSlot.time} â€” ${selectedSlot.label}`,
+        slot_label: `${selectedSlot.day} ${selectedSlot.time} — ${selectedSlot.label}`,
         consent: trialForm.consent,
         website: trialForm.website.trim(),
       });
@@ -287,7 +287,7 @@ const EssaiGratuit = () => {
           level: trialForm.level,
           phone: trialForm.phone.trim(),
           email: trialForm.email.trim().toLowerCase(),
-          slot_label: `${selectedSlot.day} ${selectedSlot.time} â€” ${selectedSlot.label}`,
+          slot_label: `${selectedSlot.day} ${selectedSlot.time} — ${selectedSlot.label}`,
         },
       });
 
@@ -476,7 +476,7 @@ const EssaiGratuit = () => {
                         />
                         <span>
                           <span className="block font-extrabold text-clubDark">
-                            {slot.day} Â· {slot.time}
+                            {slot.day} · {slot.time}
                           </span>
                           <span className="mt-1 block text-sm text-muted-foreground">{slot.label}</span>
                         </span>
@@ -506,7 +506,7 @@ const EssaiGratuit = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="trial-age">Ã‚ge</Label>
+                  <Label htmlFor="trial-age">Âge</Label>
                   <Input
                     id="trial-age"
                     type="number"
@@ -594,7 +594,7 @@ const EssaiGratuit = () => {
                   className="h-auto bg-clubPrimary py-4 text-base font-bold text-white hover:bg-clubPrimary/90 md:col-span-2"
                 >
                   {trialState === "sending"
-                    ? "Réservation en coursâ€¦"
+                    ? "Réservation en cours…"
                     : "Réserver ma séance gratuite"}
                 </Button>
               </CardContent>
@@ -613,7 +613,7 @@ const EssaiGratuit = () => {
                       Demande enregistrée
                     </span>
                     <h2 className="mt-2 text-3xl font-black text-clubDark">
-                      Ã€ bientôt, {confirmedTrial.firstName} !
+                      À bientôt, {confirmedTrial.firstName} !
                     </h2>
                     <p className="mt-3 text-muted-foreground">
                       Voici votre mémo de séance. Le club dispose de vos coordonnées pour
@@ -635,7 +635,7 @@ const EssaiGratuit = () => {
                       </div>
                       <div className="rounded-xl bg-white p-4">
                         <Shirt className="mb-2 h-5 w-5 text-clubPrimary" />
-                        <strong className="block text-clubDark">Ã€ apporter</strong>
+                        <strong className="block text-clubDark">À apporter</strong>
                         <span className="text-sm text-muted-foreground">
                           Tenue de sport, chaussures propres et gourde. Raquette prêtée si besoin.
                         </span>
@@ -664,7 +664,7 @@ const EssaiGratuit = () => {
         <section>
           <div className="mb-8 text-center">
             <span className="text-sm font-extrabold uppercase tracking-[0.2em] text-clubPrimary">
-              Saison 2026â€“2027
+              Saison 2026–2027
             </span>
             <h2 className="mt-2 text-3xl font-black text-clubDark md:text-4xl">
               Tarifs simples et transparents
@@ -677,7 +677,7 @@ const EssaiGratuit = () => {
                   Licence jeunes
                 </span>
                 <div className="mt-3 text-5xl font-black text-clubDark">
-                  140 <span className="text-2xl text-clubPrimary">â‚¬</span>
+                  140 <span className="text-2xl text-clubPrimary">€</span>
                 </div>
                 <p className="mt-3 text-sm text-muted-foreground">
                   Adhésion, licence fédérale et assurance comprises.
@@ -690,7 +690,7 @@ const EssaiGratuit = () => {
                   Licence adultes
                 </span>
                 <div className="mt-3 text-5xl font-black">
-                  160 <span className="text-2xl text-clubPrimary">â‚¬</span>
+                  160 <span className="text-2xl text-clubPrimary">€</span>
                 </div>
                 <p className="mt-3 text-sm text-white/70">
                   Adhésion, licence fédérale et assurance comprises.
@@ -699,8 +699,8 @@ const EssaiGratuit = () => {
             </Card>
           </div>
           <div className="mx-auto mt-5 max-w-4xl rounded-2xl border border-clubPrimary/20 bg-clubPrimary/5 p-5 text-sm text-clubDark">
-            <strong>Tarifs famille :</strong> â€“5 % pour 2 personnes, â€“10 % pour 3,
-            â€“15 % pour 4, â€“20 % à partir de 5. Paiement par virement, chèque,
+            <strong>Tarifs famille :</strong> –5 % pour 2 personnes, –10 % pour 3,
+            –15 % pour 4, –20 % à partir de 5. Paiement par virement, chèque,
             carte bancaire, Pass’Sport ou chèques ANCV.
           </div>
         </section>
@@ -792,7 +792,7 @@ const EssaiGratuit = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="pre-age">Ã‚ge</Label>
+                        <Label htmlFor="pre-age">Âge</Label>
                         <Input
                           id="pre-age"
                           type="number"
@@ -905,7 +905,7 @@ const EssaiGratuit = () => {
                         className="bg-clubPrimary py-5 font-bold text-white hover:bg-clubPrimary/90 md:col-span-2"
                       >
                         {preRegistrationState === "sending"
-                          ? "Envoi en coursâ€¦"
+                          ? "Envoi en cours…"
                           : "Envoyer ma préinscription"}
                       </Button>
                     </form>

@@ -289,7 +289,7 @@ const TournamentRegistration = () => {
 
               <div className="p-6 bg-clubDark text-white rounded-xl text-center shadow-inner">
                 <p className="text-sm opacity-80 mb-1">Montant total estimé</p>
-                <p className="text-4xl font-black text-clubPrimary">{totalPrice}â‚¬</p>
+                <p className="text-4xl font-black text-clubPrimary">{totalPrice}€</p>
               </div>
 
               <Button 

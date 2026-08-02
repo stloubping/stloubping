@@ -87,7 +87,7 @@ const TournamentRegistrationsList = () => {
     }
 
     const headers = [
-      "NÂ°", "Date d'inscription", "Prénom", "Nom", "Email", "Téléphone",
+      "N°", "Date d'inscription", "Prénom", "Nom", "Email", "Téléphone",
       "Numéro de licence", "Points", "Club", "Tableaux sélectionnés", "Partenaire de double", "Consentement"
     ];
 
@@ -168,7 +168,7 @@ const TournamentRegistrationsList = () => {
               <Table className="min-w-full divide-y divide-border">
                 <TableHeader>
                   <TableRow className="bg-clubDark text-clubDark-foreground hover:bg-clubDark">
-                    <TableHead className="text-clubDark-foreground w-[50px]">NÂ°</TableHead>
+                    <TableHead className="text-clubDark-foreground w-[50px]">N°</TableHead>
                     <TableHead className="text-clubDark-foreground">Date</TableHead>
                     <TableHead className="text-clubDark-foreground">Nom Complet</TableHead>
                     <TableHead className="text-clubDark-foreground">Points</TableHead>
