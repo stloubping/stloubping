@@ -55,7 +55,7 @@ const WeeklyRoomAttendance = () => {
   }, [refresh]);
 
   const saveChoice = async (date: string, attending: boolean, hasKeys: boolean) => {
-    if (attending && !days[date]?.is_open) return;
+    if (attending && days[date]?.is_open === false) return;
     setSubmitting(date);
     const { error } = await supabase.rpc("set_weekly_room_attendance", {
       p_attendance_date: date,
