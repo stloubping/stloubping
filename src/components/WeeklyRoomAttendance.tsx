@@ -87,7 +87,7 @@ const WeeklyRoomAttendance = () => {
     </div>
     <Card className="border-0 shadow-lg"><CardContent className="p-3 md:p-5">
       <div className="grid grid-cols-1 gap-3 min-[390px]:grid-cols-2 sm:grid-cols-4 lg:grid-cols-7">{week.map((day) => {
-        const value = days[day.dateKey] || { is_open: false, player_count: 0, key_holder_count: 0 };
+        const value = days[day.dateKey] || { is_open: true, player_count: 0, key_holder_count: 0 };
         const attending = registered.has(day.dateKey);
         const hasKeys = keyDays.has(day.dateKey);
         const busy = submitting === day.dateKey;
