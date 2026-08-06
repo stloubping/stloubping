@@ -94,8 +94,8 @@ const WeeklyRoomAttendance = () => {
       <p className="mt-2 text-sm text-muted-foreground">{getCurrentWeekLabel(week)} &middot; Un clic suffit, sans nom ni inscription.</p>
     </div>
     <div className="mb-4 flex justify-center">
-      <Button type="button" variant="outline" onClick={toggleDisplayedWeek} className="min-h-11 rounded-full border-clubPrimary/40 bg-white px-5 font-bold text-clubDark shadow-sm hover:bg-clubPrimary/10">
-        <CalendarDays className="mr-2 h-4 w-4 text-clubPrimary" />
+      <Button type="button" onClick={toggleDisplayedWeek} className="min-h-11 rounded-full bg-clubPrimary px-5 font-bold text-white shadow-md hover:bg-clubPrimary/90 hover:text-white">
+        <CalendarDays className="mr-2 h-4 w-4 text-white" />
         {weekOffset === 0 ? "Voir la semaine suivante" : "Revenir à la semaine en cours"}
       </Button>
     </div>
