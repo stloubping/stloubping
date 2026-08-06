@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { Check, Clock3, KeyRound, Loader2, LockKeyhole, Users, X } from "lucide-react";
+﻿import { useCallback, useEffect, useState } from "react";
+import { CalendarDays, Check, Clock3, KeyRound, Loader2, LockKeyhole, Users, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,7 +27,8 @@ const savedSet = (key: string) => {
 const persistSet = (key: string, value: Set<string>) => localStorage.setItem(key, JSON.stringify([...value]));
 
 const WeeklyRoomAttendance = () => {
-  const [week, setWeek] = useState(getRoomAttendanceWeekDays);
+  const [weekOffset, setWeekOffset] = useState(0);
+  const [week, setWeek] = useState(() => getRoomAttendanceWeekDays(0));
   const [days, setDays] = useState<Record<string, AttendanceDay>>({});
   const [registered, setRegistered] = useState<Set<string>>(() => savedSet(DAYS_KEY));
   const [keyDays, setKeyDays] = useState<Set<string>>(() => savedSet(KEY_DAYS_KEY));
@@ -48,11 +49,18 @@ const WeeklyRoomAttendance = () => {
     void refresh();
     const refreshTimer = window.setInterval(refresh, 30_000);
     const weekTimer = window.setInterval(() => {
-      const nextWeek = getRoomAttendanceWeekDays();
+      const nextWeek = getRoomAttendanceWeekDays(weekOffset);
       setWeek((current) => current[0].dateKey === nextWeek[0].dateKey ? current : nextWeek);
     }, 60_000);
     return () => { window.clearInterval(refreshTimer); window.clearInterval(weekTimer); };
   }, [refresh]);
+
+  const toggleDisplayedWeek = () => {
+    const nextOffset = weekOffset === 0 ? 1 : 0;
+    setWeekOffset(nextOffset);
+    setWeek(getRoomAttendanceWeekDays(nextOffset));
+    setLoading(true);
+  };
 
   const saveChoice = async (date: string, attending: boolean, hasKeys: boolean) => {
     if (attending && days[date]?.is_open === false) return;
@@ -81,9 +89,15 @@ const WeeklyRoomAttendance = () => {
 
   return <section className="mb-12" aria-labelledby="room-attendance-title">
     <div className="mb-6 text-center">
-      <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-clubPrimary">Cette semaine</p>
+      <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-clubPrimary">{weekOffset === 0 ? "Cette semaine" : "Semaine suivante"}</p>
       <h2 id="room-attendance-title" className="text-2xl font-bold text-clubDark md:text-3xl">Qui vient &agrave; la salle ?</h2>
       <p className="mt-2 text-sm text-muted-foreground">{getCurrentWeekLabel(week)} &middot; Un clic suffit, sans nom ni inscription.</p>
+    </div>
+    <div className="mb-4 flex justify-center">
+      <Button type="button" variant="outline" onClick={toggleDisplayedWeek} className="min-h-11 rounded-full border-clubPrimary/40 bg-white px-5 font-bold text-clubDark shadow-sm hover:bg-clubPrimary/10">
+        <CalendarDays className="mr-2 h-4 w-4 text-clubPrimary" />
+        {weekOffset === 0 ? "Voir la semaine suivante" : "Revenir à la semaine en cours"}
+      </Button>
     </div>
     <Card className="border-0 shadow-lg"><CardContent className="p-3 md:p-5">
       <div className="grid grid-cols-1 gap-3 min-[390px]:grid-cols-2 sm:grid-cols-4 lg:grid-cols-7">{week.map((day) => {
@@ -105,6 +119,7 @@ const WeeklyRoomAttendance = () => {
         </article>;
       })}</div>
     </CardContent></Card>
+
   </section>;
 };
 
