@@ -1,4 +1,4 @@
-export const WEEK_DAY_LABELS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"] as const;
+﻿export const WEEK_DAY_LABELS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"] as const;
 
 export const toLocalDateKey = (date: Date) => {
   const year = date.getFullYear();
@@ -32,10 +32,11 @@ export const getCurrentWeekLabel = (days = getCurrentWeekDays()) => {
   return `Du ${formatter.format(days[0].date)} au ${formatter.format(days[6].date)}`;
 };
 
-export const getRoomAttendanceWeekDays = () => {
+export const getRoomAttendanceWeekDays = (weekOffset = 0) => {
   const reference = new Date();
   if (reference.getDay() === 1 && reference.getHours() < 1) {
     reference.setDate(reference.getDate() - 1);
   }
+  reference.setDate(reference.getDate() + weekOffset * 7);
   return getCurrentWeekDays(reference);
 };
