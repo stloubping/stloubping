@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
-import { CalendarCheck, ClipboardList, Clock3, Download, FileSpreadsheet, Loader2, LogOut, PackageCheck, Plus, RefreshCw, Shirt, ShoppingBag, Users } from "lucide-react";
+import { CalendarCheck, ClipboardList, Clock3, Download, FileSpreadsheet, Loader2, LogOut, PackageCheck, Plus, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -330,9 +330,6 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
             <p className="mt-2 text-white/65">{session.user.email}</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Button asChild variant="outline" className="border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white">
-              <Link to="/administration/espace-capitaine"><Users className="mr-2 h-4 w-4" /> Espace capitaine</Link>
-            </Button>
             <Button asChild variant="outline" className="border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white">
               <Link to="/administration/presences-salle"><CalendarCheck className="mr-2 h-4 w-4" /> Pr&eacute;sences salle</Link>
             </Button>
