@@ -54,7 +54,6 @@ const Administration = () => {
       if (error || !data) {
         setIsAdmin(false);
         toast.error("Ce compte n’est pas autorisé à gérer le club.");
-        await supabase.auth.signOut();
         return;
       }
       setIsAdmin(true);
