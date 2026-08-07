@@ -18,7 +18,7 @@ export default function TeamOne() {
   const [loading, setLoading] = useState(true);
   const [checkingAccess, setCheckingAccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("stloubping@gmail.com");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
