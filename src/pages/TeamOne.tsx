@@ -30,7 +30,6 @@ export default function TeamOne() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
       setSession(nextSession);
-      setProfile(null);
       setLoading(false);
     });
 
