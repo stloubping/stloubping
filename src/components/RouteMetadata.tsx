@@ -26,6 +26,7 @@ const metadataFor = (pathname: string): Metadata => {
   if (pathname.startsWith("/videos/")) return { title: "Vidéos de tennis de table — Saint-Loub'Ping", description: "Retrouvez les vidéos WTT, tutoriels, reportages et légendes du tennis de table sélectionnés par Saint-Loub'Ping." };
   if (pathname === "/partenaires") return { title: "Partenaires — Saint-Loub'Ping", description: "Découvrez les partenaires qui soutiennent le club de tennis de table Saint-Loub'Ping à Saint-Loubès." };
   if (pathname === "/contact") return { title: "Contact — Saint-Loub'Ping", description: "Contactez le club de tennis de table Saint-Loub'Ping à Saint-Loubès pour toute question sur les entraînements et les adhésions." };
+  if (pathname === "/equipe-1") return { title: "Espace Équipe 1 — Saint-Loub'Ping", description: "Espace privé de gestion sportive de l’Équipe 1 de Saint-Loub'Ping.", noIndex: true };
   if (pathname.startsWith("/administration")) return { title: "Gestion du club — Saint-Loub'Ping", description: "Espace privé de gestion du club Saint-Loub'Ping.", noIndex: true };
   return { title: `${siteName} — Club de tennis de table à Saint-Loubès`, description: "Saint-Loub'Ping, club de tennis de table à Saint-Loubès en Gironde." };
 };

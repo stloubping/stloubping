@@ -43,6 +43,7 @@ const PolitiqueConfidentialite = React.lazy(() => import("./pages/PolitiqueConfi
 const PolitiqueCookies = React.lazy(() => import("./pages/PolitiqueCookies"));
 const DemandeDonnees = React.lazy(() => import("./pages/DemandeDonnees"));
 const Administration = React.lazy(() => import("./pages/Administration"));
+const TeamOne = React.lazy(() => import("./pages/TeamOne"));
 const StageAout = React.lazy(() => import("./pages/StageAout"));
 
 const StatistiquesJoueurs = React.lazy(
@@ -112,8 +113,8 @@ const App = () => (
                 <Route path="/administration/commandes-terminees" element={<Administration />} />
                 <Route path="/administration/wacksport" element={<Administration />} />
                 <Route path="/administration/presences-salle" element={<Administration />} />
-                <Route path="/administration/espace-capitaine" element={<Administration />} />
                 <Route path="/administration/stage-aout" element={<Administration />} />
+                <Route path="/equipe-1" element={<TeamOne />} />
                 <Route path="*" element={<NotFound />} />
                 </Routes>
               </React.Suspense>
