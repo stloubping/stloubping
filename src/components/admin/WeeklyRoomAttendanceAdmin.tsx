@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ArrowLeft, CalendarCheck, Loader2, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
@@ -11,7 +11,8 @@ import { getCurrentWeekLabel, getRoomAttendanceWeekDays } from "@/lib/weekAttend
 type AttendanceDay = { is_open: boolean; player_count: number; key_holder_count: number };
 
 const WeeklyRoomAttendanceAdmin = () => {
-  const week = useMemo(() => getRoomAttendanceWeekDays(), []);
+  const [weekOffset, setWeekOffset] = useState(0);
+  const [week, setWeek] = useState(() => getRoomAttendanceWeekDays(0));
   const [days, setDays] = useState<Record<string, AttendanceDay>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
@@ -29,6 +30,13 @@ const WeeklyRoomAttendanceAdmin = () => {
 
   useEffect(() => { void refresh(); }, [refresh]);
 
+  const toggleDisplayedWeek = () => {
+    const nextOffset = weekOffset === 0 ? 1 : 0;
+    setWeekOffset(nextOffset);
+    setWeek(getRoomAttendanceWeekDays(nextOffset));
+    setLoading(true);
+  };
+
   const save = async (dates: string[], isOpen: boolean) => {
     setSaving(dates.length === 1 ? dates[0] : "all");
     const { error } = await supabase.from("weekly_room_days").upsert(
@@ -45,10 +53,11 @@ const WeeklyRoomAttendanceAdmin = () => {
     <Card className="overflow-hidden border-0 shadow-xl">
       <CardHeader className="bg-clubDark text-white"><div className="flex items-center justify-between gap-4"><div>
         <p className="mb-1 text-sm font-bold uppercase tracking-widest text-clubPrimary">Présences à la salle</p>
-        <CardTitle className="text-2xl">Ouvertures de la semaine</CardTitle><p className="mt-1 text-sm text-white/65">{getCurrentWeekLabel()}</p>
+        <CardTitle className="text-2xl">Ouvertures de la semaine</CardTitle><p className="mt-1 text-sm text-white/65">{getCurrentWeekLabel(week)}</p>
       </div><CalendarCheck className="h-9 w-9 text-clubPrimary" /></div></CardHeader>
       <CardContent className="space-y-5 p-4 md:p-6">
         <div className="flex flex-wrap gap-2">
+          <Button type="button" variant="secondary" disabled={saving !== null} onClick={toggleDisplayedWeek}>{weekOffset === 0 ? "Voir la semaine suivante" : "Revenir à la semaine en cours"}</Button>
           <Button disabled={saving !== null} onClick={() => void save(week.map((day) => day.dateKey), true)}>Ouvrir toute la semaine</Button>
           <Button disabled={saving !== null} variant="outline" onClick={() => void save(week.map((day) => day.dateKey), false)}>Fermer toute la semaine</Button>
         </div>
