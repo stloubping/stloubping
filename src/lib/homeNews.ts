@@ -9,6 +9,7 @@ type HomeNewsRow = {
   description: string;
   link: string;
   image_url: string;
+  display_order: number;
 };
 
 const dateFormatter = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" });
@@ -28,10 +29,20 @@ export const fallbackHomeNewsItems = allNewsItems.slice(0, 3);
 export const fetchHomeNewsItems = async () => {
   const { data, error } = await supabase
     .from("home_news_items")
-    .select("id,title,published_at,location,description,link,image_url")
-    .order("published_at", { ascending: false })
-    .order("created_at", { ascending: false })
+    .select("id,title,published_at,location,description,link,image_url,display_order")
+    .order("display_order", { ascending: true })
     .limit(3);
+
+  if (error) throw error;
+  return (data as HomeNewsRow[]).map(toNewsItem);
+};
+
+export const fetchAllManagedNewsItems = async () => {
+  const { data, error } = await supabase
+    .from("home_news_items")
+    .select("id,title,published_at,location,description,link,image_url,display_order")
+    .order("published_at", { ascending: false })
+    .order("created_at", { ascending: false });
 
   if (error) throw error;
   return (data as HomeNewsRow[]).map(toNewsItem);

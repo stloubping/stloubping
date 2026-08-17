@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Newspaper, Search } from "lucide-react";
 import NewsCard from "@/components/NewsCard";
 import { Input } from "@/components/ui/input";
 import { allNewsItems } from "@/data/news";
+import { fetchAllManagedNewsItems } from "@/lib/homeNews";
 
 const normalize = (value = "") =>
   value
@@ -14,17 +15,24 @@ const normalize = (value = "") =>
 
 const Actualites = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [newsItems, setNewsItems] = useState(allNewsItems);
+
+  useEffect(() => {
+    fetchAllManagedNewsItems()
+      .then((managedItems) => setNewsItems([...managedItems, ...allNewsItems.slice(3)]))
+      .catch((error) => console.error("Impossible de charger les actualités administrables.", error));
+  }, []);
 
   const filteredNews = useMemo(() => {
     const query = normalize(searchQuery.trim());
-    if (!query) return allNewsItems;
+    if (!query) return newsItems;
 
-    return allNewsItems.filter((news) =>
+    return newsItems.filter((news) =>
       normalize(
         `${news.title} ${news.description} ${news.location} ${news.date}`,
       ).includes(query),
     );
-  }, [searchQuery]);
+  }, [newsItems, searchQuery]);
 
   return (
     <div className="min-h-screen bg-clubLight text-clubLight-foreground">
@@ -42,9 +50,9 @@ const Actualites = () => {
             forts du St Loub Ping.
           </p>
           <p className="mt-5 text-sm font-semibold text-white/60">
-            {allNewsItems.length} article
-            {allNewsItems.length > 1 ? "s" : ""} publié
-            {allNewsItems.length > 1 ? "s" : ""}
+            {newsItems.length} article
+            {newsItems.length > 1 ? "s" : ""} publié
+            {newsItems.length > 1 ? "s" : ""}
           </p>
         </div>
       </section>
