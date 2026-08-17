@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
@@ -8,14 +8,19 @@ import NewsCard from "@/components/NewsCard";
 import HeroSection from "@/components/HeroSection";
 import VideoCard from "@/components/VideoCard";
 import { allVideos } from '@/data/videos';
-import { allNewsItems } from '@/data/news';
+import { fallbackHomeNewsItems, fetchHomeNewsItems } from '@/lib/homeNews';
 import CompetitionCalendar from '@/components/CompetitionCalendar';
 import WeeklyRoomAttendance from '@/components/WeeklyRoomAttendance';
 import { ArrowRight, Newspaper } from 'lucide-react';
 
 const Accueil = () => {
-  // Les articles sont classés du plus récent au plus ancien dans la source.
-  const homeNewsItems = allNewsItems.slice(0, 3);
+  const [homeNewsItems, setHomeNewsItems] = useState(fallbackHomeNewsItems);
+
+  useEffect(() => {
+    fetchHomeNewsItems()
+      .then((items) => { if (items.length > 0) setHomeNewsItems(items); })
+      .catch((error) => console.error("Impossible de charger les actualités de l’accueil.", error));
+  }, []);
 
   const latestVideos = [...allVideos]
     .sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime())
