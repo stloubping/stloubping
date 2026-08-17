@@ -73,6 +73,14 @@ export const allVideos: VideoItem[] = [
     category: 'wtt',
     dateAdded: "2026-07-26",
   },
+  {
+    id: 'wtt-9',
+    title: "FULL MATCH | Felix Lebrun vs Tomokazu Harimoto | MS Final | #EuropeSmash 2026",
+    description: "Revivez la finale simple messieurs entre Félix Lebrun et Tomokazu Harimoto au Europe Smash 2026.",
+    youtubeId: "Oc6EUZ2aYQ4",
+    category: 'wtt',
+    dateAdded: "2026-08-17",
+  },
   // Reportages
   {
     id: 'reportage-1',
