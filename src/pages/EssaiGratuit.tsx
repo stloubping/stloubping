@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 
 type Profile = "enfant" | "adolescent" | "adulte-loisir" | "competiteur";
 type RequestState = "idle" | "sending" | "success" | "error";
+type ScheduleTone = "libre" | "jeunes" | "competition" | "adultes";
 
 type TrialForm = {
   profile: Profile | "";
@@ -168,28 +169,72 @@ const trialSlots: Array<{
   },
 ];
 
-const planning = [
-  { day: "Lundi", time: "18h00 – 20h00", group: "Entraînement libre", tone: "libre" },
-  { day: "Mardi", time: "18h00 – 20h00", group: "Entraînement libre", tone: "libre" },
-  { day: "Mercredi", time: "15h30 – 16h30", group: "Loisirs 7–10 ans", tone: "jeunes" },
-  { day: "Mercredi", time: "16h30 – 18h00", group: "Loisirs 11–16 ans", tone: "jeunes" },
-  { day: "Mercredi", time: "18h00 – 19h30", group: "Jeunes compétitions", tone: "jeunes" },
-  { day: "Mercredi", time: "19h30 – 21h00", group: "Adultes compétitions", tone: "adultes" },
-  { day: "Jeudi", time: "17h00 – 18h00", group: "Jeunes perfectionnement", tone: "jeunes" },
-  { day: "Jeudi", time: "18h00 – 19h30", group: "Loisirs 11–16 ans", tone: "jeunes" },
-  { day: "Jeudi", time: "19h30 – 21h00", group: "Adultes loisirs", tone: "adultes" },
-  { day: "Vendredi", time: "17h00 – 18h00", group: "Jeunes perfectionnement", tone: "jeunes" },
-  { day: "Vendredi", time: "18h00 – 20h00", group: "Jeunes compétitions", tone: "jeunes" },
-  { day: "Vendredi", time: "20h00 – 00h00", group: "Critérium Gironde", tone: "competition" },
-  { day: "Samedi", time: "10h00 – 11h30", group: "Loisirs 7–10 ans", tone: "jeunes" },
-  { day: "Samedi", time: "14h00 – 21h00", group: "Championnat par équipe", tone: "competition" },
+const trainingSchedule: Array<{
+  day: string;
+  slots: Array<{ time: string; label: string; tone: ScheduleTone }>;
+}> = [
+  { day: "Lundi", slots: [{ time: "18h00 – 20h00", label: "Entraînement libre", tone: "libre" }] },
+  { day: "Mardi", slots: [{ time: "18h00 – 20h00", label: "Entraînement libre", tone: "libre" }] },
+  {
+    day: "Mercredi",
+    slots: [
+      { time: "15h30 – 16h30", label: "Loisirs 7–10 ans", tone: "jeunes" },
+      { time: "16h30 – 18h00", label: "Loisirs 11–16 ans", tone: "jeunes" },
+      { time: "18h00 – 19h30", label: "Jeunes compétitions", tone: "jeunes" },
+      { time: "19h30 – 21h00", label: "Adultes compétitions", tone: "adultes" },
+    ],
+  },
+  {
+    day: "Jeudi",
+    slots: [
+      { time: "17h00 – 18h00", label: "Jeunes perfectionnement", tone: "jeunes" },
+      { time: "18h00 – 19h30", label: "Loisirs 11–16 ans", tone: "jeunes" },
+      { time: "19h30 – 21h00", label: "Adultes loisirs", tone: "adultes" },
+    ],
+  },
+  {
+    day: "Vendredi",
+    slots: [
+      { time: "17h00 – 18h00", label: "Jeunes perfectionnement", tone: "jeunes" },
+      { time: "18h00 – 20h00", label: "Jeunes compétitions", tone: "jeunes" },
+      { time: "20h00 – 00h00", label: "Critérium Gironde", tone: "competition" },
+    ],
+  },
+  {
+    day: "Samedi",
+    slots: [
+      { time: "10h00 – 11h30", label: "Loisirs 7–10 ans", tone: "jeunes" },
+      { time: "14h00 – 21h00", label: "Championnat par équipe", tone: "competition" },
+    ],
+  },
 ];
 
-const toneClasses: Record<string, string> = {
-  libre: "border-lime-300 bg-lime-50 text-lime-900",
-  jeunes: "border-sky-300 bg-sky-50 text-sky-900",
+const scheduleToneClasses: Record<ScheduleTone, string> = {
+  libre: "border-lime-300 bg-lime-50 text-lime-950",
+  jeunes: "border-sky-300 bg-sky-50 text-sky-950",
   competition: "border-amber-300 bg-amber-50 text-amber-950",
   adultes: "border-rose-300 bg-rose-50 text-rose-950",
+};
+
+const scheduleStartRows = [10 * 60, 14 * 60, 15 * 60 + 30, 16 * 60 + 30, 17 * 60, 18 * 60, 19 * 60 + 30, 20 * 60];
+
+const parseScheduleTime = (value: string) => {
+  const [hours, minutes] = value.trim().split("h").map(Number);
+  return hours * 60 + (minutes || 0);
+};
+
+const getScheduleGridPosition = (time: string) => {
+  const [startValue, endValue] = time.split("–");
+  const start = parseScheduleTime(startValue);
+  let end = parseScheduleTime(endValue);
+
+  if (end === 0) end = 24 * 60;
+
+  const startRow = scheduleStartRows.indexOf(start) + 1;
+  const nextStartAtOrAfterEnd = scheduleStartRows.findIndex((rowStart) => rowStart >= end);
+  const endRow = nextStartAtOrAfterEnd === -1 ? scheduleStartRows.length + 1 : nextStartAtOrAfterEnd + 1;
+
+  return { gridRow: `${startRow} / ${endRow}` };
 };
 
 const initialTrialForm: TrialForm = {
@@ -705,34 +750,70 @@ const EssaiGratuit = () => {
           </div>
         </section>
 
-        <section>
-          <div className="mb-8 text-center">
-            <span className="text-sm font-extrabold uppercase tracking-[0.2em] text-clubPrimary">
-              Tous les entraînements
-            </span>
-            <h2 className="mt-2 text-3xl font-black text-clubDark md:text-4xl">
-              Planning hebdomadaire
-            </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-              Les horaires peuvent être ajustés à l’issue des premiers entraînements.
-            </p>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {planning.map((item) => (
-              <div
-                key={`${item.day}-${item.time}`}
-                className={`rounded-2xl border p-4 ${toneClasses[item.tone]}`}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <strong>{item.day}</strong>
-                  <span className="rounded-full bg-white/70 px-2.5 py-1 text-xs font-bold">
-                    {item.time}
-                  </span>
+        <section aria-labelledby="trial-training-schedule-title">
+          <Card className="overflow-hidden rounded-2xl border border-border bg-clubLight shadow-lg">
+            <CardHeader className="border-b border-border bg-clubDark px-5 py-6 text-white sm:px-8">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="mb-1 text-sm font-bold uppercase tracking-[0.18em] text-clubPrimary">
+                    Saison 2026–2027
+                  </p>
+                  <CardTitle id="trial-training-schedule-title" className="text-2xl text-white md:text-3xl">
+                    Planning des entraînements
+                  </CardTitle>
                 </div>
-                <p className="mt-3 text-sm font-semibold">{item.group}</p>
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10">
+                  <CalendarDays className="h-6 w-6 text-clubPrimary" aria-hidden="true" />
+                </div>
               </div>
-            ))}
-          </div>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6 lg:p-8">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                {trainingSchedule.map(({ day, slots }) => (
+                  <article key={day} className="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
+                    <h3 className="border-b border-clubPrimary/20 bg-clubPrimary/10 px-4 py-3 text-center text-base font-extrabold uppercase tracking-wide text-clubDark">
+                      {day}
+                    </h3>
+                    <div className="space-y-3 p-3 lg:grid lg:h-[520px] lg:grid-rows-8 lg:gap-1 lg:space-y-0 lg:p-2">
+                      {slots.map((slot) => (
+                        <div
+                          key={`${day}-${slot.time}`}
+                          className={`rounded-lg border-l-4 p-3 lg:flex lg:flex-col lg:justify-center lg:px-2 lg:py-1.5 ${scheduleToneClasses[slot.tone]}`}
+                          style={getScheduleGridPosition(slot.time)}
+                        >
+                          <p className="font-bold leading-tight lg:text-xs">{slot.label}</p>
+                          <p className="mt-1.5 flex items-center gap-1 text-sm font-semibold lg:text-xs">
+                            <Clock3 className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                            <time>{slot.time}</time>
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              <div className="mt-6 flex flex-wrap justify-center gap-2 sm:gap-3" aria-label="Légende du planning">
+                {[
+                  { label: "Libre", tone: "libre" as const },
+                  { label: "Jeunes", tone: "jeunes" as const },
+                  { label: "Compétition", tone: "competition" as const },
+                  { label: "Adultes", tone: "adultes" as const },
+                ].map((item) => (
+                  <span
+                    key={item.tone}
+                    className={`rounded-full border px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${scheduleToneClasses[item.tone]}`}
+                  >
+                    {item.label}
+                  </span>
+                ))}
+              </div>
+
+              <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-muted-foreground">
+                Ces horaires sont susceptibles d'ajustements à l'issue des premiers entraînements.
+              </p>
+            </CardContent>
+          </Card>
         </section>
 
         <section id="preinscription" className="scroll-mt-24">
