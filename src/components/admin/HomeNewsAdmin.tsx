@@ -1,5 +1,5 @@
 import { type FormEvent, useCallback, useEffect, useState } from "react";
-import { ArrowLeft, Loader2, Newspaper, Plus, Save, Trash2 } from "lucide-react";
+import { ArrowLeft, ImageUp, Loader2, Newspaper, Plus, Save, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -34,6 +34,7 @@ const HomeNewsAdmin = () => {
   const [draft, setDraft] = useState<NewsDraft>(emptyDraft);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
+  const [uploading, setUploading] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     const { data, error } = await supabase
@@ -122,11 +123,49 @@ const HomeNewsAdmin = () => {
     setSaving(null);
   };
 
+  const uploadImage = async (file: File, target: string, onChange: (field: keyof NewsDraft, nextValue: string) => void) => {
+    if (!file.type.startsWith("image/")) {
+      toast.error("Sélectionnez un fichier image.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("L’image ne doit pas dépasser 5 Mo.");
+      return;
+    }
+
+    setUploading(target);
+    const extension = file.name.split(".").pop()?.toLocaleLowerCase() || "jpg";
+    const filePath = `${new Date().getFullYear()}/${crypto.randomUUID()}.${extension}`;
+    const { error } = await supabase.storage.from("news-images").upload(filePath, file, {
+      cacheControl: "3600",
+      contentType: file.type,
+      upsert: false,
+    });
+
+    if (error) {
+      console.error(error);
+      toast.error("L’image n’a pas pu être envoyée.");
+    } else {
+      const { data } = supabase.storage.from("news-images").getPublicUrl(filePath);
+      onChange("image_url", data.publicUrl);
+      toast.success("Image ajoutée. Pensez à enregistrer l’article.");
+    }
+    setUploading(null);
+  };
+
   const fields = (value: NewsDraft, onChange: (field: keyof NewsDraft, nextValue: string) => void, prefix: string) => <>
     <div className="grid gap-4 md:grid-cols-[1fr_180px]"><label className="grid gap-1.5 text-sm font-bold">Titre<Input value={value.title} onChange={(event) => onChange("title", event.target.value)} maxLength={180} required /></label><label className="grid gap-1.5 text-sm font-bold">Date<input className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" type="date" value={value.published_at} onChange={(event) => onChange("published_at", event.target.value)} required /></label></div>
     <label className="grid gap-1.5 text-sm font-bold">Lieu (facultatif)<Input value={value.location} onChange={(event) => onChange("location", event.target.value)} maxLength={160} /></label>
     <label className="grid gap-1.5 text-sm font-bold">Texte de l’actualité<Textarea value={value.description} onChange={(event) => onChange("description", event.target.value)} maxLength={3000} rows={5} required /></label>
-    <div className="grid gap-4 md:grid-cols-2"><label className="grid gap-1.5 text-sm font-bold">Lien du bouton (facultatif)<Input value={value.link} onChange={(event) => onChange("link", event.target.value)} placeholder="/adhesions, https://… ou #" /></label><label className="grid gap-1.5 text-sm font-bold">Image (URL ou chemin)<Input value={value.image_url} onChange={(event) => onChange("image_url", event.target.value)} placeholder="/images/actualites/mon-image.jpg" /></label></div>
+    <label className="grid gap-1.5 text-sm font-bold">Lien du bouton (facultatif)<Input value={value.link} onChange={(event) => onChange("link", event.target.value)} placeholder="/adhesions, https://… ou #" /></label>
+    <div className="grid gap-3 rounded-xl border bg-muted/20 p-4 md:grid-cols-[160px_1fr] md:items-center">
+      <div className="h-28 overflow-hidden rounded-lg border bg-white">{value.image_url ? <img src={value.image_url} alt="Aperçu de l’actualité" className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-xs text-muted-foreground">Aucune image</div>}</div>
+      <div className="space-y-3"><p className="text-sm font-bold">Image de l’article</p><label className="inline-flex min-h-10 cursor-pointer items-center rounded-md bg-clubPrimary px-4 py-2 text-sm font-bold text-white hover:bg-clubPrimary/90">
+        {uploading === prefix ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ImageUp className="mr-2 h-4 w-4" />}
+        {uploading === prefix ? "Envoi en cours…" : "Choisir une image"}
+        <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="sr-only" disabled={uploading !== null} onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadImage(file, prefix, onChange); event.target.value = ""; }} />
+      </label><p className="text-xs font-normal text-muted-foreground">JPG, PNG, WebP ou GIF · 5 Mo maximum.</p><details className="text-xs"><summary className="cursor-pointer text-muted-foreground">Utiliser une adresse d’image</summary><Input className="mt-2" value={value.image_url} onChange={(event) => onChange("image_url", event.target.value)} placeholder="https://…" /></details></div>
+    </div>
   </>;
 
   return <section className="min-h-[70vh] bg-clubLight px-4 py-10"><div className="mx-auto max-w-5xl space-y-6">
