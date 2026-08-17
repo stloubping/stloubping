@@ -19,6 +19,14 @@
   ],
   "rewrites": [
     {
+      "source": "/ping-tracker",
+      "destination": "/ping-tracker/index.html"
+    },
+    {
+      "source": "/ping-tracker/",
+      "destination": "/ping-tracker/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
