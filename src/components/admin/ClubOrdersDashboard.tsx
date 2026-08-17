@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Session } from "@supabase/supabase-js";
-import { CalendarCheck, ClipboardList, Clock3, Download, FileSpreadsheet, Loader2, LogOut, PackageCheck, Plus, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
+import { CalendarCheck, ClipboardList, Clock3, Download, FileSpreadsheet, Loader2, LogOut, Newspaper, PackageCheck, Plus, RefreshCw, Shirt, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -335,6 +335,9 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
             </Button>
             <Button asChild variant="outline" className="border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white">
               <Link to="/administration/stage-aout"><CalendarCheck className="mr-2 h-4 w-4" /> Stage {"ao\u00fbt"}</Link>
+            </Button>
+            <Button asChild variant="outline" className="border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white">
+              <Link to="/administration/actualites"><Newspaper className="mr-2 h-4 w-4" /> Actualités accueil</Link>
             </Button>
             <Button variant="outline" onClick={fetchOrders} className="border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white">
               <RefreshCw className="mr-2 h-4 w-4" /> Actualiser
