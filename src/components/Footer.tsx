@@ -1,7 +1,7 @@
 import React from 'react';
 import { MadeWithDyad } from './made-with-dyad';
 import { Link } from 'react-router-dom';
-import { Activity, ExternalLink, Facebook, Mail, Phone, MapPin } from 'lucide-react';
+import { Activity, Facebook, Mail, Phone, MapPin } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -32,15 +32,12 @@ const Footer = () => {
               <li><Link to="/adhesions" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Adhésions</Link></li>
               <li className="pt-2">
                 <a
-                  href="https://ping-tracker-mvp.toniop.chatgpt.site"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/ping-tracker/"
                   className="inline-flex items-center gap-2 rounded-lg border border-clubPrimary/50 bg-clubPrimary/10 px-3 py-2 text-sm font-semibold text-clubPrimary transition-colors hover:bg-clubPrimary hover:text-clubDark"
-                  aria-label="Ouvrir Ping Tracker dans un nouvel onglet"
+                  aria-label="Ouvrir Ping Tracker"
                 >
                   <Activity size={17} aria-hidden="true" />
                   Ping Tracker
-                  <ExternalLink size={14} aria-hidden="true" />
                 </a>
               </li>
             </ul>
