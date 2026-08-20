@@ -148,3 +148,37 @@
     width: 100%;
   }
 }
+
+@media print {
+  body.player-ranking-page * {
+    visibility: hidden;
+  }
+
+  body.player-ranking-page .player-ranking-print-area,
+  body.player-ranking-page .player-ranking-print-area * {
+    visibility: visible;
+  }
+
+  body.player-ranking-page .player-ranking-print-area {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  body.annual-progression-page * {
+    visibility: hidden;
+  }
+
+  body.annual-progression-page .annual-progression-print-area,
+  body.annual-progression-page .annual-progression-print-area * {
+    visibility: visible;
+  }
+
+  body.annual-progression-page .annual-progression-print-area {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    padding: 1rem;
+  }
+}
