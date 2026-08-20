@@ -11,7 +11,7 @@ import { allVideos } from '@/data/videos';
 import { fallbackHomeNewsItems, fetchHomeNewsItems } from '@/lib/homeNews';
 import CompetitionCalendar from '@/components/CompetitionCalendar';
 import WeeklyRoomAttendance from '@/components/WeeklyRoomAttendance';
-import { ArrowRight, Newspaper } from 'lucide-react';
+import { ArrowRight, CalendarDays, Newspaper } from 'lucide-react';
 
 const Accueil = () => {
   const [homeNewsItems, setHomeNewsItems] = useState(fallbackHomeNewsItems);
@@ -35,6 +35,14 @@ const Accueil = () => {
         imageAlt="Joueurs de tennis de table en plein entraînement"
       />
       <div className="container mx-auto px-4 py-4 md:py-8">
+        <div className="mb-5 flex justify-center">
+          <Button asChild className="rounded-full bg-clubPrimary px-5 font-bold text-white shadow-md hover:bg-clubPrimary/90">
+            <Link to="/competitions-equipes/calendrier">
+              <CalendarDays className="mr-2 h-4 w-4" />
+              Calendrier 2026/2027
+            </Link>
+          </Button>
+        </div>
         <WeeklyRoomAttendance />
 
         {/* ---------- Les 3 dernières actualités ---------- */}
