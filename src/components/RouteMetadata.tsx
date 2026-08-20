@@ -13,7 +13,7 @@ const siteUrl = "https://www.saintloubping.fr";
 const defaultImage = `${siteUrl}/images/logo/telecharge.jpg`;
 
 const metadataFor = (pathname: string): Metadata => {
-  if (pathname === "/") return { title: "Saint-Loub'Ping — Club de tennis de table à Saint-Loubès (33)", description: "Saint-Loub'Ping, le club de tennis de table à Saint-Loubès en Gironde. Entraînements, compétition, loisir, jeunes, actualités et inscriptions." };
+  if (pathname === "/") return { title: "Club de tennis de table à Saint-Loubès — Saint-Loub'Ping", description: "Club de tennis de table à Saint-Loubès, près de Sainte-Eulalie, Ambarès-et-Lagrave et Carbon-Blanc. Loisirs, compétition, jeunes et inscriptions." };
   if (pathname === "/actualites") return { title: "Actualités du club — Saint-Loub'Ping", description: "Les dernières actualités, événements, stages et résultats du club de tennis de table Saint-Loub'Ping à Saint-Loubès." };
   if (pathname === "/le-club") return { title: "Le club — Saint-Loub'Ping à Saint-Loubès", description: "Découvrez l'histoire, les valeurs, les installations et l'équipe du club de tennis de table Saint-Loub'Ping." };
   if (pathname === "/adhesions") return { title: "Adhésions et tarifs — Saint-Loub'Ping", description: "Inscrivez-vous au club Saint-Loub'Ping : tarifs, horaires, planning des entraînements et documents d'adhésion à Saint-Loubès." };

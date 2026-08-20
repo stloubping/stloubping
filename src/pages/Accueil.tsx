@@ -129,6 +129,18 @@ const Accueil = () => {
             </CardContent>
           </Card>
         </section>
+
+        <section className="mt-12 rounded-2xl border border-clubPrimary/20 bg-white p-6 text-center shadow-sm md:p-8" aria-labelledby="zone-desservie">
+          <h2 id="zone-desservie" className="text-xl font-bold text-clubDark md:text-2xl">
+            Un club de tennis de table près de chez vous
+          </h2>
+          <p className="mx-auto mt-3 max-w-3xl text-sm leading-6 text-clubLight-foreground md:text-base">
+            Saint-Loub’Ping accueille les joueurs de Saint-Loubès et des communes voisines : Sainte-Eulalie, Ambarès-et-Lagrave, Carbon-Blanc, Bassens, Yvrac, Montussan, Izon et Vayres. Que vous cherchiez une activité loisir, une section jeunes ou la compétition, venez découvrir le club.
+          </p>
+          <Button asChild variant="outline" className="mt-5 rounded-full border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white">
+            <Link to="/essai-gratuit">Réserver une séance d’essai</Link>
+          </Button>
+        </section>
       </div>
     </div>
   );
