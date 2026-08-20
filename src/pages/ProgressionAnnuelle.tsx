@@ -7,6 +7,7 @@ import {
   RefreshCw,
   Search,
   Medal,
+  Printer,
   TrendingDown,
   TrendingUp,
   Trophy,
@@ -86,6 +87,12 @@ const ProgressionAnnuelle = () => {
 
   useEffect(() => {
     loadPlayers();
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.add("annual-progression-page");
+
+    return () => document.body.classList.remove("annual-progression-page");
   }, []);
 
   const categories = useMemo(
@@ -348,7 +355,7 @@ const ProgressionAnnuelle = () => {
         </article>
       </section>
 
-      <main className="container px-4 py-14 md:px-6 md:py-20">
+      <main className="annual-progression-print-area container px-4 py-14 md:px-6 md:py-20">
         <header className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-clubPrimary">
@@ -358,14 +365,25 @@ const ProgressionAnnuelle = () => {
               Tableau des progressions
             </h2>
           </div>
-          <span className="w-fit rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm">
-            {filteredPlayers.length} joueur
-            {filteredPlayers.length > 1 ? "s" : ""} affiché
-            {filteredPlayers.length > 1 ? "s" : ""}
-          </span>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="w-fit rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm">
+              {filteredPlayers.length} joueur
+              {filteredPlayers.length > 1 ? "s" : ""} affiché
+              {filteredPlayers.length > 1 ? "s" : ""}
+            </span>
+            <Button
+              type="button"
+              onClick={() => window.print()}
+              variant="outline"
+              className="print:hidden"
+            >
+              <Printer className="mr-2 h-4 w-4" />
+              Imprimer la progression
+            </Button>
+          </div>
         </header>
 
-        <div className="mb-4 grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(230px,1fr)_180px_160px_190px_auto]">
+        <div className="mb-4 grid gap-3 print:hidden md:grid-cols-2 xl:grid-cols-[minmax(230px,1fr)_180px_160px_190px_auto]">
           <label className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -443,7 +461,7 @@ const ProgressionAnnuelle = () => {
           <button
             type="button"
             onClick={resetFilters}
-            className="mb-4 text-sm font-semibold text-clubPrimary hover:underline"
+            className="mb-4 text-sm font-semibold text-clubPrimary hover:underline print:hidden"
           >
             Effacer tous les filtres
           </button>
