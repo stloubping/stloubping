@@ -55,7 +55,14 @@ const navItems: NavItem[] = [
       { name: "Stage " + "ao\u00fbt", path: "/stage-aout", type: "link" },
     ],
   },
-  { name: "Adhésions", path: "/adhesions", type: "link" },
+  {
+    name: "Adhésions",
+    type: "dropdown",
+    children: [
+      { name: "Adhésions et tarifs", path: "/adhesions", type: "link" },
+      { name: "Horaires 2026/2027", path: "/horaires", type: "link" },
+    ],
+  },
   {
     name: "Boutique",
     type: "dropdown",

@@ -46,7 +46,7 @@ const Accueil = () => {
               <span><span className="block text-xs font-bold uppercase tracking-wider text-white/75">Compétitions</span><span className="block text-lg font-black">Calendrier 2026/2027</span></span>
               <ArrowRight className="ml-auto h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
-            <Link to="/adhesions#training-schedule-title" className="group flex items-center gap-4 rounded-2xl bg-white px-5 py-4 text-clubDark shadow-md transition-transform hover:-translate-y-0.5">
+            <Link to="/horaires" className="group flex items-center gap-4 rounded-2xl bg-white px-5 py-4 text-clubDark shadow-md transition-transform hover:-translate-y-0.5">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-clubPrimary/10"><Clock3 className="h-6 w-6 text-clubPrimary" /></span>
               <span><span className="block text-xs font-bold uppercase tracking-wider text-clubDark/55">Entraînements</span><span className="block text-lg font-black">Horaires 2026/2027</span></span>
               <ArrowRight className="ml-auto h-5 w-5 text-clubPrimary transition-transform group-hover:translate-x-1" />

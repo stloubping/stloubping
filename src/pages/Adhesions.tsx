@@ -16,15 +16,15 @@ import {
 } from "@/components/ui/accordion";
 import { CalendarDays, ChevronDown, Clock3, HelpCircle } from 'lucide-react';
 
-type ScheduleTone = "libre" | "jeunes" | "competition" | "adultes";
+export type ScheduleTone = "libre" | "jeunes" | "competition" | "adultes";
 
-type ScheduleSlot = {
+export type ScheduleSlot = {
   time: string;
   label: string;
   tone: ScheduleTone;
 };
 
-const trainingSchedule: { day: string; slots: ScheduleSlot[] }[] = [
+export const trainingSchedule: { day: string; slots: ScheduleSlot[] }[] = [
   {
     day: "Lundi",
     slots: [{ time: "18h00 – 20h00", label: "Entraînement libre", tone: "libre" }],
@@ -67,7 +67,7 @@ const trainingSchedule: { day: string; slots: ScheduleSlot[] }[] = [
   },
 ];
 
-const scheduleToneClasses: Record<ScheduleTone, string> = {
+export const scheduleToneClasses: Record<ScheduleTone, string> = {
   libre: "border-lime-300 bg-lime-50 text-lime-950",
   jeunes: "border-sky-300 bg-sky-50 text-sky-950",
   competition: "border-amber-300 bg-amber-50 text-amber-950",
@@ -81,7 +81,7 @@ const parseScheduleTime = (value: string) => {
   return hours * 60 + (minutes || 0);
 };
 
-const getScheduleGridPosition = (time: string) => {
+export const getScheduleGridPosition = (time: string) => {
   const [startValue, endValue] = time.split("–");
   const start = parseScheduleTime(startValue);
   let end = parseScheduleTime(endValue);
