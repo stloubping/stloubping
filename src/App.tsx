@@ -18,6 +18,7 @@ const CompetitionsEquipes = React.lazy(() => import("./pages/CompetitionsEquipes
 const CalendrierCompetitions = React.lazy(() => import("./pages/CalendrierCompetitions"));
 const EssaiGratuit = React.lazy(() => import("./pages/EssaiGratuit"));
 const Adhesions = React.lazy(() => import("./pages/Adhesions"));
+const Horaires = React.lazy(() => import("./pages/Horaires"));
 const Boutique = React.lazy(() => import("./pages/Boutique"));
 const Materiels = React.lazy(() => import("./pages/Materiels"));
 const Partenaires = React.lazy(() => import("./pages/Partenaires"));
@@ -92,6 +93,7 @@ const App = () => (
                 />
                 <Route path="/classement-joueurs/par-categorie-age" element={<ProgressionParCategorieAge />} />
                 <Route path="/adhesions" element={<Adhesions />} />
+                <Route path="/horaires" element={<Horaires />} />
                 <Route path="/boutique" element={<Boutique />} />
                 <Route path="/boutique/materiels" element={<Materiels />} />
                 <Route path="/partenaires" element={<Partenaires />} />
