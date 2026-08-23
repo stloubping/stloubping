@@ -46,6 +46,7 @@ const Administration = React.lazy(() => import("./pages/Administration"));
 const TeamOne = React.lazy(() => import("./pages/TeamOne"));
 const StageAout = React.lazy(() => import("./pages/StageAout"));
 const TrainingGroups = React.lazy(() => import("./pages/TrainingGroups"));
+const TrainingGroupsPublic = React.lazy(() => import("./pages/TrainingGroupsPublic"));
 
 const StatistiquesJoueurs = React.lazy(
   () => import("./pages/StatistiquesJoueurs"),
@@ -70,7 +71,8 @@ const App = () => (
                 <Route path="/competitions-equipes/criterium-gironde" element={<CriteriumGironde />} />
                 <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
                 <Route path="/stage-aout" element={<StageAout />} />
-                <Route path="/groupes-entrainement" element={<TrainingGroups />} />
+                <Route path="/groupes-entrainement" element={<TrainingGroupsPublic />} />
+                <Route path="/administration/groupes-entrainement" element={<TrainingGroups />} />
                 <Route path="/classement-joueurs/:licence" element={<FicheJoueur />} />
                 <Route path="/classement-joueurs/progression-mensuelle" element={<ProgressionMensuelle />} />
                 <Route path="/classement-joueurs/progression-annuelle" element={<ProgressionAnnuelle />} />
