@@ -11,7 +11,7 @@ import { allVideos } from '@/data/videos';
 import { fallbackHomeNewsItems, fetchHomeNewsItems } from '@/lib/homeNews';
 import CompetitionCalendar from '@/components/CompetitionCalendar';
 import WeeklyRoomAttendance from '@/components/WeeklyRoomAttendance';
-import { ArrowRight, CalendarDays, Newspaper } from 'lucide-react';
+import { ArrowRight, CalendarDays, Clock3, Newspaper } from 'lucide-react';
 
 const Accueil = () => {
   const [homeNewsItems, setHomeNewsItems] = useState(fallbackHomeNewsItems);
@@ -35,14 +35,24 @@ const Accueil = () => {
         imageAlt="Joueurs de tennis de table en plein entraînement"
       />
       <div className="container mx-auto px-4 py-4 md:py-8">
-        <div className="mb-5 flex justify-center">
-          <Button asChild className="rounded-full bg-clubPrimary px-5 font-bold text-white shadow-md hover:bg-clubPrimary/90">
-            <Link to="/competitions-equipes/calendrier">
-              <CalendarDays className="mr-2 h-4 w-4" />
-              Calendrier 2026/2027
+        <section className="mx-auto mb-8 max-w-5xl rounded-3xl bg-clubDark p-4 shadow-xl sm:p-6" aria-label="Informations saison 2026-2027">
+          <div className="mb-4 text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-clubPrimary">Saison 2026–2027</p>
+            <h2 className="mt-1 text-xl font-black text-white sm:text-2xl">Toutes les dates et tous les horaires du club</h2>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Link to="/competitions-equipes/calendrier" className="group flex items-center gap-4 rounded-2xl bg-clubPrimary px-5 py-4 text-white shadow-md transition-transform hover:-translate-y-0.5 hover:bg-clubPrimary/90">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/15"><CalendarDays className="h-6 w-6" /></span>
+              <span><span className="block text-xs font-bold uppercase tracking-wider text-white/75">Compétitions</span><span className="block text-lg font-black">Calendrier 2026/2027</span></span>
+              <ArrowRight className="ml-auto h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
-          </Button>
-        </div>
+            <Link to="/adhesions#training-schedule-title" className="group flex items-center gap-4 rounded-2xl bg-white px-5 py-4 text-clubDark shadow-md transition-transform hover:-translate-y-0.5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-clubPrimary/10"><Clock3 className="h-6 w-6 text-clubPrimary" /></span>
+              <span><span className="block text-xs font-bold uppercase tracking-wider text-clubDark/55">Entraînements</span><span className="block text-lg font-black">Horaires 2026/2027</span></span>
+              <ArrowRight className="ml-auto h-5 w-5 text-clubPrimary transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+        </section>
         <WeeklyRoomAttendance />
 
         {/* ---------- Les 3 dernières actualités ---------- */}
