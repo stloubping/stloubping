@@ -27,7 +27,8 @@ const metadataFor = (pathname: string): Metadata => {
   if (pathname === "/partenaires") return { title: "Partenaires — Saint-Loub'Ping", description: "Découvrez les partenaires qui soutiennent le club de tennis de table Saint-Loub'Ping à Saint-Loubès." };
   if (pathname === "/contact") return { title: "Contact — Saint-Loub'Ping", description: "Contactez le club de tennis de table Saint-Loub'Ping à Saint-Loubès pour toute question sur les entraînements et les adhésions." };
   if (pathname === "/equipe-1") return { title: "Espace Équipe 1 — Saint-Loub'Ping", description: "Espace privé de gestion sportive de l’Équipe 1 de Saint-Loub'Ping.", noIndex: true };
-  if (pathname === "/groupes-entrainement") return { title: "Groupes d’entraînement — Saint-Loub'Ping", description: "Espace privé de gestion des groupes d’entraînement du Saint-Loub'Ping.", noIndex: true };
+  if (pathname === "/groupes-entrainement") return { title: "Groupes d’entraînement — Saint-Loub'Ping", description: "Découvrez les groupes d’entraînement du club de tennis de table Saint-Loub'Ping." };
+  if (pathname === "/administration/groupes-entrainement") return { title: "Gestion des groupes d’entraînement — Saint-Loub'Ping", description: "Espace privé de gestion des groupes d’entraînement du Saint-Loub'Ping.", noIndex: true };
   if (pathname.startsWith("/administration")) return { title: "Gestion du club — Saint-Loub'Ping", description: "Espace privé de gestion du club Saint-Loub'Ping.", noIndex: true };
   return { title: `${siteName} — Club de tennis de table à Saint-Loubès`, description: "Saint-Loub'Ping, club de tennis de table à Saint-Loubès en Gironde." };
 };

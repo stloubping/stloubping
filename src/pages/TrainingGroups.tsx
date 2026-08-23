@@ -50,7 +50,10 @@ export default function TrainingGroups() {
     ]);
     if (error) toast.error("Les groupes d’entraînement n’ont pas pu être chargés.");
     setRows((data ?? []) as Row[]);
-    setPlayers(clubPlayers);
+    setPlayers([...clubPlayers].sort((a, b) =>
+      a.nom.localeCompare(b.nom, "fr", { sensitivity: "base" }) ||
+      a.prenom.localeCompare(b.prenom, "fr", { sensitivity: "base" }),
+    ));
     setLoading(false);
   };
 
