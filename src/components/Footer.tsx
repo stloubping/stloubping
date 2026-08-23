@@ -31,6 +31,7 @@ const Footer = () => {
               <li><Link to="/competitions-equipes" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Compétitions</Link></li>
               <li><Link to="/adhesions" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Adhésions</Link></li>
               <li><Link to="/groupes-entrainement" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Groupes d’entraînement</Link></li>
+              <li><Link to="/administration/groupes-entrainement" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Administrer les groupes</Link></li>
               <li className="pt-2">
                 <a
                   href="/ping-tracker/"
