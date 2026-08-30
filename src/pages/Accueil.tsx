@@ -10,7 +10,6 @@ import VideoCard from "@/components/VideoCard";
 import { allVideos } from '@/data/videos';
 import { fallbackHomeNewsItems, fetchHomeNewsItems } from '@/lib/homeNews';
 import CompetitionCalendar from '@/components/CompetitionCalendar';
-import WeeklyRoomAttendance from '@/components/WeeklyRoomAttendance';
 import { ArrowRight, CalendarDays, Clock3, Newspaper } from 'lucide-react';
 
 const Accueil = () => {
@@ -53,8 +52,6 @@ const Accueil = () => {
             </Link>
           </div>
         </section>
-        <WeeklyRoomAttendance />
-
         {/* ---------- Les 3 dernières actualités ---------- */}
         <section className="mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-clubDark">
