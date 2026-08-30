@@ -21,9 +21,10 @@ const CompetitionCalendarAdmin = () => {
     if (!error && (!data || data.length === 0)) data = seedRows;
     if (error) {
       toast.error("La base du calendrier n’est pas encore disponible. Les événements actuels sont affichés.");
-      data = seedRows;
+      data = [];
     }
-    setEvents((data ?? []).map((event) => ({ id: event.id, date: event.date, endDate: event.end_date ?? undefined, title: event.title, category: event.category as CompetitionEvent["category"], phase: event.phase as CompetitionEvent["phase"] | undefined, location: event.location ?? "", details: event.details ?? "" })));
+    const overrides = new Map((data ?? []).map((event) => [event.id, event]));
+    setEvents(competitions20262027.map((event) => { const override = overrides.get(event.id); return { ...event, endDate: event.endDate, location: override?.location ?? event.location ?? "", details: override?.details ?? event.details ?? "" }; }));
     setLoading(false);
   };
   useEffect(() => { void load(); }, []);
