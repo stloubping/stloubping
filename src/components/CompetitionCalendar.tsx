@@ -71,7 +71,10 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
   useEffect(() => {
     let active = true;
     supabase.from("competition_calendar_events").select("id,date,end_date,title,category,phase,location,details").order("date").order("sort_order").then(({ data }) => {
-      if (active && data?.length) setCalendarEvents(data.map((event) => ({ id: event.id, date: event.date, endDate: event.end_date ?? undefined, title: event.title, category: event.category as CompetitionEvent["category"], phase: event.phase as CompetitionEvent["phase"] | undefined, location: event.location ?? undefined, details: event.details ?? undefined })));
+      if (active && data?.length) {
+        const overrides = new Map(data.map((event) => [event.id, event]));
+        setCalendarEvents(competitions20262027.map((event) => { const override = overrides.get(event.id); return { ...event, location: override?.location ?? event.location, details: override?.details ?? event.details }; }));
+      }
     });
     return () => { active = false; };
   }, []);
