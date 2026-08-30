@@ -334,7 +334,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
               <Link to="/administration/presences-salle"><CalendarCheck className="mr-2 h-4 w-4" /> Pr&eacute;sences salle</Link>
             </Button>
             <Button asChild variant="outline" className="border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white">
-              <Link to="/administration/stage-aout"><CalendarCheck className="mr-2 h-4 w-4" /> Stage {"ao\u00fbt"}</Link>
+              <Link to="/administration/stage"><CalendarCheck className="mr-2 h-4 w-4" /> Stages</Link>
             </Button>
             <Button asChild variant="outline" className="border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white">
               <Link to="/administration/actualites"><Newspaper className="mr-2 h-4 w-4" /> Actualités accueil</Link>

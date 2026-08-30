@@ -14,6 +14,7 @@ import CompletedEquipmentOrders from "@/components/admin/CompletedEquipmentOrder
 import WackSportOrders from "@/components/admin/WackSportOrders";
 import WeeklyRoomAttendanceAdmin from "@/components/admin/WeeklyRoomAttendanceAdmin";
 import AugustStageAdmin from "@/components/admin/AugustStageAdmin";
+import StagesAdmin from "@/components/admin/StagesAdmin";
 import HomeNewsAdmin from "@/components/admin/HomeNewsAdmin";
 import CompetitionCalendarAdmin from "@/components/admin/CompetitionCalendarAdmin";
 import { Input } from "@/components/ui/input";
@@ -219,6 +220,10 @@ const Administration = () => {
 
   if (location.pathname === "/administration/stage-aout") {
     return <AugustStageAdmin />;
+  }
+
+  if (location.pathname === "/administration/stage") {
+    return <StagesAdmin />;
   }
 
   if (location.pathname === "/administration/actualites") {
