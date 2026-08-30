@@ -15,6 +15,7 @@ import WackSportOrders from "@/components/admin/WackSportOrders";
 import WeeklyRoomAttendanceAdmin from "@/components/admin/WeeklyRoomAttendanceAdmin";
 import AugustStageAdmin from "@/components/admin/AugustStageAdmin";
 import HomeNewsAdmin from "@/components/admin/HomeNewsAdmin";
+import CompetitionCalendarAdmin from "@/components/admin/CompetitionCalendarAdmin";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -222,6 +223,10 @@ const Administration = () => {
 
   if (location.pathname === "/administration/actualites") {
     return <HomeNewsAdmin />;
+  }
+
+  if (location.pathname === "/administration/calendrier-competitions") {
+    return <CompetitionCalendarAdmin />;
   }
 
   return <ClubOrdersDashboard session={session} onSignOut={() => supabase.auth.signOut()} />;
