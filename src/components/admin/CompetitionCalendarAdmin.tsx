@@ -19,7 +19,10 @@ const CompetitionCalendarAdmin = () => {
     setLoading(true);
     let { data, error } = await supabase.from("competition_calendar_events").select("id,date,end_date,title,category,phase,location,details").order("date").order("sort_order");
     if (!error && (!data || data.length === 0)) data = seedRows;
-    if (error) toast.error("Le calendrier n’a pas pu être chargé.");
+    if (error) {
+      toast.error("La base du calendrier n’est pas encore disponible. Les événements actuels sont affichés.");
+      data = seedRows;
+    }
     setEvents((data ?? []).map((event) => ({ id: event.id, date: event.date, endDate: event.end_date ?? undefined, title: event.title, category: event.category as CompetitionEvent["category"], phase: event.phase as CompetitionEvent["phase"] | undefined, location: event.location ?? "", details: event.details ?? "" })));
     setLoading(false);
   };
