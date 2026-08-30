@@ -47,6 +47,7 @@ const Administration = React.lazy(() => import("./pages/Administration"));
 const TeamOne = React.lazy(() => import("./pages/TeamOne"));
 const StageAout = React.lazy(() => import("./pages/StageAout"));
 const StageGeneric = React.lazy(() => import("./pages/StageGeneric"));
+const StagesPublic = React.lazy(() => import("./pages/StagesPublic"));
 const TrainingGroups = React.lazy(() => import("./pages/TrainingGroups"));
 const TrainingGroupsPublic = React.lazy(() => import("./pages/TrainingGroupsPublic"));
 
@@ -74,6 +75,7 @@ const App = () => (
                 <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
                 <Route path="/stage-aout" element={<StageAout />} />
                 <Route path="/stage/:slug" element={<StageGeneric />} />
+                <Route path="/stages" element={<StagesPublic />} />
                 <Route path="/groupes-entrainement" element={<TrainingGroupsPublic />} />
                 <Route path="/administration/groupes-entrainement" element={<TrainingGroups />} />
                 <Route path="/classement-joueurs/:licence" element={<FicheJoueur />} />
