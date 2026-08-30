@@ -18,10 +18,7 @@ const CompetitionCalendarAdmin = () => {
   const load = async () => {
     setLoading(true);
     let { data, error } = await supabase.from("competition_calendar_events").select("id,date,end_date,title,category,phase,location,details").order("date").order("sort_order");
-    if (!error && (!data || data.length === 0)) {
-      const seeded = await supabase.from("competition_calendar_events").upsert(seedRows);
-      if (!seeded.error) ({ data, error } = await supabase.from("competition_calendar_events").select("id,date,end_date,title,category,phase,location,details").order("date").order("sort_order"));
-    }
+    if (!error && (!data || data.length === 0)) data = seedRows;
     if (error) toast.error("Le calendrier n’a pas pu être chargé.");
     setEvents((data ?? []).map((event) => ({ id: event.id, date: event.date, endDate: event.end_date ?? undefined, title: event.title, category: event.category as CompetitionEvent["category"], phase: event.phase as CompetitionEvent["phase"] | undefined, location: event.location ?? "", details: event.details ?? "" })));
     setLoading(false);
@@ -30,7 +27,7 @@ const CompetitionCalendarAdmin = () => {
   const update = (id: string, field: "location" | "details", value: string) => setEvents((current) => current.map((event) => event.id === id ? { ...event, [field]: value } : event));
   const save = async (event: CalendarRow) => {
     setSaving(event.id);
-    const { error } = await supabase.from("competition_calendar_events").update({ location: event.location.trim() || null, details: event.details.trim() || null }).eq("id", event.id);
+    const { error } = await supabase.from("competition_calendar_events").upsert({ id: event.id, date: event.date, end_date: event.endDate || null, title: event.title, category: event.category, phase: event.phase || null, location: event.location.trim() || null, details: event.details.trim() || null, sort_order: events.findIndex((item) => item.id === event.id) });
     if (error) toast.error("Le champ « Lieu / Infos » n’a pas pu être enregistré."); else toast.success("Lieu / Infos enregistré.");
     setSaving(null);
   };
