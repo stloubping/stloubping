@@ -121,6 +121,7 @@ const App = () => (
                 <Route path="/administration/presences-salle" element={<Administration />} />
                 <Route path="/administration/stage-aout" element={<Administration />} />
                 <Route path="/administration/actualites" element={<Administration />} />
+                <Route path="/administration/calendrier-competitions" element={<Administration />} />
                 <Route path="/equipe-1" element={<TeamOne />} />
                 <Route path="*" element={<NotFound />} />
                 </Routes>
