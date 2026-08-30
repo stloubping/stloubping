@@ -52,7 +52,7 @@ const navItems: NavItem[] = [
       { name: "Progression annuelle", path: "/classement-joueurs/progression-annuelle", type: "link" },
       { name: "Statistiques joueurs", path: "/classement-joueurs/statistiques", type: "link" },
       { name: "Groupes d’entraînement", path: "/groupes-entrainement", type: "link" },
-      { name: "Stage " + "ao\u00fbt", path: "/stage-aout", type: "link" },
+      { name: "Stages", path: "/stage-aout", type: "link" },
     ],
   },
   {
