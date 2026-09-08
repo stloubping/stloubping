@@ -1,0 +1,11 @@
+import { useEffect, useState } from "react";
+import { CalendarDays, ChevronRight, Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+
+type Stage = { id: string; name: string; slug: string; start_date: string | null; end_date: string | null };
+const date = (value: string | null) => value ? new Date(`${value}T12:00:00`).toLocaleDateString("fr-FR") : "Dates à préciser";
+const StagesPublic = () => { const [stages, setStages] = useState<Stage[]>([]); const [loading, setLoading] = useState(true); useEffect(() => { supabase.from("stages").select("id,name,slug,start_date,end_date").order("created_at", { ascending: false }).then(({ data }) => { setStages((data ?? []) as Stage[]); setLoading(false); }); }, []); return <section className="min-h-[70vh] bg-clubLight px-4 py-12"><div className="mx-auto max-w-5xl"><div className="mb-10 text-center"><CalendarDays className="mx-auto mb-3 h-10 w-10 text-clubPrimary" /><p className="text-sm font-bold uppercase tracking-[0.2em] text-clubPrimary">Les joueurs</p><h1 className="mt-2 text-4xl font-black text-clubDark md:text-5xl">Stages</h1><p className="mx-auto mt-3 max-w-2xl text-muted-foreground">Choisissez le stage auquel vous souhaitez vous inscrire.</p></div>{loading ? <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-clubPrimary" /></div> : stages.length === 0 ? <Card><CardContent className="py-12 text-center text-muted-foreground">Aucun stage disponible actuellement.</CardContent></Card> : <div className="grid gap-5 sm:grid-cols-2">{stages.map((stage) => <Card key={stage.id} className="border-0 shadow-lg"><CardHeader><CardTitle>{stage.name}</CardTitle><p className="text-sm text-muted-foreground">{date(stage.start_date)}{stage.end_date ? ` – ${date(stage.end_date)}` : ""}</p></CardHeader><CardContent><Button asChild className="w-full bg-clubPrimary font-bold"><Link to={stage.slug === "stage-aout" ? "/stage-aout" : `/stage/${stage.slug}`}>Voir le stage<ChevronRight className="ml-2 h-4 w-4" /></Link></Button></CardContent></Card>)}</div>}</div></section>; };
+export default StagesPublic;

@@ -51,10 +51,18 @@ const navItems: NavItem[] = [
       { name: "Classement des joueurs", path: "/classement-joueurs", type: "link" },
       { name: "Progression annuelle", path: "/classement-joueurs/progression-annuelle", type: "link" },
       { name: "Statistiques joueurs", path: "/classement-joueurs/statistiques", type: "link" },
-      { name: "Stage " + "ao\u00fbt", path: "/stage-aout", type: "link" },
+      { name: "Groupes d’entraînement", path: "/groupes-entrainement", type: "link" },
+      { name: "Stages", path: "/stages", type: "link" },
     ],
   },
-  { name: "Adhésions", path: "/adhesions", type: "link" },
+  {
+    name: "Adhésions",
+    type: "dropdown",
+    children: [
+      { name: "Adhésions et tarifs", path: "/adhesions", type: "link" },
+      { name: "Horaires 2026/2027", path: "/horaires", type: "link" },
+    ],
+  },
   {
     name: "Boutique",
     type: "dropdown",

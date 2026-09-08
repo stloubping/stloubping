@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /administration
+Disallow: /groupes-entrainement
 Disallow: /tournoi-inscriptions-liste
 
 Sitemap: https://www.saintloubping.fr/sitemap.xml

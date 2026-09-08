@@ -18,6 +18,7 @@ const CompetitionsEquipes = React.lazy(() => import("./pages/CompetitionsEquipes
 const CalendrierCompetitions = React.lazy(() => import("./pages/CalendrierCompetitions"));
 const EssaiGratuit = React.lazy(() => import("./pages/EssaiGratuit"));
 const Adhesions = React.lazy(() => import("./pages/Adhesions"));
+const Horaires = React.lazy(() => import("./pages/Horaires"));
 const Boutique = React.lazy(() => import("./pages/Boutique"));
 const Materiels = React.lazy(() => import("./pages/Materiels"));
 const Partenaires = React.lazy(() => import("./pages/Partenaires"));
@@ -45,6 +46,10 @@ const DemandeDonnees = React.lazy(() => import("./pages/DemandeDonnees"));
 const Administration = React.lazy(() => import("./pages/Administration"));
 const TeamOne = React.lazy(() => import("./pages/TeamOne"));
 const StageAout = React.lazy(() => import("./pages/StageAout"));
+const StageGeneric = React.lazy(() => import("./pages/StageGeneric"));
+const StagesPublic = React.lazy(() => import("./pages/StagesPublic"));
+const TrainingGroups = React.lazy(() => import("./pages/TrainingGroups"));
+const TrainingGroupsPublic = React.lazy(() => import("./pages/TrainingGroupsPublic"));
 
 const StatistiquesJoueurs = React.lazy(
   () => import("./pages/StatistiquesJoueurs"),
@@ -69,6 +74,10 @@ const App = () => (
                 <Route path="/competitions-equipes/criterium-gironde" element={<CriteriumGironde />} />
                 <Route path="/classement-joueurs" element={<ClassementJoueurs />} />
                 <Route path="/stage-aout" element={<StageAout />} />
+                <Route path="/stage/:slug" element={<StageGeneric />} />
+                <Route path="/stages" element={<StagesPublic />} />
+                <Route path="/groupes-entrainement" element={<TrainingGroupsPublic />} />
+                <Route path="/administration/groupes-entrainement" element={<TrainingGroups />} />
                 <Route path="/classement-joueurs/:licence" element={<FicheJoueur />} />
                 <Route path="/classement-joueurs/progression-mensuelle" element={<ProgressionMensuelle />} />
                 <Route path="/classement-joueurs/progression-annuelle" element={<ProgressionAnnuelle />} />
@@ -88,6 +97,7 @@ const App = () => (
                 />
                 <Route path="/classement-joueurs/par-categorie-age" element={<ProgressionParCategorieAge />} />
                 <Route path="/adhesions" element={<Adhesions />} />
+                <Route path="/horaires" element={<Horaires />} />
                 <Route path="/boutique" element={<Boutique />} />
                 <Route path="/boutique/materiels" element={<Materiels />} />
                 <Route path="/partenaires" element={<Partenaires />} />
@@ -114,7 +124,10 @@ const App = () => (
                 <Route path="/administration/wacksport" element={<Administration />} />
                 <Route path="/administration/presences-salle" element={<Administration />} />
                 <Route path="/administration/stage-aout" element={<Administration />} />
+                <Route path="/administration/stage" element={<Administration />} />
+                <Route path="/administration/stage/:slug" element={<Administration />} />
                 <Route path="/administration/actualites" element={<Administration />} />
+                <Route path="/administration/calendrier-competitions" element={<Administration />} />
                 <Route path="/equipe-1" element={<TeamOne />} />
                 <Route path="*" element={<NotFound />} />
                 </Routes>

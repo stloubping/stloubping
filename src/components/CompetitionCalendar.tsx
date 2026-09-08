@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,7 @@ import {
   ChevronUp
 } from "lucide-react";
 import { competitions20262027, categoryLabels, CompetitionEvent } from "@/data/competitions20262027";
+import { supabase } from "@/integrations/supabase/client";
 
 const months = [
   { value: "all", label: "Toute la saison" },
@@ -66,6 +67,17 @@ interface CompetitionCalendarProps {
 }
 
 const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit }) => {
+  const [calendarEvents, setCalendarEvents] = useState<CompetitionEvent[]>(competitions20262027);
+  useEffect(() => {
+    let active = true;
+    supabase.from("competition_calendar_events").select("id,date,end_date,title,category,phase,location,details").order("date").order("sort_order").then(({ data }) => {
+      if (active && data?.length) {
+        const overrides = new Map(data.map((event) => [event.id, event]));
+        setCalendarEvents(competitions20262027.map((event) => { const override = overrides.get(event.id); return { ...event, location: override?.location ?? event.location, details: override?.details ?? event.details }; }));
+      }
+    });
+    return () => { active = false; };
+  }, []);
   const pdfPath = "/documents/schedule/Competitions-2026-2027.pdf";
   
   const [searchQuery, setSearchQuery] = useState("");
@@ -77,7 +89,7 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
   const todayStr = new Date().toISOString().split('T')[0];
 
   const filteredCompetitions = useMemo(() => {
-    return competitions20262027
+    return calendarEvents
       .filter((item) => {
         // Filtre recherche textuelle
         const matchesSearch = searchQuery === "" || 
@@ -97,7 +109,7 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
         return matchesSearch && matchesCategory && matchesMonth && matchesPhase;
       })
       .sort((a, b) => a.date.localeCompare(b.date));
-  }, [searchQuery, selectedCategory, selectedMonth, selectedPhase]);
+  }, [calendarEvents, searchQuery, selectedCategory, selectedMonth, selectedPhase]);
 
   const displayedCompetitions = useMemo(() => {
     if (initialLimit && !isExpanded && !searchQuery && selectedCategory === "all" && selectedMonth === "all" && selectedPhase === "all") {
@@ -358,7 +370,7 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
               ) : null}
 
               <div className="text-center text-xs text-muted-foreground pt-1">
-                Affichage de {displayedCompetitions.length} compétition(s) sur un total de {competitions20262027.length}.
+                Affichage de {displayedCompetitions.length} compétition(s) sur un total de {calendarEvents.length}.
               </div>
           </div>
         </CardContent>

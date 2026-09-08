@@ -6,6 +6,7 @@ import {
   ArrowUpDown,
   CalendarDays,
   Minus,
+  Printer,
   RefreshCw,
   Search,
   Trophy,
@@ -87,6 +88,11 @@ const ClassementJoueurs = () => {
 
   useEffect(() => {
     loadPlayers();
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.add("player-ranking-page");
+    return () => document.body.classList.remove("player-ranking-page");
   }, []);
 
   const categories = useMemo(
@@ -305,7 +311,7 @@ const ClassementJoueurs = () => {
 
       <section
         id="classement"
-        className="container scroll-mt-24 px-4 py-16 md:px-6 md:py-20"
+        className="player-ranking-print-area container scroll-mt-24 px-4 py-16 md:px-6 md:py-20"
       >
         <header className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
@@ -319,14 +325,25 @@ const ClassementJoueurs = () => {
               Recherchez un licencié ou filtrez le tableau.
             </p>
           </div>
-          <span className="w-fit rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600">
-            {filteredPlayers.length} joueur
-            {filteredPlayers.length > 1 ? "s" : ""} affiché
-            {filteredPlayers.length > 1 ? "s" : ""}
-          </span>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="w-fit rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600">
+              {filteredPlayers.length} joueur
+              {filteredPlayers.length > 1 ? "s" : ""} affiché
+              {filteredPlayers.length > 1 ? "s" : ""}
+            </span>
+            <Button
+              type="button"
+              onClick={() => window.print()}
+              variant="outline"
+              className="print:hidden"
+            >
+              <Printer className="mr-2 h-4 w-4" />
+              Imprimer le classement
+            </Button>
+          </div>
         </header>
 
-        <div className="mb-4 grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(260px,1fr)_220px_190px_auto]">
+        <div className="mb-4 grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(260px,1fr)_220px_190px_auto] print:hidden">
           <label className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
