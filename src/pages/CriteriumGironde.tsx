@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Trophy, Users } from 'lucide-react';
-import { Badge } from "@/components/ui/badge";
 
 interface TeamRanking {
   clt: string;
@@ -44,10 +43,10 @@ const CriteriumGironde = () => {
           t.libepr.toLowerCase().includes("criterium")
         );
 
-        // Tri par numéro d'équipe (1 à 3)
+        // Tri par numéro d'équipe (1 à 4), sans confondre avec le numéro de phase.
         const sortedTeams = criteriumTeams.sort((a: Team, b: Team) => {
-          const numA = parseInt(a.libequipe.match(/\d+/)?.[0] || "999");
-          const numB = parseInt(b.libequipe.match(/\d+/)?.[0] || "999");
+          const numA = parseInt(a.libequipe.match(/(?:PING|LOUB)\s+(\d+)/i)?.[1] || "999");
+          const numB = parseInt(b.libequipe.match(/(?:PING|LOUB)\s+(\d+)/i)?.[1] || "999");
           return numA - numB;
         });
         
@@ -76,7 +75,7 @@ const CriteriumGironde = () => {
       <div className="text-center mb-12">
         <h1 className="text-3xl md:text-4xl font-bold text-clubDark mb-4">Critérium de Gironde</h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Suivez les performances de nos 3 équipes engagées dans le Critérium de Gironde.
+          Suivez les performances de nos 4 équipes engagées dans le Critérium de Gironde.
         </p>
       </div>
 

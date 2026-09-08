@@ -63,7 +63,12 @@ function parseXmlList(xml: string, tagName: string): Record<string, string>[] {
 }
 
 function decodeEntities(str: string): string {
-  return str.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ');
+  return str
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&nbsp;/g, ' ');
 }
 
 function parseLien(lienBrut: string): Record<string, string> {
@@ -89,7 +94,8 @@ function detectPhase(text: string): string {
 }
 
 function extractTeamNumber(libequipe: string): string {
-  const match = libequipe.match(/(\d+)\s*$/);
+  const nameWithoutPhase = libequipe.replace(/\s*-\s*phase\s*\d+\s*$/i, '').trim();
+  const match = nameWithoutPhase.match(/(\d+)\s*$/);
   return match ? match[1] : "1";
 }
 
@@ -124,7 +130,7 @@ serve(async (req) => {
       const lienParams = parseLien(lienBrut);
       const teamName = decodeEntities(team.libequipe || '');
       const teamNumber = extractTeamNumber(teamName);
-      const phase = detectPhase(decodeEntities(`${team.libepr || ''} ${team.libdivision || ''}`));
+      const phase = detectPhase(decodeEntities(`${teamName} ${team.libepr || ''} ${team.libdivision || ''}`));
 
       if (!lienParams.D1) {
         finalTeams.push({
@@ -194,8 +200,8 @@ serve(async (req) => {
     }
 
     finalTeams.sort((a, b) => {
-      const numA = parseInt((a.libequipe.match(/\d+$/) || ['99'])[0]);
-      const numB = parseInt((b.libequipe.match(/\d+$/) || ['99'])[0]);
+      const numA = parseInt(extractTeamNumber(a.libequipe));
+      const numB = parseInt(extractTeamNumber(b.libequipe));
       if (numA !== numB) return numA - numB;
       return a.phase.localeCompare(b.phase);
     });
