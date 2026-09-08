@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Trophy, Users } from 'lucide-react';
 
 interface TeamRanking {
@@ -31,9 +30,9 @@ const CriteriumGironde = () => {
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const { data, error } = await supabase.functions.invoke('get-club-results');
-        
-        if (error) throw error;
+        const response = await fetch('/api/fftt/criterium');
+        if (!response.ok) throw new Error(`Erreur FFTT ${response.status}`);
+        const data = await response.json();
 
         if (!data?.teams) return;
 
