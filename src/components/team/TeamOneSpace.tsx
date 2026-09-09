@@ -1,41 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, CalendarDays, Car, Check, Clock3, LogOut, MapPin, Phone, ShieldCheck, UserRoundCheck, Users, X } from "lucide-react";
+import { ArrowLeft, CalendarDays, Car, Check, Loader2, LogOut, MapPin, UserRoundCheck, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
-const matches = [
-  { id: 1, round: "Journée 1", date: "Sam. 19 sept. · 16 h", opponent: "CAM Bordeaux 4", place: "Domicile", players: ["Yves", "Nicolas", "Yann", "Thomas"] },
-  { id: 2, round: "Journée 2", date: "Sam. 3 oct. · 16 h", opponent: "Libourne TT 3", place: "Extérieur", players: ["Yves", "Nicolas", "Yann", "Thomas"] },
-  { id: 3, round: "Journée 3", date: "Sam. 17 oct. · 16 h", opponent: "Cestas SAG 5", place: "Domicile", players: ["Yves", "Nicolas", "Yann", "Thomas"] },
-  { id: 4, round: "Journée 4", date: "Sam. 7 nov. · 16 h", opponent: "Bègles US 4", place: "Extérieur", players: ["Yves", "Nicolas", "Yann", "Thomas"] },
-  { id: 5, round: "Journée 5", date: "Sam. 21 nov. · 16 h", opponent: "Mérignac SAM 6", place: "Domicile", players: ["Yves", "Nicolas", "Yann", "Thomas"] },
-  { id: 6, round: "Journée 6", date: "Sam. 5 déc. · 16 h", opponent: "Bruges PPC 3", place: "Extérieur", players: ["Yves", "Nicolas", "Yann", "Thomas"] },
-  { id: 7, round: "Journée 7", date: "Sam. 12 déc. · 16 h", opponent: "Villenave TT 4", place: "Domicile", players: ["Yves", "Nicolas", "Yann", "Thomas"] },
-];
+const emptyRounds = Array.from({ length: 7 }, (_, index) => ({
+  id: `round-${index + 1}`,
+  round: String(index + 1),
+  date: "",
+  opponent: "",
+}));
 
-const crossTeamPlayers = [
-  { name: "Lucas Martin", ranking: "9", team: "Équipe 2", played: 1, status: "Éligible" },
-  { name: "Hugo Bernard", ranking: "8", team: "Équipe 2", played: 2, status: "À vérifier" },
-  { name: "Emma Laurent", ranking: "7", team: "Équipe 3", played: 1, status: "Éligible" },
-  { name: "Paul Robert", ranking: "6", team: "Équipe 3", played: 3, status: "Brûlé" },
-];
+const createEmptyCrossTeamPlayers = () =>
+  Array.from({ length: 4 }, () => ({
+    name: "",
+    ranking: "0",
+    team: "",
+    played: 0,
+    status: "À vérifier",
+  }));
 
-const doubles = [
-  { round: "J1", pair1: "Yves / Nicolas", pair2: "Yann / Thomas", result1: "3–1", result2: "2–3" },
-  { round: "J2", pair1: "Yves / Yann", pair2: "Nicolas / Anthony", result1: "3–0", result2: "3–2" },
-  { round: "J3", pair1: "Yves / Nicolas", pair2: "Thomas / Anthony", result1: "1–3", result2: "3–1" },
-  { round: "J4", pair1: "Nicolas / Yann", pair2: "Yves / Thomas", result1: "3–2", result2: "2–3" },
-  { round: "J5", pair1: "Yves / Nicolas", pair2: "Yann / Anthony", result1: "3–1", result2: "3–0" },
-  { round: "J6", pair1: "Yves / Yann", pair2: "Nicolas / Thomas", result1: "2–3", result2: "3–2" },
-  { round: "J7", pair1: "À composer", pair2: "À composer", result1: "—", result2: "—" },
-];
+const createEmptyDoubles = () =>
+  Array.from({ length: 7 }, (_, index) => ({
+    round: `J${index + 1}`,
+    pair1: "",
+    pair2: "",
+    result1: "",
+    result2: "",
+  }));
 
 type Answer = "present" | "absent" | undefined;
 type DoubleField = "pair1" | "pair2" | "result1" | "result2";
 type CrossTeamField = "name" | "ranking" | "team" | "played" | "status";
+
+type OfficialMatch = {
+  id: string;
+  round: string;
+  date: string;
+  time: string;
+  home: boolean;
+  opponent: string;
+  scoreFor: string;
+  scoreAgainst: string;
+  played: boolean;
+};
 
 type TeamOneSpaceProps = {
   displayName: string;
@@ -46,9 +56,33 @@ type TeamOneSpaceProps = {
 const TeamOneSpace = ({ displayName, email, onSignOut }: TeamOneSpaceProps) => {
   const [answers, setAnswers] = useState<Record<string, Answer>>({});
   const [playerNames, setPlayerNames] = useState(() => Array.from({ length: 8 }, () => ""));
-  const [doubleRows, setDoubleRows] = useState(doubles);
-  const [crossTeamRows, setCrossTeamRows] = useState(crossTeamPlayers);
-  const [drivers, setDrivers] = useState("Frédéric · Anthony");
+  const [doubleRows, setDoubleRows] = useState(createEmptyDoubles);
+  const [crossTeamRows, setCrossTeamRows] = useState(createEmptyCrossTeamPlayers);
+  const [drivers, setDrivers] = useState("");
+  const [officialMatches, setOfficialMatches] = useState<OfficialMatch[]>([]);
+  const [calendarLoading, setCalendarLoading] = useState(true);
+  const [calendarError, setCalendarError] = useState(false);
+
+  useEffect(() => {
+    const loadCalendar = async () => {
+      try {
+        const response = await fetch("/api/fftt/criterium?competition=championnat");
+        if (!response.ok) throw new Error(`Erreur FFTT ${response.status}`);
+        const data = await response.json();
+        setOfficialMatches(data?.teams?.[0]?.matches ?? []);
+      } catch (error) {
+        console.error("Calendrier Équipe 1 indisponible", error);
+        setCalendarError(true);
+      } finally {
+        setCalendarLoading(false);
+      }
+    };
+
+    void loadCalendar();
+  }, []);
+
+  const availabilityRounds = officialMatches.length > 0 ? officialMatches : emptyRounds;
+  const nextAwayMatch = officialMatches.find((match) => !match.played && !match.home);
 
   const toggleAnswer = (answerKey: string) => {
     setAnswers((currentAnswers) => {
@@ -91,12 +125,38 @@ const TeamOneSpace = ({ displayName, email, onSignOut }: TeamOneSpaceProps) => {
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><Button asChild variant="ghost" className="-ml-4 text-white hover:bg-white/10 hover:text-white"><Link to="/"><ArrowLeft className="mr-2 h-4 w-4" />Retour au site</Link></Button><Button type="button" variant="outline" onClick={onSignOut} className="border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white"><LogOut className="mr-2 h-4 w-4" />Déconnexion</Button></div>
           <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div><p className="text-sm font-extrabold uppercase tracking-[0.18em] text-clubPrimary">Espace privé · {displayName}</p><h1 className="mt-2 text-3xl font-black md:text-4xl">Équipe 1</h1><p className="mt-2 max-w-2xl text-white/65">Pilotez toute la phase 1 de l’Équipe 1, de la convocation au déplacement. Compte connecté : {email}.</p></div>
-            <div className="flex flex-wrap gap-2"><Badge className="bg-clubPrimary text-white hover:bg-clubPrimary">Équipe 1 · Départementale</Badge><Badge className="bg-amber-400 text-amber-950 hover:bg-amber-400">Phase 1 · démonstration</Badge></div>
+            <div className="flex flex-wrap gap-2"><Badge className="bg-clubPrimary text-white hover:bg-clubPrimary">Équipe 1 · Régionale 2</Badge><Badge className="bg-white/10 text-white hover:bg-white/10">Phase 1 · Poule 2</Badge></div>
           </div>
         </div>
       </section>
 
       <main className="container mx-auto space-y-8 px-4 py-8">
+        <section>
+          <div className="mb-4 flex items-center gap-3"><CalendarDays className="h-7 w-7 text-clubPrimary" /><div><h2 className="text-2xl font-black text-clubDark">Calendrier officiel · Équipe 1</h2><p className="text-sm text-muted-foreground">Les dates et les résultats sont synchronisés avec la FFTT.</p></div></div>
+          <Card className="overflow-hidden border-clubPrimary/20">
+            <CardContent className="p-0">
+              {calendarLoading ? (
+                <div className="flex items-center justify-center gap-2 p-8 text-sm text-muted-foreground"><Loader2 className="h-5 w-5 animate-spin text-clubPrimary" />Chargement du calendrier FFTT…</div>
+              ) : calendarError ? (
+                <p className="p-6 text-center text-sm text-red-700">Le calendrier FFTT ne peut pas être chargé pour le moment.</p>
+              ) : officialMatches.length > 0 ? (
+                <div className="divide-y">
+                  {officialMatches.map((match) => (
+                    <div key={match.id} className="grid gap-3 p-4 sm:grid-cols-[70px_120px_1fr_auto] sm:items-center">
+                      <div className="font-black text-clubPrimary">J{match.round}</div>
+                      <div><p className="font-bold text-clubDark">{match.date}</p>{match.time && <p className="text-xs text-muted-foreground">{match.time}</p>}</div>
+                      <div><p className="font-semibold text-clubDark">{match.opponent}</p><p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{match.home ? "À domicile" : "À l’extérieur"}</p></div>
+                      {match.played ? <Badge className="w-fit bg-clubPrimary text-white">{match.scoreFor} – {match.scoreAgainst}</Badge> : <Badge variant="outline" className="w-fit">À venir</Badge>}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="p-6 text-center text-sm text-muted-foreground">Aucune journée publiée par la FFTT.</p>
+              )}
+            </CardContent>
+          </Card>
+        </section>
+
         <section>
           <div className="mb-4 flex items-center gap-3"><CalendarDays className="h-7 w-7 text-clubPrimary" /><div><h2 className="text-2xl font-black text-clubDark">Calendrier complet · Phase 1</h2><p className="text-sm text-muted-foreground">Saisissez les noms des joueurs en ligne, puis cliquez sur une case pour passer de « à confirmer » à « présent », puis « absent ».</p></div></div>
           <Card className="overflow-hidden">
@@ -107,13 +167,13 @@ const TeamOneSpace = ({ displayName, email, onSignOut }: TeamOneSpaceProps) => {
                     <th className="sticky left-0 z-20 min-w-[210px] border-b border-r bg-background px-3 py-3 text-left font-semibold">
                       Joueur
                     </th>
-                    {matches.map((match) => (
+                    {availabilityRounds.map((match) => (
                       <th
                         key={match.id}
                         className="min-w-[92px] border-b px-2 py-3 text-center font-semibold"
                         title={`${match.round} – ${match.opponent} – ${match.date}`}
                       >
-                        J{match.id}
+                        J{match.round}
                       </th>
                     ))}
                   </tr>
@@ -134,8 +194,8 @@ const TeamOneSpace = ({ displayName, email, onSignOut }: TeamOneSpaceProps) => {
                           maxLength={80}
                         />
                       </th>
-                      {matches.map((match) => {
-                        const answerKey = `${playerIndex}-${match.id}`;
+                      {availabilityRounds.map((match) => {
+                        const answerKey = `${playerIndex}-${match.round}`;
                         const answer = answers[answerKey];
                         const playerLabel = playerName.trim() || `Joueur ${playerIndex + 1}`;
 
@@ -151,8 +211,8 @@ const TeamOneSpace = ({ displayName, email, onSignOut }: TeamOneSpaceProps) => {
                                     ? "border-rose-500 bg-rose-500 text-white"
                                     : "border-muted-foreground/30 bg-muted/40 text-muted-foreground hover:bg-muted"
                               }`}
-                              title={`${playerLabel} – J${match.id} : ${answer === "present" ? "présent" : answer === "absent" ? "absent" : "à confirmer"}`}
-                              aria-label={`${playerLabel}, journée ${match.id}`}
+                              title={`${playerLabel} – J${match.round} : ${answer === "present" ? "présent" : answer === "absent" ? "absent" : "à confirmer"}`}
+                              aria-label={`${playerLabel}, journée ${match.round}`}
                             >
                               {answer === "present" ? <Check className="h-4 w-4" /> : answer === "absent" ? <X className="h-4 w-4" /> : "?"}
                             </button>
@@ -271,11 +331,18 @@ const TeamOneSpace = ({ displayName, email, onSignOut }: TeamOneSpaceProps) => {
             </CardContent>
           </Card>
 
-          <Card><CardHeader><CardTitle className="flex items-center gap-2"><Car className="text-clubPrimary" />Covoiturage · prochain déplacement</CardTitle></CardHeader><CardContent className="space-y-4"><div className="rounded-xl bg-muted/55 p-4"><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Conducteurs</p><Input className="mt-2 bg-background" value={drivers} onChange={(event) => setDrivers(event.target.value)} aria-label="Conducteurs du prochain déplacement" placeholder="Noms des conducteurs" /></div><div className="flex gap-3"><MapPin className="mt-0.5 h-5 w-5 shrink-0 text-clubPrimary" /><div><p className="font-bold">Rendez-vous à 7 h 30</p><p className="text-sm text-muted-foreground">Parking de la salle de Saint-Loubès</p></div></div><div className="flex gap-3"><MapPin className="mt-0.5 h-5 w-5 shrink-0 text-clubPrimary" /><div><p className="font-bold">Salle de Libourne TT</p><p className="text-sm text-muted-foreground">12 avenue des Sports, 33500 Libourne</p><a className="text-sm font-semibold text-clubPrimary hover:underline" href="https://www.google.com/maps" target="_blank" rel="noreferrer">Ouvrir le GPS</a></div></div><div className="flex gap-3"><Phone className="mt-0.5 h-5 w-5 shrink-0 text-clubPrimary" /><div><p className="font-bold">Capitaine adverse</p><p className="text-sm text-muted-foreground">Jean Dupont · 06 00 00 00 00</p></div></div></CardContent></Card>
+          <Card>
+            <CardHeader><CardTitle className="flex items-center gap-2"><Car className="text-clubPrimary" />Covoiturage · prochain déplacement</CardTitle></CardHeader>
+            <CardContent className="space-y-4">
+              <div className="rounded-xl bg-muted/55 p-4"><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Conducteurs</p><Input className="mt-2 bg-background" value={drivers} onChange={(event) => setDrivers(event.target.value)} aria-label="Conducteurs du prochain déplacement" placeholder="Saisir les noms des conducteurs" /></div>
+              {nextAwayMatch ? (
+                <div className="flex gap-3 rounded-xl border p-4"><MapPin className="mt-0.5 h-5 w-5 shrink-0 text-clubPrimary" /><div><p className="font-bold">J{nextAwayMatch.round} · {nextAwayMatch.date}</p><p className="text-sm text-muted-foreground">Déplacement chez {nextAwayMatch.opponent}</p></div></div>
+              ) : (
+                <p className="rounded-xl border border-dashed p-4 text-sm text-muted-foreground">Aucun déplacement à venir dans le calendrier FFTT.</p>
+              )}
+            </CardContent>
+          </Card>
         </section>
-
-
-        <Card className="border-dashed"><CardContent className="flex flex-col items-center gap-3 p-6 text-center sm:flex-row sm:text-left"><ShieldCheck className="h-9 w-9 shrink-0 text-clubPrimary" /><div><p className="font-black text-clubDark">Étape suivante après validation du MVP</p><p className="text-sm text-muted-foreground">Connexion à Supabase, vraies équipes, invitations des joueurs et sauvegarde partagée des confirmations.</p></div></CardContent></Card>
       </main>
     </div>
   );
