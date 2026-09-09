@@ -155,7 +155,10 @@ function parseXmlRecords(xml: string): XmlRecord[] {
   return root.children.map(toObject);
 }
 
-function parseXmlList(xml: string, tagName: "equipe" | "classement" | "poule"): XmlRecord[] {
+function parseXmlList(
+  xml: string,
+  tagName: "equipe" | "classement" | "poule" | "tour",
+): XmlRecord[] {
   const recordPattern = new RegExp(`<${tagName}>[\\s\\S]*?<\\/${tagName}>`, "gi");
   return Array.from(xml.matchAll(recordPattern)).flatMap((match) =>
     parseXmlRecords(match[0]),
@@ -180,15 +183,27 @@ function containsTeam(ranking: XmlRecord[], teamNumber: string): boolean {
   });
 }
 
+function isClubTeam(name: string, teamNumber: string): boolean {
+  const decodedName = decodeXml(name);
+  return (
+    /(?:st|saint)\s*loub/i.test(decodedName) &&
+    extractTeamNumber(decodedName) === teamNumber
+  );
+}
+
 function phaseFrom(name: string): string {
   return name.match(/phase\s*(\d+)/i)?.[1] || "1";
 }
 
-async function loadRanking(team: XmlRecord): Promise<XmlRecord[]> {
+async function loadRanking(team: XmlRecord): Promise<{
+  ranking: XmlRecord[];
+  divisionId: string;
+  poolId: string;
+}> {
   const teamName = decodeXml(team.libequipe || "");
   const teamNumber = extractTeamNumber(teamName);
   const divisionLink = parseLink(team.liendivision || "");
-  if (!divisionLink.D1) return [];
+  if (!divisionLink.D1) return { ranking: [], divisionId: "", poolId: "" };
 
   const rankingParams: Record<string, string> = {
     action: "classement",
@@ -200,7 +215,13 @@ async function loadRanking(team: XmlRecord): Promise<XmlRecord[]> {
     await callSmartping("xml_result_equ", rankingParams),
     "classement",
   );
-  if (containsTeam(ranking, teamNumber)) return ranking;
+  if (containsTeam(ranking, teamNumber)) {
+    return {
+      ranking,
+      divisionId: divisionLink.D1,
+      poolId: divisionLink.cx_poule || "",
+    };
+  }
 
   const pools = parseXmlList(
     await callSmartping("xml_result_equ", {
@@ -223,9 +244,66 @@ async function loadRanking(team: XmlRecord): Promise<XmlRecord[]> {
       }),
       "classement",
     );
-    if (containsTeam(candidate, teamNumber)) return candidate;
+    if (containsTeam(candidate, teamNumber)) {
+      return { ranking: candidate, divisionId: divisionLink.D1, poolId };
+    }
   }
-  return ranking;
+  return {
+    ranking,
+    divisionId: divisionLink.D1,
+    poolId: divisionLink.cx_poule || "",
+  };
+}
+
+function dateSortKey(value: string): number {
+  const match = value.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+  return match ? Number(`${match[3]}${match[2]}${match[1]}`) : 0;
+}
+
+async function loadTeamMatches(
+  divisionId: string,
+  poolId: string,
+  teamNumber: string,
+) {
+  if (!divisionId || !poolId) return [];
+  const tours = parseXmlList(
+    await callSmartping("xml_result_equ", {
+      auto: "1",
+      D1: divisionId,
+      cx_poule: poolId,
+    }),
+    "tour",
+  );
+
+  return tours
+    .filter(
+      (tour) =>
+        isClubTeam(tour.equa || "", teamNumber) ||
+        isClubTeam(tour.equb || "", teamNumber),
+    )
+    .map((tour, index) => {
+      const home = isClubTeam(tour.equa || "", teamNumber);
+      const link = parseLink(tour.lien || "");
+      const scoreHome = tour.scorea || "";
+      const scoreAway = tour.scoreb || "";
+      const played = scoreHome !== "" && scoreAway !== "";
+      return {
+        id: link.renc_id || `${teamNumber}-${index}`,
+        round: decodeXml(tour.libelle || "").match(/tour\s*n[°ºo]?\s*(\d+)/i)?.[1] || "",
+        date: decodeXml(tour.datereelle || tour.dateprevue || ""),
+        time: decodeXml(tour.heurereelle || ""),
+        home,
+        opponent: decodeXml(home ? tour.equb || "" : tour.equa || ""),
+        scoreFor: played ? (home ? scoreHome : scoreAway) : "",
+        scoreAgainst: played ? (home ? scoreAway : scoreHome) : "",
+        played,
+      };
+    })
+    .sort(
+      (a, b) =>
+        dateSortKey(a.date) - dateSortKey(b.date) ||
+        Number(a.round || "99") - Number(b.round || "99"),
+    );
 }
 
 export async function loadClubTeamRankings(competition: "criterium" | "championnat") {
@@ -245,10 +323,17 @@ export async function loadClubTeamRankings(competition: "criterium" | "championn
     teams.map(async (team) => {
       const name = decodeXml(team.libequipe || "");
       let ranking: XmlRecord[] = [];
+      let matches: Awaited<ReturnType<typeof loadTeamMatches>> = [];
       try {
-        ranking = await loadRanking(team);
+        const rankingResult = await loadRanking(team);
+        ranking = rankingResult.ranking;
+        matches = await loadTeamMatches(
+          rankingResult.divisionId,
+          rankingResult.poolId,
+          extractTeamNumber(name),
+        );
       } catch (error) {
-        console.warn(`[api/fftt/${competition}] Classement indisponible pour ${name}`, error);
+        console.warn(`[api/fftt/${competition}] Données indisponibles pour ${name}`, error);
       }
       return {
         libequipe: name,
@@ -264,6 +349,7 @@ export async function loadClubTeamRankings(competition: "criterium" | "championn
           nul: row.nul || "0",
           def: row.def || "0",
         })),
+        matches,
       };
     }),
   );

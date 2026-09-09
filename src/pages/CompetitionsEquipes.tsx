@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Loader2, Trophy, Users } from 'lucide-react';
+import { CalendarDays, Loader2, MapPin, Trophy, Users } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 
 interface TeamRanking {
@@ -22,6 +22,19 @@ interface Team {
   libepr: string;
   phase: string;
   ranking?: TeamRanking[];
+  matches?: TeamMatch[];
+}
+
+interface TeamMatch {
+  id: string;
+  round: string;
+  date: string;
+  time: string;
+  home: boolean;
+  opponent: string;
+  scoreFor: string;
+  scoreAgainst: string;
+  played: boolean;
 }
 
 const CompetitionsEquipes = () => {
@@ -127,6 +140,48 @@ const CompetitionsEquipes = () => {
                       )}
                     </TableBody>
                   </Table>
+                </div>
+                <div className="border-t border-border p-4 md:p-6">
+                  <div className="mb-4 flex items-center gap-2">
+                    <CalendarDays className="h-5 w-5 text-clubPrimary" aria-hidden="true" />
+                    <h3 className="text-lg font-bold text-clubDark">Calendrier et résultats</h3>
+                  </div>
+                  {team.matches && team.matches.length > 0 ? (
+                    <div className="space-y-2">
+                      {team.matches.map((match) => (
+                        <div
+                          key={match.id}
+                          className="grid gap-3 rounded-lg border bg-white p-3 sm:grid-cols-[80px_110px_1fr_auto] sm:items-center"
+                        >
+                          <div className="font-bold text-clubPrimary">
+                            {match.round ? `J${match.round}` : "Journée"}
+                          </div>
+                          <div>
+                            <div className="font-medium text-clubDark">{match.date}</div>
+                            {match.time && <div className="text-xs text-muted-foreground">{match.time}</div>}
+                          </div>
+                          <div>
+                            <div className="font-semibold text-clubDark">{match.opponent}</div>
+                            <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+                              <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+                              {match.home ? "À domicile" : "À l’extérieur"}
+                            </div>
+                          </div>
+                          {match.played ? (
+                            <Badge className="w-fit bg-clubPrimary text-white">
+                              {match.scoreFor} – {match.scoreAgainst}
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="w-fit">À venir</Badge>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="rounded-lg bg-clubSection/40 p-4 text-sm text-muted-foreground">
+                      Le calendrier n’est pas encore disponible auprès de la FFTT.
+                    </p>
+                  )}
                 </div>
               </CardContent>
             </Card>
