@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Trophy, Users } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 
@@ -32,16 +31,11 @@ const CompetitionsEquipes = () => {
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const { data, error } = await supabase.functions.invoke('get-club-results');
-        if (error) throw error;
+        const response = await fetch('/api/fftt/championnat');
+        if (!response.ok) throw new Error(`Erreur FFTT ${response.status}`);
+        const data = await response.json();
         if (!data?.teams) return;
-
-        const championnatTeams = data.teams.filter((t: Team) => 
-          !t.libepr.toLowerCase().includes("critérium") && 
-          !t.libepr.toLowerCase().includes("criterium")
-        );
-        
-        setTeams(championnatTeams);
+        setTeams(data.teams);
       } catch (err) {
         console.error("Erreur Championnat:", err);
       } finally {

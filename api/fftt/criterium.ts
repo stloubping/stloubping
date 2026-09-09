@@ -225,6 +225,51 @@ async function loadRanking(team: XmlRecord): Promise<XmlRecord[]> {
   return ranking;
 }
 
+export async function loadClubTeamRankings(competition: "criterium" | "championnat") {
+  const config = getConfiguration();
+  const initialization = parseXmlRecords(await callSmartping("xml_initialisation"));
+  if (initialization[0]?.appli !== "1") throw new Error("Accès Smartping refusé");
+
+  const teams = parseXmlList(
+    await callSmartping("xml_equipe", { numclu: config.clubNumber }),
+    "equipe",
+  ).filter((team) => {
+    const isCriterium = /crit[eé]rium/i.test(decodeXml(team.libepr || ""));
+    return competition === "criterium" ? isCriterium : !isCriterium;
+  });
+
+  const resolvedTeams = await Promise.all(
+    teams.map(async (team) => {
+      const name = decodeXml(team.libequipe || "");
+      let ranking: XmlRecord[] = [];
+      try {
+        ranking = await loadRanking(team);
+      } catch (error) {
+        console.warn(`[api/fftt/${competition}] Classement indisponible pour ${name}`, error);
+      }
+      return {
+        libequipe: name,
+        libdivision: decodeXml(team.libdivision || ""),
+        libepr: decodeXml(team.libepr || ""),
+        phase: phaseFrom(name),
+        ranking: ranking.map((row) => ({
+          clt: row.clt || "",
+          equipe: decodeXml(row.equipe || ""),
+          joue: row.joue || "0",
+          pts: row.pts || "0",
+          vic: row.vic || "0",
+          nul: row.nul || "0",
+          def: row.def || "0",
+        })),
+      };
+    }),
+  );
+  resolvedTeams.sort(
+    (a, b) => Number(extractTeamNumber(a.libequipe)) - Number(extractTeamNumber(b.libequipe)),
+  );
+  return resolvedTeams;
+}
+
 export default async function handler(request: ApiRequest, response: ApiResponse) {
   if (request.method !== "GET") {
     response.setHeader("Allow", "GET");
@@ -233,45 +278,7 @@ export default async function handler(request: ApiRequest, response: ApiResponse
   }
 
   try {
-    const config = getConfiguration();
-    const initialization = parseXmlRecords(await callSmartping("xml_initialisation"));
-    if (initialization[0]?.appli !== "1") throw new Error("Accès Smartping refusé");
-
-    const teams = parseXmlList(
-      await callSmartping("xml_equipe", { numclu: config.clubNumber }),
-      "equipe",
-    ).filter((team) => /crit[eé]rium/i.test(decodeXml(team.libepr || "")));
-
-    const resolvedTeams = await Promise.all(
-      teams.map(async (team) => {
-        const name = decodeXml(team.libequipe || "");
-        let ranking: XmlRecord[] = [];
-        try {
-          ranking = await loadRanking(team);
-        } catch (error) {
-          console.warn(`[api/fftt/criterium] Classement indisponible pour ${name}`, error);
-        }
-        return {
-          libequipe: name,
-          libdivision: decodeXml(team.libdivision || ""),
-          libepr: decodeXml(team.libepr || ""),
-          phase: phaseFrom(name),
-          ranking: ranking.map((row) => ({
-            clt: row.clt || "",
-            equipe: decodeXml(row.equipe || ""),
-            joue: row.joue || "0",
-            pts: row.pts || "0",
-            vic: row.vic || "0",
-            nul: row.nul || "0",
-            def: row.def || "0",
-          })),
-        };
-      }),
-    );
-    resolvedTeams.sort(
-      (a, b) => Number(extractTeamNumber(a.libequipe)) - Number(extractTeamNumber(b.libequipe)),
-    );
-
+    const resolvedTeams = await loadClubTeamRankings("criterium");
     response.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600");
     response.status(200).json({ teams: resolvedTeams, updatedAt: new Date().toISOString() });
   } catch (error) {
