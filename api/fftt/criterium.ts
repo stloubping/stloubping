@@ -1,6 +1,9 @@
 import { createHash, createHmac } from "node:crypto";
 
-type ApiRequest = { method?: string };
+type ApiRequest = {
+  method?: string;
+  query?: Record<string, string | string[] | undefined>;
+};
 
 type ApiResponse = {
   status: (code: number) => ApiResponse;
@@ -278,11 +281,16 @@ export default async function handler(request: ApiRequest, response: ApiResponse
   }
 
   try {
-    const resolvedTeams = await loadClubTeamRankings("criterium");
+    const requestedCompetition = request.query?.competition;
+    const competitionValue = Array.isArray(requestedCompetition)
+      ? requestedCompetition[0]
+      : requestedCompetition;
+    const competition = competitionValue === "championnat" ? "championnat" : "criterium";
+    const resolvedTeams = await loadClubTeamRankings(competition);
     response.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600");
     response.status(200).json({ teams: resolvedTeams, updatedAt: new Date().toISOString() });
   } catch (error) {
-    console.error("[api/fftt/criterium]", error);
+    console.error("[api/fftt/equipes]", error);
     response.status(500).json({
       error: error instanceof Error ? error.message : "Erreur interne du service FFTT",
       teams: [],

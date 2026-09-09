@@ -31,7 +31,7 @@ const CompetitionsEquipes = () => {
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const response = await fetch('/api/fftt/championnat');
+        const response = await fetch('/api/fftt/criterium?competition=championnat');
         if (!response.ok) throw new Error(`Erreur FFTT ${response.status}`);
         const data = await response.json();
         if (!data?.teams) return;
