@@ -39,6 +39,29 @@ interface Team {
   matches?: TeamMatch[];
 }
 
+const pouleResultsByTeam: Record<string, Array<{ home: string; away: string; homeScore: number; awayScore: number }>> = {
+  "1": [
+    { home: "ST LOUB PING 1", away: "GRADIGNAN TT 1", homeScore: 37, awayScore: 13 },
+    { home: "TT FARGUAIS 1", away: "AL EYSINES 1", homeScore: 31, awayScore: 19 },
+    { home: "PP NORD GIR. 2", away: "VILLENAVE TT 1", homeScore: 25, awayScore: 25 },
+  ],
+  "2": [
+    { home: "ST LOUB PING 2", away: "SAG CESTAS 1", homeScore: 8, awayScore: 42 },
+    { home: "BX COQS ROUGES 2", away: "PP NORD GIR. 1", homeScore: 39, awayScore: 11 },
+    { home: "EP SLP 1", away: "TT CASTELNAU 1", homeScore: 27, awayScore: 23 },
+  ],
+  "3": [
+    { home: "ST LOUB PING 3", away: "UA CADILLACAISE 1", homeScore: 13, awayScore: 37 },
+    { home: "J LANGON 1", away: "CAM BORDEAUX 1", homeScore: 39, awayScore: 11 },
+    { home: "AS LIBOURNE 2", away: "AS AMBARES 1", homeScore: 29, awayScore: 21 },
+  ],
+  "4": [
+    { home: "ST LOUB PING 4", away: "US CENON 2", homeScore: 27, awayScore: 23 },
+    { home: "AS AMBARES 2", away: "TT SAUVETERROIS 1", homeScore: 31, awayScore: 19 },
+    { home: "CA BEGLAIS 2", away: "ASTT MACAU 1", homeScore: 25, awayScore: 25 },
+  ],
+};
+
 const CriteriumGironde = () => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
@@ -177,6 +200,22 @@ const CriteriumGironde = () => {
                     </div>
                   );
                 })()}
+                {pouleResultsByTeam[String(idx + 1)] && (
+                  <div className="border-t border-clubPrimary/10 bg-clubSection/20 p-4 md:p-5">
+                    <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-clubDark">
+                      Résultats de la poule · J1 · 11/09/2026
+                    </h3>
+                    <div className="grid gap-2 md:grid-cols-2">
+                      {pouleResultsByTeam[String(idx + 1)].map((result) => (
+                        <div key={`${result.home}-${result.away}`} className="flex items-center justify-between rounded-lg border bg-white px-3 py-2 text-sm">
+                          <span className="font-medium text-clubDark">{result.home}</span>
+                          <span className="mx-2 font-bold text-clubPrimary">{result.homeScore} – {result.awayScore}</span>
+                          <span className="text-right font-medium text-clubDark">{result.away}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}

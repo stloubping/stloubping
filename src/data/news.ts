@@ -9,6 +9,16 @@ export interface NewsItem {
 }
 
 export const allNewsItems: NewsItem[] = [
+  // Résultats de la dernière journée du Critérium de Gironde
+  {
+    id: 20260913,
+    title: "Résultats de la dernière journée du Critérium de Gironde",
+    date: "13 Septembre 2026",
+    location: "Critérium de Gironde",
+    description: "La dernière journée du Critérium de Gironde vient de se terminer. Retrouvez les résultats et les classements détaillés de nos équipes, poule par poule, sur la page dédiée du club. Bravo à tous nos joueurs pour leur engagement !",
+    link: "/competitions-equipes/criterium-gironde",
+    image: "/images/actualites/championnat-equipe-journee-3-phase-1.png",
+  },
   // 1️⃣ Précommandes du maillot officiel
   {
     id: 1001,
