@@ -15,7 +15,7 @@ export const allNewsItems: NewsItem[] = [
     title: "Résultats de la dernière journée du Critérium de Gironde",
     date: "13 Septembre 2026",
     location: "Critérium de Gironde",
-    description: "La première journée du Critérium de Gironde s’est disputée le 11 septembre 2026. Résultats : Saint-Loub’Ping 1 bat Gradignan TT 1 (37–13), TT Farguais 1 bat AL Eysines 1 (31–19), et PP Nord Gir. 2 fait match nul contre Villenave TT 1 (25–25). Saint-Loub’Ping 2 s’incline face à SAG Cestas 1 (8–42), tandis que BX Coqs Rouges 2 bat PP Nord Gir. 1 (39–11) et EP SLP 1 bat TT Castelnau 1 (27–23). Saint-Loub’Ping 3 perd contre UA Cadillac 1 (13–37), J Langon 1 bat CAM Bordeaux 1 (39–11), et AS Libourne 2 bat AS Ambarès 1 (29–21). Saint-Loub’Ping 4 bat US Cenon 2 (27–23), AS Ambarès 2 bat TT Sauveterrois 1 (31–19), et CA Béglais 2 fait match nul contre ASTT Macau 1 (25–25). Retrouvez les classements détaillés sur la page du Critérium.",
+    description: "La première journée du Critérium de Gironde s’est disputée le 11 septembre 2026. Résultats de nos équipes : Saint-Loub’Ping 1 bat Gradignan TT 1 (37–13). Saint-Loub’Ping 2 s’incline face à SAG Cestas 1 (8–42). Saint-Loub’Ping 3 perd contre UA Cadillac 1 (13–37). Saint-Loub’Ping 4 bat US Cenon 2 (27–23). Retrouvez les classements et les résultats complets des poules sur la page du Critérium.",
     link: "/competitions-equipes/criterium-gironde",
     image: "/images/actualites/resultats-criterium-gironde.png",
   },
