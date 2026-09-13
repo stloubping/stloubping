@@ -91,11 +91,18 @@ const trialSlots: Array<{
     profiles: ["enfant"],
   },
   {
-    id: "samedi-1000",
+    id: "samedi-0930",
     day: "Samedi",
-    time: "10h00 – 11h30",
+    time: "09h30 – 11h00",
     label: "Loisirs 7–10 ans",
     profiles: ["enfant"],
+  },
+  {
+    id: "samedi-1100",
+    day: "Samedi",
+    time: "11h00 – 12h00",
+    label: "Jeunes perfectionnement",
+    profiles: ["adolescent", "competiteur"],
   },
   {
     id: "mercredi-1630",
@@ -203,8 +210,8 @@ const trainingSchedule: Array<{
   {
     day: "Samedi",
     slots: [
-      { time: "10h00 – 11h30", label: "Loisirs 7–10 ans", tone: "jeunes" },
-      { time: "14h00 – 21h00", label: "Championnat par équipe", tone: "competition" },
+      { time: "09h30 – 11h00", label: "Loisirs 7–10 ans", tone: "jeunes" },
+      { time: "11h00 – 12h00", label: "Jeunes perfectionnement", tone: "jeunes" },
     ],
   },
 ];
