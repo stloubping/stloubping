@@ -13,6 +13,21 @@ interface TeamRanking {
   vic: string;
   nul: string;
   def: string;
+  pointsFor: string;
+  pointsAgainst: string;
+  goalAverage: string;
+}
+
+interface TeamMatch {
+  id: string;
+  round: string;
+  date: string;
+  time: string;
+  home: boolean;
+  opponent: string;
+  scoreFor: string;
+  scoreAgainst: string;
+  played: boolean;
 }
 
 interface Team {
@@ -21,6 +36,7 @@ interface Team {
   libepr: string;
   phase: string;
   ranking?: TeamRanking[];
+  matches?: TeamMatch[];
 }
 
 const CriteriumGironde = () => {
@@ -111,6 +127,9 @@ const CriteriumGironde = () => {
                         <TableHead className="text-center font-bold">V</TableHead>
                         <TableHead className="text-center font-bold">N</TableHead>
                         <TableHead className="text-center font-bold">D</TableHead>
+                        <TableHead className="text-center font-bold">Points gagnés</TableHead>
+                        <TableHead className="text-center font-bold">Points perdus</TableHead>
+                        <TableHead className="text-center font-bold">Goal average</TableHead>
                         <TableHead className="text-center font-bold text-clubPrimary">Pts</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -126,13 +145,16 @@ const CriteriumGironde = () => {
                               <TableCell className="text-center">{row.vic}</TableCell>
                               <TableCell className="text-center">{row.nul}</TableCell>
                               <TableCell className="text-center">{row.def}</TableCell>
+                              <TableCell className="text-center">{row.pointsFor}</TableCell>
+                              <TableCell className="text-center">{row.pointsAgainst}</TableCell>
+                              <TableCell className={`text-center font-semibold ${Number(row.goalAverage) >= 0 ? "text-emerald-700" : "text-red-700"}`}>{Number(row.goalAverage) > 0 ? `+${row.goalAverage}` : row.goalAverage}</TableCell>
                               <TableCell className="text-center font-bold text-clubPrimary">{row.pts}</TableCell>
                             </TableRow>
                           );
                         })
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={7} className="text-center py-4 text-muted-foreground italic">
+                          <TableCell colSpan={10} className="text-center py-4 text-muted-foreground italic">
                             Classement non disponible.
                           </TableCell>
                         </TableRow>
@@ -140,6 +162,21 @@ const CriteriumGironde = () => {
                     </TableBody>
                   </Table>
                 </div>
+                {(() => {
+                  const latestMatch = team.matches?.filter((match) => match.played).at(-1);
+                  if (!latestMatch) return null;
+                  return (
+                    <div className="border-t border-border bg-clubSection/20 px-4 py-4 md:px-6">
+                      <p className="text-sm font-bold uppercase tracking-wide text-clubPrimary">Dernière journée — résultat</p>
+                      <p className="mt-1 text-sm text-clubDark">
+                        Tour {latestMatch.round || "—"} · {latestMatch.date || "Date non renseignée"} · {latestMatch.home ? "À domicile" : "À l’extérieur"}
+                      </p>
+                      <p className="mt-2 font-semibold text-clubDark">
+                        {team.libequipe} {latestMatch.scoreFor} – {latestMatch.scoreAgainst} {latestMatch.opponent}
+                      </p>
+                    </div>
+                  );
+                })()}
               </CardContent>
             </Card>
           ))}

@@ -306,6 +306,47 @@ async function loadTeamMatches(
     );
 }
 
+function normalizeTeamName(value: string): string {
+  return decodeXml(value).replace(/\s+/g, " ").trim().toUpperCase();
+}
+
+async function loadPoolStats(
+  divisionId: string,
+  poolId: string,
+): Promise<Map<string, { pointsFor: number; pointsAgainst: number }>> {
+  const stats = new Map<string, { pointsFor: number; pointsAgainst: number }>();
+  if (!divisionId || !poolId) return stats;
+
+  const tours = parseXmlList(
+    await callSmartping("xml_result_equ", {
+      auto: "1",
+      D1: divisionId,
+      cx_poule: poolId,
+    }),
+    "tour",
+  );
+
+  for (const tour of tours) {
+    const scoreHome = Number(tour.scorea || "");
+    const scoreAway = Number(tour.scoreb || "");
+    const home = normalizeTeamName(tour.equa || "");
+    const away = normalizeTeamName(tour.equb || "");
+    if (!home || !away || !Number.isFinite(scoreHome) || !Number.isFinite(scoreAway)) continue;
+
+    const homeStats = stats.get(home) || { pointsFor: 0, pointsAgainst: 0 };
+    homeStats.pointsFor += scoreHome;
+    homeStats.pointsAgainst += scoreAway;
+    stats.set(home, homeStats);
+
+    const awayStats = stats.get(away) || { pointsFor: 0, pointsAgainst: 0 };
+    awayStats.pointsFor += scoreAway;
+    awayStats.pointsAgainst += scoreHome;
+    stats.set(away, awayStats);
+  }
+
+  return stats;
+}
+
 export async function loadClubTeamRankings(competition: "criterium" | "championnat") {
   const config = getConfiguration();
   const initialization = parseXmlRecords(await callSmartping("xml_initialisation"));
@@ -332,6 +373,19 @@ export async function loadClubTeamRankings(competition: "criterium" | "championn
           rankingResult.poolId,
           extractTeamNumber(name),
         );
+        const poolStats = await loadPoolStats(rankingResult.divisionId, rankingResult.poolId);
+        ranking = ranking.map((row) => {
+          const stats = poolStats.get(normalizeTeamName(row.equipe || "")) || {
+            pointsFor: 0,
+            pointsAgainst: 0,
+          };
+          return {
+            ...row,
+            pointsFor: String(stats.pointsFor),
+            pointsAgainst: String(stats.pointsAgainst),
+            goalAverage: String(stats.pointsFor - stats.pointsAgainst),
+          };
+        });
       } catch (error) {
         console.warn(`[api/fftt/${competition}] Données indisponibles pour ${name}`, error);
       }
@@ -348,6 +402,9 @@ export async function loadClubTeamRankings(competition: "criterium" | "championn
           vic: row.vic || "0",
           nul: row.nul || "0",
           def: row.def || "0",
+          pointsFor: row.pointsFor || "0",
+          pointsAgainst: row.pointsAgainst || "0",
+          goalAverage: row.goalAverage || "0",
         })),
         matches,
       };
