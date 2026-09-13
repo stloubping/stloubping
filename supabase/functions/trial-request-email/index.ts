@@ -90,6 +90,10 @@ serve(async (req) => {
         from: "St Loub'Ping <contact@saintloubping.fr>",
         to: ["saintloubping@laposte.net"],
         reply_to: request.email,
+        // Explicit header kept for mail servers that ignore the Resend alias.
+        headers: {
+          "Reply-To": request.email,
+        },
         subject,
         html: `
           <div style="font-family:Arial,sans-serif;color:#111827;max-width:640px;margin:0 auto;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;">
