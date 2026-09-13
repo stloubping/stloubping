@@ -185,21 +185,6 @@ const CriteriumGironde = () => {
                     </TableBody>
                   </Table>
                 </div>
-                {(() => {
-                  const latestMatch = team.matches?.filter((match) => match.played).at(-1);
-                  if (!latestMatch) return null;
-                  return (
-                    <div className="border-t border-border bg-clubSection/20 px-4 py-4 md:px-6">
-                      <p className="text-sm font-bold uppercase tracking-wide text-clubPrimary">Dernière journée — résultat</p>
-                      <p className="mt-1 text-sm text-clubDark">
-                        Tour {latestMatch.round || "—"} · {latestMatch.date || "Date non renseignée"} · {latestMatch.home ? "À domicile" : "À l’extérieur"}
-                      </p>
-                      <p className="mt-2 font-semibold text-clubDark">
-                        {team.libequipe} {latestMatch.scoreFor} – {latestMatch.scoreAgainst} {latestMatch.opponent}
-                      </p>
-                    </div>
-                  );
-                })()}
                 {pouleResultsByTeam[String(idx + 1)] && (
                   <div className="border-t border-clubPrimary/10 bg-clubSection/20 p-4 md:p-5">
                     <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-clubDark">
