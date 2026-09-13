@@ -207,6 +207,11 @@ const Adhesions = () => {
                   </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
+                  <a href="/documents/adhesions/autorisation-sortie-mineurs.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
+                    Autorisation de sortie mineurs
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <a href="/documents/adhesions/droit-a-l-image-et-rgpd.pdf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-clubLight-foreground hover:bg-clubSection hover:text-clubPrimary">
                     Droit à l'image et RGPD
                   </a>
