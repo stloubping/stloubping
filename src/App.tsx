@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SiteVisitTracker from "@/components/SiteVisitTracker";
 import Layout from "./components/Layout";
 import Accueil from "./pages/Accueil";
 import NotFound from "./pages/NotFound";
@@ -59,7 +60,8 @@ const App = () => (
   <div className="app-root">
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <BrowserRouter>
+      <BrowserRouter>
+        <SiteVisitTracker />
           <RouteMetadata />
           <LightboxProvider>
             <Layout>
@@ -128,6 +130,7 @@ const App = () => (
                 <Route path="/administration/stage/:slug" element={<Administration />} />
                 <Route path="/administration/actualites" element={<Administration />} />
                 <Route path="/administration/calendrier-competitions" element={<Administration />} />
+                <Route path="/administration/statistiques-visites" element={<Administration />} />
                 <Route path="/equipe-1" element={<TeamOne />} />
                 <Route path="*" element={<NotFound />} />
                 </Routes>

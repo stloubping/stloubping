@@ -18,6 +18,7 @@ import StagesAdmin from "@/components/admin/StagesAdmin";
 import GenericStageAdmin from "@/components/admin/GenericStageAdmin";
 import HomeNewsAdmin from "@/components/admin/HomeNewsAdmin";
 import CompetitionCalendarAdmin from "@/components/admin/CompetitionCalendarAdmin";
+import SiteVisitsAdmin from "@/components/admin/SiteVisitsAdmin";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -237,6 +238,10 @@ const Administration = () => {
 
   if (location.pathname === "/administration/calendrier-competitions") {
     return <CompetitionCalendarAdmin />;
+  }
+
+  if (location.pathname === "/administration/statistiques-visites") {
+    return <SiteVisitsAdmin />;
   }
 
   return <ClubOrdersDashboard session={session} onSignOut={() => supabase.auth.signOut()} />;

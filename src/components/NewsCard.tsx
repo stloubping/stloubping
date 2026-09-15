@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { useLightbox } from '@/context/LightboxContext';
 
 interface NewsItem {
-  id: number;
+  id: string | number;
   title: string;
   date: string;
   location: string;
