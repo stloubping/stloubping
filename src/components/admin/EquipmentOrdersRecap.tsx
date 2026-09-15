@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ArrowLeft, Loader2, Archive, CheckCircle2, PackageCheck, Pencil, RotateCcw, Save, X } from "lucide-react";
+import { ArrowLeft, Loader2, Archive, CheckCircle2, PackageCheck, Pencil, Plus, RotateCcw, Save, Trash2, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 import type { EditableEquipmentItem } from "@/components/admin/EquipmentOrderEditor";
 
 type Order = { id: string; created_at: string; first_name: string; last_name: string; items: EditableEquipmentItem[]; status: string; paid_at: string | null; handed_over_at: string | null; handed_over_by: string | null };
-type Draft = { first_name: string; last_name: string; order_number: string; total: string; paid_at: string; handed_over_at: string; handed_over_by: string };
+type DistributionLine = { date: string; details: string; handed_over_by: string };
+type Draft = { first_name: string; last_name: string; order_number: string; total: string; paid_at: string; handed_over_at: string; handed_over_by: string; distributionLines: DistributionLine[] };
 const statuses = ["ordered", "available", "delivered"];
 const previousStatus: Record<string, { value: string; label: string }> = {
   ordered: { value: "confirmed", label: "Confirmée" },
@@ -38,14 +39,14 @@ const EquipmentOrdersRecap = () => {
   }, []);
   useEffect(() => { fetchOrders(); }, [fetchOrders]);
 
-  const edit = (order: Order) => { setEditingId(order.id); setDraft({ first_name: order.first_name, last_name: order.last_name, order_number: numberOf(order), total: totalOf(order).toFixed(2), paid_at: order.paid_at ?? "", handed_over_at: order.handed_over_at ?? "", handed_over_by: order.handed_over_by ?? "" }); };
+  const edit = (order: Order) => { setEditingId(order.id); setDraft({ first_name: order.first_name, last_name: order.last_name, order_number: numberOf(order), total: totalOf(order).toFixed(2), paid_at: order.paid_at ?? "", handed_over_at: order.handed_over_at ?? "", handed_over_by: order.handed_over_by ?? "", distributionLines: (order.items[0] as EditableEquipmentItem & { distribution_lines?: DistributionLine[] })?.distribution_lines ?? [] }); };
   const save = async (order: Order) => {
     if (!draft) return;
     const total = Number(draft.total.replace(",", "."));
     if (!draft.first_name.trim() || !draft.last_name.trim() || !draft.order_number.trim()) { toast.error("Le nom, le prénom et le numéro sont obligatoires."); return; }
     if (!Number.isFinite(total) || total < 0) { toast.error("Saisissez un montant valide."); return; }
     if (orders.some((entry) => entry.id !== order.id && numberOf(entry).toLowerCase() === draft.order_number.trim().toLowerCase())) { toast.error("Ce numéro de commande est déjà utilisé."); return; }
-    const items = order.items.map((item, index) => index === 0 ? { ...item, supplier_order_number: draft.order_number.trim(), supplier_total: total } : item);
+    const items = order.items.map((item, index) => index === 0 ? { ...item, supplier_order_number: draft.order_number.trim(), supplier_total: total, distribution_lines: draft.distributionLines } : item);
     setSaving(true);
     const { error } = await supabase.from("equipment_orders").update({ first_name: draft.first_name.trim(), last_name: draft.last_name.trim(), items, paid_at: draft.paid_at || null, handed_over_at: draft.handed_over_at || null, handed_over_by: draft.handed_over_by.trim() || null }).eq("id", order.id);
     if (error) { console.error(error); toast.error("Les modifications n’ont pas pu être enregistrées."); }
@@ -96,12 +97,14 @@ const EquipmentOrdersRecap = () => {
           <div><Label text="Payé le" /><Input aria-label="Payé le" type="date" value={editingDraft.paid_at} onChange={(e) => setDraft({ ...editingDraft, paid_at: e.target.value })} /></div>
           <div><Label text="Donné le" /><Input aria-label="Donné le" type="date" value={editingDraft.handed_over_at} onChange={(e) => setDraft({ ...editingDraft, handed_over_at: e.target.value })} /></div>
           <div><Label text="Donné par" /><Input aria-label="Donné par" placeholder="Nom du membre" value={editingDraft.handed_over_by} onChange={(e) => setDraft({ ...editingDraft, handed_over_by: e.target.value })} /></div>
+          <div className="col-span-full rounded-lg border bg-clubSection/20 p-3"><div className="mb-2 flex items-center justify-between"><strong className="text-sm">Distributions en plusieurs fois</strong><Button type="button" variant="outline" size="sm" onClick={() => setDraft({ ...editingDraft, distributionLines: [...editingDraft.distributionLines, { date: "", details: "", handed_over_by: "" }] })}><Plus className="mr-1 h-4 w-4" />Ajouter une ligne</Button></div>{editingDraft.distributionLines.length === 0 ? <p className="text-xs text-muted-foreground">Aucune distribution enregistrée.</p> : <div className="space-y-2">{editingDraft.distributionLines.map((line, lineIndex) => <div key={lineIndex} className="grid gap-2 sm:grid-cols-[1fr_1.5fr_1.2fr_auto]"><Input type="date" aria-label={`Date de distribution ${lineIndex + 1}`} value={line.date} onChange={(e) => setDraft({ ...editingDraft, distributionLines: editingDraft.distributionLines.map((entry, index) => index === lineIndex ? { ...entry, date: e.target.value } : entry) })} /><Input aria-label={`Détail de distribution ${lineIndex + 1}`} placeholder="Articles remis / quantité" value={line.details} onChange={(e) => setDraft({ ...editingDraft, distributionLines: editingDraft.distributionLines.map((entry, index) => index === lineIndex ? { ...entry, details: e.target.value } : entry) })} /><Input aria-label={`Responsable distribution ${lineIndex + 1}`} placeholder="Remis par" value={line.handed_over_by} onChange={(e) => setDraft({ ...editingDraft, distributionLines: editingDraft.distributionLines.map((entry, index) => index === lineIndex ? { ...entry, handed_over_by: e.target.value } : entry) })} /><Button type="button" variant="ghost" size="icon" aria-label={`Supprimer la ligne ${lineIndex + 1}`} onClick={() => setDraft({ ...editingDraft, distributionLines: editingDraft.distributionLines.filter((_, index) => index !== lineIndex) })}><Trash2 className="h-4 w-4 text-red-600" /></Button></div>)}</div>}</div>
           <div className="flex gap-2"><Button size="icon" onClick={() => save(order)} disabled={saving} aria-label="Enregistrer">{saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}</Button><Button size="icon" variant="outline" onClick={() => { setEditingId(null); setDraft(null); }} disabled={saving} aria-label="Annuler"><X className="h-4 w-4" /></Button></div>
         </> : <>
           <p><Label text="Nom" /><strong>{order.last_name}</strong></p><p><Label text="Prénom" />{order.first_name}</p><p className="font-black text-clubPrimary"><Label text="Somme" />{money(totalOf(order))}</p><p className="break-all font-mono font-bold"><Label text="N°" />{numberOf(order)}</p>
           <p><Label text="Payé le" />{order.paid_at ? new Date(`${order.paid_at}T12:00:00`).toLocaleDateString("fr-FR") : "—"}</p>
           <p><Label text="Donné le" />{order.handed_over_at ? new Date(`${order.handed_over_at}T12:00:00`).toLocaleDateString("fr-FR") : "—"}</p>
           <p><Label text="Donné par" />{order.handed_over_by || "—"}</p>
+          {((order.items[0] as EditableEquipmentItem & { distribution_lines?: DistributionLine[] })?.distribution_lines ?? []).length > 0 && <div className="col-span-full rounded-lg bg-clubSection/20 p-3 text-sm"><strong>Distributions :</strong><ul className="mt-1 space-y-1">{((order.items[0] as EditableEquipmentItem & { distribution_lines?: DistributionLine[] }).distribution_lines ?? []).map((line, lineIndex) => <li key={lineIndex}>{line.date ? new Date(`${line.date}T12:00:00`).toLocaleDateString("fr-FR") : "Date à préciser"} · {line.details || "Articles remis"} · {line.handed_over_by || "Responsable à préciser"}</li>)}</ul></div>}
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap"><Button variant="outline" size="sm" onClick={() => edit(order)}><Pencil className="mr-2 h-4 w-4" />Modifier</Button>{order.status === "ordered" && <Button size="sm" onClick={() => markAsArrived(order)} disabled={arrivingId === order.id} className="whitespace-nowrap bg-clubPrimary font-bold hover:bg-clubPrimary/90">{arrivingId === order.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PackageCheck className="mr-2 h-4 w-4" />}Arrivée au club</Button>}<Button variant="outline" size="sm" onClick={() => revertStatus(order)} disabled={revertingId === order.id} className="whitespace-nowrap">{revertingId === order.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RotateCcw className="mr-2 h-4 w-4" />}Revenir à « {previousStatus[order.status]?.label} »</Button><Button size="sm" onClick={() => markAsCompleted(order)} disabled={finishingId === order.id} className="whitespace-nowrap bg-emerald-600 font-bold hover:bg-emerald-700">{finishingId === order.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}Terminé</Button></div>
         </>}</div>; })}</div>
       </div></Card>
