@@ -51,9 +51,11 @@ type TeamOneSpaceProps = {
   displayName: string;
   email: string;
   onSignOut: () => void;
+  teamNumber?: number;
 };
 
-const TeamOneSpace = ({ displayName, email, onSignOut }: TeamOneSpaceProps) => {
+const TeamOneSpace = ({ displayName, email, onSignOut, teamNumber = 1 }: TeamOneSpaceProps) => {
+  const teamLabel = `Équipe ${teamNumber}`;
   const [answers, setAnswers] = useState<Record<string, Answer>>({});
   const [playerNames, setPlayerNames] = useState(() => Array.from({ length: 8 }, () => ""));
   const [doubleRows, setDoubleRows] = useState(createEmptyDoubles);
@@ -69,9 +71,9 @@ const TeamOneSpace = ({ displayName, email, onSignOut }: TeamOneSpaceProps) => {
         const response = await fetch("/api/fftt/criterium?competition=championnat");
         if (!response.ok) throw new Error(`Erreur FFTT ${response.status}`);
         const data = await response.json();
-        setOfficialMatches(data?.teams?.[0]?.matches ?? []);
+        setOfficialMatches(data?.teams?.[teamNumber - 1]?.matches ?? []);
       } catch (error) {
-        console.error("Calendrier Équipe 1 indisponible", error);
+        console.error(`Calendrier ${teamLabel} indisponible`, error);
         setCalendarError(true);
       } finally {
         setCalendarLoading(false);
@@ -79,7 +81,7 @@ const TeamOneSpace = ({ displayName, email, onSignOut }: TeamOneSpaceProps) => {
     };
 
     void loadCalendar();
-  }, []);
+  }, [teamLabel, teamNumber]);
 
   const availabilityRounds = officialMatches.length > 0 ? officialMatches : emptyRounds;
   const nextAwayMatch = officialMatches.find((match) => !match.played && !match.home);
@@ -124,15 +126,15 @@ const TeamOneSpace = ({ displayName, email, onSignOut }: TeamOneSpaceProps) => {
         <div className="container mx-auto">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><Button asChild variant="ghost" className="-ml-4 text-white hover:bg-white/10 hover:text-white"><Link to="/"><ArrowLeft className="mr-2 h-4 w-4" />Retour au site</Link></Button><Button type="button" variant="outline" onClick={onSignOut} className="border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white"><LogOut className="mr-2 h-4 w-4" />Déconnexion</Button></div>
           <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <div><p className="text-sm font-extrabold uppercase tracking-[0.18em] text-clubPrimary">Espace privé · {displayName}</p><h1 className="mt-2 text-3xl font-black md:text-4xl">Équipe 1</h1><p className="mt-2 max-w-2xl text-white/65">Pilotez toute la phase 1 de l’Équipe 1, de la convocation au déplacement. Compte connecté : {email}.</p></div>
-            <div className="flex flex-wrap gap-2"><Badge className="bg-clubPrimary text-white hover:bg-clubPrimary">Équipe 1 · Régionale 2</Badge><Badge className="bg-white/10 text-white hover:bg-white/10">Phase 1 · Poule 2</Badge></div>
+            <div><p className="text-sm font-extrabold uppercase tracking-[0.18em] text-clubPrimary">Espace privé · {displayName}</p><h1 className="mt-2 text-3xl font-black md:text-4xl">{teamLabel}</h1><p className="mt-2 max-w-2xl text-white/65">Pilotez toute la phase 1 de {teamLabel}, de la convocation au déplacement. Compte connecté : {email}.</p></div>
+            <div className="flex flex-wrap gap-2"><Badge className="bg-clubPrimary text-white hover:bg-clubPrimary">{teamLabel} · Régionale 2</Badge><Badge className="bg-white/10 text-white hover:bg-white/10">Phase 1 · Poule 2</Badge></div>
           </div>
         </div>
       </section>
 
       <main className="container mx-auto space-y-8 px-4 py-8">
         <section>
-          <div className="mb-4 flex items-center gap-3"><CalendarDays className="h-7 w-7 text-clubPrimary" /><div><h2 className="text-2xl font-black text-clubDark">Calendrier officiel · Équipe 1</h2><p className="text-sm text-muted-foreground">Les dates et les résultats sont synchronisés avec la FFTT.</p></div></div>
+          <div className="mb-4 flex items-center gap-3"><CalendarDays className="h-7 w-7 text-clubPrimary" /><div><h2 className="text-2xl font-black text-clubDark">Calendrier officiel · {teamLabel}</h2><p className="text-sm text-muted-foreground">Les dates et les résultats sont synchronisés avec la FFTT.</p></div></div>
           <Card className="overflow-hidden border-clubPrimary/20">
             <CardContent className="p-0">
               {calendarLoading ? (

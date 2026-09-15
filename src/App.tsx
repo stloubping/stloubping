@@ -46,6 +46,7 @@ const PolitiqueCookies = React.lazy(() => import("./pages/PolitiqueCookies"));
 const DemandeDonnees = React.lazy(() => import("./pages/DemandeDonnees"));
 const Administration = React.lazy(() => import("./pages/Administration"));
 const TeamOne = React.lazy(() => import("./pages/TeamOne"));
+const TeamTwo = React.lazy(() => import("./pages/TeamTwo"));
 const StageAout = React.lazy(() => import("./pages/StageAout"));
 const StageGeneric = React.lazy(() => import("./pages/StageGeneric"));
 const StagesPublic = React.lazy(() => import("./pages/StagesPublic"));
@@ -132,6 +133,7 @@ const App = () => (
                 <Route path="/administration/calendrier-competitions" element={<Administration />} />
                 <Route path="/administration/statistiques-visites" element={<Administration />} />
                 <Route path="/equipe-1" element={<TeamOne />} />
+                <Route path="/equipe-2" element={<TeamTwo />} />
                 <Route path="*" element={<NotFound />} />
                 </Routes>
               </React.Suspense>
