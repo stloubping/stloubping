@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Résultats championnat par équipes – première journée</title>
+  <desc id="desc">Annonce graphique des résultats des équipes de Saint-Loub'Ping.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111318"/><stop offset="1" stop-color="#2a080d"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ef3340"/><stop offset="1" stop-color="#ff5a5f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <circle cx="1080" cy="-20" r="260" fill="#ef3340" opacity=".11"/>
+  <circle cx="40" cy="700" r="250" fill="#ef3340" opacity=".08"/>
+  <rect x="58" y="48" width="1084" height="579" rx="28" fill="none" stroke="#ef3340" stroke-width="3" opacity=".65"/>
+  <text x="90" y="105" fill="#ef3340" font-family="Arial, sans-serif" font-size="23" font-weight="700" letter-spacing="4">SAINT-LOUB’PING</text>
+  <text x="90" y="157" fill="#fff" font-family="Arial, sans-serif" font-size="38" font-weight="800">RÉSULTATS — JOURNÉE 1</text>
+  <text x="90" y="190" fill="#d8d8dc" font-family="Arial, sans-serif" font-size="19">Championnat par équipes · 19–20 septembre 2026</text>
+  <line x1="90" y1="218" x2="1110" y2="218" stroke="#ef3340" stroke-width="3"/>
+  <g font-family="Arial, sans-serif" font-size="22" font-weight="700">
+    <rect x="90" y="247" width="1020" height="48" rx="10" fill="#ef3340" opacity=".18"/>
+    <text x="115" y="279" fill="#fff">Équipe 1</text><text x="405" y="279" fill="#f4b5ba">Aiffres 4</text><text x="1018" y="279" fill="#fff" text-anchor="end">6 – 8</text>
+    <rect x="90" y="307" width="1020" height="48" rx="10" fill="#ef3340" opacity=".52"/>
+    <text x="115" y="339" fill="#fff">Équipe 2</text><text x="405" y="339" fill="#fff">Club TT Audenge 1</text><text x="1018" y="339" fill="#fff" text-anchor="end">14 – 0</text>
+    <rect x="90" y="367" width="1020" height="48" rx="10" fill="#ef3340" opacity=".18"/>
+    <text x="115" y="399" fill="#fff">Équipe 3</text><text x="405" y="399" fill="#f4b5ba">SAM Lesparre 5</text><text x="1018" y="399" fill="#fff" text-anchor="end">6 – 8</text>
+    <rect x="90" y="427" width="1020" height="48" rx="10" fill="#ef3340" opacity=".52"/>
+    <text x="115" y="459" fill="#fff">Équipe 4</text><text x="405" y="459" fill="#fff">US Bouscat 6</text><text x="1018" y="459" fill="#fff" text-anchor="end">12 – 2</text>
+    <rect x="90" y="487" width="1020" height="48" rx="10" fill="#ef3340" opacity=".18"/>
+    <text x="115" y="519" fill="#fff">Équipe 5</text><text x="405" y="519" fill="#f4b5ba">TT Farguais 3</text><text x="1018" y="519" fill="#fff" text-anchor="end">3 – 11</text>
+    <rect x="90" y="547" width="1020" height="48" rx="10" fill="#ef3340" opacity=".52"/>
+    <text x="115" y="579" fill="#fff">Équipe 6</text><text x="405" y="579" fill="#fff">CA Bègles 11</text><text x="1018" y="579" fill="#fff" text-anchor="end">4 – 10</text>
+  </g>
+  <text x="1108" y="618" fill="#c9c9cf" font-family="Arial, sans-serif" font-size="14" text-anchor="end">Résultats officiels FFTT · Équipe 7 : résultat non renseigné</text>
+</svg>
