@@ -13,12 +13,17 @@ import CompetitionCalendar from '@/components/CompetitionCalendar';
 import { ArrowRight, CalendarDays, Clock3, Newspaper } from 'lucide-react';
 
 const Accueil = () => {
-  const [homeNewsItems, setHomeNewsItems] = useState(fallbackHomeNewsItems);
+  const [homeNewsItems, setHomeNewsItems] = useState<typeof fallbackHomeNewsItems>([]);
+  const [newsLoading, setNewsLoading] = useState(true);
 
   useEffect(() => {
     fetchHomeNewsItems()
-      .then((items) => { if (items.length > 0) setHomeNewsItems(items); })
-      .catch((error) => console.error("Impossible de charger les actualités de l’accueil.", error));
+      .then((items) => setHomeNewsItems(items.length > 0 ? items : fallbackHomeNewsItems))
+      .catch((error) => {
+        console.error("Impossible de charger les actualités de l’accueil.", error);
+        setHomeNewsItems(fallbackHomeNewsItems);
+      })
+      .finally(() => setNewsLoading(false));
   }, []);
 
   const latestVideos = [...allVideos]
@@ -57,10 +62,20 @@ const Accueil = () => {
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-clubDark">
             Dernières Actualités
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
-            {homeNewsItems.map((news) => (
-              <NewsCard key={news.id} news={news} />
-            ))}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8 lg:grid-cols-3">
+            {newsLoading
+              ? [0, 1, 2].map((placeholder) => (
+                  <div key={placeholder} className="h-[24rem] animate-pulse overflow-hidden rounded-xl bg-white shadow-lg" aria-label="Chargement de l’actualité">
+                    <div className="h-40 bg-clubDark/10 md:h-48" />
+                    <div className="space-y-3 p-4">
+                      <div className="h-5 w-4/5 rounded bg-clubDark/10" />
+                      <div className="h-3 w-2/5 rounded bg-clubDark/10" />
+                      <div className="h-3 w-full rounded bg-clubDark/10" />
+                      <div className="h-3 w-3/4 rounded bg-clubDark/10" />
+                    </div>
+                  </div>
+                ))
+              : homeNewsItems.map((news) => <NewsCard key={news.id} news={news} />)}
           </div>
 
           {/* Bouton vers toutes les actualités */}
