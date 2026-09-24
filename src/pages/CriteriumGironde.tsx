@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Loader2, Trophy, Users } from 'lucide-react';
+import { CalendarDays, CheckCircle2, Clock3, Loader2, MapPin, Trophy, Users } from 'lucide-react';
 
 interface TeamRanking {
   clt: string;
@@ -201,6 +201,44 @@ const CriteriumGironde = () => {
                     </div>
                   </div>
                 )}
+                <div className="border-t border-clubPrimary/10 bg-white p-4 md:p-6">
+                  <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-[0.18em] text-clubPrimary">Saison 2026–2027</p>
+                      <h3 className="mt-1 flex items-center gap-2 text-lg font-black text-clubDark md:text-xl">
+                        <CalendarDays className="h-5 w-5 text-clubPrimary" />
+                        Calendrier de {team.libequipe.replace(/\s*-\s*Phase\s*\d+/i, "")}
+                      </h3>
+                    </div>
+                    <p className="text-xs text-muted-foreground">Mis à jour automatiquement depuis la FFTT</p>
+                  </div>
+                  {team.matches && team.matches.length > 0 ? (
+                    <div className="grid gap-3 lg:grid-cols-2">
+                      {team.matches.map((match) => (
+                        <article key={match.id} className={`relative overflow-hidden rounded-xl border p-4 ${match.played ? "border-clubPrimary/20 bg-clubPrimary/[0.03]" : "border-border bg-clubLight"}`}>
+                          <span className={`absolute inset-y-0 left-0 w-1 ${match.played ? "bg-clubPrimary" : "bg-clubDark/20"}`} />
+                          <div className="flex items-start justify-between gap-3 pl-1">
+                            <div className="min-w-0">
+                              <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-bold text-muted-foreground">
+                                <span className="rounded-full bg-clubDark px-2.5 py-1 text-white">J{match.round || "–"}</span>
+                                <span className="flex items-center gap-1"><CalendarDays className="h-3.5 w-3.5 text-clubPrimary" />{match.date || "Date à confirmer"}</span>
+                                {match.time && <span className="flex items-center gap-1"><Clock3 className="h-3.5 w-3.5 text-clubPrimary" />{match.time}</span>}
+                              </div>
+                              <p className="truncate text-base font-black text-clubDark">{match.opponent || "Adversaire à confirmer"}</p>
+                              <p className="mt-1 flex items-center gap-1 text-xs font-semibold text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{match.home ? "À Saint-Loubès" : "À l’extérieur"}</p>
+                            </div>
+                            {match.played ? (
+                              <div className="shrink-0 text-right">
+                                <p className="flex items-center justify-end gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-700"><CheckCircle2 className="h-3.5 w-3.5" />Joué</p>
+                                <p className="mt-1 text-2xl font-black tabular-nums text-clubPrimary">{match.scoreFor} – {match.scoreAgainst}</p>
+                              </div>
+                            ) : <span className="shrink-0 rounded-full bg-clubDark/5 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-clubDark/60">À venir</span>}
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  ) : <p className="rounded-xl border border-dashed p-5 text-center text-sm text-muted-foreground">Le calendrier FFTT de cette équipe n’est pas encore disponible.</p>}
+                </div>
               </CardContent>
             </Card>
           ))}
