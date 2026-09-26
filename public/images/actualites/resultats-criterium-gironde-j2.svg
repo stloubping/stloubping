@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Résultats de la deuxième journée du Critérium de Gironde</title>
+  <desc id="desc">Les quatre résultats des équipes de Saint Loub’Ping le 25 septembre 2026.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07090c"/>
+      <stop offset="1" stop-color="#1c0c06"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f04a0b"/>
+      <stop offset="1" stop-color="#ff5a12"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#background)"/>
+  <circle cx="1080" cy="20" r="250" fill="#f04a0b" opacity=".10"/>
+  <circle cx="70" cy="690" r="235" fill="#ff5a12" opacity=".07"/>
+  <path d="M0 0h48l310 675h-50z" fill="#f04a0b" opacity=".08"/>
+  <rect x="58" y="48" width="1084" height="579" rx="28" fill="none" stroke="#f04a0b" stroke-width="3" opacity=".75"/>
+
+  <text x="90" y="105" fill="#f04a0b" font-family="Arial, sans-serif" font-size="23" font-weight="700" letter-spacing="4">SAINT LOUB’PING</text>
+  <text x="90" y="158" fill="#f3f3f1" font-family="Arial, sans-serif" font-size="39" font-weight="800">CRITÉRIUM DE GIRONDE</text>
+  <text x="90" y="194" fill="#d8d8d6" font-family="Arial, sans-serif" font-size="20">Journée 2 · 25 septembre 2026</text>
+  <line x1="90" y1="221" x2="1110" y2="221" stroke="#f04a0b" stroke-width="3"/>
+
+  <g font-family="Arial, sans-serif">
+    <rect x="90" y="250" width="1020" height="68" rx="12" fill="url(#accent)" opacity=".86"/>
+    <text x="118" y="280" fill="#fff" font-size="17" font-weight="700">ÉQUIPE 1 · EXCELLENCE</text>
+    <text x="118" y="304" fill="#fff" font-size="20" font-weight="700">AL EYSINES 1</text>
+    <text x="1065" y="295" fill="#fff" font-size="34" font-weight="800" text-anchor="end">45 – 5</text>
+
+    <rect x="90" y="332" width="1020" height="68" rx="12" fill="#f04a0b" opacity=".48"/>
+    <text x="118" y="362" fill="#fff" font-size="17" font-weight="700">ÉQUIPE 2 · EXCELLENCE</text>
+    <text x="118" y="386" fill="#fff" font-size="20" font-weight="700">TT CASTELNAU 1</text>
+    <text x="1065" y="377" fill="#fff" font-size="34" font-weight="800" text-anchor="end">30 – 20</text>
+
+    <rect x="90" y="414" width="1020" height="68" rx="12" fill="#15181c" stroke="#f04a0b" stroke-width="2" opacity=".98"/>
+    <text x="118" y="444" fill="#f04a0b" font-size="17" font-weight="700">ÉQUIPE 3 · PROMOTION EXCELLENCE</text>
+    <text x="118" y="468" fill="#f3f3f1" font-size="20" font-weight="700">AS LIBOURNE 2</text>
+    <text x="1065" y="459" fill="#f3f3f1" font-size="34" font-weight="800" text-anchor="end">11 – 39</text>
+
+    <rect x="90" y="496" width="1020" height="68" rx="12" fill="#15181c" stroke="#f04a0b" stroke-width="2" opacity=".98"/>
+    <text x="118" y="526" fill="#f04a0b" font-size="17" font-weight="700">ÉQUIPE 4 · HONNEUR</text>
+    <text x="118" y="550" fill="#f3f3f1" font-size="20" font-weight="700">ASTT MACAU 1</text>
+    <text x="1065" y="541" fill="#f3f3f1" font-size="34" font-weight="800" text-anchor="end">16 – 34</text>
+  </g>
+
+  <text x="90" y="603" fill="#f04a0b" font-family="Arial, sans-serif" font-size="17" font-weight="700">2 VICTOIRES · 2 DÉFAITES</text>
+  <text x="1110" y="603" fill="#c9c9c6" font-family="Arial, sans-serif" font-size="14" text-anchor="end">Résultats officiels FFTT</text>
+</svg>
