@@ -36,5 +36,8 @@
 .articles-category-tag{background:#f3f3f5;border-radius:4px;z-index:1}
 .articles-image-action{border-radius:8px 0 0 0;z-index:1}
 .articles-hero-product>img{height:350px}
+.articles-hero{--shop-red:#f04a0b;min-height:480px}
+.articles-hero-product>img{height:420px}
+.articles-category-tag.articles-official-tag{background:#1b1b1b;color:#fff;border-left:3px solid #f04a0b;font-weight:700}
 @media(max-width:600px){.articles-product-image{padding:28px 8px 26px}.articles-hero-product>img{height:250px}}
 @media(prefers-reduced-motion:reduce){.articles-product-image,.articles-product-image>img{transition:none}.articles-product-image:hover>img{transform:none}}

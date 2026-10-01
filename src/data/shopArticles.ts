@@ -4,7 +4,6 @@ export type ShopArticle = {
   name: string;
   model: string;
   category: 'Entraînement' | 'Survêtements' | 'Lifestyle' | 'Vestes';
-  priceHtCents: number;
   images: string[];
   description: string;
   features: string[];
@@ -13,10 +12,17 @@ export type ShopArticle = {
   cataloguePage?: number;
   imageNote?: string;
   sizesPending?: boolean;
-};
+  official?: boolean;
+  originalImage?: boolean;
+  sizes?: { children: string; adults: string };
+} & ({ priceHtCents: number; priceTtcCents?: never } | { priceTtcCents: number; priceHtCents?: never });
 
 const image = (name: string) => `/images/boutique/articles/club/${name}.webp`;
-export const articlePrice = (article: ShopArticle) => Math.round(article.priceHtCents * 1.2) / 100;
+export const articlePrice = (article: ShopArticle) => {
+  const baseTtcCents = article.priceTtcCents ?? Math.round(article.priceHtCents * 1.2);
+  // Tenues officielles : prix club inchangés. Majestee : +3 € TTC, puis euro supérieur.
+  return article.official ? baseTtcCents / 100 : Math.ceil((baseTtcCents + 300) / 100);
+};
 export const formatArticlePrice = (price: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price);
 export const articleSizes = {
   children: '4, 6, 8, 10, 12 et 14 ans',
@@ -24,6 +30,20 @@ export const articleSizes = {
 };
 
 export const shopArticles: ShopArticle[] = [
+  {
+    id: 'survetement-officiel', code: 'CLUB-SURVETEMENT', name: 'Survêtement officiel', model: 'Saint Loub’Ping', category: 'Survêtements', priceTtcCents: 8000,
+    images: [image('survetement-officiel'), image('survetement-officiel-dos')], official: true, sizesPending: true,
+    description: 'La tenue officielle du club : la veste et le pantalon assortis, avec le design de l’option A.',
+    features: ['Ensemble veste + pantalon', 'Design officiel du club · Option A', 'Marquages Saint Loub’Ping'],
+    colors: 'Noir, gris et orange', imageNote: 'Prix de 80 € TTC pour l’ensemble veste et pantalon. Tailles et modalités à confirmer auprès du club.',
+  },
+  {
+    id: 'maillot-officiel', code: 'CLUB-MAILLOT', name: 'Maillot officiel du club', model: 'Saint Loub’Ping', category: 'Entraînement', priceTtcCents: 3500,
+    images: ['/images/boutique/maillot-club-officiel.png'], official: true, originalImage: true,
+    description: 'Le maillot du club pour représenter Saint Loub’Ping en compétition et à l’entraînement.',
+    features: ['100 % polyester technique', 'Ne déteint pas en machine', 'Ne nécessite pas de repassage', 'Disponible du 2 ans au 10XL'],
+    colors: 'Orange et noir', sizes: { children: 'À partir de 2 ans', adults: 'Jusqu’au 10XL' },
+  },
   {
     id: 'dynamic-veste', code: '78', name: 'Veste zippée', model: 'Dynamic', category: 'Survêtements', priceHtCents: 1755,
     images: [image('dynamic-veste')], description: 'Une veste de survêtement zippée pour les entraînements et les déplacements du club.',

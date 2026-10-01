@@ -12,22 +12,32 @@ La route n'est liée ni au menu, ni au pied de page, ni au sitemap. Elle dispose
 
 ## Tarifs
 
-Les prix HT remisés par unité sont stockés en centimes dans `src/data/shopArticles.ts`.
-Prix TTC = prix HT × 1,20, arrondi au centime. Aucun arrondi commercial, aucune marge supplémentaire.
+### Tenues officielles ajoutées le 1er octobre 2026
 
-| Référence devis | Article | HT unitaire | TTC unitaire |
-| --- | --- | ---: | ---: |
-| 78 | Veste Dynamic | 17,55 € | 21,06 € |
-| 84-1 | Pantalon Dynamic | 17,55 € | 21,06 € |
-| 96 | Veste Fusion semi-sublimée | 37,05 € | 44,46 € |
-| 108 | Pantalon Fusion | 26,32 € | 31,58 € |
-| 1A | Medusa | 13,65 € | 16,38 € |
-| 4A | Lop | 13,65 € | 16,38 € |
-| 140 | Vendemia | 54,60 € | 65,52 € |
-| 79 | Dynamic Cap | 19,50 € | 23,40 € |
-| 118 | Energia | 35,10 € | 42,12 € |
-| 130 | Eleme Subli | 62,40 € | 74,88 € |
-| 119 | Espera | 39,00 € | 46,80 € |
+- Survêtement officiel : **80 € TTC pour l'ensemble veste + pantalon**, prix communiqué par le club. Design choisi : **option A, colonne de gauche** de la photo du 17 septembre 2026. Première fiche du catalogue et article du bandeau principal, avec vues face/dos sur fond blanc. Tailles à confirmer.
+- Maillot officiel : **35 € TTC**, image originale et caractéristiques reprises de `src/pages/Boutique.tsx` et `/images/boutique/maillot-club-officiel.png`. Le maillot n'est pas redessiné. Tailles : 2 ans au 10XL selon la page existante.
+- Ces prix TTC directs sont stockés séparément des prix HT du devis : aucune multiplication supplémentaire par 1,20.
+- Filtre « Tenues officielles » et badge « Officiel club ». Le reste du catalogue et les liens du menu restent inchangés.
+
+Images : `public/images/boutique/articles/club/survetement-officiel.webp` et `survetement-officiel-dos.webp`, éditées avec l'outil intégré ImageGen. Prompt : utiliser uniquement l'option A de la référence fournie ; conserver le noir/gris/orange, les motifs, logos et détails ; créer une seule tenue complète veste et pantalon en vue de face ou dos, mannequin invisible, volume textile réaliste, fond blanc, ombre douce, sans personne ni texte externe. Visuels non contractuels.
+
+Les prix HT remisés par unité sont stockés en centimes dans `src/data/shopArticles.ts`.
+Base TTC = prix HT × 1,20, arrondie au centime.
+Règle de vente demandée le 1er octobre 2026 : **ajouter 3 € TTC à la base, puis arrondir à l'euro supérieur**. Calcul en centimes pour éviter les erreurs flottantes. Les tenues officielles sont exclues : survêtement 80 €, maillot 35 €.
+
+| Référence devis | Article | HT unitaire | Base TTC | Vente TTC |
+| --- | --- | ---: | ---: | ---: |
+| 78 | Veste Dynamic | 17,55 € | 21,06 € | 25 € |
+| 84-1 | Pantalon Dynamic | 17,55 € | 21,06 € | 25 € |
+| 96 | Veste Fusion semi-sublimée | 37,05 € | 44,46 € | 48 € |
+| 108 | Pantalon Fusion | 26,32 € | 31,58 € | 35 € |
+| 1A | Medusa | 13,65 € | 16,38 € | 20 € |
+| 4A | Lop | 13,65 € | 16,38 € | 20 € |
+| 140 | Vendemia | 54,60 € | 65,52 € | 69 € |
+| 79 | Dynamic Cap | 19,50 € | 23,40 € | 27 € |
+| 118 | Energia | 35,10 € | 42,12 € | 46 € |
+| 130 | Eleme Subli | 62,40 € | 74,88 € | 78 € |
+| 119 | Espera | 39,00 € | 46,80 € | 50 € |
 
 Le montant de 26,32 € affiché dans la colonne de prix unitaire du devis fait foi pour le pantalon Fusion (le total de ligne présente une différence d'arrondi).
 Les frais de maquette et de transport offerts ne sont pas des produits du catalogue.
