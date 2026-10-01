@@ -10,7 +10,7 @@ const featuredArticle = shopArticles.find(article => article.id === 'dynamic-cap
 
 function ProductImage({ article, index = 0, hero = false }: { article: ShopArticle; index?: number; hero?: boolean }) {
   if (!article.images.length) return <div className="articles-image-pending"><Shirt aria-hidden="true" /><span>Visuel à confirmer</span></div>;
-  return <img src={article.images[index]} alt={`${article.name} ${article.model}${index ? ' — dos' : ' — visuel du catalogue'}`} loading={hero ? 'eager' : 'lazy'} decoding="async" />;
+  return <img src={article.images[index]} alt={`${article.name} ${article.model}${index ? ' — dos' : ''} — simulation de personnalisation Saint Loub’Ping`} loading={hero ? 'eager' : 'lazy'} decoding="async" />;
 }
 
 export default function BoutiqueArticles() {
@@ -61,7 +61,7 @@ export default function BoutiqueArticles() {
           <div className="articles-card-copy"><p className="articles-model">{article.model}</p><div className="articles-name-price"><h3><button type="button" onClick={() => openArticle(article)}>{article.name}</button></h3><p className="articles-price">{formatArticlePrice(articlePrice(article))}<small>TTC / pièce</small></p></div><p className="articles-card-description">{article.description}</p><div className="articles-card-footer"><span>Réf. {article.code}</span><button type="button" onClick={() => openArticle(article)}>Détails <ArrowRight size={15} aria-hidden="true" /></button></div></div>
         </article>)}</div>}
 
-      <aside className="articles-info"><div><p className="articles-eyebrow">Avant de commander</p><h2>Une sélection pour les commandes du club.</h2></div><div><p>Cette page présente les articles. Les commandes et le paiement ne sont pas encore ouverts.</p><p>Certains tarifs sont liés à une commande groupée : le minimum fournisseur est précisé dans chaque fiche. Il s’applique à la commande globale du club.</p><p>Les photos proviennent du catalogue Majestee 2026–2027. Les coloris et marquages illustrés sont ceux du catalogue ; la personnalisation finale Saint Loub’Ping reste à définir.</p></div></aside>
+      <aside className="articles-info"><div><p className="articles-eyebrow">Avant de commander</p><h2>Une sélection pour les commandes du club.</h2></div><div><p>Cette page présente les articles. Les commandes et le paiement ne sont pas encore ouverts.</p><p>Certains tarifs sont liés à une commande groupée : le minimum fournisseur est précisé dans chaque fiche. Il s’applique à la commande globale du club.</p><p>Visuels de présentation personnalisés avec le loup blanc du club, à partir du catalogue Majestee 2026–2027. Ces simulations sont non contractuelles : coloris, emplacement et taille du marquage restent à valider avec le fournisseur.</p></div></aside>
     </div>
 
     <Dialog open={selected !== null} onOpenChange={open => { if (!open) setSelected(null); }}>
@@ -70,8 +70,8 @@ export default function BoutiqueArticles() {
           <div className="articles-detail-visual"><ProductImage article={selected} index={imageIndex} />{selected.images.length > 1 && <div className="articles-gallery" aria-label="Vues du produit">{selected.images.map((src, index) => <button type="button" key={src} aria-pressed={imageIndex === index} onClick={() => setImageIndex(index)}>{index === 0 ? 'Face' : 'Dos'}</button>)}</div>}</div>
           <div className="articles-detail-copy"><p className="articles-eyebrow">{selected.category} · Réf. {selected.code}</p><p className="articles-detail-model">{selected.model}</p><DialogTitle className="articles-detail-title">{selected.name}</DialogTitle><DialogDescription className="articles-detail-description">{selected.description}</DialogDescription><p className="articles-detail-price">{formatArticlePrice(articlePrice(selected))}<span>TTC / pièce</span></p>
             <ul className="articles-features">{selected.features.map(feature => <li key={feature}>{feature}</li>)}</ul>
-            <dl className="articles-specs"><div><dt>Coloris</dt><dd>{selected.colors}</dd></div><div><dt>Tailles enfants</dt><dd>{selected.images.length ? articleSizes.children : 'À confirmer auprès du fournisseur'}</dd></div><div><dt>Tailles adultes</dt><dd>{selected.images.length ? articleSizes.adults : 'À confirmer auprès du fournisseur'}</dd></div></dl>
-            {selected.images.length > 0 && <p className="articles-small-note">Modèle homme et femme au catalogue. Autres tailles sur demande, à confirmer.</p>}
+            <dl className="articles-specs"><div><dt>Coloris</dt><dd>{selected.colors}</dd></div><div><dt>Tailles enfants</dt><dd>{selected.images.length && !selected.sizesPending ? articleSizes.children : 'À confirmer auprès du fournisseur'}</dd></div><div><dt>Tailles adultes</dt><dd>{selected.images.length && !selected.sizesPending ? articleSizes.adults : 'À confirmer auprès du fournisseur'}</dd></div></dl>
+            {selected.images.length > 0 && <><p className="articles-small-note">Simulation de personnalisation · visuel non contractuel.</p>{!selected.sizesPending && <p className="articles-small-note">Modèle homme et femme au catalogue. Autres tailles sur demande, à confirmer.</p>}</>}
             {selected.minimum && <p className="articles-order-note">Tarif sous réserve d’une commande groupée d’au moins <strong>{selected.minimum} pièces</strong> de cet article.</p>}
             {selected.imageNote && <p className="articles-order-note">{selected.imageNote}</p>}
             <p className="articles-source">{selected.cataloguePage ? `Source : catalogue Majestee 2026–2027, page PDF ${selected.cataloguePage}. ` : ''}Prix TTC calculé sur le prix unitaire remisé HT du devis du 29 septembre 2026, avec TVA à 20 %.</p>

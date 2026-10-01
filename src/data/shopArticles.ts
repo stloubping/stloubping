@@ -12,9 +12,10 @@ export type ShopArticle = {
   minimum?: number;
   cataloguePage?: number;
   imageNote?: string;
+  sizesPending?: boolean;
 };
 
-const image = (name: string) => `/images/boutique/articles/${name}.webp`;
+const image = (name: string) => `/images/boutique/articles/club/${name}.webp`;
 export const articlePrice = (article: ShopArticle) => Math.round(article.priceHtCents * 1.2) / 100;
 export const formatArticlePrice = (price: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price);
 export const articleSizes = {
@@ -31,9 +32,9 @@ export const shopArticles: ShopArticle[] = [
   },
   {
     id: 'dynamic-pantalon', code: '84-1', name: 'Pantalon de survêtement', model: 'Dynamic', category: 'Survêtements', priceHtCents: 1755,
-    images: [], description: 'Le pantalon proposé avec la veste Dynamic dans le devis du club.',
-    features: ['100 % polyester double interlock', 'Logo club inclus'], colors: 'Noir et rouge', minimum: 10,
-    imageNote: 'La correspondance avec le pantalon du catalogue reste à confirmer auprès du fournisseur. Visuel et tailles à confirmer.',
+    images: [image('dynamic-pantalon')], description: 'Le pantalon proposé avec la veste Dynamic dans le devis du club.',
+    features: ['100 % polyester double interlock', 'Logo club inclus'], colors: 'Noir sur le visuel présenté, coloris final à confirmer', minimum: 10, cataloguePage: 54, sizesPending: true,
+    imageNote: 'Visuel de présentation basé sur le pantalon Passion du catalogue. La correspondance avec le pantalon Dynamic du devis et les tailles restent à confirmer auprès du fournisseur.',
   },
   {
     id: 'fusion-veste', code: '96', name: 'Veste zippée semi-sublimée', model: 'Fusion', category: 'Survêtements', priceHtCents: 3705,
