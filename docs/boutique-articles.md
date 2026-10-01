@@ -44,6 +44,16 @@ Les frais de maquette et de transport offerts ne sont pas des produits du catalo
 
 ## À confirmer
 
+### Chaussettes ajoutées le 1er octobre 2026
+
+Modèles Codou Personal (basses) et Camba Personal (hautes), catalogue page PDF 82 : polyester, personnalisation des couleurs et du logo, pointures 27–30 à 47–50 EU. Aucun prix communiqué : `pricePending: true`, affichage « Prix à venir », sans montant zéro ni majoration fictive. Les articles sans prix restent en fin des deux tris par prix. Nouveau filtre « Accessoires ».
+
+Visuels : `public/images/boutique/articles/club/codou-personal.webp` et `camba-personal.webp`. Outil intégré ImageGen en mode édition, références page 82 du catalogue et loup blanc du survêtement fourni. Prompt : une paire du modèle bas/haut concerné, respecter coupe, cuff, talon et texture ; personnalisation noir avec liserés orange/blanc et petit loup blanc fidèle à la référence, conserver marquage Majestee ; packshot trois-quarts à volume réaliste, fond blanc et ombre douce, aucun corps, vêtement supplémentaire ni texte externe. Les visuels sont des simulations non contractuelles ; couleurs et marquage à valider avec le fournisseur. La charte marketing a guidé les couleurs et la reprise du loup.
+
+### Sweat Energia Subli ajouté le 1er octobre 2026
+
+Le produit demandé est l’**Energia Subli** de la page imprimée 47 du catalogue (page PDF 68) : sweat à capuche sublimé, sans zip, en polyester fleece, personnalisable. La fiche est ajoutée dans « Lifestyle » avec le blanc sublimé ton sur ton, les tailles 4–14 ans et XS–3XL, et « Prix à venir » sans montant inventé. Visuel : `public/images/boutique/articles/club/energia-subli-blanc.webp`. Outil intégré ImageGen, référence catalogue et loup du club : hoodie blanc sans fermeture, capuche, poche kangourou, texture sublimée discrète, logo club noir contrasté et marque Majestee conservée, fond studio blanc. Simulation non contractuelle.
+
 Le devis mentionne « Pantalon Dynamic », absent sous ce nom dans le catalogue.
 Le catalogue présente un pantalon uni « Passion », page PDF 54. Le club a demandé le 1er octobre 2026 d'utiliser ce visuel sur la fiche Dynamic. Il est présenté provisoirement avec un avertissement explicite : la correspondance entre les deux modèles reste à confirmer auprès du fournisseur. Les tailles restent indiquées « À confirmer ». Prix, matière et minimum restent ceux du devis Dynamic.
 
@@ -52,6 +62,8 @@ Visuel enregistré : `public/images/boutique/articles/club/dynamic-pantalon.webp
 Les coloris et marquages définitifs du club restent à valider auprès du fournisseur. Les minimums fournisseur sont ceux du devis : 10 pièces pour les survêtements, 20 pour Vendemia, 60 pour Energia et Espera. Les autres articles n'ont pas de minimum explicite.
 
 ## Direction des packshots personnalisés
+
+Short Lop passé en noir à la demande du club : `public/images/boutique/articles/club/lop-noir.webp`. Ancien visuel vert conservé. Édition avec l’outil intégré ImageGen : changer uniquement la couleur du tissu vert en noir profond, conserver intégralement logos blancs, coupe, coutures, plis, volume textile, cadrage, éclairage, fond blanc et ombre. Prix inchangé.
 
 Une édition indépendante par visuel : Dynamic veste, Dynamic pantalon (base Passion provisoire), Dynamic Cap, Fusion veste face/dos, Fusion pantalon face/dos, Medusa, Lop, Vendemia, Energia, Eleme et Espera.
 

@@ -3,7 +3,7 @@ export type ShopArticle = {
   code: string;
   name: string;
   model: string;
-  category: 'Entraînement' | 'Survêtements' | 'Lifestyle' | 'Vestes';
+  category: 'Entraînement' | 'Survêtements' | 'Lifestyle' | 'Vestes' | 'Accessoires';
   images: string[];
   description: string;
   features: string[];
@@ -15,15 +15,28 @@ export type ShopArticle = {
   official?: boolean;
   originalImage?: boolean;
   sizes?: { children: string; adults: string };
-} & ({ priceHtCents: number; priceTtcCents?: never } | { priceTtcCents: number; priceHtCents?: never });
+  shoeSizes?: string;
+} & (
+  { priceHtCents: number; priceTtcCents?: never; pricePending?: false }
+  | { priceTtcCents: number; priceHtCents?: never; pricePending?: false }
+  | { pricePending: true; priceHtCents?: never; priceTtcCents?: never }
+);
 
 const image = (name: string) => `/images/boutique/articles/club/${name}.webp`;
 export const articlePrice = (article: ShopArticle) => {
+  if (article.pricePending) return null;
   const baseTtcCents = article.priceTtcCents ?? Math.round(article.priceHtCents * 1.2);
   // Tenues officielles : prix club inchangés. Majestee : +3 € TTC, puis euro supérieur.
   return article.official ? baseTtcCents / 100 : Math.ceil((baseTtcCents + 300) / 100);
 };
-export const formatArticlePrice = (price: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price);
+export const formatArticlePrice = (price: number | null) => price === null ? 'Prix à venir' : new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price);
+export const compareArticlePrices = (a: ShopArticle, b: ShopArticle, descending = false) => {
+  const first = articlePrice(a);
+  const second = articlePrice(b);
+  if (first === null) return second === null ? 0 : 1;
+  if (second === null) return -1;
+  return descending ? second - first : first - second;
+};
 export const articleSizes = {
   children: '4, 6, 8, 10, 12 et 14 ans',
   adults: 'XS, S, M, L, XL, 2XL et 3XL',
@@ -76,9 +89,9 @@ export const shopArticles: ShopArticle[] = [
   },
   {
     id: 'lop', code: '4A', name: 'Short multisport', model: 'Lop', category: 'Entraînement', priceHtCents: 1365,
-    images: [image('lop')], description: 'Un short uni en polyester interlock pour composer votre tenue d’entraînement.',
+    images: [image('lop-noir')], description: 'Un short noir uni en polyester interlock pour composer votre tenue d’entraînement.',
     features: ['100 % polyester interlock', 'Modèle uni', 'Logo club inclus'],
-    colors: 'Noir, blanc, rouge, jaune, vert, ciel, navy et royal au catalogue', cataloguePage: 9,
+    colors: 'Noir · autres coloris disponibles au catalogue', cataloguePage: 9,
   },
   {
     id: 'vendemia', code: '140', name: 'Veste baseball', model: 'Vendemia', category: 'Lifestyle', priceHtCents: 5460,
@@ -93,6 +106,14 @@ export const shopArticles: ShopArticle[] = [
     colors: 'Plusieurs coloris au catalogue, configuration du club à confirmer', minimum: 10, cataloguePage: 59,
   },
   {
+    id: 'energia-subli', code: 'ENERGIA SUBLI', name: 'Sweat à capuche sublimé', model: 'Energia Subli', category: 'Lifestyle', pricePending: true,
+    images: [image('energia-subli-blanc')], description: 'Le sweat à capuche blanc sublimé, personnalisable aux couleurs de Saint Loub’Ping.',
+    features: ['Polyester fleece', 'Capuche et poche kangourou', 'Sublimation intégrale', 'Coloris, motifs et logo club personnalisables'],
+    colors: 'Blanc sublimé ton sur ton · configuration à valider', cataloguePage: 68,
+    sizes: { children: '4, 6, 8, 10, 12 et 14 ans', adults: 'XS, S, M, L, XL, 2XL et 3XL' },
+    imageNote: 'Prix à venir. Personnalisation, coloris et logo à valider avec le fournisseur.',
+  },
+  {
     id: 'energia', code: '118', name: 'Sweat à capuche', model: 'Energia', category: 'Lifestyle', priceHtCents: 3510,
     images: [image('energia')], description: 'Un sweat à capuche en coton fleece, pour les moments avant et après l’entraînement.',
     features: ['Coton fleece selon le devis', 'Capuche', 'Logo cœur inclus'],
@@ -103,6 +124,22 @@ export const shopArticles: ShopArticle[] = [
     images: [image('eleme')], description: 'Une veste softshell entièrement sublimée, avec un design personnalisable.',
     features: ['Matière softshell', 'Sublimation intégrale', 'Coloris, motifs et logos personnalisables', 'Poches zippées', 'Capuche en option au catalogue, non incluse dans le prix affiché'],
     colors: 'Design personnalisé à définir', cataloguePage: 72,
+  },
+  {
+    id: 'codou-personal', code: 'CODOU PERSONAL', name: 'Chaussettes basses personnalisées', model: 'Codou Personal', category: 'Accessoires', pricePending: true,
+    images: [image('codou-personal')], description: 'Les chaussettes basses Majestee, personnalisables aux couleurs de Saint Loub’Ping.',
+    features: ['Polyester', 'Modèle bas', 'Coloris et logo personnalisables'],
+    colors: 'Simulation noir, orange et blanc · configuration à valider', cataloguePage: 82,
+    shoeSizes: '27–30, 31–34, 35–38, 39–42, 43–46 et 47–50 EU. Autres pointures sur demande.',
+    imageNote: 'Prix à venir. Personnalisation et emplacement du logo à valider avec le fournisseur.',
+  },
+  {
+    id: 'camba-personal', code: 'CAMBA PERSONAL', name: 'Chaussettes hautes personnalisées', model: 'Camba Personal', category: 'Accessoires', pricePending: true,
+    images: [image('camba-personal')], description: 'Les chaussettes hautes Majestee, personnalisables avec le logo du club.',
+    features: ['Polyester', 'Modèle haut', 'Coloris et logo personnalisables'],
+    colors: 'Simulation noir, orange et blanc · configuration à valider', cataloguePage: 82,
+    shoeSizes: '27–30, 31–34, 35–38, 39–42, 43–46 et 47–50 EU. Autres pointures sur demande.',
+    imageNote: 'Prix à venir. Personnalisation et emplacement du logo à valider avec le fournisseur.',
   },
   {
     id: 'espera', code: '119', name: 'Sweat zippé à capuche', model: 'Espera', category: 'Lifestyle', priceHtCents: 3900,
