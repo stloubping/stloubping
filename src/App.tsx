@@ -21,6 +21,7 @@ const EssaiGratuit = React.lazy(() => import("./pages/EssaiGratuit"));
 const Adhesions = React.lazy(() => import("./pages/Adhesions"));
 const Horaires = React.lazy(() => import("./pages/Horaires"));
 const Boutique = React.lazy(() => import("./pages/Boutique"));
+const BoutiqueArticles = React.lazy(() => import("./pages/BoutiqueArticles"));
 const Materiels = React.lazy(() => import("./pages/Materiels"));
 const Partenaires = React.lazy(() => import("./pages/Partenaires"));
 const Contact = React.lazy(() => import("./pages/Contact"));
@@ -102,6 +103,7 @@ const App = () => (
                 <Route path="/adhesions" element={<Adhesions />} />
                 <Route path="/horaires" element={<Horaires />} />
                 <Route path="/boutique" element={<Boutique />} />
+                <Route path="/boutique/articles" element={<BoutiqueArticles />} />
                 <Route path="/boutique/materiels" element={<Materiels />} />
                 <Route path="/partenaires" element={<Partenaires />} />
                 <Route path="/tournoi-inscription" element={<TournamentRegistration />} />
