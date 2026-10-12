@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Newspaper, Search } from "lucide-react";
 import NewsCard from "@/components/NewsCard";
 import { Input } from "@/components/ui/input";
-import { allNewsItems } from "@/data/news";
+import type { NewsItem } from "@/data/news";
 import { fetchAllManagedNewsItems } from "@/lib/homeNews";
 
 const normalize = (value = "") =>
@@ -15,12 +15,30 @@ const normalize = (value = "") =>
 
 const Actualites = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [newsItems, setNewsItems] = useState(allNewsItems);
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
+    let isActive = true;
+
     fetchAllManagedNewsItems()
-      .then((managedItems) => setNewsItems([...managedItems, ...allNewsItems.slice(3)]))
-      .catch((error) => console.error("Impossible de charger les actualités administrables.", error));
+      .then((managedItems) => {
+        if (!isActive) return;
+        setNewsItems(managedItems);
+        setLoadError(false);
+      })
+      .catch((error) => {
+        console.error("Impossible de charger les actualités administrables.", error);
+        if (isActive) setLoadError(true);
+      })
+      .finally(() => {
+        if (isActive) setIsLoading(false);
+      });
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   const filteredNews = useMemo(() => {
@@ -50,9 +68,9 @@ const Actualites = () => {
             forts du St Loub Ping.
           </p>
           <p className="mt-5 text-sm font-semibold text-white/60">
-            {newsItems.length} article
-            {newsItems.length > 1 ? "s" : ""} publié
-            {newsItems.length > 1 ? "s" : ""}
+            {isLoading
+              ? "Chargement des articles…"
+              : `${newsItems.length} article${newsItems.length > 1 ? "s" : ""} publié${newsItems.length > 1 ? "s" : ""}`}
           </p>
         </div>
       </section>
@@ -81,12 +99,39 @@ const Actualites = () => {
           </label>
         </div>
 
-        <div className="mb-5 text-sm font-semibold text-muted-foreground">
-          {filteredNews.length} résultat
-          {filteredNews.length > 1 ? "s" : ""}
-        </div>
+        {!isLoading && !loadError && (
+          <div className="mb-5 text-sm font-semibold text-muted-foreground">
+            {filteredNews.length} résultat
+            {filteredNews.length > 1 ? "s" : ""}
+          </div>
+        )}
 
-        {filteredNews.length === 0 ? (
+        {isLoading ? (
+          <div
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 md:gap-8"
+            aria-label="Chargement des actualités"
+          >
+            {Array.from({ length: 6 }, (_, index) => (
+              <div
+                key={index}
+                className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
+              >
+                <div className="h-56 animate-pulse bg-slate-100 md:h-64" />
+                <div className="space-y-3 p-5">
+                  <div className="h-3 w-1/3 animate-pulse rounded bg-slate-100" />
+                  <div className="h-6 w-5/6 animate-pulse rounded bg-slate-100" />
+                  <div className="h-4 w-full animate-pulse rounded bg-slate-100" />
+                  <div className="h-4 w-2/3 animate-pulse rounded bg-slate-100" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : loadError ? (
+          <div className="rounded-xl border border-red-200 bg-red-50 px-6 py-12 text-center text-red-800">
+            Les actualités n’ont pas pu être chargées. Rechargez la page pour
+            réessayer.
+          </div>
+        ) : filteredNews.length === 0 ? (
           <div className="rounded-xl border border-slate-200 bg-white px-6 py-16 text-center text-muted-foreground">
             Aucun article ne correspond à « {searchQuery} ».
           </div>
