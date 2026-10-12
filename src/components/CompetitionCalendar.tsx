@@ -85,8 +85,17 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
   const [selectedMonth, setSelectedMonth] = useState<string>("all");
   const [selectedPhase, setSelectedPhase] = useState<string>("all");
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showPastEvents, setShowPastEvents] = useState(false);
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const [todayStr, setTodayStr] = useState(() =>
+    new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Paris" }),
+  );
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setTodayStr(new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Paris" }));
+    }, 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const filteredCompetitions = useMemo(() => {
     return calendarEvents
@@ -106,19 +115,26 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
         // Filtre phase
         const matchesPhase = selectedPhase === "all" || item.phase === selectedPhase;
 
-        return matchesSearch && matchesCategory && matchesMonth && matchesPhase;
+        const matchesDate = showPastEvents || (item.endDate || item.date) >= todayStr;
+
+        return matchesSearch && matchesCategory && matchesMonth && matchesPhase && matchesDate;
       })
-      .sort((a, b) => a.date.localeCompare(b.date));
-  }, [calendarEvents, searchQuery, selectedCategory, selectedMonth, selectedPhase]);
+      .sort((a, b) => {
+        const aIsPast = (a.endDate || a.date) < todayStr;
+        const bIsPast = (b.endDate || b.date) < todayStr;
+        if (aIsPast !== bIsPast) return aIsPast ? 1 : -1;
+        return aIsPast ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date);
+      });
+  }, [calendarEvents, searchQuery, selectedCategory, selectedMonth, selectedPhase, showPastEvents, todayStr]);
 
   const displayedCompetitions = useMemo(() => {
-    if (initialLimit && !isExpanded && !searchQuery && selectedCategory === "all" && selectedMonth === "all" && selectedPhase === "all") {
+    if (initialLimit && !isExpanded && !showPastEvents && !searchQuery && selectedCategory === "all" && selectedMonth === "all" && selectedPhase === "all") {
       return filteredCompetitions.slice(0, initialLimit);
     }
     return filteredCompetitions;
-  }, [filteredCompetitions, initialLimit, isExpanded, searchQuery, selectedCategory, selectedMonth, selectedPhase]);
+  }, [filteredCompetitions, initialLimit, isExpanded, showPastEvents, searchQuery, selectedCategory, selectedMonth, selectedPhase]);
 
-  const hasMore = initialLimit && filteredCompetitions.length > initialLimit && !searchQuery && selectedCategory === "all" && selectedMonth === "all" && selectedPhase === "all";
+  const hasMore = initialLimit && !isExpanded && !showPastEvents && filteredCompetitions.length > initialLimit && !searchQuery && selectedCategory === "all" && selectedMonth === "all" && selectedPhase === "all";
 
   return (
     <section className="mb-12">
@@ -230,12 +246,31 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
                 </div>
               </div>
 
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className="text-sm text-muted-foreground">
+                  Les prochaines dates apparaissent en premier.
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  aria-pressed={showPastEvents}
+                  onClick={() => {
+                    setShowPastEvents((show) => !show);
+                    setIsExpanded(false);
+                  }}
+                  className="border-clubPrimary text-clubPrimary hover:bg-clubPrimary/10"
+                >
+                  <Clock className="mr-2 h-4 w-4" />
+                  {showPastEvents ? "Masquer les dates passées" : "Afficher les dates passées"}
+                </Button>
+              </div>
+
               {/* --- Tableau des événements --- */}
               {displayedCompetitions.length === 0 ? (
                 <div className="text-center py-12 bg-clubSection/30 rounded-xl border border-dashed border-border">
                   <Clock className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
                   <p className="text-clubDark font-semibold">Aucun événement ne correspond à vos critères.</p>
-                  <p className="text-xs text-muted-foreground mt-1">Essayez de modifier votre recherche ou de réinitialiser les filtres.</p>
+                  <p className="text-xs text-muted-foreground mt-1">Essayez de modifier les filtres ou d’afficher les dates passées.</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto rounded-xl border border-border shadow-sm">
@@ -352,7 +387,7 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
                     onClick={() => setIsExpanded(true)}
                     className="bg-clubPrimary hover:bg-clubPrimary/90 text-white font-medium text-xs md:text-sm px-6 py-2 rounded-full shadow"
                   >
-                    Voir toutes les {filteredCompetitions.length} dates de la saison
+                    Voir les {filteredCompetitions.length} prochaines dates
                     <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
@@ -370,7 +405,7 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
               ) : null}
 
               <div className="text-center text-xs text-muted-foreground pt-1">
-                Affichage de {displayedCompetitions.length} compétition(s) sur un total de {calendarEvents.length}.
+                Affichage de {displayedCompetitions.length} compétition(s) sur {filteredCompetitions.length} correspondant aux filtres{showPastEvents ? ", dates passées incluses" : " à venir ou en cours"}.
               </div>
           </div>
         </CardContent>
