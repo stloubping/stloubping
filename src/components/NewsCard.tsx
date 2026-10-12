@@ -64,11 +64,11 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
 
   return (
     <Card className="bg-clubLight shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full">
-      <div className="relative h-40 md:h-48 overflow-hidden">
+      <div className="relative h-56 overflow-hidden bg-clubDark/95 md:h-64">
         <img loading="lazy" decoding="async"
           src={news.image}
           alt={news.title}
-          className="w-full h-full object-cover cursor-zoom-in hover:scale-105 transition-transform duration-500"
+          className="h-full w-full cursor-zoom-in object-contain transition-transform duration-500 hover:scale-[1.02]"
           onClick={() => openLightbox(news.image)}
         />
       </div>

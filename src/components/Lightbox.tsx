@@ -15,7 +15,7 @@ const LightboxModal: React.FC<LightboxModalProps> = ({ imageUrl, onClose }) => {
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 bg-black/90 border-none flex items-center justify-center overflow-hidden">
+      <DialogContent className="flex h-[95vh] max-h-[95vh] max-w-[95vw] items-center justify-center overflow-auto border-none bg-black/90 p-0">
         <Button
           variant="ghost"
           size="icon"
@@ -25,7 +25,7 @@ const LightboxModal: React.FC<LightboxModalProps> = ({ imageUrl, onClose }) => {
           <X className="h-6 w-6" />
         </Button>
         
-        <div className="w-full h-full flex items-center justify-center p-4" onClick={onClose}>
+        <div className="flex min-h-full w-full items-center justify-center p-4" onClick={onClose}>
           {isYouTubeVideo ? (
             <div 
               className="relative w-full max-w-[1280px] aspect-video"
@@ -44,7 +44,7 @@ const LightboxModal: React.FC<LightboxModalProps> = ({ imageUrl, onClose }) => {
             <img
               src={imageUrl}
               alt="Image agrandie"
-              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+              className="max-h-[calc(95vh-2rem)] max-w-[calc(95vw-2rem)] object-contain rounded-lg shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             />
           )}
