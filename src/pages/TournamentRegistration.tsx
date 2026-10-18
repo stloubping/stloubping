@@ -113,17 +113,22 @@ const TournamentRegistration = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
-    const { error } = await supabase.from("tournament_registrations").insert([values]);
+    const registrationId = crypto.randomUUID();
+    const { error } = await supabase.from("tournament_registrations").insert([{ ...values, id: registrationId }]);
     
     if (error) {
       toast.error(error.message || "Erreur lors de l'inscription.");
       setIsSubmitting(false);
     } else {
       try {
-        await supabase.functions.invoke("registration-email", {
-          body: values,
+        const { error: emailError } = await supabase.functions.invoke("registration-email", {
+          body: { registration_id: registrationId },
         });
-        toast.success("Inscription réussie ! Un email de confirmation a été envoyé.");
+        if (emailError) {
+          toast.warning("Inscription enregistrée, mais l’e-mail de confirmation n’a pas pu être envoyé.");
+        } else {
+          toast.success("Inscription réussie ! Un email de confirmation a été envoyé.");
+        }
       } catch (emailError) {
         toast.success("Inscription réussie !");
       }

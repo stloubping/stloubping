@@ -1,9 +1,4 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts"
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-}
+import { createNotificationHandler, escapeHtml } from "../_shared/email-security.ts";
 
 type OrderItem = {
   reference?: unknown
@@ -18,16 +13,6 @@ type OrderItem = {
   unit_price?: unknown
 }
 
-const escapeHtml = (value: unknown) =>
-  String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;")
-
-const isEmail = (value: unknown) =>
-  typeof value === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 
 const formatPrice = (value: number) =>
   new Intl.NumberFormat("fr-FR", {
@@ -48,57 +33,9 @@ const optionalDetails = (item: OrderItem) =>
     .map(([label, value]) => `<span style="display:inline-block;margin:3px 8px 3px 0;color:#4b5563;"><strong>${escapeHtml(label)} :</strong> ${escapeHtml(value)}</span>`)
     .join("")
 
-serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders })
-  }
 
-  try {
-    const request = await req.json()
-    const resendApiKey = Deno.env.get("RESEND_API_KEY")
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")
-
-    if (!resendApiKey || !supabaseUrl || !serviceRoleKey) {
-      throw new Error("Configuration serveur incomplète.")
-    }
-
-    if (typeof request.order_id !== "string" || !request.order_id) {
-      return new Response(JSON.stringify({ error: "Numéro de commande invalide." }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      })
-    }
-
-    const orderResponse = await fetch(
-      `${supabaseUrl}/rest/v1/equipment_orders?id=eq.${encodeURIComponent(request.order_id)}&select=id,first_name,last_name,email,items,notes`,
-      {
-        headers: {
-          apikey: serviceRoleKey,
-          Authorization: `Bearer ${serviceRoleKey}`,
-        },
-      },
-    )
-
-    if (!orderResponse.ok) {
-      throw new Error("Impossible de vérifier la commande enregistrée.")
-    }
-
-    const [order] = await orderResponse.json()
-    if (
-      !order ||
-      !order.first_name ||
-      !order.last_name ||
-      !isEmail(order.email) ||
-      !Array.isArray(order.items) ||
-      order.items.length < 1 ||
-      order.items.length > 20
-    ) {
-      return new Response(JSON.stringify({ error: "Commande introuvable ou incomplète." }), {
-        status: 404,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      })
-    }
+export const handler = createNotificationHandler("equipment", (order) => {
+  if (!Array.isArray(order.items) || order.items.length < 1 || order.items.length > 20) throw new Error("Invalid stored items");
     const items = order.items as OrderItem[]
     const estimatedTotal = items.reduce((total, item) => {
       const price = Number(item.unit_price)
@@ -129,19 +66,8 @@ serve(async (req) => {
       .join("")
 
     const shortOrderId = String(order.id).split("-")[0].toUpperCase()
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${resendApiKey}`,
-      },
-      body: JSON.stringify({
-        from: "St Loub'Ping <contact@saintloubping.fr>",
-        to: [order.email],
-        bcc: ["saintloubping@laposte.net"],
-        reply_to: "saintloubping@laposte.net",
-        subject: `Confirmation de votre commande de matériel n° ${shortOrderId}`,
-        html: `
+
+  return { subject: `Confirmation de votre commande de matériel n° ${shortOrderId}`, html: `
           <div style="font-family:Arial,sans-serif;color:#111827;max-width:640px;margin:0 auto;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;">
             <div style="background:#111827;padding:24px 28px;">
               <div style="color:#e11d48;font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;">St Loub'Ping</div>
@@ -162,24 +88,7 @@ serve(async (req) => {
             <div style="background:#f9fafb;padding:18px 28px;text-align:center;border-top:1px solid #e5e7eb;">
               <p style="font-size:12px;color:#6b7280;margin:0;">St Loub'Ping · saintloubping@laposte.net · 07 62 27 56 96</p>
             </div>
-          </div>`,
-      }),
-    })
+          </div>` };
+});
 
-    const data = await response.json()
-    if (!response.ok) {
-      throw new Error(data.message || "Erreur lors de l’envoi de l’e-mail.")
-    }
-
-    return new Response(JSON.stringify({ success: true, id: data.id }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    })
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Erreur inconnue"
-    console.error(`[equipment-order-email] ${message}`)
-    return new Response(JSON.stringify({ error: message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    })
-  }
-})
+Deno.serve(handler);
