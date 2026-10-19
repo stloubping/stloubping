@@ -15,6 +15,7 @@ import RouteMetadata from "./components/RouteMetadata";
 const queryClient = new QueryClient();
 
 const LeClub = React.lazy(() => import("./pages/LeClub"));
+const TennisLocal = React.lazy(() => import("./pages/TennisLocal"));
 const CompetitionsEquipes = React.lazy(() => import("./pages/CompetitionsEquipes"));
 const CalendrierCompetitions = React.lazy(() => import("./pages/CalendrierCompetitions"));
 const EssaiGratuit = React.lazy(() => import("./pages/EssaiGratuit"));
@@ -72,6 +73,7 @@ const App = () => (
                 <Route path="/" element={<Accueil />} />
                 <Route path="/actualites" element={<Actualites />} />
                 <Route path="/le-club" element={<LeClub />} />
+                <Route path="/tennis-de-table-rives-de-la-laurence" element={<TennisLocal />} />
                 <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
                 <Route path="/competitions-equipes/calendrier" element={<CalendrierCompetitions />} />
                 <Route path="/essai-gratuit" element={<EssaiGratuit />} />

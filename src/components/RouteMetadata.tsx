@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { clubStructuredData, localMetadata } from "@/data/localSeo.mjs";
 
 type Metadata = {
   title: string;
@@ -13,12 +14,9 @@ const siteUrl = "https://www.saintloubping.fr";
 const defaultImage = `${siteUrl}/images/logo/telecharge.jpg`;
 
 const metadataFor = (pathname: string): Metadata => {
-  if (pathname === "/") return { title: "Club de tennis de table à Saint-Loubès — Saint-Loub'Ping", description: "Club de tennis de table à Saint-Loubès, près de Sainte-Eulalie, Ambarès-et-Lagrave et Carbon-Blanc. Loisirs, compétition, jeunes et inscriptions." };
+  if (localMetadata[pathname]) return localMetadata[pathname];
   if (pathname === "/actualites") return { title: "Actualités du club — Saint-Loub'Ping", description: "Les dernières actualités, événements, stages et résultats du club de tennis de table Saint-Loub'Ping à Saint-Loubès." };
   if (pathname === "/le-club") return { title: "Le club — Saint-Loub'Ping à Saint-Loubès", description: "Découvrez l'histoire, les valeurs, les installations et l'équipe du club de tennis de table Saint-Loub'Ping." };
-  if (pathname === "/adhesions") return { title: "Adhésions et tarifs — Saint-Loub'Ping", description: "Inscrivez-vous au club Saint-Loub'Ping : tarifs, horaires, planning des entraînements et documents d'adhésion à Saint-Loubès." };
-  if (pathname === "/horaires") return { title: "Horaires des entraînements 2026-2027 — Saint-Loub'Ping", description: "Consultez les horaires et créneaux des entraînements du club de tennis de table Saint-Loub'Ping." };
-  if (pathname === "/essai-gratuit") return { title: "Séance d'essai gratuite — Saint-Loub'Ping", description: "Réservez une séance d'essai gratuite de tennis de table pour enfant, adolescent ou adulte à Saint-Loubès." };
   if (pathname === "/competitions-equipes") return { title: "Équipes et compétitions — Saint-Loub'Ping", description: "Retrouvez les équipes, compétitions et résultats du club de tennis de table Saint-Loub'Ping." };
   if (pathname === "/competitions-equipes/calendrier") return { title: "Calendrier des compétitions — Saint-Loub'Ping", description: "Consultez et filtrez toutes les dates des compétitions de tennis de table de la saison 2026-2027 du Saint-Loub'Ping." };
   if (pathname === "/stage-aout") return { title: "Stage ao\u00fbt - Saint-Loub'Ping", description: "Inscriptions et journees de presence au stage d'ao\u00fbt de Saint-Loub'Ping." };
@@ -27,7 +25,6 @@ const metadataFor = (pathname: string): Metadata => {
   if (pathname === "/boutique" || pathname.startsWith("/boutique/")) return { title: "Boutique du club — Saint-Loub'Ping", description: "Découvrez la boutique Saint-Loub'Ping et précommandez les maillots et matériels de tennis de table du club." };
   if (pathname.startsWith("/videos/")) return { title: "Vidéos de tennis de table — Saint-Loub'Ping", description: "Retrouvez les vidéos WTT, tutoriels, reportages et légendes du tennis de table sélectionnés par Saint-Loub'Ping." };
   if (pathname === "/partenaires") return { title: "Partenaires — Saint-Loub'Ping", description: "Découvrez les partenaires qui soutiennent le club de tennis de table Saint-Loub'Ping à Saint-Loubès." };
-  if (pathname === "/contact") return { title: "Contact — Saint-Loub'Ping", description: "Contactez le club de tennis de table Saint-Loub'Ping à Saint-Loubès pour toute question sur les entraînements et les adhésions." };
   if (pathname === "/equipe-1") return { title: "Espace Équipe 1 — Saint-Loub'Ping", description: "Espace privé de gestion sportive de l’Équipe 1 de Saint-Loub'Ping.", noIndex: true };
   if (pathname === "/equipe-2") return { title: "Espace Équipe 2 — Saint-Loub'Ping", description: "Espace privé de gestion sportive de l’Équipe 2 de Saint-Loub'Ping.", noIndex: true };
   if (pathname === "/groupes-entrainement") return { title: "Groupes d’entraînement — Saint-Loub'Ping", description: "Découvrez les groupes d’entraînement du club de tennis de table Saint-Loub'Ping." };
@@ -50,8 +47,9 @@ export default function RouteMetadata() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const metadata = metadataFor(pathname);
-    const canonicalUrl = `${siteUrl}${pathname === "/" ? "/" : pathname}`;
+    const normalizedPath = pathname === "/" ? "/" : pathname.replace(/\/+$/, "");
+    const metadata = metadataFor(normalizedPath);
+    const canonicalUrl = `${siteUrl}${normalizedPath}`;
     document.title = metadata.title;
     setMeta('meta[name="description"]', { name: "description" }, metadata.description);
     setMeta('meta[name="robots"]', { name: "robots" }, metadata.noIndex ? "noindex,nofollow" : "index,follow,max-image-preview:large");
@@ -69,6 +67,14 @@ export default function RouteMetadata() {
       document.head.appendChild(canonical);
     }
     canonical.href = canonicalUrl;
+    let schema = document.head.querySelector<HTMLScriptElement>('#club-structured-data');
+    if (!schema) {
+      schema = document.createElement('script');
+      schema.id = 'club-structured-data';
+      schema.type = 'application/ld+json';
+      document.head.appendChild(schema);
+    }
+    schema.textContent = JSON.stringify(clubStructuredData);
   }, [pathname]);
 
   return null;

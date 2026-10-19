@@ -12,6 +12,7 @@ import { fallbackHomeNewsItems, fetchHomeNewsItems } from '@/lib/homeNews';
 import CompetitionCalendar from '@/components/CompetitionCalendar';
 import WeeklyRoomAttendance from '@/components/WeeklyRoomAttendance';
 import { useAttendanceVisibility } from '@/lib/homepageSettings';
+import { localIntro, localPagePath } from '@/data/localSeo.mjs';
 import { ArrowRight, CalendarDays, Clock3, Newspaper } from 'lucide-react';
 
 const Accueil = () => {
@@ -162,11 +163,12 @@ const Accueil = () => {
             Un club de tennis de table près de chez vous
           </h2>
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-6 text-clubLight-foreground md:text-base">
-            Saint-Loub’Ping accueille les joueurs de Saint-Loubès et des communes voisines : Sainte-Eulalie, Ambarès-et-Lagrave, Carbon-Blanc, Bassens, Yvrac, Montussan, Izon et Vayres. Que vous cherchiez une activité loisir, une section jeunes ou la compétition, venez découvrir le club.
+            {localIntro}
           </p>
           <Button asChild variant="outline" className="mt-5 rounded-full border-clubPrimary text-clubPrimary hover:bg-clubPrimary hover:text-white">
             <Link to="/essai-gratuit">Réserver une séance d’essai</Link>
           </Button>
+          <p className="mt-4"><Link to={localPagePath} className="font-semibold text-clubPrimary underline underline-offset-4">Le club, l’accès et le ping dans les Rives de la Laurence</Link></p>
         </section>
       </div>
     </div>

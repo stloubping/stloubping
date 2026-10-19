@@ -28,6 +28,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li><Link to="/" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Accueil</Link></li>
               <li><Link to="/le-club" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Le Club</Link></li>
+              <li><Link to="/tennis-de-table-rives-de-la-laurence" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Le ping près de chez vous</Link></li>
               <li><Link to="/competitions-equipes" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Compétitions</Link></li>
               <li><Link to="/adhesions" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Adhésions</Link></li>
               <li><Link to="/administration/groupes-entrainement" className="text-sm text-clubDark-foreground/80 hover:text-clubPrimary transition-colors">Groupes d’entraînement</Link></li>

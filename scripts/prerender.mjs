@@ -1,11 +1,12 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
+import { clubAddress, clubStructuredData, directionsFrom, localFaqs, localHeading, localIntro, localMetadata, localPagePath, localTowns } from "../src/data/localSeo.mjs";
 
 const dist = join(process.cwd(), "dist");
 const siteUrl = "https://www.saintloubping.fr";
 const imageUrl = `${siteUrl}/images/logo/telecharge.jpg`;
 const pages = [
-  { path: "/", title: "Club de tennis de table à Saint-Loubès — Saint-Loub'Ping", description: "Club de tennis de table à Saint-Loubès, près de Sainte-Eulalie, Ambarès-et-Lagrave et Carbon-Blanc. Loisirs, compétition, jeunes et inscriptions.", heading: "Saint-Loub'Ping, club de tennis de table à Saint-Loubès", text: "Pratiquez le tennis de table à tout âge, en loisir ou en compétition, dans un club convivial près de Sainte-Eulalie, Ambarès-et-Lagrave et Carbon-Blanc." },
+  { path: "/", ...localMetadata["/"], heading: "Saint-Loub’Ping, club de tennis de table à Saint-Loubès", text: localIntro },
   { path: "/actualites", title: "Actualités du club — Saint-Loub'Ping", description: "Les dernières actualités, événements, stages et résultats du club de tennis de table Saint-Loub'Ping à Saint-Loubès.", heading: "Actualités du club", text: "Retrouvez les nouvelles du club, les événements, les stages, les résultats et les rendez-vous de Saint-Loub'Ping." },
   { path: "/le-club", title: "Le club — Saint-Loub'Ping à Saint-Loubès", description: "Découvrez l'histoire, les valeurs, les installations et l'équipe du club de tennis de table Saint-Loub'Ping.", heading: "Le club Saint-Loub'Ping", text: "Un club de tennis de table ouvert aux jeunes, aux adultes, aux débutants et aux compétiteurs à Saint-Loubès." },
   { path: "/adhesions", title: "Adhésions et tarifs — Saint-Loub'Ping", description: "Inscrivez-vous au club Saint-Loub'Ping : tarifs, horaires, planning des entraînements et documents d'adhésion à Saint-Loubès.", heading: "Adhésions, tarifs et entraînements", text: "Découvrez les formules d'adhésion, le planning des entraînements et les documents nécessaires pour rejoindre le club." },
@@ -17,7 +18,9 @@ const pages = [
   { path: "/boutique", title: "Boutique du club — Saint-Loub'Ping", description: "Découvrez la boutique Saint-Loub'Ping et précommandez les maillots et matériels de tennis de table du club.", heading: "Boutique Saint-Loub'Ping", text: "Précommandez les maillots et le matériel de tennis de table aux couleurs du club." },
   { path: "/partenaires", title: "Partenaires — Saint-Loub'Ping", description: "Découvrez les partenaires qui soutiennent le club de tennis de table Saint-Loub'Ping à Saint-Loubès.", heading: "Les partenaires du club", text: "Merci aux entreprises et partenaires qui accompagnent le développement de Saint-Loub'Ping." },
   { path: "/contact", title: "Contact — Saint-Loub'Ping", description: "Contactez le club de tennis de table Saint-Loub'Ping à Saint-Loubès pour toute question sur les entraînements et les adhésions.", heading: "Contacter Saint-Loub'Ping", text: "Une question sur les entraînements, les adhésions ou les compétitions ? Contactez le club de tennis de table à Saint-Loubès." },
-];
+  { path: localPagePath, ...localMetadata[localPagePath], heading: localHeading, text: localIntro },
+  { path: "/horaires", ...localMetadata["/horaires"], heading: "Horaires des entraînements à Saint-Loubès", text: "Consultez le planning des entraînements pour les enfants, les adolescents et les adultes, en loisir et en compétition." },
+].map((page) => ({ ...page, ...localMetadata[page.path] }));
 
 const escapeHtml = (value) => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const replaceTag = (html, pattern, replacement) => html.replace(pattern, replacement);
@@ -34,16 +37,20 @@ const metadata = (html, page) => {
   output = replaceTag(output, /<meta name="twitter:title" content="[^"]*"\s*\/>/, `<meta name="twitter:title" content="${escapeHtml(page.title)}" />`);
   output = replaceTag(output, /<meta name="twitter:description" content="[^"]*"\s*\/>/, `<meta name="twitter:description" content="${escapeHtml(page.description)}" />`);
   output = replaceTag(output, /<meta name="twitter:image" content="[^"]*"\s*\/>/, `<meta name="twitter:image" content="${imageUrl}" />`);
+  output = replaceTag(output, /<script id="club-structured-data" type="application\/ld\+json">[\s\S]*?<\/script>/, `<script id="club-structured-data" type="application/ld+json">${JSON.stringify(clubStructuredData).replaceAll('<', '\\u003c')}</script>`);
   return output;
 };
 const publicContent = {
-  "/": `<section><h2>Actualites recentes</h2><ul><li><a href="/actualites">Stages et entrainements du club</a></li><li><a href="/actualites">Resultats et vie des equipes</a></li><li><a href="/adhesions">Horaires et inscriptions 2026-2027</a></li></ul><h2>Tennis de table près de Saint-Loubès</h2><p>Saint-Loub'Ping accueille les joueurs de Saint-Loubès et des communes voisines : Sainte-Eulalie, Ambarès-et-Lagrave, Carbon-Blanc, Bassens, Yvrac, Montussan, Izon et Vayres.</p></section>`,
+  "/": `<section><h2>Actualités récentes</h2><ul><li><a href="/actualites">Stages et entraînements du club</a></li><li><a href="/actualites">Résultats et vie des équipes</a></li><li><a href="/adhesions">Horaires et inscriptions 2026-2027</a></li></ul><h2>Un club de tennis de table près de chez vous</h2><p>${escapeHtml(localIntro)}</p><p><a href="${localPagePath}">Le club, l’accès et le ping dans les Rives de la Laurence</a></p><a href="/essai-gratuit">Réserver une séance d’essai</a></section>`,
+  [localPagePath]: `<section><h2>Votre itinéraire jusqu’à la salle</h2><p>Notre salle est située à Saint-Loubès. Choisissez votre commune de départ pour préparer votre trajet.</p><address>Saint-Loub’Ping — ${escapeHtml(clubAddress)} — <a href="tel:+33688466859">06 88 46 68 59</a></address><ul>${localTowns.map((town) => `<li><a href="${escapeHtml(directionsFrom(town))}">Itinéraire depuis ${escapeHtml(town)}</a></li>`).join('')}</ul><h2>Débuter, reprendre ou jouer en compétition</h2><p>Enfants et adolescents, adultes loisir et compétiteurs : le club accueille tous les niveaux.</p><p><a href="/horaires">Horaires des entraînements</a> · <a href="/adhesions">Tarifs et documents d’adhésion</a> · <a href="/competitions-equipes">Nos équipes</a> · <a href="/contact">Contacter le club</a> · <a href="/essai-gratuit">Réserver mon essai gratuit</a></p><h2>Avant votre première séance</h2>${localFaqs.map(({ question, answer }) => `<h3>${escapeHtml(question)}</h3><p>${escapeHtml(answer)}</p>`).join('')}</section>`,
+  "/contact": `<section><h2>Adresse de la salle de tennis de table</h2><address>${escapeHtml(clubAddress)}</address><p><a href="tel:+33688466859">06 88 46 68 59</a> · <a href="mailto:saintloubping@laposte.net">saintloubping@laposte.net</a></p><p><a href="${localPagePath}">Préparer votre venue depuis les Rives de la Laurence</a></p></section>`,
   "/actualites": `<section><h2>Les dernieres nouvelles</h2><p>Stages, resultats, evenements et informations pratiques du club.</p><ul><li>Stages jeunes et adultes</li><li>Calendrier des competitions</li><li>Vie du club et partenaires</li></ul></section>`,
   "/adhesions": `<section><h2>Horaires et tarifs</h2><p>Decouvrez les creneaux jeunes, adultes loisir et competition, puis envoyez votre demande d adhesion.</p></section>`,
   "/classement-joueurs": `<section><h2>Effectif et progression FFTT</h2><p>Le classement, les points et la progression mensuelle des joueurs sont mis a jour depuis les donnees officielles.</p></section>`,
 };
 const shell = (html, page) => {
-  const content = `<main data-prerendered="true"><h1>${escapeHtml(page.heading)}</h1><p>${escapeHtml(page.text)}</p>${publicContent[page.path] ?? ""}<p>Saint-Loub'Ping — tennis de table à Saint-Loubès, Gironde (33).</p></main>`;
+  const intro = page.path === "/" ? "Pratiquez le tennis de table à Saint-Loubès, à tout âge, en loisir ou en compétition, dans un club ouvert aux habitants des Rives de la Laurence." : page.text;
+  const content = `<main data-prerendered="true"><h1>${escapeHtml(page.heading)}</h1><p>${escapeHtml(intro)}</p>${publicContent[page.path] ?? ""}<p>Saint-Loub'Ping — tennis de table à Saint-Loubès, Gironde (33).</p></main>`;
   return metadata(html, page).replace('<div id="root"></div>', `<div id="root">${content}</div>`);
 };
 
