@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, CalendarCheck, Loader2, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
@@ -7,10 +8,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { getCurrentWeekLabel, getRoomAttendanceWeekDays } from "@/lib/weekAttendance";
+import { attendanceVisibilityKey, saveAttendanceVisibility, useAttendanceVisibility } from "@/lib/homepageSettings";
 
 type AttendanceDay = { is_open: boolean; player_count: number; key_holder_count: number };
 
 const WeeklyRoomAttendanceAdmin = () => {
+  const queryClient = useQueryClient();
+  const visibility = useAttendanceVisibility();
+  const [savingVisibility, setSavingVisibility] = useState(false);
   const [weekOffset, setWeekOffset] = useState(0);
   const [week, setWeek] = useState(() => getRoomAttendanceWeekDays(0));
   const [days, setDays] = useState<Record<string, AttendanceDay>>({});
@@ -29,6 +34,19 @@ const WeeklyRoomAttendanceAdmin = () => {
   }, [week]);
 
   useEffect(() => { void refresh(); }, [refresh]);
+
+  const changeVisibility = async (visible: boolean) => {
+    setSavingVisibility(true);
+    try {
+      const saved = await saveAttendanceVisibility(visible);
+      queryClient.setQueryData(attendanceVisibilityKey, saved);
+      toast.success(saved ? "Le tableau est visible sur l’accueil." : "Le tableau est masqué sur l’accueil.");
+    } catch {
+      toast.error("La visibilité n’a pas pu être enregistrée. Aucun changement appliqué.");
+    } finally {
+      setSavingVisibility(false);
+    }
+  };
 
   const toggleDisplayedWeek = () => {
     const nextOffset = weekOffset === 0 ? 1 : 0;
@@ -56,6 +74,15 @@ const WeeklyRoomAttendanceAdmin = () => {
         <CardTitle className="text-2xl">Ouvertures de la semaine</CardTitle><p className="mt-1 text-sm text-white/65">{getCurrentWeekLabel(week)}</p>
       </div><CalendarCheck className="h-9 w-9 text-clubPrimary" /></div></CardHeader>
       <CardContent className="space-y-5 p-4 md:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-clubPrimary/25 bg-clubPrimary/5 p-4">
+          <div className="min-w-0 flex-1">
+            <label htmlFor="attendance-homepage-visible" className="font-bold text-clubDark">Afficher « Qui vient à la salle ? » sur l’accueil</label>
+            <p className="mt-1 text-sm text-muted-foreground">{visibility.isPending ? "Chargement du réglage…" : visibility.isError ? "Le réglage est indisponible." : visibility.data ? "Visible sur la page d’accueil." : "Masqué sur la page d’accueil."} Les présences enregistrées sont conservées.</p>
+            {visibility.isError && <Button variant="link" className="h-auto p-0" onClick={() => void visibility.refetch()}>Réessayer</Button>}
+          </div>
+          {savingVisibility && <Loader2 className="h-5 w-5 animate-spin" />}
+          <Switch id="attendance-homepage-visible" checked={visibility.data === true} disabled={visibility.isPending || visibility.isError || savingVisibility} onCheckedChange={(checked) => void changeVisibility(checked)} />
+        </div>
         <div className="flex flex-wrap gap-2">
           <Button type="button" variant="secondary" disabled={saving !== null} onClick={toggleDisplayedWeek}>{weekOffset === 0 ? "Voir la semaine suivante" : "Revenir à la semaine en cours"}</Button>
           <Button disabled={saving !== null} onClick={() => void save(week.map((day) => day.dateKey), true)}>Ouvrir toute la semaine</Button>

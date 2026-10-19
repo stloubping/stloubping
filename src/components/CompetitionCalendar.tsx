@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { competitions20262027, categoryLabels, CompetitionEvent } from "@/data/competitions20262027";
 import { supabase } from "@/integrations/supabase/client";
+import { formatCalendarDates, mergeCompetitionCalendar } from "@/lib/competitionCalendar";
 
 const months = [
   { value: "all", label: "Toute la saison" },
@@ -37,20 +38,7 @@ const months = [
   { value: "06", label: "Juin 2027" },
 ];
 
-const formatDateFr = (dateStr: string, endDateStr?: string) => {
-  const startDate = new Date(dateStr);
-  const day = startDate.getDate().toString().padStart(2, '0');
-  const monthNames = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
-  const month = monthNames[startDate.getMonth()];
-  const year = startDate.getFullYear();
-
-  if (endDateStr) {
-    const endDate = new Date(endDateStr);
-    const endDay = endDate.getDate().toString().padStart(2, '0');
-    return `${day}-${endDay} ${month} ${year}`;
-  }
-  return `${day} ${month} ${year}`;
-};
+const formatDateFr = formatCalendarDates;
 
 const createGoogleCalendarUrl = (event: CompetitionEvent) => {
   const start = event.date.replace(/-/g, '');
@@ -72,8 +60,7 @@ const CompetitionCalendar: React.FC<CompetitionCalendarProps> = ({ initialLimit 
     let active = true;
     supabase.from("competition_calendar_events").select("id,date,end_date,title,category,phase,location,details").order("date").order("sort_order").then(({ data }) => {
       if (active && data?.length) {
-        const overrides = new Map(data.map((event) => [event.id, event]));
-        setCalendarEvents(competitions20262027.map((event) => { const override = overrides.get(event.id); return { ...event, location: override?.location ?? event.location, details: override?.details ?? event.details }; }));
+        setCalendarEvents(mergeCompetitionCalendar(competitions20262027, data));
       }
     });
     return () => { active = false; };
