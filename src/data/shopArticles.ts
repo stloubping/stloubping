@@ -39,6 +39,9 @@ export const compareArticlePrices = (a: ShopArticle, b: ShopArticle, descending 
   if (second === null) return -1;
   return descending ? second - first : first - second;
 };
+// Seuls les trois articles de la boutique principale sont ouverts à la commande.
+export const boutiqueOrderIds = ['maillot-officiel', 'maillot-noir-loup-50', 'survetement-noir-rouge'] as const;
+
 export const articleSizes = {
   children: '4, 6, 8, 10, 12 et 14 ans',
   adults: 'XS, S, M, L, XL, 2XL et 3XL',

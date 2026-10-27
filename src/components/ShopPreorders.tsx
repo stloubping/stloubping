@@ -25,6 +25,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
+import { articlePrice, boutiqueOrderIds, formatArticlePrice, shopArticles } from "@/data/shopArticles";
+
+const orderProducts = boutiqueOrderIds.map(id => shopArticles.find(article => article.id === id)!);
 
 const sizes = [
   "2 ans", "4 ans", "6 ans", "8 ans", "10 ans", "12 ans", "14 ans",
@@ -42,11 +45,11 @@ const statusLabels: Record<string, string> = {
 const formSchema = z.object({
   first_name: z.string().trim().min(2, "Le prénom est requis.").max(80),
   last_name: z.string().trim().min(2, "Le nom est requis.").max(80),
-  email: z.string().trim().email("L’adresse e-mail est invalide."),
+  email: z.string().trim().email("L’adresse e-mail est invalide.").max(254),
   phone: z.string().trim().min(6, "Le téléphone est requis.").max(30),
-  size: z.string().min(1, "Choisissez une taille."),
+  size: z.string().refine(value => sizes.includes(value), "Choisissez une taille."),
   quantity: z.coerce.number().int().min(1).max(10),
-  notes: z.string().trim().max(500, "Maximum 500 caractères.").optional(),
+  notes: z.string().trim().max(400, "Maximum 400 caractères.").optional(),
   consent: z.boolean().refine(Boolean, "Votre accord est obligatoire."),
   website: z.string().max(0).optional(),
 });
@@ -65,14 +68,16 @@ type PublicPreorder = {
 };
 
 type ShopPreordersProps = {
-  productName: string;
-  unitPrice: number;
+  productId: string;
+  onProductChange: (productId: string) => void;
 };
 
-const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
+const ShopPreorders = ({ productId, onProductChange }: ShopPreordersProps) => {
   const [preorders, setPreorders] = useState<PublicPreorder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const product = orderProducts.find(article => article.id === productId);
+  const unitPrice = product ? articlePrice(product) : null;
 
   const form = useForm<PreorderForm>({
     resolver: zodResolver(formSchema),
@@ -89,8 +94,9 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
     },
   });
 
-  const quantity = form.watch("quantity") || 1;
-  const totalPrice = useMemo(() => unitPrice * quantity, [quantity, unitPrice]);
+  const quantity = Number(form.watch("quantity"));
+  const validQuantity = Number.isInteger(quantity) && quantity >= 1 && quantity <= 10;
+  const totalPrice = useMemo(() => unitPrice !== null && validQuantity ? unitPrice * quantity : null, [quantity, unitPrice, validQuantity]);
 
   const fetchPreorders = useCallback(async () => {
     setIsLoading(true);
@@ -112,23 +118,26 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
   }, [fetchPreorders]);
 
   const onSubmit = async (values: PreorderForm) => {
+    if (!product || unitPrice === null) return toast.error("Choisissez un article de la boutique.");
     setIsSubmitting(true);
-    const { error } = await supabase.from("shop_preorders").insert({
-      ...values,
-      product_name: productName,
-      notes: values.notes || null,
-      status: "received",
-    });
-
-    if (error) {
-      toast.error("La précommande n’a pas pu être enregistrée. Réessayez dans un instant.");
-      console.error(error);
-    } else {
-      toast.success("Précommande enregistrée ! Le club vous recontactera pour la confirmer.");
+    try {
+      const priceSummary = `Tarif indicatif : ${formatArticlePrice(unitPrice)} TTC × ${values.quantity} = ${formatArticlePrice(unitPrice * values.quantity)} TTC.`;
+      const { error } = await supabase.from("shop_preorders").insert({
+        ...values,
+        product_name: product.id === 'maillot-officiel' ? 'Maillot Officiel du Club' : product.name,
+        notes: [priceSummary, values.notes].filter(Boolean).join("\n"),
+        status: "received",
+      });
+      if (error) throw error;
+      toast.success("Bon de commande enregistré ! Le club vous recontactera pour le confirmer.");
       form.reset();
       await fetchPreorders();
+    } catch (error) {
+      toast.error("La précommande n’a pas pu être enregistrée. Réessayez dans un instant.");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
 
   return (
@@ -139,14 +148,22 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
             <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-clubPrimary/10">
               <Shirt className="h-6 w-6 text-clubPrimary" />
             </div>
-            <CardTitle className="text-3xl text-clubDark">Précommander votre maillot</CardTitle>
+            <CardTitle className="text-3xl text-clubDark">Bon de commande boutique</CardTitle>
             <CardDescription>
-              Remplissez ce formulaire. Le club vous contactera pour confirmer la commande et le règlement.
+              Choisissez l’un des trois articles, votre taille et la quantité. Le club vous contactera pour confirmer les disponibilités et le règlement. Aucun paiement en ligne.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="relative space-y-6">
+                <fieldset disabled={isSubmitting} className="space-y-6">
+                <div className="space-y-2">
+                  <label htmlFor="boutique-article" className="text-sm font-medium">Article à commander</label>
+                  <select id="boutique-article" value={productId} onChange={event => onProductChange(event.target.value)} className="flex min-h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    {orderProducts.map(article => <option key={article.id} value={article.id}>{article.name} — {formatArticlePrice(articlePrice(article))} TTC{article.priceUnit === 'ensemble' ? ' / ensemble' : ''}</option>)}
+                  </select>
+                  {product && <p className="text-sm text-muted-foreground">{product.priceUnit === 'ensemble' ? 'Ensemble veste + pantalon. Pour des tailles différentes, précisez-les dans la remarque.' : 'Prix à la pièce.'} Tailles souhaitées sous réserve de confirmation par le club.</p>}
+                </div>
                 <input type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute left-[-10000px] h-px w-px opacity-0" {...form.register("website")} />
                 <div className="grid gap-5 md:grid-cols-2">
                   <FormField control={form.control} name="first_name" render={({ field }) => (
@@ -179,7 +196,7 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
                   )} />
                   <FormField control={form.control} name="size" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Taille</FormLabel>
+                      <FormLabel>Taille souhaitée</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger><SelectValue placeholder="Choisir une taille" /></SelectTrigger>
@@ -204,7 +221,7 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
                   <FormItem>
                     <FormLabel>Précision éventuelle</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Ex. coupe, remise à un entraîneur…" rows={3} {...field} />
+                      <Textarea placeholder="Ex. taille veste et pantalon, remise à un entraîneur…" rows={3} maxLength={400} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -226,21 +243,23 @@ const ShopPreorders = ({ productName, unitPrice }: ShopPreordersProps) => {
 
                 <div className="flex flex-col items-center justify-between gap-4 rounded-xl bg-clubDark p-5 text-white sm:flex-row">
                   <div>
-                    <p className="text-sm text-white/70">Total estimé</p>
-                    <p className="text-3xl font-black text-clubPrimary">{totalPrice} €</p>
+                    <p className="font-bold">{product?.name}</p>
+                    <p className="text-sm text-white/70">{formatArticlePrice(unitPrice)} TTC × {validQuantity ? quantity : '—'} · Total estimé TTC</p>
+                    <p className="text-3xl font-black text-clubPrimary">{totalPrice === null ? '—' : formatArticlePrice(totalPrice)}</p>
                   </div>
                   <Button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !product || !validQuantity}
                     className="w-full bg-clubPrimary px-8 py-6 text-lg font-bold text-white sm:w-auto"
                   >
                     {isSubmitting ? (
                       <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Enregistrement…</>
                     ) : (
-                      <><PackageCheck className="mr-2 h-5 w-5" />Précommander</>
+                      <><PackageCheck className="mr-2 h-5 w-5" />Envoyer le bon de commande</>
                     )}
                   </Button>
                 </div>
+                </fieldset>
               </form>
             </Form>
           </CardContent>

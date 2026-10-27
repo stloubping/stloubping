@@ -1,9 +1,8 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from 'react';
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Link } from 'react-router-dom';
 import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
-import { Shirt, Ruler, DollarSign, Mail, User, FileText, Globe, PackageSearch, ArrowRight } from 'lucide-react'; // Ajout d'icônes pour les méthodes de commande
+import { Ruler, DollarSign, Mail, User, FileText, Globe } from 'lucide-react';
 import ShopPreorders from '@/components/ShopPreorders';
 import { articlePrice, formatArticlePrice, shopArticles } from '@/data/shopArticles';
 
@@ -11,6 +10,11 @@ const newClubArticles = shopArticles.filter(article => article.id === 'maillot-n
 
 const Boutique = () => {
   const { openLightbox } = useLightbox(); // Use the lightbox hook
+  const [productId, setProductId] = useState('maillot-officiel');
+  const selectProduct = (id: string) => {
+    setProductId(id);
+    document.getElementById('precommande')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const jerseyDetails = {
     name: "Maillot Officiel du Club",
@@ -41,27 +45,6 @@ const Boutique = () => {
         </Card>
       </section>
 
-      <section className="mb-12">
-        <Card className="mx-auto max-w-4xl overflow-hidden border-clubPrimary/30 bg-clubDark text-white shadow-lg">
-          <CardContent className="flex flex-col items-center gap-5 p-6 text-center sm:flex-row sm:text-left">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-clubPrimary/15">
-              <PackageSearch className="h-7 w-7 text-clubPrimary" />
-            </div>
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold">Commander du matériel</h2>
-              <p className="mt-1 text-sm text-white/70">
-                Bois, revêtements, balles, chaussures ou accessoires : transmettez au club vos références Wack Sport.
-              </p>
-            </div>
-            <Button asChild className="w-full bg-clubPrimary font-bold text-white sm:w-auto">
-              <Link to="/boutique/materiels">
-                Page Matériels <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </section>
-
       <section className="mb-12" aria-labelledby="nouveautes-club">
         <h2 id="nouveautes-club" className="mb-8 text-center text-3xl font-bold text-clubDark">Les nouveautés du club</h2>
         <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2">
@@ -74,7 +57,7 @@ const Boutique = () => {
               <p className="text-3xl font-bold text-clubPrimary">{formatArticlePrice(articlePrice(article))}<span className="ml-2 text-sm font-normal text-muted-foreground">TTC / {article.priceUnit ?? 'pièce'}</span></p>
               <p>{article.description}</p>
               <p className="text-sm text-muted-foreground">{article.imageNote}</p>
-              <p className="text-sm">Pour commander, contactez le club ou les entraîneurs.</p>
+              <Button type="button" className="w-full bg-clubPrimary text-white" onClick={() => selectProduct(article.id)}>Commander cet article</Button>
             </CardContent>
           </Card>)}
         </div>
@@ -121,10 +104,10 @@ const Boutique = () => {
                 <h4 className="text-lg font-semibold text-clubDark mb-3">Comment commander :</h4>
                 <ul className="space-y-2 text-clubLight-foreground">
                   <li>
-                    <a href="#precommande" className="flex items-center font-semibold text-clubPrimary hover:underline">
+                    <button type="button" onClick={() => selectProduct('maillot-officiel')} className="flex items-center font-semibold text-clubPrimary hover:underline">
                       <Globe className="mr-2 h-4 w-4" />
-                      Sur le site
-                    </a>
+                      Commander sur le site
+                    </button>
                   </li>
                   <li className="flex items-center">
                     <Mail className="mr-2 h-4 w-4 text-clubPrimary" />
@@ -145,7 +128,7 @@ const Boutique = () => {
         </Card>
       </section>
 
-      <ShopPreorders productName={jerseyDetails.name} unitPrice={35} />
+      <ShopPreorders productId={productId} onProductChange={setProductId} />
     </div>
   );
 };
