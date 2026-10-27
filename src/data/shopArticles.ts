@@ -14,6 +14,8 @@ export type ShopArticle = {
   sizesPending?: boolean;
   official?: boolean;
   originalImage?: boolean;
+  clubPrice?: boolean;
+  priceUnit?: 'ensemble' | 'pièce';
   sizes?: { children: string; adults: string };
   shoeSizes?: string;
 } & (
@@ -27,7 +29,7 @@ export const articlePrice = (article: ShopArticle) => {
   if (article.pricePending) return null;
   const baseTtcCents = article.priceTtcCents ?? Math.round(article.priceHtCents * 1.2);
   // Tenues officielles : prix club inchangés. Majestee : +3 € TTC, puis euro supérieur.
-  return article.official ? baseTtcCents / 100 : Math.ceil((baseTtcCents + 300) / 100);
+  return article.official || article.clubPrice ? baseTtcCents / 100 : Math.ceil((baseTtcCents + 300) / 100);
 };
 export const formatArticlePrice = (price: number | null) => price === null ? 'Prix à venir' : new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price);
 export const compareArticlePrices = (a: ShopArticle, b: ShopArticle, descending = false) => {
@@ -43,6 +45,20 @@ export const articleSizes = {
 };
 
 export const shopArticles: ShopArticle[] = [
+  {
+    id: 'maillot-noir-loup-50', code: 'CLUB-MAILLOT-NOIR-50', name: 'Maillot noir · Loup 50', model: 'Saint Loub’Ping', category: 'Entraînement', priceTtcCents: 1000,
+    images: ['/images/boutique/maillot-noir-loup-50.jpeg'], clubPrice: true, originalImage: true, sizesPending: true,
+    description: 'Un maillot noir avec le motif loup blanc « 50 » sur la poitrine.',
+    features: ['Col rond', 'Manches courtes', 'Motif loup blanc « 50 »'],
+    colors: 'Noir et blanc', imageNote: 'Visuel fourni par le club. Tailles et disponibilités à confirmer auprès du club.',
+  },
+  {
+    id: 'survetement-noir-rouge', code: 'CLUB-SURVETEMENT-NOIR-ROUGE', name: 'Survêtement noir et rouge', model: 'Saint Loub’Ping', category: 'Survêtements', priceTtcCents: 8000,
+    images: ['/images/boutique/survetement-noir-rouge.png'], clubPrice: true, originalImage: true, sizesPending: true, priceUnit: 'ensemble',
+    description: 'L’ensemble veste zippée et pantalon assorti, avec les marquages Saint Loub’Ping.',
+    features: ['Ensemble veste + pantalon', 'Design noir et rouge', 'Marquages Saint Loub’Ping sur la poitrine, le dos et le pantalon'],
+    colors: 'Noir et rouge', imageNote: '80 € TTC pour l’ensemble. Visuel de présentation fourni par le club ; tailles et disponibilités à confirmer.',
+  },
   {
     id: 'survetement-officiel', code: 'CLUB-SURVETEMENT', name: 'Survêtement officiel', model: 'Saint Loub’Ping', category: 'Survêtements', priceTtcCents: 8000,
     images: [image('survetement-officiel'), image('survetement-officiel-dos')], official: true, sizesPending: true,

@@ -5,6 +5,9 @@ import { Link } from 'react-router-dom';
 import { useLightbox } from '@/context/LightboxContext'; // Import useLightbox
 import { Shirt, Ruler, DollarSign, Mail, User, FileText, Globe, PackageSearch, ArrowRight } from 'lucide-react'; // Ajout d'icônes pour les méthodes de commande
 import ShopPreorders from '@/components/ShopPreorders';
+import { articlePrice, formatArticlePrice, shopArticles } from '@/data/shopArticles';
+
+const newClubArticles = shopArticles.filter(article => article.id === 'maillot-noir-loup-50' || article.id === 'survetement-noir-rouge');
 
 const Boutique = () => {
   const { openLightbox } = useLightbox(); // Use the lightbox hook
@@ -59,6 +62,24 @@ const Boutique = () => {
         </Card>
       </section>
 
+      <section className="mb-12" aria-labelledby="nouveautes-club">
+        <h2 id="nouveautes-club" className="mb-8 text-center text-3xl font-bold text-clubDark">Les nouveautés du club</h2>
+        <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2">
+          {newClubArticles.map(article => <Card key={article.id} className="overflow-hidden rounded-xl shadow-lg">
+            <button type="button" className="flex w-full items-center justify-center bg-white p-5" onClick={() => openLightbox(article.images[0])} aria-label={`Agrandir ${article.name}`}>
+              <img src={article.images[0]} alt={article.name} loading="lazy" decoding="async" className="h-80 w-full object-contain" />
+            </button>
+            <CardContent className="space-y-3 p-6">
+              <h3 className="text-2xl font-bold text-clubDark">{article.name}</h3>
+              <p className="text-3xl font-bold text-clubPrimary">{formatArticlePrice(articlePrice(article))}<span className="ml-2 text-sm font-normal text-muted-foreground">TTC / {article.priceUnit ?? 'pièce'}</span></p>
+              <p>{article.description}</p>
+              <p className="text-sm text-muted-foreground">{article.imageNote}</p>
+              <p className="text-sm">Pour commander, contactez le club ou les entraîneurs.</p>
+            </CardContent>
+          </Card>)}
+        </div>
+      </section>
+
       <section>
         <h2 className="text-3xl font-bold text-center mb-8 text-clubDark">Le Maillot du Club</h2>
         <Card className="max-w-4xl mx-auto bg-clubLight shadow-lg rounded-xl overflow-hidden">
@@ -72,7 +93,7 @@ const Boutique = () => {
                 onClick={() => openLightbox(jerseyDetails.image)}
               />
             </div>
-            
+
             {/* Details Section */}
             <div className="p-6 space-y-4">
               <h3 className="text-3xl font-bold text-clubPrimary">{jerseyDetails.name}</h3>
