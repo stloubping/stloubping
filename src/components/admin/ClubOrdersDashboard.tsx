@@ -41,6 +41,7 @@ type EquipmentOrder = {
 };
 
 type ShirtOrder = {
+  items: import('@/lib/shopCart').ShopOrderItem[] | null;
   id: string;
   created_at: string;
   first_name: string;
@@ -108,7 +109,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
         .order("created_at", { ascending: false }),
       supabase
         .from("shop_preorders")
-        .select("id, created_at, first_name, last_name, email, phone, product_name, size, quantity, notes, status")
+        .select("id, created_at, first_name, last_name, email, phone, product_name, size, quantity, notes, status, items")
         .order("created_at", { ascending: false }),
     ]);
 
@@ -386,7 +387,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
             <Card className={`h-full transition ${activeSection === "shirts" ? "border-clubPrimary ring-2 ring-clubPrimary/20" : "hover:border-clubPrimary/40"}`}>
               <CardContent className="flex items-center gap-4 p-5">
                 <Shirt className="h-8 w-8 text-clubPrimary" />
-                <div><p className="text-3xl font-black">{shirtOrders.length}</p><p className="text-sm text-muted-foreground">commandes maillots · {shirtsPending} à traiter</p></div>
+                <div><p className="text-3xl font-black">{shirtOrders.length}</p><p className="text-sm text-muted-foreground">bons boutique · {shirtsPending} à traiter</p></div>
               </CardContent>
             </Card>
           </button>
@@ -401,7 +402,7 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
               <ClipboardList className="h-4 w-4" /> Terminées <span className="rounded-full bg-black/5 px-2 py-0.5 text-xs">{completedEquipmentOrders.length}</span>
             </TabsTrigger>
 <TabsTrigger value="shirts" className="gap-2 py-3 text-sm font-bold sm:text-base">
-              <Shirt className="h-4 w-4" /> Maillots <span className="rounded-full bg-black/5 px-2 py-0.5 text-xs">{shirtOrders.length}</span>
+              <Shirt className="h-4 w-4" /> Boutique <span className="rounded-full bg-black/5 px-2 py-0.5 text-xs">{shirtOrders.length}</span>
             </TabsTrigger>
           </TabsList>
 
@@ -547,11 +548,15 @@ const ClubOrdersDashboard = ({ session, onSignOut }: ClubOrdersDashboardProps) =
                       </div>
                     </CardHeader>
                     <CardContent className="p-5">
-                      <div className="grid gap-4 rounded-xl bg-clubSection/30 p-4 sm:grid-cols-3">
+                      {order.items?.length ? <div className="space-y-3 rounded-xl bg-clubSection/30 p-4">
+                        <p className="font-bold">Un bon · {order.items.length} article{order.items.length > 1 ? 's' : ''}</p>
+                        {order.items.map(item => <div key={item.product_id} className="flex flex-wrap justify-between gap-2 border-t pt-3 text-sm"><span className="font-bold">{item.product_name}</span><span>Taille {item.size} · Qté {item.quantity}</span><span>{formatPrice(item.unit_price_cents * item.quantity / 100)}</span></div>)}
+                        <p className="border-t pt-3 text-right font-bold">Total du bon : {formatPrice(order.items.reduce((sum, item) => sum + item.unit_price_cents * item.quantity, 0) / 100)}</p>
+                      </div> : <div className="grid gap-4 rounded-xl bg-clubSection/30 p-4 sm:grid-cols-3">
                         <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Produit</p><p className="mt-1 font-bold">{order.product_name}</p></div>
                         <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Taille</p><p className="mt-1 text-lg font-black">{order.size}</p></div>
                         <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Quantité</p><p className="mt-1 text-lg font-black">{order.quantity}</p></div>
-                      </div>
+                      </div>}
                       {order.notes && <p className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900"><strong>Remarque :</strong> {order.notes}</p>}
                     </CardContent>
                   </Card>

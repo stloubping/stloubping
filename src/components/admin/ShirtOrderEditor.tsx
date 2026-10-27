@@ -14,8 +14,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
+import { createShopOrderItem, shopOrderSizes, type ShopOrderItem } from "@/lib/shopCart";
 
 export type EditableShirtOrder = {
+  items?: ShopOrderItem[] | null;
   id: string;
   first_name: string;
   last_name: string;
@@ -38,6 +40,7 @@ type ShirtOrderDraft = Omit<EditableShirtOrder, "notes"> & {
 
 const createDraft = (order: EditableShirtOrder): ShirtOrderDraft => ({
   ...order,
+  items: order.items?.map(item => ({ ...item })) ?? null,
   notes: order.notes ?? "",
 });
 
@@ -68,7 +71,7 @@ const ShirtOrderEditor = ({ order, onSaved }: ShirtOrderEditorProps) => {
       return;
     }
 
-    if (!productName || !size || !Number.isInteger(draft.quantity) || draft.quantity < 1 || draft.quantity > 10) {
+    if (!draft.items?.length && (!productName || !size || !Number.isInteger(draft.quantity) || draft.quantity < 1 || draft.quantity > 10)) {
       toast.error("Indiquez un produit, une taille et une quantité comprise entre 1 et 10.");
       return;
     }
@@ -78,15 +81,23 @@ const ShirtOrderEditor = ({ order, onSaved }: ShirtOrderEditorProps) => {
       return;
     }
 
+    let items: ShopOrderItem[] | null = null;
+    try {
+      if (draft.items?.length) items = draft.items.map(item => createShopOrderItem(item.product_id, item.size, item.quantity));
+    } catch {
+      toast.error("Vérifiez la taille et la quantité de chaque article (1 à 10).");
+      return;
+    }
     const updatedOrder: EditableShirtOrder = {
       id: order.id,
       first_name: firstName,
       last_name: lastName,
       email,
       phone,
-      product_name: productName,
-      size,
-      quantity: draft.quantity,
+      product_name: items ? items.map(item => `${item.product_name} × ${item.quantity}`).join(' · ') : productName,
+      size: items ? items.map(item => `${item.product_name} : ${item.size}`).join(' · ') : size,
+      quantity: items ? items.reduce((sum, item) => sum + item.quantity, 0) : draft.quantity,
+      items,
       notes: notes || null,
     };
 
@@ -101,17 +112,18 @@ const ShirtOrderEditor = ({ order, onSaved }: ShirtOrderEditorProps) => {
         product_name: updatedOrder.product_name,
         size: updatedOrder.size,
         quantity: updatedOrder.quantity,
+        items: updatedOrder.items,
         notes: updatedOrder.notes,
       })
       .eq("id", order.id);
 
     if (error) {
       console.error(error);
-      toast.error("La commande de maillot n’a pas pu être modifiée.");
+      toast.error("La bon de commande boutique n’a pas pu être modifiée.");
     } else {
       onSaved(updatedOrder);
       setIsOpen(false);
-      toast.success("Commande de maillot modifiée.");
+      toast.success("Bon de commande boutique modifiée.");
     }
     setIsSaving(false);
   };
@@ -125,9 +137,9 @@ const ShirtOrderEditor = ({ order, onSaved }: ShirtOrderEditorProps) => {
       </DialogTrigger>
       <DialogContent className="max-h-[92vh] max-w-3xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Modifier la commande de maillot</DialogTitle>
+          <DialogTitle className="text-2xl">Modifier la bon de commande boutique</DialogTitle>
           <DialogDescription>
-            Les changements sont enregistrés dans Supabase et repris automatiquement dans le bordereau des maillots.
+            Les changements sont enregistrés dans Supabase et repris automatiquement dans le bordereau boutique.
           </DialogDescription>
         </DialogHeader>
 
@@ -148,6 +160,19 @@ const ShirtOrderEditor = ({ order, onSaved }: ShirtOrderEditorProps) => {
             Téléphone
             <Input type="tel" value={draft.phone} onChange={(event) => updateField("phone", event.target.value)} maxLength={30} />
           </label>
+          {draft.items?.length ? <div className="space-y-4 sm:col-span-2">
+            {draft.items.map((item, index) => <div key={item.product_id} className="rounded-lg border p-3">
+              <p className="mb-3 font-bold">{item.product_name}</p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className="space-y-2 text-sm font-bold">Taille
+                  <select value={item.size} onChange={event => updateField('items', draft.items!.map((line, i) => i === index ? { ...line, size: event.target.value } : line))} className="h-10 w-full rounded-md border bg-background px-3">{shopOrderSizes.map(size => <option key={size} value={size}>{size}</option>)}</select>
+                </label>
+                <label className="space-y-2 text-sm font-bold">Quantité
+                  <Input type="number" min={1} max={10} value={item.quantity} onChange={event => updateField('items', draft.items!.map((line, i) => i === index ? { ...line, quantity: Number(event.target.value) } : line))} />
+                </label>
+              </div>
+            </div>)}
+          </div> : <>
           <label className="space-y-2 text-sm font-bold sm:col-span-2">
             Produit
             <Input value={draft.product_name} onChange={(event) => updateField("product_name", event.target.value)} />
@@ -160,6 +185,7 @@ const ShirtOrderEditor = ({ order, onSaved }: ShirtOrderEditorProps) => {
             Quantité
             <Input type="number" min={1} max={10} value={draft.quantity} onChange={(event) => updateField("quantity", Number(event.target.value))} />
           </label>
+          </>}
           <label className="space-y-2 text-sm font-bold sm:col-span-2">
             Remarque
             <Textarea value={draft.notes} onChange={(event) => updateField("notes", event.target.value)} maxLength={500} rows={4} />

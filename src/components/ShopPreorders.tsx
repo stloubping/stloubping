@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -17,23 +17,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { articlePrice, boutiqueOrderIds, formatArticlePrice, shopArticles } from "@/data/shopArticles";
-
-const orderProducts = boutiqueOrderIds.map(id => shopArticles.find(article => article.id === id)!);
-
-const sizes = [
-  "2 ans", "4 ans", "6 ans", "8 ans", "10 ans", "12 ans", "14 ans",
-  "XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "6XL",
-  "7XL", "8XL", "9XL", "10XL",
-];
+import { articlePrice, formatArticlePrice } from "@/data/shopArticles";
+import { createShopOrderItem, shopOrderProducts as orderProducts, shopOrderSizes as sizes, shopOrderTotal } from "@/lib/shopCart";
 
 const statusLabels: Record<string, string> = {
   received: "Reçue",
@@ -47,8 +33,7 @@ const formSchema = z.object({
   last_name: z.string().trim().min(2, "Le nom est requis.").max(80),
   email: z.string().trim().email("L’adresse e-mail est invalide.").max(254),
   phone: z.string().trim().min(6, "Le téléphone est requis.").max(30),
-  size: z.string().refine(value => sizes.includes(value), "Choisissez une taille."),
-  quantity: z.coerce.number().int().min(1).max(10),
+  items: z.array(z.object({ size: z.string(), quantity: z.coerce.number().catch(0) })).length(3),
   notes: z.string().trim().max(400, "Maximum 400 caractères.").optional(),
   consent: z.boolean().refine(Boolean, "Votre accord est obligatoire."),
   website: z.string().max(0).optional(),
@@ -68,16 +53,14 @@ type PublicPreorder = {
 };
 
 type ShopPreordersProps = {
-  productId: string;
-  onProductChange: (productId: string) => void;
+  productIds: string[];
+  onProductsChange: (productIds: string[]) => void;
 };
 
-const ShopPreorders = ({ productId, onProductChange }: ShopPreordersProps) => {
+const ShopPreorders = ({ productIds, onProductsChange }: ShopPreordersProps) => {
   const [preorders, setPreorders] = useState<PublicPreorder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const product = orderProducts.find(article => article.id === productId);
-  const unitPrice = product ? articlePrice(product) : null;
 
   const form = useForm<PreorderForm>({
     resolver: zodResolver(formSchema),
@@ -86,17 +69,20 @@ const ShopPreorders = ({ productId, onProductChange }: ShopPreordersProps) => {
       last_name: "",
       email: "",
       phone: "",
-      size: "",
-      quantity: 1,
+      items: orderProducts.map(() => ({ size: "", quantity: 1 })),
       notes: "",
       consent: false,
       website: "",
     },
   });
 
-  const quantity = Number(form.watch("quantity"));
-  const validQuantity = Number.isInteger(quantity) && quantity >= 1 && quantity <= 10;
-  const totalPrice = useMemo(() => unitPrice !== null && validQuantity ? unitPrice * quantity : null, [quantity, unitPrice, validQuantity]);
+  const draftItems = form.watch("items");
+  const selectedProducts = orderProducts.filter(product => productIds.includes(product.id));
+  const validQuantities = selectedProducts.every(product => {
+    const quantity = Number(draftItems[orderProducts.indexOf(product)]?.quantity);
+    return Number.isInteger(quantity) && quantity >= 1 && quantity <= 10;
+  });
+  const totalPrice = orderProducts.reduce((total, product, index) => productIds.includes(product.id) ? total + articlePrice(product)! * (Number(draftItems[index]?.quantity) || 0) : total, 0);
 
   const fetchPreorders = useCallback(async () => {
     setIsLoading(true);
@@ -118,18 +104,33 @@ const ShopPreorders = ({ productId, onProductChange }: ShopPreordersProps) => {
   }, [fetchPreorders]);
 
   const onSubmit = async (values: PreorderForm) => {
-    if (!product || unitPrice === null) return toast.error("Choisissez un article de la boutique.");
+    if (!selectedProducts.length) return toast.error("Choisissez au moins un article.");
+    let invalid = false;
+    for (const product of selectedProducts) {
+      const index = orderProducts.indexOf(product);
+      if (!sizes.includes(values.items[index].size)) { form.setError(`items.${index}.size`, { message: "Choisissez une taille." }); invalid = true; }
+      const quantity = values.items[index].quantity;
+      if (!Number.isInteger(quantity) || quantity < 1 || quantity > 10) { form.setError(`items.${index}.quantity`, { message: "De 1 à 10 pièces par article." }); invalid = true; }
+    }
+    if (invalid) return;
+    const items = selectedProducts.map(product => {
+      const value = values.items[orderProducts.indexOf(product)];
+      return createShopOrderItem(product.id, value.size, value.quantity);
+    });
     setIsSubmitting(true);
     try {
-      const priceSummary = `Tarif indicatif : ${formatArticlePrice(unitPrice)} TTC × ${values.quantity} = ${formatArticlePrice(unitPrice * values.quantity)} TTC.`;
+      const priceSummary = `Total indicatif du bon : ${formatArticlePrice(shopOrderTotal(items))} TTC.`;
       const { error } = await supabase.from("shop_preorders").insert({
         ...values,
-        product_name: product.id === 'maillot-officiel' ? 'Maillot Officiel du Club' : product.name,
+        items,
+        product_name: items.map(item => item.product_name).join(" · "),
+        size: items.map(item => item.size).join(" · "),
+        quantity: items.reduce((sum, item) => sum + item.quantity, 0),
         notes: [priceSummary, values.notes].filter(Boolean).join("\n"),
         status: "received",
       });
       if (error) throw error;
-      toast.success("Bon de commande enregistré ! Le club vous recontactera pour le confirmer.");
+      toast.success("Votre bon de commande a été enregistré avec tous les articles sélectionnés.");
       form.reset();
       await fetchPreorders();
     } catch (error) {
@@ -150,19 +151,31 @@ const ShopPreorders = ({ productId, onProductChange }: ShopPreordersProps) => {
             </div>
             <CardTitle className="text-3xl text-clubDark">Bon de commande boutique</CardTitle>
             <CardDescription>
-              Choisissez l’un des trois articles, votre taille et la quantité. Le club vous contactera pour confirmer les disponibilités et le règlement. Aucun paiement en ligne.
+              Réunissez un, deux ou trois articles sur un seul bon. Choisissez une taille et une quantité pour chacun ; vos coordonnées ne sont saisies qu’une seule fois. Le club confirmera les disponibilités et le règlement. Aucun paiement en ligne.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="relative space-y-6">
                 <fieldset disabled={isSubmitting} className="space-y-6">
-                <div className="space-y-2">
-                  <label htmlFor="boutique-article" className="text-sm font-medium">Article à commander</label>
-                  <select id="boutique-article" value={productId} onChange={event => onProductChange(event.target.value)} className="flex min-h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                    {orderProducts.map(article => <option key={article.id} value={article.id}>{article.name} — {formatArticlePrice(articlePrice(article))} TTC{article.priceUnit === 'ensemble' ? ' / ensemble' : ''}</option>)}
-                  </select>
-                  {product && <p className="text-sm text-muted-foreground">{product.priceUnit === 'ensemble' ? 'Ensemble veste + pantalon. Pour des tailles différentes, précisez-les dans la remarque.' : 'Prix à la pièce.'} Tailles souhaitées sous réserve de confirmation par le club.</p>}
+                <div className="space-y-4">
+                  <h4 className="font-bold">Articles sur votre bon</h4>
+                  {orderProducts.map((product, index) => {
+                    const selected = productIds.includes(product.id);
+                    return <div key={product.id} className={`rounded-xl border p-4 ${selected ? 'border-clubPrimary/50 bg-clubPrimary/5' : 'bg-muted/20'}`}>
+                      <div className="flex items-start gap-3">
+                        <Checkbox id={`order-${product.id}`} checked={selected} onCheckedChange={checked => { form.clearErrors(`items.${index}`); onProductsChange(checked === true ? [...productIds, product.id] : productIds.filter(id => id !== product.id)); }} />
+                        <label htmlFor={`order-${product.id}`} className="flex-1 cursor-pointer font-bold">{product.name}</label>
+                        <span className="whitespace-nowrap font-bold text-clubPrimary">{formatArticlePrice(articlePrice(product))}</span>
+                      </div>
+                      {selected && <div className="mt-4 grid gap-4 sm:grid-cols-3">
+                        <FormField control={form.control} name={`items.${index}.size`} render={({ field }) => <FormItem><FormLabel>Taille · {product.name}</FormLabel><FormControl><select {...field} className="flex min-h-11 w-full rounded-md border bg-background px-3 py-2 text-sm"><option value="">Choisir une taille</option>{sizes.map(size => <option key={size} value={size}>{size}</option>)}</select></FormControl><FormMessage /></FormItem>} />
+                        <FormField control={form.control} name={`items.${index}.quantity`} render={({ field }) => <FormItem><FormLabel>Quantité · {product.name}</FormLabel><FormControl><Input type="number" min={1} max={10} {...field} /></FormControl><FormMessage /></FormItem>} />
+                        <div className="self-end"><p className="text-sm text-muted-foreground">Sous-total TTC</p><p className="py-2 text-xl font-bold">{Number.isInteger(Number(draftItems[index]?.quantity)) && Number(draftItems[index]?.quantity) >= 1 && Number(draftItems[index]?.quantity) <= 10 ? formatArticlePrice(articlePrice(product)! * Number(draftItems[index].quantity)) : '—'}</p></div>
+                      </div>}
+                    </div>;
+                  })}
+                  <p className="text-sm text-muted-foreground">Tailles souhaitées à confirmer par le club. Pour le survêtement, précisez dans la remarque si la veste et le pantalon nécessitent des tailles différentes.</p>
                 </div>
                 <input type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute left-[-10000px] h-px w-px opacity-0" {...form.register("website")} />
                 <div className="grid gap-5 md:grid-cols-2">
@@ -194,27 +207,6 @@ const ShopPreorders = ({ productId, onProductChange }: ShopPreordersProps) => {
                       <FormMessage />
                     </FormItem>
                   )} />
-                  <FormField control={form.control} name="size" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Taille souhaitée</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger><SelectValue placeholder="Choisir une taille" /></SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {sizes.map((size) => <SelectItem key={size} value={size}>{size}</SelectItem>)}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                  <FormField control={form.control} name="quantity" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Quantité</FormLabel>
-                      <FormControl><Input type="number" min={1} max={10} {...field} /></FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
                 </div>
 
                 <FormField control={form.control} name="notes" render={({ field }) => (
@@ -243,13 +235,13 @@ const ShopPreorders = ({ productId, onProductChange }: ShopPreordersProps) => {
 
                 <div className="flex flex-col items-center justify-between gap-4 rounded-xl bg-clubDark p-5 text-white sm:flex-row">
                   <div>
-                    <p className="font-bold">{product?.name}</p>
-                    <p className="text-sm text-white/70">{formatArticlePrice(unitPrice)} TTC × {validQuantity ? quantity : '—'} · Total estimé TTC</p>
-                    <p className="text-3xl font-black text-clubPrimary">{totalPrice === null ? '—' : formatArticlePrice(totalPrice)}</p>
+                    <p className="font-bold">{selectedProducts.length} article{selectedProducts.length > 1 ? 's' : ''} sur un seul bon</p>
+                    <p className="text-sm text-white/70">Total général TTC</p>
+                    <p className="text-3xl font-black text-clubPrimary">{validQuantities ? formatArticlePrice(totalPrice) : '—'}</p>
                   </div>
                   <Button
                     type="submit"
-                    disabled={isSubmitting || !product || !validQuantity}
+                    disabled={isSubmitting || !selectedProducts.length || !validQuantities}
                     className="w-full bg-clubPrimary px-8 py-6 text-lg font-bold text-white sm:w-auto"
                   >
                     {isSubmitting ? (

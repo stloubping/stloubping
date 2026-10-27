@@ -10,9 +10,9 @@ const newClubArticles = shopArticles.filter(article => article.id === 'maillot-n
 
 const Boutique = () => {
   const { openLightbox } = useLightbox(); // Use the lightbox hook
-  const [productId, setProductId] = useState('maillot-officiel');
+  const [productIds, setProductIds] = useState<string[]>(['maillot-officiel']);
   const selectProduct = (id: string) => {
-    setProductId(id);
+    setProductIds(current => current.includes(id) ? current : [...current, id]);
     document.getElementById('precommande')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
@@ -128,7 +128,7 @@ const Boutique = () => {
         </Card>
       </section>
 
-      <ShopPreorders productId={productId} onProductChange={setProductId} />
+      <ShopPreorders productIds={productIds} onProductsChange={setProductIds} />
     </div>
   );
 };

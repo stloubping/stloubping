@@ -8,6 +8,7 @@ import AdminHelpBubble from "@/components/admin/AdminHelpBubble";
 import { supabase } from "@/integrations/supabase/client";
 
 type ConfirmedShirtOrder = {
+  items?: import('@/lib/shopCart').ShopOrderItem[] | null;
   id: string;
   first_name: string;
   last_name: string;
@@ -43,13 +44,13 @@ const ShirtOrderSlip = ({ session }: ShirtOrderSlipProps) => {
       setIsLoading(true);
       const { data, error } = await supabase
         .from("shop_preorders")
-        .select("id, first_name, last_name, product_name, size, quantity, notes")
+        .select("id, first_name, last_name, product_name, size, quantity, notes, items")
         .eq("status", "confirmed")
         .order("created_at", { ascending: true });
 
       if (error) {
         console.error(error);
-        toast.error("Impossible de charger les commandes de maillots confirmées.");
+        toast.error("Impossible de charger les commandes boutique confirmées.");
       } else {
         setOrders((data ?? []) as ConfirmedShirtOrder[]);
       }
@@ -62,7 +63,7 @@ const ShirtOrderSlip = ({ session }: ShirtOrderSlipProps) => {
   const groupedOrders = useMemo<AggregatedShirtOrder[]>(() => {
     const grouped = new Map<string, AggregatedShirtOrder>();
 
-    orders.forEach((order) => {
+    orders.flatMap(order => order.items?.length ? order.items.map(item => ({ ...order, product_name: item.product_name, size: item.size, quantity: item.quantity })) : [order]).forEach((order) => {
       const key = JSON.stringify([order.product_name, order.size]);
       const customer = `${order.first_name} ${order.last_name}`;
       const existing = grouped.get(key);
@@ -110,10 +111,10 @@ const ShirtOrderSlip = ({ session }: ShirtOrderSlipProps) => {
           <header className="bg-clubDark px-6 py-8 text-white md:px-10">
             <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-clubPrimary">Saint Loub Ping</p>
             <div className="mt-2 flex items-center gap-3">
-              <h1 className="text-3xl font-black md:text-4xl">Bordereau de commande maillots</h1>
+              <h1 className="text-3xl font-black md:text-4xl">Bordereau de commandes boutique</h1>
               <AdminHelpBubble
                 label="Contenu du bordereau"
-                text="Ce document reprend uniquement les commandes au statut « Confirmée ». Les maillots sont regroupés par modèle et par taille avant impression."
+                text="Ce document reprend uniquement les commandes au statut « Confirmée ». Les articles sont regroupés par modèle et par taille avant impression."
                 className="border-white/30 bg-white/10 text-white hover:bg-white hover:text-clubDark print:hidden"
                 side="bottom"
               />
@@ -127,14 +128,14 @@ const ShirtOrderSlip = ({ session }: ShirtOrderSlipProps) => {
             <div className="p-10 text-center md:p-16">
               <Shirt className="mx-auto h-12 w-12 text-muted-foreground/40" />
               <h2 className="mt-4 text-2xl font-black text-clubDark">Aucune commande confirmée</h2>
-              <p className="mt-2 text-muted-foreground">Les maillots apparaîtront ici dès que leur statut sera « Confirmée ».</p>
+              <p className="mt-2 text-muted-foreground">Les articles apparaîtront ici dès que leur statut sera « Confirmée ».</p>
             </div>
           ) : (
             <>
               <div className="grid gap-4 border-b bg-clubSection/20 p-6 sm:grid-cols-3 md:px-10">
                 <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Commandes</p><p className="mt-1 text-2xl font-black">{orders.length}</p></div>
                 <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Modèles / tailles</p><p className="mt-1 text-2xl font-black">{groupedOrders.length}</p></div>
-                <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Maillots au total</p><p className="mt-1 text-2xl font-black text-clubPrimary">{totalQuantity}</p></div>
+                <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Articles au total</p><p className="mt-1 text-2xl font-black text-clubPrimary">{totalQuantity}</p></div>
               </div>
 
               <div className="hidden overflow-x-auto md:block">
@@ -177,7 +178,7 @@ const ShirtOrderSlip = ({ session }: ShirtOrderSlipProps) => {
 
               <footer className="border-t-2 border-clubDark bg-clubSection/25 p-6 md:px-10">
                 <div className="ml-auto flex max-w-md justify-between text-2xl font-black">
-                  <span>Total des maillots</span><span>{totalQuantity}</span>
+                  <span>Total des articles</span><span>{totalQuantity}</span>
                 </div>
                 <p className="mt-8 text-xs text-muted-foreground">Bordereau réservé à la gestion du club · {session.user.email}</p>
               </footer>
