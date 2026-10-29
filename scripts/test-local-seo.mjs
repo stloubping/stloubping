@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { clubStructuredData, directionsFrom, localFaqs, localMetadata, localPagePath, localTowns } from '../src/data/localSeo.mjs';
+import { clubStructuredData, directionsFrom, localFaqs, localMetadata, localPagePath, localTowns, localTownGuides, localTrainingProfiles } from '../src/data/localSeo.mjs';
+import { trainingSchedule } from '../src/data/trainingSchedule.mjs';
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 const html = await read(`dist${localPagePath}/index.html`);
@@ -10,6 +11,24 @@ const schemaMatch = /<script id="club-structured-data" type="application\/ld\+js
 assert.deepEqual(JSON.parse(html.match(schemaMatch)[1]), clubStructuredData);
 assert.deepEqual(JSON.parse(home.match(schemaMatch)[1]).areaServed.map((town) => town.name), localTowns);
 assert.equal(localTowns.length, 6);
+assert.deepEqual(localTownGuides.map(guide => guide.town), localTowns);
+for (const guide of localTownGuides) {
+  assert.ok(html.includes(`id="${guide.id}"`));
+  for (const text of [guide.heading, guide.text, guide.tip]) assert.ok(html.includes(text), `Contenu de ${guide.town} absent du HTML initial`);
+}
+assert.match(html, /ping-pong/i);
+assert.match(html, /Toutes les séances ont lieu/);
+for (const profile of localTrainingProfiles) {
+  assert.ok(profile.slots.length > 0);
+  assert.ok(html.includes(profile.title));
+  for (const slot of profile.slots) {
+    assert.ok(html.includes(slot.time));
+    assert.ok(trainingSchedule.some(day => day.day === slot.day && day.slots.some(item => item.label === slot.label && item.time === slot.time)), 'Horaire local absent du planning commun');
+  }
+}
+assert.ok(localTrainingProfiles.find(profile => profile.id === 'enfants').slots.some(slot => slot.day === 'Samedi' && slot.time === '09h30 – 11h00'));
+assert.ok(localTrainingProfiles.find(profile => profile.id === 'adultes-loisir').slots.some(slot => slot.day === 'Jeudi' && slot.time === '19h30 – 21h00'));
+assert.ok((await read('src/pages/Adhesions.tsx')).includes("import { trainingSchedule } from '@/data/trainingSchedule.mjs'"));
 for (const town of localTowns) {
   assert.ok(html.includes(town), `Commune manquante : ${town}`);
   assert.ok(home.includes(town), `Commune absente de l’accueil : ${town}`);
