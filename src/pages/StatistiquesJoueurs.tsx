@@ -11,6 +11,9 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  Cell,
+  Pie,
+  PieChart,
   XAxis,
   YAxis,
 } from "recharts";
@@ -77,6 +80,33 @@ const categoryRankingChartConfig = {
   },
 } satisfies ChartConfig;
 
+const ageGroupChartConfig = {
+  joueurs: {
+    label: "Joueurs",
+  },
+} satisfies ChartConfig;
+
+const ageGroups = [
+  {
+    groupe: "Jeunes",
+    description: "Poussins à juniors",
+    prefixes: ["P", "B", "M", "C", "J"],
+    color: "#e11d48",
+  },
+  {
+    groupe: "Seniors",
+    description: "Catégorie senior",
+    prefixes: ["S"],
+    color: "#111827",
+  },
+  {
+    groupe: "Vétérans",
+    description: "Vétérans 1 et plus",
+    prefixes: ["V"],
+    color: "#f59e0b",
+  },
+] as const;
+
 const StatistiquesJoueurs = () => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
@@ -113,6 +143,21 @@ const StatistiquesJoueurs = () => {
       .map(([categorie, joueurs]) => ({ categorie, joueurs }))
       .sort((a, b) => categorySort(a.categorie, b.categorie));
   }, [players]);
+
+  const ageGroupData = useMemo(
+    () =>
+      ageGroups.map((group) => ({
+        ...group,
+        joueurs: players.filter((player) => {
+          const prefix = String(player.cat || "")
+            .trim()
+            .charAt(0)
+            .toUpperCase();
+          return (group.prefixes as readonly string[]).includes(prefix);
+        }).length,
+      })),
+    [players],
+  );
 
   const rankingBandData = useMemo(() => {
     const counts = new Map<number, number>();
@@ -301,6 +346,79 @@ const StatistiquesJoueurs = () => {
           </div>
         ) : (
           <div className="grid gap-6">
+            <article className="overflow-hidden rounded-xl border bg-white p-5 shadow-sm md:p-7">
+              <div className="grid items-center gap-6 lg:grid-cols-[minmax(280px,0.9fr)_minmax(360px,1.1fr)]">
+                <div>
+                  <h3 className="text-xl font-extrabold md:text-2xl">
+                    Répartition par génération
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Vue d’ensemble des jeunes, seniors et vétérans licenciés au
+                    club cette saison.
+                  </p>
+
+                  <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+                    {ageGroupData.map((item) => (
+                      <div
+                        key={item.groupe}
+                        className="rounded-lg border border-slate-200 bg-slate-50 p-3 sm:p-4"
+                      >
+                        <span
+                          className="mb-3 block h-1.5 w-8 rounded-full"
+                          style={{ backgroundColor: item.color }}
+                        />
+                        <strong className="block text-2xl font-black text-clubDark sm:text-3xl">
+                          {item.joueurs}
+                        </strong>
+                        <span className="mt-1 block text-xs font-extrabold sm:text-sm">
+                          {item.groupe}
+                        </span>
+                        <span className="mt-1 hidden text-xs text-muted-foreground sm:block">
+                          {item.description}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="relative mx-auto w-full max-w-[440px]">
+                  <ChartContainer
+                    config={ageGroupChartConfig}
+                    className="mx-auto h-[280px] w-full sm:h-[330px]"
+                  >
+                    <PieChart accessibilityLayer>
+                      <ChartTooltip
+                        cursor={false}
+                        content={<ChartTooltipContent nameKey="groupe" />}
+                      />
+                      <Pie
+                        data={ageGroupData}
+                        dataKey="joueurs"
+                        nameKey="groupe"
+                        innerRadius="52%"
+                        outerRadius="82%"
+                        paddingAngle={3}
+                        stroke="white"
+                        strokeWidth={4}
+                      >
+                        {ageGroupData.map((item) => (
+                          <Cell key={item.groupe} fill={item.color} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ChartContainer>
+                  <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center pt-1">
+                    <strong className="text-3xl font-black text-clubDark">
+                      {players.length}
+                    </strong>
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                      licenciés
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
             <article className="overflow-hidden rounded-xl border bg-white p-5 shadow-sm md:p-7">
               <h3 className="text-xl font-extrabold md:text-2xl">
                 Nombre de joueurs par catégorie
