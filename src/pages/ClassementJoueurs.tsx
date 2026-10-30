@@ -34,8 +34,7 @@ const formatMonthlyEvolution = (value: number) =>
     maximumFractionDigits: 1,
   });
 
-const isNewRegistration = (player: Player) =>
-  Number(player.valmen || 0) === 0 && Number(player.points || 0) === 500;
+const isNewRegistration = (player: Player) => Number(player.valmen || 0) <= 0;
 
 const monthlyEvolution = (player: Player) =>
   isNewRegistration(player) ? 0 : Number(player.progmens || 0);

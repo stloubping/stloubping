@@ -14,7 +14,7 @@ export interface Player {
   progans?: number;
 }
 
-const CACHE_KEY = "stloub_club_players_official_v2";
+const CACHE_KEY = "stloub_club_players_official_v3";
 
 function isValidPlayer(value: unknown): value is Player {
   if (!value || typeof value !== "object") return false;

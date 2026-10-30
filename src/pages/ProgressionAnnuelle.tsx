@@ -48,7 +48,7 @@ const formatPoints = (value: number) =>
   });
 
 const isNewRegistration = (player: Player) =>
-  Number(player.valinit || 0) === 0 && Number(player.points || 0) === 500;
+  Number(player.valinit || 0) <= 0;
 
 const annualEvolution = (player: Player) =>
   isNewRegistration(player) ? 0 : Number(player.progans || 0);

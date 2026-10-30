@@ -190,15 +190,40 @@ export default async function handler(request: ApiRequest, response: ApiResponse
       throw new Error("Accès Smartping refusé");
     }
 
-    const rawPlayers = parseXmlRecords(
-      await callSmartping("xml_licence_b", { club: config.clubNumber }),
+    // xml_licence_b renvoie aussi des licences conservées dans SPID mais non
+    // validées pour la saison courante. La liste officielle avec valid=1 est
+    // donc utilisée comme source de vérité, puis enrichie avec les données de
+    // classement de xml_licence_b.
+    const [validatedRecords, rawPlayers] = await Promise.all([
+      callSmartping("xml_liste_joueur_o", {
+        club: config.clubNumber,
+        valid: "1",
+      }).then(parseXmlRecords),
+      callSmartping("xml_licence_b", { club: config.clubNumber }).then(
+        parseXmlRecords,
+      ),
+    ]);
+
+    const validatedLicences = new Set(
+      validatedRecords
+        .map((player) => String(player.licence || "").trim())
+        .filter(Boolean),
     );
 
+    if (validatedLicences.size === 0) {
+      throw new Error("Aucune licence FFTT validée trouvée pour le club");
+    }
+
     const players = rawPlayers
+      .filter((player) =>
+        validatedLicences.has(String(player.licence || "").trim()),
+      )
       .map((player) => {
         const points = numberValue(player.pointm || player.point);
         const previousMonthly = numberValue(player.apointm);
         const initialSeason = numberValue(player.initm);
+        const hasMonthlyReference = previousMonthly > 0;
+        const hasSeasonReference = initialSeason > 0;
 
         return {
           idlicence: player.idlicence || "",
@@ -211,8 +236,13 @@ export default async function handler(request: ApiRequest, response: ApiResponse
           cat: player.cat || "",
           valinit: rounded(initialSeason),
           valmen: rounded(previousMonthly),
-          progmens: rounded(points - previousMonthly),
-          progans: rounded(points - initialSeason),
+          // Une référence à 0 signifie que la FFTT ne fournit pas encore de
+          // valeur antérieure (nouveau licencié, reprise ou donnée absente).
+          // Le classement complet ne doit jamais devenir une progression.
+          progmens: hasMonthlyReference
+            ? rounded(points - previousMonthly)
+            : 0,
+          progans: hasSeasonReference ? rounded(points - initialSeason) : 0,
         };
       })
       .filter((player) => player.nom && player.prenom && player.licence)
