@@ -16,6 +16,7 @@ const queryClient = new QueryClient();
 
 const LeClub = React.lazy(() => import("./pages/LeClub"));
 const TennisLocal = React.lazy(() => import("./pages/TennisLocal"));
+const PingPongIzon = React.lazy(() => import("./pages/PingPongIzon"));
 const CompetitionsEquipes = React.lazy(() => import("./pages/CompetitionsEquipes"));
 const CalendrierCompetitions = React.lazy(() => import("./pages/CalendrierCompetitions"));
 const EssaiGratuit = React.lazy(() => import("./pages/EssaiGratuit"));
@@ -74,6 +75,7 @@ const App = () => (
                 <Route path="/actualites" element={<Actualites />} />
                 <Route path="/le-club" element={<LeClub />} />
                 <Route path="/tennis-de-table-rives-de-la-laurence" element={<TennisLocal />} />
+                <Route path="/ou-jouer-au-ping-pong-a-izon" element={<PingPongIzon />} />
                 <Route path="/competitions-equipes" element={<CompetitionsEquipes />} />
                 <Route path="/competitions-equipes/calendrier" element={<CalendrierCompetitions />} />
                 <Route path="/essai-gratuit" element={<EssaiGratuit />} />

@@ -33,6 +33,7 @@ export default function TennisLocal() {
     </section>
 
     <section className="my-12" aria-labelledby="depuis-votre-commune">
+      <aside className="mb-8 border-l-4 border-clubPrimary bg-clubSection/20 p-5"><h2 className="text-xl font-bold">Vous venez d’Izon ?</h2><p className="mt-2 leading-7">Izon ne fait pas partie des six communes des Rives de la Laurence, mais ses habitants sont aussi les bienvenus à Saint-Loubès.</p><Link to="/ou-jouer-au-ping-pong-a-izon" className="mt-3 inline-flex min-h-11 items-center font-semibold underline underline-offset-4">Où jouer au ping-pong quand on habite Izon ?</Link></aside>
       <p className="text-sm font-bold uppercase tracking-widest text-clubPrimary">Les Rives de la Laurence</p>
       <h2 id="depuis-votre-commune" className="mt-2 text-2xl font-bold md:text-3xl">Depuis votre commune, jusqu’à la table</h2>
       <div className="mt-6 grid gap-x-8 gap-y-6 md:grid-cols-2">

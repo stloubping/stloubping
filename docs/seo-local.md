@@ -10,6 +10,8 @@
 
 ## À effectuer après la mise en ligne, avec le compte du club
 
+Page complémentaire Izon : `/ou-jouer-au-ping-pong-a-izon`, avec accès à la salle réelle de Saint-Loubès, repères horaires issus du planning partagé, préparation de l’essai et questions pratiques. Liens depuis le pied de page et la page locale régionale ; Izon n’est pas ajouté à la liste des six communes des Rives de la Laurence. Métadonnées et contenu pré-rendu partagés dans `src/data/izonSeo.mjs`. Test : `node scripts/test-izon-seo.mjs`. Ne pas décliner automatiquement cette page en copies par commune.
+
 1. Google Business Profile : vérifier ou revendiquer la fiche existante, sans créer de doublon. Employer le vrai nom du club, la même adresse, le même téléphone et le site `https://www.saintloubping.fr/`. Vérifier les catégories disponibles, les horaires effectifs et les photos réelles de la salle. Ne pas ajouter les communes au nom du club pour y accumuler des mots-clés.
 2. Google Search Console : soumettre `https://www.saintloubping.fr/sitemap.xml`, inspecter la nouvelle page et demander son indexation si nécessaire. Contrôler ensuite les impressions/clics et les requêtes locales. L’exploration et le classement ne sont ni immédiats ni garantis.
 3. Annuaires locaux : demander aux mairies, à l’intercommunalité et aux annuaires sportifs qui présentent déjà le club de vérifier l’adresse et leur lien vers le domaine actuel. Ne pas prétendre à un partenariat sans accord.

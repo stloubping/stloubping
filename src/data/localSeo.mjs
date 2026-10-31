@@ -1,4 +1,5 @@
 import { trainingSchedule } from './trainingSchedule.mjs';
+import { izonMetadata, izonPagePath } from './izonSeo.mjs';
 
 export const localPagePath = '/tennis-de-table-rives-de-la-laurence';
 export const localTowns = ['Saint-Loubès', 'Saint-Sulpice-et-Cameyrac', 'Sainte-Eulalie', 'Montussan', 'Yvrac', 'Beychac-et-Caillau'];
@@ -34,6 +35,7 @@ export const localFaqs = [
   { question: 'Comment connaître les horaires et les tarifs ?', answer: 'La page Horaires présente le planning des entraînements. La page Adhésions regroupe les tarifs et les documents à télécharger. Vous pouvez aussi contacter le club au 06 88 46 68 59.' },
 ];
 export const localMetadata = {
+  [izonPagePath]: izonMetadata,
   '/': { title: 'Tennis de table à Saint-Loubès — Saint-Loub’Ping', description: 'Tennis de table à Saint-Loubès : enfants, adultes, loisir et compétition. Ouvert aux habitants des Rives de la Laurence. Réservez un essai gratuit.' },
   [localPagePath]: { title: 'Tennis de table et ping-pong · Rives de la Laurence — Saint-Loub’Ping', description: 'Tennis de table et ping-pong à Saint-Loubès : accès depuis les six communes des Rives de la Laurence, créneaux enfants et adultes, essai gratuit.' },
   '/essai-gratuit': { title: 'Essai gratuit de tennis de table à Saint-Loubès — Saint-Loub’Ping', description: 'Enfant, ado ou adulte : essayez le ping à Saint-Loubès. Club ouvert aux habitants des Rives de la Laurence. Demandez votre séance d’essai gratuite.' },
