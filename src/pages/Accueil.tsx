@@ -107,11 +107,20 @@ const Accueil = () => {
             </CardTitle>
             <CardContent className="px-0">
               <p className="mb-6 text-sm md:text-base text-clubLight-foreground">
-                Restez connecté avec le club et ne manquez aucune actualité directement depuis notre page Facebook.
+                Retrouvez les publications, les photos et la vie du club sur notre page Facebook.
+              </p>
+              <Button asChild className="h-auto min-h-12 max-w-full whitespace-normal bg-clubPrimary px-6 py-3 text-white hover:bg-clubPrimary/90">
+                <a href="https://www.facebook.com/people/Saint-LoubPing/100085857905183/" target="_blank" rel="noopener noreferrer">
+                  Voir nos publications sur Facebook <ArrowRight className="ml-2 h-4 w-4 shrink-0" aria-hidden="true" />
+                </a>
+              </Button>
+              <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-muted-foreground">
+                Le fil intégré ci-dessous dépend de Facebook et peut ne pas afficher les publications.
+                Le bouton reste disponible pour consulter la page directement.
               </p>
               <div className="mt-4 flex justify-center w-full max-w-[320px] mx-auto overflow-hidden rounded-lg border">
                 <iframe
-                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fp%2FSaint-LoubPing-100085857905183%2F&tabs=timeline&width=320&height=500&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
+                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F110189851840814&tabs=timeline&width=320&height=500&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true"
                   width="320"
                   height="500"
                   style={{ border: 'none', overflow: 'hidden' }}
