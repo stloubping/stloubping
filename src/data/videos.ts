@@ -10,6 +10,14 @@ export interface VideoItem {
 export const allVideos: VideoItem[] = [
   // Vidéos WTT
   {
+    id: 'wtt-10',
+    title: "FULL MATCH | Simon Gauzy vs Liang Jingkun | MS R16 | #WTTMontpellier 2026",
+    description: "Le match complet des huitièmes de finale simple messieurs entre Simon Gauzy et Liang Jingkun au WTT Montpellier 2026.",
+    youtubeId: "LI9iWQJFS14",
+    category: 'wtt',
+    dateAdded: "2026-10-31",
+  },
+  {
     id: 'wtt-1',
     title: "WTT Contender Doha 2024 - Finale Hommes",
     description: "Revivez les moments forts de la finale masculine du WTT Contender Doha 2024 entre Liang Jingkun et Lin Gaoyuan.",
