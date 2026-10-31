@@ -114,23 +114,6 @@ const Accueil = () => {
                   Voir nos publications sur Facebook <ArrowRight className="ml-2 h-4 w-4 shrink-0" aria-hidden="true" />
                 </a>
               </Button>
-              <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-muted-foreground">
-                Le fil intégré ci-dessous dépend de Facebook et peut ne pas afficher les publications.
-                Le bouton reste disponible pour consulter la page directement.
-              </p>
-              <div className="mt-4 flex justify-center w-full max-w-[320px] mx-auto overflow-hidden rounded-lg border">
-                <iframe
-                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F110189851840814&tabs=timeline&width=320&height=500&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true"
-                  width="320"
-                  height="500"
-                  style={{ border: 'none', overflow: 'hidden' }}
-                  scrolling="no"
-                  frameBorder="0"
-                  allowFullScreen={true}
-                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                  title="Page Facebook Saint-LoubPing"
-                ></iframe>
-              </div>
             </CardContent>
           </Card>
         </section>
